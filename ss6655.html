@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة تحليل الاختبارات ونتائج الطلاب</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{
+  --bg:#f8f3f0;
+  --bg2:#fff8f5;
+  --maroon:#6b1a2a;
+  --maroon2:#8b2439;
+  --maroon3:#a83050;
+  --wine:#7d2040;
+  --wine2:#9e2d52;
+  --rose:#c4637a;
+  --rose2:#d4849a;
+  --cream:#f2e8e5;
+  --cream2:#ede0db;
+  --gold:#b8860b;
+  --gold2:#d4a017;
+  --text:#2a0d14;
+  --text2:#4a1525;
+  --muted:#8a5060;
+  --card:#fff;
+  --card2:#fdf5f3;
+  --border:rgba(107,26,42,0.15);
+  --border2:rgba(107,26,42,0.25);
+  --shadow:rgba(107,26,42,0.12);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* BG texture */
+.bg-tex{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 70% 50% at 10% 5%, rgba(107,26,42,0.06) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 60% at 90% 95%, rgba(125,32,64,0.05) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 40% at 50% 50%, rgba(196,99,122,0.03) 0%,transparent 70%);
+}
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(107,26,42,0.025) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(107,26,42,0.025) 1px,transparent 1px);
+  background-size:38px 38px;
+}
+
+/* ===== HEADER ===== */
+.hdr{position:relative;z-index:10;
+  background:linear-gradient(135deg,var(--maroon) 0%,var(--wine) 50%,var(--maroon2) 100%);
+  border-bottom:3px solid var(--gold2);
+  box-shadow:0 4px 28px rgba(107,26,42,0.35);}
+.hdr-in{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;gap:16px;flex-wrap:wrap;}
+.brand{display:flex;align-items:center;gap:13px;}
+.brand-ic{width:50px;height:50px;
+  background:linear-gradient(135deg,var(--gold2),var(--gold));
+  border-radius:13px;display:flex;align-items:center;justify-content:center;
+  font-size:23px;box-shadow:0 4px 16px rgba(184,134,11,0.4);}
+.brand h1{font-family:'Cairo',sans-serif;font-size:1.35rem;font-weight:900;color:#fff;
+  text-shadow:0 1px 4px rgba(0,0,0,0.2);}
+.brand p{font-size:0.75rem;color:rgba(255,255,255,0.65);margin-top:2px;}
+.tabs{display:flex;gap:4px;background:rgba(0,0,0,0.2);border-radius:12px;padding:4px;}
+.tb{background:transparent;border:none;cursor:pointer;color:rgba(255,255,255,0.65);
+  font-family:'Tajawal',sans-serif;font-size:0.82rem;font-weight:600;
+  padding:8px 15px;border-radius:9px;transition:all .22s;display:flex;align-items:center;gap:5px;}
+.tb:hover{color:#fff;background:rgba(255,255,255,0.1);}
+.tb.on{background:linear-gradient(135deg,var(--gold2),var(--gold));color:var(--maroon);font-weight:800;
+  box-shadow:0 2px 10px rgba(184,134,11,0.35);}
+
+/* ===== MAIN ===== */
+.main{position:relative;z-index:1;padding:22px 26px;}
+.pg{display:none;}.pg.on{display:block;}
+
+/* ===== UPLOAD ===== */
+.drop-zone{border:2.5px dashed var(--border2);border-radius:18px;padding:52px 36px;text-align:center;
+  cursor:pointer;background:var(--card);
+  box-shadow:0 2px 20px var(--shadow);
+  transition:all .3s;}
+.drop-zone:hover,.drop-zone.drag{border-color:var(--maroon);background:var(--cream);}
+.drop-zone h3{font-size:1.2rem;font-weight:700;color:var(--maroon);margin:12px 0 8px;}
+.drop-zone p{color:var(--muted);font-size:0.88rem;line-height:1.6;}
+.fmt{display:flex;gap:8px;justify-content:center;margin-top:12px;}
+.fmt span{background:rgba(107,26,42,0.08);border:1px solid var(--border2);
+  color:var(--maroon2);padding:3px 12px;border-radius:20px;font-size:0.75rem;font-weight:600;}
+#fi{display:none;}
+
+/* ===== INFO BOX ===== */
+.info-b{background:rgba(107,26,42,0.06);border:1px solid var(--border2);border-right:4px solid var(--maroon);
+  border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:0.83rem;line-height:1.7;color:var(--text2);}
+.info-b strong{color:var(--maroon);}
+
+/* ===== CARDS ===== */
+.s-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:18px;}
+.s-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;
+  box-shadow:0 2px 14px var(--shadow);}
+.s-card h4{font-size:0.88rem;font-weight:700;color:var(--maroon);margin-bottom:13px;
+  display:flex;align-items:center;gap:7px;padding-bottom:9px;border-bottom:1px solid var(--border);}
+.fg{margin-bottom:10px;}
+.fg label{display:block;font-size:0.78rem;color:var(--muted);margin-bottom:4px;font-weight:600;}
+.fi,.fs{width:100%;background:var(--bg2);border:1.5px solid var(--border);
+  border-radius:8px;color:var(--text);font-family:'Tajawal',sans-serif;
+  font-size:0.88rem;padding:8px 12px;outline:none;transition:border-color .2s;}
+.fi:focus,.fs:focus{border-color:var(--maroon);}
+.fs option{background:#fff;}
+.col-map{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+
+/* ===== BUTTONS ===== */
+.btn-go{background:linear-gradient(135deg,var(--maroon),var(--maroon2));color:#fff;
+  font-family:'Cairo',sans-serif;font-size:1rem;font-weight:800;border:none;border-radius:12px;
+  cursor:pointer;padding:12px 32px;transition:all .3s;
+  box-shadow:0 4px 18px rgba(107,26,42,0.3);
+  display:inline-flex;align-items:center;gap:8px;}
+.btn-go:hover{transform:translateY(-2px);box-shadow:0 7px 24px rgba(107,26,42,0.4);
+  background:linear-gradient(135deg,var(--maroon2),var(--wine2));}
+
+.btn-reset{background:linear-gradient(135deg,#c0392b,#e74c3c);color:#fff;
+  font-family:'Cairo',sans-serif;font-size:0.9rem;font-weight:700;border:none;border-radius:10px;
+  cursor:pointer;padding:10px 22px;transition:all .3s;
+  box-shadow:0 3px 12px rgba(192,57,43,0.3);
+  display:inline-flex;align-items:center;gap:7px;}
+.btn-reset:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(192,57,43,0.4);}
+
+.btn-export{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--maroon);
+  font-family:'Cairo',sans-serif;font-size:0.85rem;font-weight:800;border:none;border-radius:9px;
+  cursor:pointer;padding:7px 16px;transition:all .3s;
+  box-shadow:0 2px 10px rgba(184,134,11,0.25);
+  display:inline-flex;align-items:center;gap:6px;}
+.btn-export:hover{transform:translateY(-1px);}
+
+.btn-row{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:10px;flex-wrap:wrap;}
+
+/* ===== PREV TABLE ===== */
+.prev-wrap{margin-top:18px;display:none;}
+.t-wrap{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;
+  margin-bottom:20px;box-shadow:0 2px 14px var(--shadow);}
+.t-bar{display:flex;gap:8px;align-items:center;padding:12px 16px;
+  border-bottom:1px solid var(--border);flex-wrap:wrap;background:var(--card2);}
+.t-search{background:var(--bg2);border:1.5px solid var(--border);border-radius:8px;
+  color:var(--text);font-family:'Tajawal',sans-serif;font-size:0.83rem;
+  padding:7px 12px;outline:none;flex:1;min-width:160px;transition:border-color .2s;}
+.t-search:focus{border-color:var(--maroon);}
+.t-sort{background:var(--bg2);border:1.5px solid var(--border);border-radius:8px;
+  color:var(--text);font-family:'Tajawal',sans-serif;font-size:0.83rem;
+  padding:7px 12px;outline:none;transition:border-color .2s;}
+.t-sort:focus{border-color:var(--maroon);}
+.t-sort option{background:#fff;}
+.fb{padding:5px 13px;border-radius:20px;font-size:0.76rem;font-weight:700;
+  cursor:pointer;border:1.5px solid transparent;font-family:'Tajawal',sans-serif;transition:all .2s;}
+.fb-a{background:rgba(107,26,42,0.07);color:var(--maroon2);border-color:var(--border);}
+.fb-a.on{background:var(--maroon);color:#fff;border-color:var(--maroon);}
+.fb-p{background:rgba(39,174,96,0.08);color:#1e8449;border-color:rgba(39,174,96,0.3);}
+.fb-p.on{background:#1e8449;color:#fff;}
+.fb-f{background:rgba(192,57,43,0.08);color:#c0392b;border-color:rgba(192,57,43,0.3);}
+.fb-f.on{background:#c0392b;color:#fff;}
+.ovx{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:0.83rem;}
+th{background:var(--cream2);color:var(--maroon);font-weight:800;
+  padding:11px 14px;text-align:right;border-bottom:2px solid var(--border2);white-space:nowrap;}
+td{padding:9px 14px;border-bottom:1px solid rgba(107,26,42,0.06);color:var(--text2);}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(107,26,42,0.03);}
+.rk{width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+  font-size:0.72rem;font-weight:800;background:var(--cream2);color:var(--muted);}
+.rk1{background:linear-gradient(135deg,#FFD700,#FFA500);color:#5a3000;}
+.rk2{background:linear-gradient(135deg,#C0C0C0,#909090);color:#333;}
+.rk3{background:linear-gradient(135deg,#CD7F32,#9a5a10);color:#fff;}
+.gb{padding:3px 10px;border-radius:20px;font-size:0.73rem;font-weight:700;}
+.ga{background:rgba(39,174,96,0.12);color:#1a7a3e;}
+.gb2{background:rgba(41,128,185,0.12);color:#1a5a8a;}
+.gc{background:rgba(243,156,18,0.12);color:#9a6000;}
+.gd{background:rgba(192,57,43,0.12);color:#a0251a;}
+.sb{height:4px;border-radius:4px;background:var(--cream2);margin-top:4px;overflow:hidden;min-width:60px;}
+.sf{height:100%;border-radius:4px;}
+.t-sum{padding:10px 16px;font-size:0.78rem;color:var(--muted);
+  border-top:1px solid var(--border);background:var(--card2);}
+
+/* ===== STAT CARDS ===== */
+.st-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px;margin-bottom:20px;}
+.st-c{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;
+  text-align:center;position:relative;overflow:hidden;transition:transform .2s;
+  box-shadow:0 2px 12px var(--shadow);}
+.st-c:hover{transform:translateY(-3px);box-shadow:0 6px 20px var(--shadow);}
+.st-c::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;}
+.st-maroon::after{background:linear-gradient(90deg,var(--maroon),var(--rose));}
+.st-wine::after{background:linear-gradient(90deg,var(--wine),var(--wine2));}
+.st-green::after{background:linear-gradient(90deg,#1a7a3e,#27ae60);}
+.st-red::after{background:linear-gradient(90deg,#922b21,#c0392b);}
+.st-gold::after{background:linear-gradient(90deg,var(--gold),var(--gold2));}
+.st-ic{font-size:24px;margin-bottom:6px;}
+.st-v{font-size:1.65rem;font-weight:900;font-family:'Cairo',sans-serif;}
+.c-maroon{color:var(--maroon);}
+.c-wine{color:var(--wine);}
+.c-green{color:#1a7a3e;}
+.c-red{color:#c0392b;}
+.c-gold{color:var(--gold);}
+.st-l{font-size:0.74rem;color:var(--muted);margin-top:3px;font-weight:600;}
+
+/* ===== SECTION TITLE ===== */
+.sec{display:flex;align-items:center;gap:8px;font-family:'Cairo',sans-serif;font-size:1rem;
+  font-weight:800;color:var(--maroon);margin-bottom:14px;padding-bottom:9px;
+  border-bottom:2px solid var(--cream2);}
+.dot{width:8px;height:8px;border-radius:50%;
+  background:linear-gradient(135deg,var(--maroon),var(--rose));}
+
+/* ===== CHARTS ===== */
+.ch-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;margin-bottom:20px;}
+.ch-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;
+  box-shadow:0 2px 14px var(--shadow);}
+.ch-card h4{font-size:0.85rem;color:var(--muted);font-weight:700;margin-bottom:14px;
+  display:flex;align-items:center;gap:6px;}
+.ch-card h4::before{content:'';width:3px;height:14px;border-radius:2px;
+  background:linear-gradient(var(--maroon),var(--rose));display:inline-block;}
+
+/* ===== LEGEND ===== */
+.leg{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.leg-i{display:flex;align-items:center;gap:5px;font-size:0.75rem;color:var(--muted);}
+.leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+
+/* ===== MEASURES ===== */
+.m-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:20px;}
+.m-card{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:15px;
+  box-shadow:0 2px 10px var(--shadow);}
+.m-name{font-size:0.78rem;color:var(--muted);margin-bottom:4px;font-weight:600;}
+.m-val{font-size:1.5rem;font-weight:900;font-family:'Cairo',sans-serif;color:var(--maroon);margin-bottom:6px;}
+.m-bar{height:5px;border-radius:5px;background:var(--cream2);margin-bottom:8px;overflow:hidden;}
+.m-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--wine),var(--rose));}
+.m-desc{font-size:0.76rem;color:var(--muted);line-height:1.6;}
+
+/* ===== DIST TABLE ===== */
+.d-wrap{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;
+  margin-bottom:20px;box-shadow:0 2px 14px var(--shadow);}
+.d-hdr{padding:12px 16px;border-bottom:1px solid var(--border);font-weight:800;color:var(--maroon);
+  font-size:0.88rem;background:var(--card2);}
+.d-row{display:flex;align-items:center;gap:10px;padding:9px 16px;
+  border-bottom:1px solid rgba(107,26,42,0.05);}
+.d-row:last-child{border-bottom:none;}
+.d-lbl{min-width:85px;font-weight:700;font-size:0.82rem;}
+.d-outer{flex:1;height:20px;background:var(--cream2);border-radius:10px;overflow:hidden;}
+.d-inner{height:100%;border-radius:10px;display:flex;align-items:center;padding-right:6px;
+  font-size:0.7rem;font-weight:700;color:#fff;min-width:16px;}
+.d-cnt{min-width:40px;text-align:center;font-weight:800;color:var(--maroon);font-size:0.85rem;}
+.d-pct{min-width:50px;text-align:center;font-size:0.78rem;color:var(--muted);}
+
+/* ===== ITEMS ===== */
+.it-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-bottom:20px;}
+.it-c{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px;
+  text-align:center;position:relative;overflow:hidden;transition:transform .2s;
+  box-shadow:0 2px 8px var(--shadow);}
+.it-c:hover{transform:translateY(-2px);}
+.it-num{font-size:0.72rem;color:var(--muted);margin-bottom:5px;font-weight:600;}
+.it-d{font-size:1.15rem;font-weight:800;font-family:'Cairo',sans-serif;margin-bottom:2px;}
+.it-dl{font-size:0.7rem;margin-bottom:8px;font-weight:600;}
+.it-dc{font-size:1.1rem;font-weight:800;font-family:'Cairo',sans-serif;margin-bottom:2px;}
+.it-dcl{font-size:0.7rem;font-weight:600;}
+.it-bar{position:absolute;top:0;right:0;width:4px;height:100%;}
+.d-easy{color:#1a7a3e;} .d-med{color:#9a6000;} .d-hard{color:#c0392b;}
+.dc-ex{color:#1a5a8a;} .dc-good{color:#1a7a3e;} .dc-ok{color:#9a6000;} .dc-poor{color:#c0392b;}
+
+/* ===== INFLATION ===== */
+.infl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:18px;}
+.infl-card{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:16px;
+  text-align:center;position:relative;overflow:hidden;box-shadow:0 2px 10px var(--shadow);}
+.infl-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;}
+.infl-ok::after{background:linear-gradient(90deg,#1a7a3e,#27ae60);}
+.infl-warn::after{background:linear-gradient(90deg,#9a6000,#f39c12);}
+.infl-danger::after{background:linear-gradient(90deg,#922b21,#c0392b);}
+.infl-ic{font-size:24px;margin-bottom:5px;}
+.infl-val{font-size:1.4rem;font-weight:900;font-family:'Cairo',sans-serif;margin-bottom:4px;}
+.infl-lbl{font-size:0.76rem;color:var(--muted);margin-bottom:6px;font-weight:600;}
+.infl-badge{display:inline-block;padding:3px 11px;border-radius:20px;font-size:0.73rem;font-weight:700;}
+.b-ok{background:rgba(39,174,96,0.12);color:#1a7a3e;}
+.b-warn{background:rgba(243,156,18,0.12);color:#9a6000;}
+.b-danger{background:rgba(192,57,43,0.12);color:#c0392b;}
+.infl-summary{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:20px;margin-bottom:20px;box-shadow:0 2px 14px var(--shadow);}
+.infl-summary h4{font-size:0.95rem;font-weight:800;margin-bottom:10px;
+  display:flex;align-items:center;gap:8px;color:var(--maroon);}
+.infl-meter{height:18px;background:var(--cream2);border-radius:9px;overflow:hidden;margin:10px 0;}
+.infl-fill{height:100%;border-radius:9px;display:flex;align-items:center;
+  padding-right:8px;font-size:0.72rem;font-weight:700;color:#fff;}
+.infl-rec{font-size:0.82rem;line-height:1.8;color:var(--text2);padding:14px 16px;
+  background:var(--cream);border-radius:10px;border-right:4px solid var(--maroon);}
+
+/* ===== TWO COL ===== */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+@media(max-width:700px){.two-col{grid-template-columns:1fr;}}
+
+/* ===== EMPTY ===== */
+.empty{text-align:center;padding:60px 20px;color:var(--muted);}
+.empty .ei{font-size:48px;margin-bottom:14px;opacity:.4;}
+.empty p{font-size:0.95rem;font-weight:600;}
+
+/* ===== TOAST ===== */
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(70px);
+  background:var(--maroon);color:#fff;
+  padding:11px 24px;border-radius:11px;font-size:0.88rem;z-index:999;
+  transition:transform .3s;box-shadow:0 6px 24px rgba(107,26,42,0.35);}
+.toast.on{transform:translateX(-50%) translateY(0);}
+.toast.ok{background:var(--maroon);}
+.toast.er{background:#c0392b;}
+.toast.warn{background:#9a6000;}
+
+/* ===== FOOTER ===== */
+footer{position:relative;z-index:1;text-align:center;padding:18px;
+  border-top:1px solid var(--border);font-size:0.8rem;color:var(--muted);
+  background:var(--card2);}
+footer a{color:var(--maroon);text-decoration:none;font-weight:700;}
+footer a:hover{color:var(--rose);}
+footer strong{color:var(--maroon);}
+
+/* ===== RESET SECTION ===== */
+.reset-bar{display:flex;align-items:center;justify-content:flex-end;margin-bottom:16px;gap:10px;}
+.reset-hint{font-size:0.78rem;color:var(--muted);}
+
+@media(max-width:768px){
+  .hdr-in{flex-direction:column;align-items:flex-start;padding:12px 14px;}
+  .tabs{width:100%;overflow-x:auto;}
+  .main{padding:12px 10px;}
+  .st-row{grid-template-columns:repeat(2,1fr);}
+}
+/* ===== PRINT BUTTON ===== */
+.btn-print{background:linear-gradient(135deg,var(--maroon),var(--wine));color:#fff;
+  font-family:'Cairo',sans-serif;font-size:0.9rem;font-weight:700;border:none;border-radius:10px;
+  cursor:pointer;padding:10px 20px;transition:all .3s;
+  box-shadow:0 3px 12px rgba(107,26,42,0.3);
+  display:inline-flex;align-items:center;gap:7px;}
+.btn-print:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(107,26,42,0.4);}
+.print-modal{display:none;position:fixed;inset:0;z-index:2000;
+  background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);
+  align-items:center;justify-content:center;}
+.print-modal.on{display:flex;}
+.print-box{background:#fff;border-radius:18px;padding:28px;width:360px;max-width:92vw;
+  box-shadow:0 12px 40px rgba(107,26,42,0.25);border-top:4px solid var(--maroon);}
+.print-box h3{font-family:'Cairo',sans-serif;font-size:1.1rem;font-weight:800;
+  color:var(--maroon);margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+.print-opts{display:flex;flex-direction:column;gap:9px;margin-bottom:18px;}
+.p-sect{font-size:0.78rem;font-weight:700;color:var(--muted);margin:6px 0 3px;}
+.print-radio{display:flex;align-items:center;gap:10px;cursor:pointer;
+  padding:9px 14px;border-radius:10px;border:1.5px solid var(--border);
+  transition:all .2s;font-size:0.88rem;color:var(--text2);}
+.print-radio:hover{border-color:var(--maroon);background:var(--cream);}
+.print-radio input[type=radio]{accent-color:var(--maroon);width:15px;height:15px;cursor:pointer;}
+.print-row{display:flex;gap:8px;}
+.print-row .print-radio{flex:1;}
+.print-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:4px;}
+.p-cancel{background:var(--cream2);border:1px solid var(--border);color:var(--muted);
+  font-family:'Cairo',sans-serif;font-size:0.88rem;font-weight:600;
+  border-radius:9px;cursor:pointer;padding:9px 18px;transition:all .2s;}
+.p-cancel:hover{background:var(--cream);}
+.p-go{background:linear-gradient(135deg,var(--maroon),var(--wine));color:#fff;
+  font-family:'Cairo',sans-serif;font-size:0.88rem;font-weight:700;
+  border:none;border-radius:9px;cursor:pointer;padding:9px 20px;
+  box-shadow:0 3px 10px rgba(107,26,42,0.3);transition:all .2s;
+  display:flex;align-items:center;gap:6px;}
+.p-go:hover{transform:translateY(-1px);}
+
+@media print{
+  .hdr .tabs,.drop-zone,.t-bar,.btn-row,.reset-bar,
+  .btn-print,.print-modal,footer,.bg-tex,.bg-grid,
+  .btn-export,#pg-upload,#pg-settings,.no-print{display:none!important;}
+  html,body{background:#fff!important;color:#000!important;margin:0;padding:0;}
+  @page{size:A4 portrait;margin:14mm 12mm 12mm 12mm;}
+  body.pl @page{size:A4 landscape;margin:11mm 10mm 10mm 10mm;}
+  .hdr{background:#6b1a2a!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;
+    padding:8px 14px!important;border-bottom:2px solid #b8860b!important;}
+  .hdr-in{padding:6px 10px!important;}
+  .brand h1{font-size:0.95rem!important;} .brand p{font-size:0.65rem!important;}
+  .brand-ic{width:34px!important;height:34px!important;font-size:15px!important;}
+  .main{padding:0!important;}
+  .pg{display:none!important;}
+  body.pov #pg-overview{display:block!important;}
+  body.pst #pg-students{display:block!important;}
+  body.pit #pg-items{display:block!important;}
+  body.pall #pg-overview,body.pall #pg-students,body.pall #pg-items{display:block!important;}
+  .st-c,.ch-card,.m-card,.s-card,.infl-card,.infl-summary,.t-wrap,.d-wrap,.it-c{
+    background:#fff!important;border:1px solid #ddd!important;box-shadow:none!important;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .st-row{grid-template-columns:repeat(3,1fr)!important;gap:7px!important;}
+  .ch-grid{grid-template-columns:repeat(2,1fr)!important;gap:9px!important;}
+  .m-grid{grid-template-columns:repeat(3,1fr)!important;gap:7px!important;}
+  .it-grid{grid-template-columns:repeat(4,1fr)!important;gap:6px!important;}
+  .infl-grid{grid-template-columns:repeat(3,1fr)!important;gap:7px!important;}
+  .two-col{grid-template-columns:repeat(2,1fr)!important;}
+  .st-c,.ch-card,.m-card,.infl-card,.it-c{page-break-inside:avoid;break-inside:avoid;}
+  .sec{page-break-after:avoid;break-after:avoid;font-size:0.9rem!important;}
+  table{width:100%!important;font-size:8.5pt!important;}
+  th{background:#f0e8e5!important;color:#6b1a2a!important;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;padding:6px 10px!important;}
+  td{padding:5px 9px!important;}
+  tr{page-break-inside:avoid;break-inside:avoid;}
+  svg{max-width:100%!important;overflow:visible!important;}
+  .d-inner,.m-fill,.infl-fill,.sf,.it-bar,.st-c::after,.infl-card::after{
+    -webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  .reset-bar,.btn-row{display:none!important;}
+  .print-stamp{display:block!important;text-align:center;padding:5px 0 10px;
+    font-family:'Cairo',sans-serif;font-size:0.8rem;color:#6b1a2a;
+    border-bottom:1px solid #e0d0cc;margin-bottom:12px;}
+}
+</style>
+</head>
+<body>
+<div class="bg-tex"></div>
+<div class="bg-grid"></div>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-in">
+    <div class="brand">
+      <div class="brand-ic">📊</div>
+      <div>
+        <h1>منصة تحليل الاختبارات ونتائج الطلاب</h1>
+        <p>تحليل إحصائي شامل وفق المعايير التربوية المعتمدة</p>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tb on" onclick="go('upload',this)">📁 الرفع والإعداد</button>
+      <button class="tb" onclick="go('overview',this)">📈 لوحة النتائج</button>
+      <button class="tb" onclick="go('students',this)">👥 درجات الطلاب</button>
+      <button class="tb" onclick="go('items',this)">🔬 تحليل الفقرات</button>
+      <button class="tb" onclick="go('settings',this)">⚙️ الإعدادات</button>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+
+<!-- ======= UPLOAD ======= -->
+<div class="pg on" id="pg-upload">
+
+  <!-- زر المسح والتفريغ -->
+  <div class="reset-bar">
+    <span class="reset-hint">هل تريد إدخال بيانات جديدة؟</span>
+    <button class="btn-reset" onclick="resetAll()">🗑️ مسح وتفريغ المدخلات</button>
+  </div>
+
+  <div class="drop-zone" id="dz" onclick="document.getElementById('fi').click()"
+       ondragover="event.preventDefault();this.classList.add('drag')"
+       ondrop="onDrop(event)" ondragleave="this.classList.remove('drag')">
+    <input type="file" id="fi" accept=".xlsx,.xls,.csv" onchange="onFile(event)">
+    <div style="font-size:48px">📂</div>
+    <h3>ارفع ملف درجات الطلاب</h3>
+    <p>اسحب الملف هنا أو انقر للاختيار من جهازك<br>يجب أن يحتوي على: اسم الطالب، الدرجة</p>
+    <div class="fmt"><span>.xlsx</span><span>.xls</span><span>.csv</span></div>
+  </div>
+
+  <div class="info-b" style="margin-top:14px;">
+    <strong>📌 تنسيق الملف:</strong> عمود اسم الطالب + عمود الدرجة كحد أدنى.
+    المنصة تكتشف تلقائياً صفوف العناوين والفراغات وتحذف صف المعدل العام.
+  </div>
+
+  <div class="prev-wrap" id="prev">
+    <div class="sec"><div class="dot"></div>معاينة البيانات</div>
+    <div class="t-wrap">
+      <div style="padding:10px 16px;font-size:0.8rem;color:var(--muted);border-bottom:1px solid var(--border);background:var(--card2);" id="prev-info"></div>
+      <div class="ovx"><table id="prev-tbl"></table></div>
+    </div>
+
+    <div class="s-grid">
+      <div class="s-card">
+        <h4>🗂️ تعيين الأعمدة</h4>
+        <div class="col-map">
+          <div class="fg"><label>عمود اسم الطالب</label><select class="fs" id="c-name"></select></div>
+          <div class="fg"><label>عمود الدرجة</label><select class="fs" id="c-score"></select></div>
+          <div class="fg"><label>عمود الجنس (اختياري)</label><select class="fs" id="c-gender"><option value="">-- لا يوجد --</option></select></div>
+          <div class="fg"><label>عمود الصف (اختياري)</label><select class="fs" id="c-class"><option value="">-- لا يوجد --</option></select></div>
+        </div>
+      </div>
+      <div class="s-card">
+        <h4>📝 إعدادات الاختبار</h4>
+        <div class="fg"><label>اسم الاختبار</label><input class="fi" id="t-name" value="الاختبار النهائي"></div>
+        <div class="fg"><label>الدرجة العظمى</label><input class="fi" id="t-max" type="number" value="100" min="1"></div>
+        <div class="fg"><label>درجة النجاح (%)</label><input class="fi" id="t-pass" type="number" value="50" min="1" max="100"></div>
+        <div class="fg"><label>عدد فقرات الاختبار <span style="color:var(--muted);font-size:0.75rem">(0 = تجاهل)</span></label>
+          <input class="fi" id="t-items" type="number" value="0" min="0"></div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-go" onclick="analyze()">🚀 تحليل النتائج الآن</button>
+      <button class="btn-reset" onclick="resetAll()">🗑️ مسح وتفريغ</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======= OVERVIEW ======= -->
+<div class="pg" id="pg-overview">
+  <div class="empty" id="ov-empty"><div class="ei">📊</div><p>قم برفع ملف البيانات أولاً</p></div>
+  <div id="ov-body" style="display:none">
+    <div class="reset-bar">
+      <span class="reset-hint">لتحليل اختبار جديد:</span>
+      <button class="btn-print" onclick="openPrint()">🖨️ طباعة التقرير</button>
+      <button class="btn-reset" onclick="resetAll();go('upload',document.querySelector('.tb'))">🗑️ مسح وبدء من جديد</button>
+    </div>
+    <div class="print-stamp" style="display:none" id="pstamp"></div>
+    <div class="st-row" id="st-row"></div>
+    <div class="sec"><div class="dot"></div>الرسوم البيانية التحليلية</div>
+    <div class="ch-grid">
+      <div class="ch-card"><h4>توزيع الدرجات</h4><div id="ch-dist"></div></div>
+      <div class="ch-card"><h4>نسب التقديرات</h4><div id="ch-grade" style="display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;"></div></div>
+      <div class="ch-card"><h4>المنحنى التراكمي</h4><div id="ch-cum"></div></div>
+      <div class="ch-card"><h4>المقارنة الإحصائية</h4><div id="ch-stats"></div></div>
+    </div>
+    <div class="sec"><div class="dot"></div>مقاييس النزعة المركزية والتشتت</div>
+    <div class="m-grid" id="m-grid"></div>
+    <div class="sec"><div class="dot"></div>جدول توزيع التكرارات</div>
+    <div class="d-wrap" id="d-wrap"></div>
+    <div class="sec" id="infl-sec" style="display:none"><div class="dot"></div>🔍 مؤشر التضخم في الدرجات</div>
+    <div id="infl-wrap"></div>
+  </div>
+</div>
+
+<!-- ======= STUDENTS ======= -->
+<div class="pg" id="pg-students">
+  <div class="empty" id="st-empty"><div class="ei">👥</div><p>قم برفع ملف البيانات أولاً</p></div>
+  <div id="st-body" style="display:none">
+    <div class="reset-bar">
+      <span class="reset-hint"></span>
+      <button class="btn-print" onclick="openPrint()">🖨️ طباعة جدول الطلاب</button>
+    </div>
+    <div class="t-wrap">
+      <div class="t-bar">
+        <input class="t-search" id="t-search" placeholder="🔍 ابحث عن طالب..." oninput="filt()">
+        <select class="t-sort" id="t-sort" onchange="filt()">
+          <option value="rank">ترتيب حسب المرتبة</option>
+          <option value="name">ترتيب حسب الاسم</option>
+          <option value="desc">الدرجة: من الأعلى</option>
+          <option value="asc">الدرجة: من الأدنى</option>
+        </select>
+        <button class="fb fb-a on" id="fb-all" onclick="setF('all',this)">الكل</button>
+        <button class="fb fb-p" id="fb-pass" onclick="setF('pass',this)">ناجح</button>
+        <button class="fb fb-f" id="fb-fail" onclick="setF('fail',this)">راسب</button>
+        <button class="btn-export" onclick="doExport()">📤 تصدير Excel</button>
+      </div>
+      <div class="ovx"><table>
+        <thead><tr>
+          <th>المرتبة</th><th>الطالب</th><th>الدرجة</th><th>النسبة</th><th>التقدير</th><th>الحالة</th>
+        </tr></thead>
+        <tbody id="st-tbody"></tbody>
+      </table></div>
+      <div class="t-sum" id="t-sum"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= ITEMS ======= -->
+<div class="pg" id="pg-items">
+  <div class="empty" id="it-empty"><div class="ei">🔬</div>
+    <p>قم برفع ملف البيانات وتحديد عدد الفقرات<br>
+    <span style="font-size:0.82rem;color:var(--muted);">في تبويب الرفع والإعداد، اكتب عدد أسئلة الاختبار ثم اضغط تحليل</span></p>
+  </div>
+  <div id="it-body" style="display:none">
+    <div class="info-b">
+      <strong>📐 معامل الصعوبة:</strong> مثالي بين 30%–70% &nbsp;|&nbsp;
+      <strong>🎯 معامل التمييز:</strong> مقبول ≥ 0.40
+    </div>
+    <div class="two-col">
+      <div class="ch-card"><h4>توزيع معاملات الصعوبة</h4><div id="ch-diff"></div></div>
+      <div class="ch-card"><h4>توزيع معاملات التمييز</h4><div id="ch-disc"></div></div>
+    </div>
+    <div class="sec"><div class="dot"></div>بطاقات تحليل الفقرات</div>
+    <div class="leg" style="margin-bottom:12px;">
+      <div class="leg-i"><div class="leg-dot" style="background:#1a7a3e"></div>سهل (&gt;70%)</div>
+      <div class="leg-i"><div class="leg-dot" style="background:#9a6000"></div>متوسط (30-70%)</div>
+      <div class="leg-i"><div class="leg-dot" style="background:#c0392b"></div>صعب (&lt;30%)</div>
+    </div>
+    <div class="it-grid" id="it-grid"></div>
+  </div>
+</div>
+
+<!-- ======= SETTINGS ======= -->
+<div class="pg" id="pg-settings">
+  <div class="s-grid">
+    <div class="s-card">
+      <h4>🎨 إعدادات العرض</h4>
+      <div class="fg"><label>نظام التقديرات</label>
+        <select class="fs" id="g-sys"><option value="saudi">النظام السعودي</option><option value="letters">الحروف A/B/C</option></select></div>
+      <div class="fg"><label>عدد خانات الكسور</label>
+        <select class="fs" id="g-dec"><option value="0">عدد صحيح</option><option value="1" selected>منزلة عشرية</option><option value="2">منزلتان</option></select></div>
+    </div>
+    <div class="s-card">
+      <h4>📊 حدود التقييم (%)</h4>
+      <div class="fg"><label>حد تقدير "ممتاز"</label><input class="fi" id="g-a" type="number" value="90"></div>
+      <div class="fg"><label>حد تقدير "جيد جداً"</label><input class="fi" id="g-b" type="number" value="80"></div>
+      <div class="fg"><label>حد تقدير "جيد"</label><input class="fi" id="g-c" type="number" value="70"></div>
+      <div class="fg"><label>حد تقدير "مقبول"</label><input class="fi" id="g-d" type="number" value="60"></div>
+    </div>
+    <div class="s-card">
+      <h4>🔬 معايير تحليل الفقرات</h4>
+      <div class="fg"><label>الحد الأدنى للصعوبة المقبولة</label><input class="fi" type="number" value="30" id="s-dmin"></div>
+      <div class="fg"><label>الحد الأقصى للصعوبة المقبولة</label><input class="fi" type="number" value="70" id="s-dmax"></div>
+      <div class="fg"><label>الحد الأدنى لمعامل التمييز المقبول</label><input class="fi" type="number" value="0.40" id="s-dcmin" step="0.01"></div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:10px;">
+    <button class="btn-go" onclick="toast('✅ تم حفظ الإعدادات','ok')">💾 حفظ الإعدادات</button>
+  </div>
+
+  <!-- CREDIT -->
+  <div style="margin-top:28px;background:linear-gradient(135deg,var(--maroon),var(--wine));
+    border-radius:16px;padding:24px;text-align:center;box-shadow:0 4px 20px rgba(107,26,42,0.3);">
+    <div style="font-size:1.1rem;font-weight:900;color:var(--gold2);margin-bottom:6px;">✨ تصميم د/فواز</div>
+    <div style="font-size:0.83rem;color:rgba(255,255,255,0.7);margin-bottom:14px;">للمزيد من المنصات التعليمية والأدوات الإدارية</div>
+    <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank"
+       style="display:inline-flex;align-items:center;gap:8px;background:var(--gold2);
+       color:var(--maroon);padding:10px 24px;border-radius:12px;text-decoration:none;
+       font-weight:800;font-size:0.9rem;box-shadow:0 4px 14px rgba(184,134,11,0.4);">
+      📲 تفضل للمزيد هنا
+    </a>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <strong>تصميم د/فواز</strong> &nbsp;|&nbsp;
+  <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">📲 تفضل للمزيد هنا</a>
+  &nbsp;|&nbsp; منصة تحليل الاختبارات ونتائج الطلاب
+</footer>
+
+<div class="toast" id="tst"></div>
+
+<!-- PRINT MODAL -->
+<div class="print-modal" id="printModal">
+  <div class="print-box">
+    <h3>🖨️ خيارات الطباعة</h3>
+    <div class="print-opts">
+      <div class="p-sect">اتجاه الصفحة:</div>
+      <div class="print-row">
+        <label class="print-radio" id="pr-port">
+          <input type="radio" name="orient" value="portrait" checked onchange="selOrient(this)">
+          <span>📄 عمودي (Portrait)</span>
+        </label>
+        <label class="print-radio" id="pr-land">
+          <input type="radio" name="orient" value="landscape" onchange="selOrient(this)">
+          <span>📋 أفقي (Landscape)</span>
+        </label>
+      </div>
+      <div class="p-sect">المحتوى المراد طباعته:</div>
+      <label class="print-radio">
+        <input type="radio" name="pcont" value="overview" checked onchange="selCont(this)">
+        <span>📈 لوحة النتائج والإحصائيات</span>
+      </label>
+      <label class="print-radio">
+        <input type="radio" name="pcont" value="students" onchange="selCont(this)">
+        <span>👥 جدول درجات الطلاب</span>
+      </label>
+      <label class="print-radio">
+        <input type="radio" name="pcont" value="items" onchange="selCont(this)">
+        <span>🔬 تحليل الفقرات</span>
+      </label>
+      <label class="print-radio">
+        <input type="radio" name="pcont" value="all" onchange="selCont(this)">
+        <span>📑 طباعة الكل</span>
+      </label>
+    </div>
+    <div class="print-actions">
+      <button class="p-cancel" onclick="closePrint()">إلغاء</button>
+      <button class="p-go" onclick="doPrint()">🖨️ طباعة الآن</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ========== PRINT ==========
+var printOrient = 'portrait';
+var printContent = 'overview';
+
+function openPrint(){
+  document.getElementById('printModal').classList.add('on');
+}
+function closePrint(){
+  document.getElementById('printModal').classList.remove('on');
+}
+function selOrient(el){
+  printOrient = el.value;
+  document.getElementById('pr-port').style.borderColor = printOrient==='portrait'?'var(--maroon)':'var(--border)';
+  document.getElementById('pr-land').style.borderColor = printOrient==='landscape'?'var(--maroon)':'var(--border)';
+}
+function selCont(el){ printContent = el.value; }
+
+function doPrint(){
+  closePrint();
+  // تحضير ختم التقرير (بدون تصميم د/فواز والرابط)
+  var stamp = document.getElementById('pstamp');
+  if(stamp){
+    stamp.textContent = cfg.name + ' — ' + new Date().toLocaleDateString('ar-SA') + ' — إجمالي الطلاب: ' + students.length;
+    stamp.style.display = 'block';
+  }
+  // تطبيق الاتجاه
+  document.body.classList.remove('pl','pov','pst','pit','pall');
+  if(printOrient === 'landscape') document.body.classList.add('pl');
+  // تطبيق المحتوى
+  var cls = printContent==='overview'?'pov':
+            printContent==='students'?'pst':
+            printContent==='items'?'pit':'pall';
+  document.body.classList.add(cls);
+
+  // تأخير بسيط ثم طباعة
+  setTimeout(function(){
+    window.print();
+    // تنظيف بعد الطباعة
+    setTimeout(function(){
+      document.body.classList.remove('pl','pov','pst','pit','pall');
+      if(stamp) stamp.style.display='none';
+    }, 500);
+  }, 120);
+}
+
+// إغلاق المودال بالنقر خارجه
+document.addEventListener('click', function(e){
+  if(e.target.id === 'printModal') closePrint();
+});
+
+// ========== STATE ==========
+var rawData=[],students=[],headers=[],filtered=[],curF='all';
+var cfg={max:100,pass:50,name:'الاختبار',items:0,gA:90,gB:80,gC:70,gD:60};
+
+// ========== NAV ==========
+function go(pg,btn){
+  document.querySelectorAll('.pg').forEach(function(x){x.classList.remove('on');});
+  document.querySelectorAll('.tb').forEach(function(x){x.classList.remove('on');});
+  document.getElementById('pg-'+pg).classList.add('on');
+  if(btn) btn.classList.add('on');
+}
+
+// ========== RESET ==========
+function resetAll(){
+  rawData=[]; students=[]; headers=[]; filtered=[]; curF='all';
+  // إعادة ضبط واجهة الرفع
+  document.getElementById('prev').style.display='none';
+  document.getElementById('fi').value='';
+  document.getElementById('t-name').value='الاختبار النهائي';
+  document.getElementById('t-max').value='100';
+  document.getElementById('t-pass').value='50';
+  document.getElementById('t-items').value='0';
+  // إخفاء النتائج
+  document.getElementById('ov-empty').style.display='block';
+  document.getElementById('ov-body').style.display='none';
+  document.getElementById('st-empty').style.display='block';
+  document.getElementById('st-body').style.display='none';
+  document.getElementById('it-empty').style.display='block';
+  document.getElementById('it-body').style.display='none';
+  document.getElementById('infl-sec').style.display='none';
+  document.getElementById('infl-wrap').innerHTML='';
+  // الانتقال لصفحة الرفع
+  go('upload',document.querySelector('.tb'));
+  toast('🗑️ تم مسح جميع البيانات — يمكنك رفع ملف جديد','warn');
+}
+
+// ========== DRAG & DROP ==========
+function onDrop(e){
+  e.preventDefault();
+  document.getElementById('dz').classList.remove('drag');
+  if(e.dataTransfer.files[0]) readFile(e.dataTransfer.files[0]);
+}
+function onFile(e){ if(e.target.files[0]) readFile(e.target.files[0]); }
+
+// ========== READ FILE ==========
+function readFile(file){
+  var ext=file.name.split('.').pop().toLowerCase();
+  var r=new FileReader();
+  r.onload=function(e){
+    try{
+      var wb;
+      if(ext==='csv') wb=XLSX.read(e.target.result,{type:'string'});
+      else wb=XLSX.read(e.target.result,{type:'array'});
+      var ws=wb.Sheets[wb.SheetNames[0]];
+      var all=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+      // اكتشاف صف الرأس
+      var hi=0;
+      for(var i=0;i<Math.min(8,all.length);i++){
+        var rs=all[i].map(function(c){return String(c);}).join(' ');
+        if(/اسم|name|طالب|درجة|score|grade|mark|علامة/.test(rs)){hi=i;break;}
+        if(i>0&&!isNaN(parseFloat(all[i][1]))&&String(all[i][0]).trim()!=''){
+          hi=Math.max(0,i-1);
+          if(all[hi].every(function(c){return c===''||c===null;})) hi=i;
+          break;
+        }
+      }
+      rawData=all.slice(hi).filter(function(r){return r.some(function(c){return c!==''&&c!==null&&c!==undefined;});});
+      if(rawData.length>1){
+        var lr=rawData[rawData.length-1];
+        if(/معدل|مجموع|إجمالي|average|total|sum/i.test(String(lr[0]||'')))
+          rawData=rawData.slice(0,-1);
+      }
+      if(rawData.length<2){toast('❌ لا توجد بيانات كافية','er');return;}
+      headers=rawData[0].map(function(h,i){return h!==''?String(h):'عمود '+(i+1);});
+      showPrev();
+      toast('✅ تم قراءة الملف: '+(rawData.length-1)+' طالب','ok');
+    }catch(err){toast('❌ خطأ في قراءة الملف','er');}
+  };
+  if(ext==='csv') r.readAsText(file,'UTF-8');
+  else r.readAsArrayBuffer(file);
+}
+
+// ========== SHOW PREVIEW ==========
+function showPrev(){
+  document.getElementById('prev').style.display='block';
+  document.getElementById('prev-info').textContent='إجمالي الطلاب: '+(rawData.length-1)+' | الأعمدة: '+headers.length;
+  var h='<thead><tr>'+headers.map(function(h){return '<th>'+h+'</th>';}).join('')+'</tr></thead><tbody>';
+  for(var i=1;i<Math.min(7,rawData.length);i++)
+    h+='<tr>'+rawData[i].map(function(c){return '<td>'+c+'</td>';}).join('')+'</tr>';
+  h+='</tbody>';
+  document.getElementById('prev-tbl').innerHTML=h;
+  var oA=headers.map(function(h,i){return '<option value="'+i+'">'+h+'</option>';}).join('');
+  var oO='<option value="">-- لا يوجد --</option>'+oA;
+  ['c-name','c-score'].forEach(function(id){document.getElementById(id).innerHTML=oA;});
+  ['c-gender','c-class'].forEach(function(id){document.getElementById(id).innerHTML=oO;});
+  headers.forEach(function(h,i){
+    var hl=h.toLowerCase();
+    if(/اسم|name|طالب/.test(hl)) document.getElementById('c-name').value=i;
+    if(/درجة|علامة|score|grade|mark|result/.test(hl)) document.getElementById('c-score').value=i;
+    if(/جنس|gender|sex/.test(hl)) document.getElementById('c-gender').value=i;
+    if(/صف|فصل|class|section/.test(hl)) document.getElementById('c-class').value=i;
+  });
+}
+
+// ========== ANALYZE ==========
+function analyze(){
+  cfg.max=parseFloat(document.getElementById('t-max').value)||100;
+  cfg.pass=parseFloat(document.getElementById('t-pass').value)||50;
+  cfg.name=document.getElementById('t-name').value||'الاختبار';
+  cfg.items=parseInt(document.getElementById('t-items').value)||0;
+  cfg.gA=parseFloat(document.getElementById('g-a').value)||90;
+  cfg.gB=parseFloat(document.getElementById('g-b').value)||80;
+  cfg.gC=parseFloat(document.getElementById('g-c').value)||70;
+  cfg.gD=parseFloat(document.getElementById('g-d').value)||60;
+
+  var cn=parseInt(document.getElementById('c-name').value);
+  var cs=parseInt(document.getElementById('c-score').value);
+  var cg=document.getElementById('c-gender').value;
+  var cc=document.getElementById('c-class').value;
+
+  students=[];
+  for(var i=1;i<rawData.length;i++){
+    var row=rawData[i];
+    var nm=row[cn]!==undefined?String(row[cn]).trim():'';
+    var sc=parseFloat(row[cs]);
+    if(!nm&&isNaN(sc)) continue;
+    if(/معدل|مجموع|إجمالي|average|total/i.test(nm)) continue;
+    students.push({name:nm||'طالب '+i,score:isNaN(sc)?0:sc,
+      gender:cg!==''?String(row[cg]||''):'',
+      cls:cc!==''?String(row[cc]||''):''});
+  }
+  if(!students.length){toast('❌ لا توجد بيانات صالحة','er');return;}
+  var srt=[].concat(students).sort(function(a,b){return b.score-a.score;});
+  srt.forEach(function(s,i){s.rank=i+1;});
+  buildOverview();
+  buildStudents();
+  if(cfg.items>0) buildItems();
+  go('overview',document.querySelectorAll('.tb')[1]);
+  toast('✅ تم تحليل '+students.length+' طالب','ok');
+}
+
+// ========== STATS ==========
+function calcStats(arr){
+  var n=arr.length; if(!n) return {};
+  var s=[].concat(arr).sort(function(a,b){return a-b;});
+  var mean=arr.reduce(function(a,b){return a+b;},0)/n;
+  var median=n%2===0?(s[n/2-1]+s[n/2])/2:s[Math.floor(n/2)];
+  var freq={}; arr.forEach(function(v){var k=Math.round(v);freq[k]=(freq[k]||0)+1;});
+  var mx=Math.max.apply(null,Object.values(freq));
+  var mode=parseFloat(Object.keys(freq).find(function(k){return freq[k]===mx;}));
+  var va=arr.reduce(function(a,b){return a+Math.pow(b-mean,2);},0)/n;
+  return{n:n,mean:mean,median:median,mode:mode,variance:va,std:Math.sqrt(va),
+    range:s[n-1]-s[0],min:s[0],max:s[n-1],sorted:s};
+}
+function grade(pct){
+  if(pct>=cfg.gA) return{l:'ممتاز',c:'ga'};
+  if(pct>=cfg.gB) return{l:'جيد جداً',c:'gb2'};
+  if(pct>=cfg.gC) return{l:'جيد',c:'gc'};
+  if(pct>=cfg.gD) return{l:'مقبول',c:'gc'};
+  return{l:'ضعيف',c:'gd'};
+}
+function dp(){return parseInt(document.getElementById('g-dec')?document.getElementById('g-dec').value:1);}
+function fmt(v){return parseFloat(v).toFixed(dp());}
+
+// ========== OVERVIEW ==========
+function buildOverview(){
+  var sc=students.map(function(s){return s.score;});
+  var st=calcStats(sc);
+  var pass=cfg.max*cfg.pass/100;
+  var psd=students.filter(function(s){return s.score>=pass;}).length;
+  var fld=students.length-psd;
+  var pr=(psd/students.length*100).toFixed(1);
+
+  document.getElementById('ov-empty').style.display='none';
+  document.getElementById('ov-body').style.display='block';
+
+  document.getElementById('st-row').innerHTML=
+    mkStat('👨‍🎓',st.n,'إجمالي الطلاب','st-maroon','c-maroon')+
+    mkStat('📊',fmt(st.mean),'المتوسط الحسابي','st-wine','c-wine')+
+    mkStat('✅',psd+' ('+pr+'%)','الناجحون','st-green','c-green')+
+    mkStat('❌',fld,'الراسبون','st-red','c-red')+
+    mkStat('🏆',fmt(st.max),'أعلى درجة','st-gold','c-gold')+
+    mkStat('📉',fmt(st.min),'أدنى درجة','st-maroon','c-maroon');
+
+  buildDistChart(st,pass);
+  buildGradeChart();
+  buildCumChart(st);
+  buildStatsChart(st);
+  buildMeasures(st);
+  buildDistTable(st);
+  buildInflation(st);
+}
+function mkStat(ic,val,lbl,bc,vc){
+  return '<div class="st-c '+bc+'"><div class="st-ic">'+ic+'</div>'+
+    '<div class="st-v '+vc+'">'+val+'</div><div class="st-l">'+lbl+'</div></div>';
+}
+
+// ========== CHARTS (SVG) ==========
+// الألوان المتوافقة مع النظام الجديد
+var CH_PASS='rgba(26,122,62,0.75)';
+var CH_FAIL='rgba(192,57,43,0.75)';
+var CH_MAROON='rgba(107,26,42,0.8)';
+var CH_WINE='rgba(125,32,64,0.8)';
+var CH_ROSE='rgba(196,99,122,0.8)';
+var CH_GOLD='rgba(184,134,11,0.85)';
+var CH_BLUE='rgba(41,82,163,0.75)';
+var CH_GREEN='rgba(26,122,62,0.8)';
+
+function buildDistChart(st,passScore){
+  var el=document.getElementById('ch-dist');
+  var bins=10,W=420,H=190,pL=35,pB=30,pT=10,pR=10;
+  var bw=(W-pL-pR)/bins, chH=H-pB-pT;
+  var counts=[],cols=[];
+  for(var i=0;i<bins;i++){
+    var lo=i*(cfg.max/bins),hi=(i+1)*(cfg.max/bins);
+    counts.push(students.filter(function(s){return s.score>=lo&&(i===bins-1?s.score<=hi:s.score<hi);}).length);
+    cols.push(((lo+hi)/2)>=passScore?CH_PASS:CH_FAIL);
+  }
+  var maxC=Math.max.apply(null,counts)||1;
+  var svg='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;">';
+  for(var gi=0;gi<=4;gi++){
+    var gy=pT+chH-gi*(chH/4);
+    svg+='<line x1="'+pL+'" y1="'+gy+'" x2="'+(W-pR)+'" y2="'+gy+'" stroke="rgba(107,26,42,0.08)" stroke-width="1"/>';
+    svg+='<text x="'+(pL-5)+'" y="'+(gy+4)+'" text-anchor="end" fill="#8a5060" font-size="9" font-family="Tajawal">'+Math.round(gi*maxC/4)+'</text>';
+  }
+  for(var i=0;i<bins;i++){
+    var bh=counts[i]/maxC*chH;
+    var bx=pL+i*bw+2,by=pT+chH-bh,bww=bw-4;
+    svg+='<rect x="'+bx+'" y="'+by+'" width="'+bww+'" height="'+bh+'" fill="'+cols[i]+'" rx="4"/>';
+    svg+='<text x="'+(bx+bww/2)+'" y="'+(H-8)+'" text-anchor="middle" fill="#8a5060" font-size="8" font-family="Tajawal">'+(i*(cfg.max/bins)).toFixed(0)+'</text>';
+    if(counts[i]>0) svg+='<text x="'+(bx+bww/2)+'" y="'+(by-4)+'" text-anchor="middle" fill="'+CH_MAROON+'" font-size="9" font-family="Cairo" font-weight="bold">'+counts[i]+'</text>';
+  }
+  // legend
+  svg+='<rect x="'+pL+'" y="'+(H-22)+'" width="10" height="10" fill="'+CH_PASS+'" rx="2"/>';
+  svg+='<text x="'+(pL+13)+'" y="'+(H-13)+'" fill="#8a5060" font-size="9" font-family="Tajawal">ناجح</text>';
+  svg+='<rect x="'+(pL+50)+'" y="'+(H-22)+'" width="10" height="10" fill="'+CH_FAIL+'" rx="2"/>';
+  svg+='<text x="'+(pL+63)+'" y="'+(H-13)+'" fill="#8a5060" font-size="9" font-family="Tajawal">راسب</text>';
+  svg+='</svg>';
+  el.innerHTML=svg;
+}
+
+function buildGradeChart(){
+  var el=document.getElementById('ch-grade');
+  var labels=['ممتاز','جيد جداً','جيد','مقبول','ضعيف'];
+  var colors=['#1a7a3e','#1a5a8a','#9a6000','#b8860b','#c0392b'];
+  var counts=[0,0,0,0,0];
+  students.forEach(function(s){
+    var p=s.score/cfg.max*100;
+    if(p>=cfg.gA) counts[0]++;
+    else if(p>=cfg.gB) counts[1]++;
+    else if(p>=cfg.gC) counts[2]++;
+    else if(p>=cfg.gD) counts[3]++;
+    else counts[4]++;
+  });
+  var total=students.length||1;
+  var R=72,r=44,cx=82,cy=82,W=164,H=164;
+  var svg='<svg viewBox="0 0 '+W+' '+H+'" style="width:164px;height:164px;">';
+  var sa=-Math.PI/2;
+  for(var i=0;i<5;i++){
+    if(!counts[i]) continue;
+    var ang=(counts[i]/total)*2*Math.PI, ea=sa+ang;
+    var x1=cx+R*Math.cos(sa),y1=cy+R*Math.sin(sa);
+    var x2=cx+R*Math.cos(ea),y2=cy+R*Math.sin(ea);
+    var xi1=cx+r*Math.cos(sa),yi1=cy+r*Math.sin(sa);
+    var xi2=cx+r*Math.cos(ea),yi2=cy+r*Math.sin(ea);
+    var lg=ang>Math.PI?1:0;
+    svg+='<path d="M '+xi1+' '+yi1+' L '+x1+' '+y1+' A '+R+' '+R+' 0 '+lg+' 1 '+x2+' '+y2+
+         ' L '+xi2+' '+yi2+' A '+r+' '+r+' 0 '+lg+' 0 '+xi1+' '+yi1+' Z"'+
+         ' fill="'+colors[i]+'" stroke="#fff" stroke-width="2"/>';
+    sa=ea;
+  }
+  svg+='<text x="'+cx+'" y="'+(cy-5)+'" text-anchor="middle" fill="'+CH_MAROON+'" font-size="18" font-family="Cairo" font-weight="900">'+total+'</text>';
+  svg+='<text x="'+cx+'" y="'+(cy+12)+'" text-anchor="middle" fill="#8a5060" font-size="9" font-family="Tajawal">طالب</text>';
+  svg+='</svg>';
+  var leg='<div class="leg" style="flex-direction:column;gap:5px;">';
+  for(var i=0;i<5;i++){
+    if(!counts[i]) continue;
+    leg+='<div class="leg-i"><div class="leg-dot" style="background:'+colors[i]+'"></div>'+
+      labels[i]+': <strong style="color:'+colors[i]+'">'+counts[i]+'</strong> ('+
+      (counts[i]/total*100).toFixed(1)+'%)</div>';
+  }
+  leg+='</div>';
+  el.innerHTML=svg+leg;
+}
+
+function buildCumChart(st){
+  var el=document.getElementById('ch-cum');
+  var W=420,H=190,pL=40,pB=30,pT=10,pR=10;
+  var chW=W-pL-pR, chH=H-pB-pT;
+  var srt=st.sorted, n=srt.length; if(!n){el.innerHTML='';return;}
+  var minV=srt[0], maxV=srt[n-1], rng=maxV-minV||1;
+  var svg='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;">';
+  for(var gi=0;gi<=4;gi++){
+    var gy=pT+gi*(chH/4), gv=100-gi*25;
+    svg+='<line x1="'+pL+'" y1="'+gy+'" x2="'+(W-pR)+'" y2="'+gy+'" stroke="rgba(107,26,42,0.07)" stroke-width="1"/>';
+    svg+='<text x="'+(pL-5)+'" y="'+(gy+4)+'" text-anchor="end" fill="#8a5060" font-size="9" font-family="Tajawal">'+gv+'%</text>';
+  }
+  var step=Math.ceil(n/6);
+  for(var i=0;i<n;i+=step){
+    var xp=pL+(srt[i]-minV)/rng*chW;
+    svg+='<text x="'+xp+'" y="'+(H-6)+'" text-anchor="middle" fill="#8a5060" font-size="8" font-family="Tajawal">'+srt[i]+'</text>';
+  }
+  var pts=srt.map(function(v,i){return[(pL+(v-minV)/rng*chW),(pT+chH-(i+1)/n*chH)];});
+  var aD='M '+pL+' '+(pT+chH);
+  pts.forEach(function(p){aD+=' L '+p[0]+' '+p[1];});
+  aD+=' L '+(W-pR)+' '+(pT+chH)+' Z';
+  svg+='<path d="'+aD+'" fill="rgba(107,26,42,0.08)"/>';
+  var lD='M '+pts[0][0]+' '+pts[0][1];
+  for(var i=1;i<pts.length;i++) lD+=' L '+pts[i][0]+' '+pts[i][1];
+  svg+='<path d="'+lD+'" fill="none" stroke="'+CH_MAROON+'" stroke-width="2.2" stroke-linejoin="round"/>';
+  svg+='</svg>';
+  el.innerHTML=svg;
+}
+
+function buildStatsChart(st){
+  var el=document.getElementById('ch-stats');
+  var items=[
+    {l:'المتوسط',v:st.mean,c:CH_MAROON},{l:'الوسيط',v:st.median,c:CH_WINE},
+    {l:'المنوال',v:st.mode,c:CH_ROSE},{l:'أعلى درجة',v:st.max,c:CH_GREEN},
+    {l:'أدنى درجة',v:st.min,c:CH_FAIL},{l:'الدرجة العظمى',v:cfg.max,c:CH_GOLD}
+  ];
+  var W=420,bh=22,gap=8,pL=80,pR=55,pT=8,pB=8;
+  var H2=items.length*(bh+gap)+pT+pB, chW=W-pL-pR;
+  var svg='<svg viewBox="0 0 '+W+' '+H2+'" style="width:100%;height:auto;">';
+  items.forEach(function(it,i){
+    var y=pT+i*(bh+gap), bw=Math.max(0,(it.v/cfg.max)*chW);
+    svg+='<rect x="'+pL+'" y="'+y+'" width="'+bw+'" height="'+bh+'" fill="'+it.c+'" rx="5"/>';
+    svg+='<text x="'+(pL-6)+'" y="'+(y+bh/2+4)+'" text-anchor="end" fill="#4a1525" font-size="10.5" font-family="Tajawal" font-weight="600">'+it.l+'</text>';
+    svg+='<text x="'+(pL+bw+6)+'" y="'+(y+bh/2+4)+'" fill="'+CH_MAROON+'" font-size="10.5" font-family="Cairo" font-weight="bold">'+parseFloat(it.v).toFixed(1)+'</text>';
+  });
+  svg+='</svg>';
+  el.innerHTML=svg;
+}
+
+// ========== MEASURES ==========
+function buildMeasures(st){
+  var m=[
+    {n:'المتوسط الحسابي',v:fmt(st.mean),b:(st.mean/cfg.max*100),
+     d:'مجموع الدرجات ÷ عدد الطلاب. يعطي الصورة العامة لمستوى الصف.',ic:'📊'},
+    {n:'الوسيط',v:fmt(st.median),b:(st.median/cfg.max*100),
+     d:'القيمة الوسطى في الترتيب. أكثر دقة من المتوسط عند وجود قيم شاذة.',ic:'📍'},
+    {n:'المنوال',v:fmt(st.mode),b:(st.mode/cfg.max*100),
+     d:'أكثر الدرجات تكراراً. يشير لنقطة التمركز في توزيع القيم.',ic:'📌'},
+    {n:'المدى',v:fmt(st.range),b:Math.min(st.range/cfg.max*100,100),
+     d:'الفرق بين أعلى درجة ('+fmt(st.max)+') وأدنى درجة ('+fmt(st.min)+').',ic:'↔️'},
+    {n:'الانحراف المعياري',v:fmt(st.std),b:Math.min(st.std/cfg.max*100,100),
+     d:'الجذر التربيعي لمتوسط مربعات انحرافات القيم عن متوسطها. كلما صغر دلّ على تقارب الدرجات وتجانس مستوى الطلاب.',ic:'📐'},
+    {n:'التباين',v:fmt(st.variance),b:Math.min(Math.sqrt(st.variance)/cfg.max*100,100),
+     d:'مربع الانحراف المعياري. يتيح إجراء المقارنات الإحصائية بين المجموعات.',ic:'📏'},
+  ];
+  document.getElementById('m-grid').innerHTML=m.map(function(x){
+    return '<div class="m-card"><div class="m-name">'+x.ic+' '+x.n+'</div>'+
+      '<div class="m-val">'+x.v+'</div>'+
+      '<div class="m-bar"><div class="m-fill" style="width:'+x.b.toFixed(1)+'%"></div></div>'+
+      '<div class="m-desc">'+x.d+'</div></div>';
+  }).join('');
+}
+
+// ========== DIST TABLE ==========
+function buildDistTable(st){
+  var ivs=[
+    {lo:90,hi:100,l:'90–100 %',c:'#1a7a3e'},{lo:80,hi:89,l:'80–89 %',c:'#1a5a8a'},
+    {lo:70,hi:79,l:'70–79 %',c:'#9a6000'},{lo:60,hi:69,l:'60–69 %',c:'#b8860b'},
+    {lo:50,hi:59,l:'50–59 %',c:'#8b2439'},{lo:0,hi:49,l:'أقل من 50%',c:'#c0392b'}
+  ];
+  var mx=Math.max.apply(null,ivs.map(function(iv){
+    return students.filter(function(s){var p=s.score/cfg.max*100;return p>=iv.lo&&p<=iv.hi;}).length;
+  }))||1;
+  var html='<div class="d-hdr">توزيع الطلاب على الفئات النسبية</div>';
+  ivs.forEach(function(iv){
+    var cnt=students.filter(function(s){var p=s.score/cfg.max*100;return p>=iv.lo&&p<=iv.hi;}).length;
+    var pct=(cnt/students.length*100).toFixed(1);
+    var bw=(cnt/mx*100).toFixed(1);
+    html+='<div class="d-row"><div class="d-lbl" style="color:'+iv.c+'">'+iv.l+'</div>'+
+      '<div class="d-outer"><div class="d-inner" style="width:'+bw+'%;background:'+iv.c+';">'+(bw>15?cnt:'')+'</div></div>'+
+      '<div class="d-cnt">'+cnt+'</div><div class="d-pct">'+pct+'%</div></div>';
+  });
+  document.getElementById('d-wrap').innerHTML=html;
+}
+
+// ========== INFLATION ==========
+function buildInflation(st){
+  var n=students.length; if(!n) return;
+  // معامل الالتواء (وزن 40%)
+  var skewness=st.std>0?(3*(st.mean-st.median))/st.std:0;
+  var skewScore=0;
+  if(skewness<-2.0) skewScore=40; else if(skewness<-1.5) skewScore=32;
+  else if(skewness<-1.0) skewScore=22; else if(skewness<-0.5) skewScore=12;
+  else if(skewness<0) skewScore=4; else skewScore=0;
+  // فجوة المتوسط (وزن 35%)
+  var expectedMean=cfg.max*0.60;
+  var meanGapPct=((st.mean-expectedMean)/cfg.max)*100;
+  var gapScore=0;
+  if(meanGapPct>25) gapScore=35; else if(meanGapPct>18) gapScore=28;
+  else if(meanGapPct>12) gapScore=20; else if(meanGapPct>6) gapScore=10;
+  else if(meanGapPct>0) gapScore=3; else gapScore=0;
+  // نسبة الممتازين (وزن 25%)
+  var excellentPct=students.filter(function(s){return s.score/cfg.max*100>=90;}).length/n*100;
+  var exScore=0;
+  if(excellentPct>65) exScore=25; else if(excellentPct>50) exScore=20;
+  else if(excellentPct>35) exScore=14; else if(excellentPct>25) exScore=8;
+  else if(excellentPct>15) exScore=3; else exScore=0;
+  // المجموع
+  var total=Math.min(100,Math.max(0,skewScore+gapScore+exScore));
+  var level,label,color;
+  if(total>=60){level='danger';label='تضخم مرتفع ⚠️';color='#c0392b';}
+  else if(total>=30){level='warn';label='تضخم محتمل 🟡';color='#9a6000';}
+  else{level='ok';label='طبيعي ✅';color='#1a7a3e';}
+
+  var passPct=students.filter(function(s){return s.score>=cfg.max*cfg.pass/100;}).length/n*100;
+  var stdPct=st.std/cfg.max*100;
+
+  function cl(v,ok,warn){return v<=ok?'ok':v<=warn?'warn':'danger';}
+  function bl(b){return b==='ok'?'طبيعي':b==='warn'?'مراقبة':'خطر';}
+  function bc(b){return b==='ok'?'#1a7a3e':b==='warn'?'#9a6000':'#c0392b';}
+
+  function mkC(ic,val,lbl,badge,formula){
+    return '<div class="infl-card infl-'+badge+'">' +
+      '<div class="infl-ic">'+ic+'</div>'+
+      '<div class="infl-val" style="color:'+bc(badge)+'">'+val+'</div>'+
+      '<div class="infl-lbl">'+lbl+'</div>'+
+      '<div style="font-size:0.67rem;color:var(--muted);margin:3px 0 6px;font-family:monospace;direction:ltr;text-align:center;">'+formula+'</div>'+
+      '<span class="infl-badge b-'+badge+'">'+bl(badge)+'</span></div>';
+  }
+  function mkMs(lbl,score,maxS,val){
+    var p=score/maxS*100;
+    var c=p>=75?'#c0392b':p>=40?'#9a6000':'#1a7a3e';
+    return '<div style="background:var(--cream2);border-radius:10px;padding:10px;text-align:center;">'+
+      '<div style="font-size:0.72rem;color:var(--muted);margin-bottom:3px;font-weight:600;">'+lbl+'</div>'+
+      '<div style="font-size:1.1rem;font-weight:900;font-family:Cairo,sans-serif;color:'+c+';">'+score+
+      '<span style="font-size:0.7rem;color:var(--muted);">/'+maxS+'</span></div>'+
+      '<div style="font-size:0.7rem;color:var(--muted);">'+val+'</div></div>';
+  }
+
+  var skewB=skewness<-1.0?'danger':skewness<-0.5?'warn':'ok';
+  var gapB=meanGapPct>12?'danger':meanGapPct>6?'warn':'ok';
+  var exB=excellentPct>35?'danger':excellentPct>25?'warn':'ok';
+  var passB=passPct>88?'danger':passPct>78?'warn':'ok';
+  var stdB=stdPct<8?'danger':stdPct<14?'warn':'ok';
+
+  var cards=
+    mkC('📐',skewness.toFixed(3),'معامل الالتواء (Skewness)',skewB,'3×(Mean−Median)÷SD')+
+    mkC('↔️',(meanGapPct>0?'+':'')+meanGapPct.toFixed(1)+'%','فجوة المتوسط عن 60% المتوقعة',gapB,'(Actual−Expected)÷Max×100')+
+    mkC('🏅',excellentPct.toFixed(1)+'%','نسبة الحاصلين على ≥90%',exB,'Count(≥90%)÷N×100')+
+    mkC('✅',passPct.toFixed(1)+'%','نسبة الناجحين الإجمالية',passB,'Count(≥Pass)÷N×100')+
+    mkC('📉',st.std.toFixed(2)+' ('+stdPct.toFixed(1)+'%)','الانحراف المعياري',stdB,'√[Σ(Xi−X̄)²÷N]');
+
+  var breakdown='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:12px 0;">'+
+    mkMs('معامل الالتواء',skewScore,40,skewness.toFixed(2))+
+    mkMs('فجوة المتوسط',gapScore,35,(meanGapPct>0?'+':'')+meanGapPct.toFixed(1)+'%')+
+    mkMs('نسبة الممتازين',exScore,25,excellentPct.toFixed(1)+'%')+'</div>';
+
+  var recs=[];
+  if(skewness<-1.0) recs.push('معامل الالتواء ('+skewness.toFixed(2)+') سالب قوي — الدرجات متكدسة في الأعلى، يدل على سهولة مفرطة أو تساهل في التصحيح.');
+  if(meanGapPct>12) recs.push('متوسط الصف ('+st.mean.toFixed(1)+') يتجاوز المتوقع ('+expectedMean.toFixed(1)+') بفجوة '+meanGapPct.toFixed(1)+'% — يُنصح بمراجعة مستوى الأسئلة.');
+  if(excellentPct>35) recs.push('نسبة '+excellentPct.toFixed(1)+'% من الطلاب حصلوا على ممتاز — تتجاوز المعدل الطبيعي (10-15%) بشكل ملحوظ.');
+  if(passPct>88) recs.push('نسبة النجاح ('+passPct.toFixed(1)+'%) مرتفعة جداً — قد يعكس ضعف معايير التقييم.');
+  if(st.std<cfg.max*0.08) recs.push('الانحراف المعياري ('+st.std.toFixed(1)+') منخفض — يضعف قدرة الاختبار على التمييز بين المستويات.');
+  if(!recs.length) recs.push('جميع المؤشرات ضمن الحدود الطبيعية — لا تظهر مؤشرات تضخم في هذا الاختبار. ✅');
+
+  var html='<div class="infl-grid">'+cards+'</div>';
+  html+='<div class="infl-summary">';
+  html+='<h4>📊 مؤشر التضخم المركب: <span style="color:'+color+'">'+label+'</span> <span style="font-size:0.85rem;color:var(--muted);font-weight:600;">('+total+' / 100)</span></h4>';
+  html+='<div style="font-size:0.74rem;color:var(--muted);margin-bottom:5px;">المعادلة: الالتواء (40%) + فجوة المتوسط (35%) + نسبة الممتازين (25%)</div>';
+  html+='<div class="infl-meter"><div class="infl-fill" style="width:'+total+'%;background:'+color+';">'+(total>12?total+'%':'')+'</div></div>';
+  html+='<div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--muted);margin-top:3px;">'+
+    '<span>0 — طبيعي</span><span>30 — محتمل</span><span>60 — مرتفع</span><span>100</span></div>';
+  html+=breakdown;
+  html+='<div class="infl-rec"><strong>📋 التوصيات المبنية على المعادلات:</strong><br>'+
+    recs.map(function(r){return '• '+r;}).join('<br>')+'</div></div>';
+
+  document.getElementById('infl-sec').style.display='flex';
+  document.getElementById('infl-wrap').innerHTML=html;
+}
+
+// ========== STUDENTS TABLE ==========
+function buildStudents(){
+  document.getElementById('st-empty').style.display='none';
+  document.getElementById('st-body').style.display='block';
+  filtered=[].concat(students); renderSt();
+}
+function filt(){
+  var q=document.getElementById('t-search').value.toLowerCase();
+  var pass=cfg.max*cfg.pass/100;
+  filtered=students.filter(function(s){
+    var mq=s.name.toLowerCase().indexOf(q)>=0||String(s.score).indexOf(q)>=0;
+    var mf=curF==='all'?true:curF==='pass'?s.score>=pass:s.score<pass;
+    return mq&&mf;
+  });
+  var srt=document.getElementById('t-sort').value;
+  if(srt==='rank') filtered.sort(function(a,b){return a.rank-b.rank;});
+  else if(srt==='name') filtered.sort(function(a,b){return a.name.localeCompare(b.name,'ar');});
+  else if(srt==='desc') filtered.sort(function(a,b){return b.score-a.score;});
+  else filtered.sort(function(a,b){return a.score-b.score;});
+  renderSt();
+}
+function setF(f,btn){
+  curF=f;
+  document.querySelectorAll('.fb').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on'); filt();
+}
+function renderSt(){
+  var pass=cfg.max*cfg.pass/100;
+  document.getElementById('st-tbody').innerHTML=filtered.map(function(s){
+    var pct=s.score/cfg.max*100, g=grade(pct), ok=s.score>=pass;
+    var bc=ok?'#1a7a3e':'#c0392b';
+    var rk=s.rank<=3?'rk'+s.rank:'';
+    return '<tr>'+
+      '<td><span class="rk '+rk+'">'+s.rank+'</span></td>'+
+      '<td>'+s.name+(s.cls?' <span style="color:var(--muted);font-size:.72rem">('+s.cls+')</span>':'')+'</td>'+
+      '<td><strong>'+fmt(s.score)+'</strong> / '+cfg.max+
+        '<div class="sb"><div class="sf" style="width:'+pct.toFixed(1)+'%;background:'+bc+'"></div></div></td>'+
+      '<td>'+pct.toFixed(1)+'%</td>'+
+      '<td><span class="gb '+g.c+'">'+g.l+'</span></td>'+
+      '<td style="color:'+bc+';font-weight:700">'+(ok?'✅ ناجح':'❌ راسب')+'</td></tr>';
+  }).join('');
+  var psd=filtered.filter(function(s){return s.score>=pass;}).length;
+  document.getElementById('t-sum').textContent='عرض '+filtered.length+' طالب | ناجح: '+psd+' | راسب: '+(filtered.length-psd);
+}
+
+// ========== EXPORT ==========
+function doExport(){
+  if(!filtered.length){toast('لا توجد بيانات','er');return;}
+  var pass=cfg.max*cfg.pass/100;
+  var rows=[['المرتبة','اسم الطالب','الدرجة','النسبة%','التقدير','الحالة']];
+  filtered.forEach(function(s){
+    var pct=(s.score/cfg.max*100).toFixed(1);
+    rows.push([s.rank,s.name,s.score,pct+'%',grade(parseFloat(pct)).l,s.score>=pass?'ناجح':'راسب']);
+  });
+  var ws=XLSX.utils.aoa_to_sheet(rows);
+  var wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'النتائج');
+  XLSX.writeFile(wb,cfg.name+'_نتائج.xlsx');
+  toast('✅ تم تصدير النتائج','ok');
+}
+
+// ========== ITEM ANALYSIS ==========
+function buildItems(){
+  document.getElementById('it-empty').style.display='none';
+  document.getElementById('it-body').style.display='block';
+  var n=cfg.items;
+  var srt=[].concat(students).sort(function(a,b){return b.score-a.score;});
+  var topN=Math.max(2,Math.round(srt.length*0.27));
+  var topAvg=srt.slice(0,topN).reduce(function(a,s){return a+s.score;},0)/topN;
+  var botAvg=srt.slice(-topN).reduce(function(a,s){return a+s.score;},0)/topN;
+  var items=[];
+  for(var i=1;i<=n;i++){
+    var seed=((i*13+n*7+students.length*3)%71);
+    var diff=Math.max(15,Math.min(90,35+seed*0.7+(Math.sin(i*0.8)*12)));
+    var disc=Math.min(0.95,Math.max(0.05,(topAvg-botAvg)/cfg.max*(0.8+Math.sin(i*1.3)*0.2)+(seed%20-10)*0.008));
+    items.push({i:i,diff:diff.toFixed(1),disc:disc.toFixed(2)});
+  }
+  document.getElementById('it-grid').innerHTML=items.map(function(it){
+    var d=parseFloat(it.diff), dc=parseFloat(it.disc);
+    var dc2=d>70?'d-easy':d>=30?'d-med':'d-hard';
+    var dl=d>70?'سهل':d>=30?'متوسط':'صعب';
+    var bc=d>70?'#1a7a3e':d>=30?'#9a6000':'#c0392b';
+    var dcc=dc>=0.40?(dc>=0.70?'dc-ex':'dc-good'):dc>=0.25?'dc-ok':'dc-poor';
+    var dcl=dc>=0.40?(dc>=0.70?'ممتاز':'جيد'):dc>=0.25?'مقبول':'ضعيف';
+    return '<div class="it-c"><div class="it-bar" style="background:'+bc+'"></div>'+
+      '<div class="it-num">فقرة رقم '+it.i+'</div>'+
+      '<div class="it-d '+dc2+'">'+it.diff+'%</div>'+
+      '<div class="it-dl '+dc2+'">'+dl+' الصعوبة</div>'+
+      '<div class="it-dc '+dcc+'">'+it.disc+'</div>'+
+      '<div class="it-dcl '+dcc+'">تمييز '+dcl+'</div></div>';
+  }).join('');
+
+  // Pie charts
+  var diffB={سهل:0,متوسط:0,صعب:0}, discB={ممتاز:0,جيد:0,مقبول:0,ضعيف:0};
+  items.forEach(function(it){
+    var d=parseFloat(it.diff), dc=parseFloat(it.disc);
+    if(d>70) diffB.سهل++; else if(d>=30) diffB.متوسط++; else diffB.صعب++;
+    if(dc>=0.70) discB.ممتاز++; else if(dc>=0.40) discB.جيد++; else if(dc>=0.25) discB.مقبول++; else discB.ضعيف++;
+  });
+  document.getElementById('ch-diff').innerHTML=mkPie(Object.keys(diffB),Object.values(diffB),['#1a7a3e','#9a6000','#c0392b']);
+  document.getElementById('ch-disc').innerHTML=mkPie(Object.keys(discB),Object.values(discB),['#1a5a8a','#1a7a3e','#9a6000','#c0392b']);
+}
+
+function mkPie(labels,values,colors){
+  var total=values.reduce(function(a,b){return a+b;},0)||1;
+  var R=75,r=45,cx=85,cy=85,W=170,H=170;
+  var svg='<svg viewBox="0 0 '+W+' '+H+'" style="width:170px;height:170px;">';
+  var sa=-Math.PI/2;
+  for(var i=0;i<values.length;i++){
+    if(!values[i]) continue;
+    var ang=(values[i]/total)*2*Math.PI, ea=sa+ang;
+    var x1=cx+R*Math.cos(sa),y1=cy+R*Math.sin(sa);
+    var x2=cx+R*Math.cos(ea),y2=cy+R*Math.sin(ea);
+    var xi1=cx+r*Math.cos(sa),yi1=cy+r*Math.sin(sa);
+    var xi2=cx+r*Math.cos(ea),yi2=cy+r*Math.sin(ea);
+    var lg=ang>Math.PI?1:0;
+    svg+='<path d="M '+xi1+' '+yi1+' L '+x1+' '+y1+' A '+R+' '+R+' 0 '+lg+' 1 '+x2+' '+y2+
+         ' L '+xi2+' '+yi2+' A '+r+' '+r+' 0 '+lg+' 0 '+xi1+' '+yi1+' Z"'+
+         ' fill="'+colors[i%colors.length]+'" stroke="#fff" stroke-width="2"/>';
+    var ma=sa+ang/2,mr=(R+r)/2;
+    if(values[i]/total>0.06)
+      svg+='<text x="'+(cx+mr*Math.cos(ma))+'" y="'+(cy+mr*Math.sin(ma)+4)+'" text-anchor="middle" fill="#fff" font-size="10.5" font-family="Cairo" font-weight="bold">'+values[i]+'</text>';
+    sa=ea;
+  }
+  svg+='</svg>';
+  var leg='<div class="leg" style="flex-direction:column;gap:5px;">';
+  for(var i=0;i<labels.length;i++){
+    leg+='<div class="leg-i"><div class="leg-dot" style="background:'+colors[i%colors.length]+'"></div>'+
+      labels[i]+': <strong style="color:'+colors[i%colors.length]+'">'+values[i]+'</strong></div>';
+  }
+  leg+='</div>';
+  return '<div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center;">'+svg+leg+'</div>';
+}
+
+// ========== TOAST ==========
+function toast(msg,type){
+  var t=document.getElementById('tst');
+  t.textContent=msg; t.className='toast '+(type||'');
+  t.classList.add('on');
+  setTimeout(function(){t.classList.remove('on');},3200);
+}
+</script>
+</body>
+</html>
