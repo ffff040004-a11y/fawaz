@@ -1,0 +1,1812 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مسابقة أساسيات اللغة الإنجليزية | الصف الرابع - الخامس - السادس</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #1A5276;
+    --primary-light: #2E86C1;
+    --gold: #F4D03F;
+    --gold-dark: #D4AC0D;
+    --teal: #1ABC9C;
+    --teal-dark: #148F77;
+    --red: #E74C3C;
+    --red-dark: #C0392B;
+    --bg: #0A1628;
+    --card: #0F2237;
+    --card2: #152D45;
+    --text: #E8F4FD;
+    --text-muted: #7FB3D3;
+    --border: #1F4E79;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 15% 10%, rgba(26,82,118,0.4) 0%, transparent 50%),
+      radial-gradient(ellipse at 85% 85%, rgba(26,188,156,0.1) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, rgba(244,208,63,0.05) 0%, transparent 70%);
+    overflow-x: hidden;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(135deg, #1A5276 0%, #0D2B45 50%, #0A1628 100%);
+    padding: 22px 24px 18px;
+    text-align: center;
+    border-bottom: 3px solid var(--gold);
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(45deg, transparent, transparent 25px, rgba(255,255,255,0.015) 25px, rgba(255,255,255,0.015) 50px);
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), var(--teal), var(--gold), transparent);
+  }
+  .header-flag {
+    font-size: 1.6rem;
+    margin-bottom: 6px;
+    display: block;
+    position: relative;
+  }
+  .header-title {
+    font-family: 'Cairo', sans-serif;
+    font-size: 1.9rem;
+    font-weight: 900;
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(244,208,63,0.5);
+    letter-spacing: 1px;
+    position: relative;
+    line-height: 1.2;
+  }
+  .header-title-en {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--teal);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 4px;
+    display: block;
+    direction: ltr;
+    position: relative;
+  }
+  .header-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-top: 6px;
+    position: relative;
+  }
+  .stars-row {
+    display: flex; justify-content: center; gap: 8px;
+    margin: 8px 0 0;
+    position: relative;
+  }
+  .star { font-size: 1.1rem; animation: twinkle 2s infinite; }
+  .star:nth-child(2) { animation-delay: 0.4s; }
+  .star:nth-child(3) { animation-delay: 0.8s; }
+  .star:nth-child(4) { animation-delay: 1.2s; }
+  @keyframes twinkle { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.3;transform:scale(0.75)} }
+
+  /* ===== GRADE SELECTOR ===== */
+  .grade-bar {
+    background: linear-gradient(90deg, var(--card), var(--card2), var(--card));
+    border-bottom: 1px solid var(--border);
+    padding: 12px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+  }
+  .grade-label {
+    font-size: 0.85rem;
+    color: var(--gold);
+    font-weight: 800;
+  }
+  .grade-btn {
+    background: var(--card2);
+    border: 2px solid var(--border);
+    color: var(--text-muted);
+    padding: 7px 20px;
+    border-radius: 30px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .grade-btn:hover, .grade-btn.active {
+    background: var(--primary);
+    border-color: var(--gold);
+    color: var(--gold);
+    box-shadow: 0 0 14px rgba(244,208,63,0.3);
+  }
+
+  /* ===== TOPIC SELECTOR ===== */
+  .settings-bar {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+  }
+  .settings-label {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    font-weight: 700;
+    width: 100%;
+    text-align: center;
+  }
+  .unit-btn {
+    background: var(--card2);
+    border: 2px solid var(--border);
+    color: var(--text-muted);
+    padding: 5px 14px;
+    border-radius: 24px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .unit-btn:hover, .unit-btn.active {
+    background: var(--primary-light);
+    border-color: var(--teal);
+    color: #fff;
+    box-shadow: 0 0 10px rgba(26,188,156,0.25);
+  }
+
+  .credit-bar {
+    background: var(--card2);
+    border-bottom: 1px solid var(--border);
+    padding: 9px 20px;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+  .credit-bar a { color: var(--gold); text-decoration: none; font-weight: 700; }
+  .credit-bar a:hover { text-decoration: underline; }
+
+  /* ===== SCORE BAR ===== */
+  .score-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .score-item {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 0.88rem; font-weight: 700;
+  }
+  .score-num { font-size: 1.1rem; font-weight: 900; }
+  .score-correct .score-num { color: var(--teal); }
+  .score-wrong .score-num { color: var(--red); }
+  .score-total .score-num { color: var(--gold); }
+
+  .progress-wrap {
+    width: 100%; height: 6px;
+    background: var(--border); border-radius: 3px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal), var(--gold));
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+
+  /* ===== QUIZ AREA ===== */
+  .quiz-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px 16px 40px;
+  }
+
+  .question-counter {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+
+  .question-card {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 18px;
+    padding: 24px 22px 20px;
+    margin-bottom: 18px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    animation: slideIn 0.35s ease;
+  }
+  @keyframes slideIn { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+  .question-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 5px; height: 100%;
+    background: linear-gradient(180deg, var(--gold), var(--teal));
+    border-radius: 18px 0 0 18px;
+  }
+
+  .topic-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 14px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+    border: 1px solid rgba(244,208,63,0.3);
+  }
+
+  .question-en {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1.5;
+    margin-bottom: 6px;
+    direction: ltr;
+    text-align: left;
+    background: rgba(244,208,63,0.05);
+    padding: 10px 14px;
+    border-radius: 10px;
+    border-right: 3px solid var(--gold);
+  }
+  .question-ar {
+    font-size: 0.98rem;
+    color: var(--text-muted);
+    margin: 8px 0 18px;
+    line-height: 1.6;
+    padding: 0 4px;
+  }
+
+  /* ===== OPTIONS ===== */
+  .options-grid { display: flex; flex-direction: column; gap: 10px; }
+
+  .option-btn {
+    background: var(--card2);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    text-align: right;
+    font-family: 'Tajawal', sans-serif;
+    position: relative;
+    overflow: hidden;
+  }
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--primary-light);
+    background: rgba(26,82,118,0.3);
+    transform: translateX(-3px);
+  }
+  .option-letter {
+    min-width: 30px; height: 30px;
+    background: var(--border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 900;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .option-text-en {
+    font-size: 0.9rem; color: var(--text); font-weight: 600;
+    direction: ltr; text-align: left;
+  }
+  .option-text-ar {
+    font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;
+  }
+  .option-texts { flex: 1; }
+
+  .option-btn.correct {
+    background: rgba(26,188,156,0.15); border-color: var(--teal);
+    animation: correctPulse 0.5s ease;
+  }
+  .option-btn.correct .option-letter { background: var(--teal); color: #fff; }
+  @keyframes correctPulse { 0%{transform:scale(1)} 40%{transform:scale(1.02)} 100%{transform:scale(1)} }
+
+  .option-btn.wrong {
+    background: rgba(231,76,60,0.12); border-color: var(--red);
+    animation: shake 0.4s ease;
+  }
+  .option-btn.wrong .option-letter { background: var(--red); color: #fff; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+  /* ===== FEEDBACK ===== */
+  .feedback-panel {
+    margin-top: 14px; padding: 14px 16px;
+    border-radius: 12px; display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  .feedback-panel.correct-fb {
+    background: rgba(26,188,156,0.15); border: 1px solid var(--teal);
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .feedback-panel.wrong-fb {
+    background: rgba(231,76,60,0.1); border: 1px solid var(--red);
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .feedback-icon { font-size: 1.5rem; flex-shrink: 0; }
+  .feedback-msg { font-size: 0.95rem; font-weight: 700; }
+  .feedback-msg.correct-msg { color: var(--teal); }
+  .feedback-msg.wrong-msg { color: var(--red); }
+  .feedback-answer { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; line-height: 1.5; }
+  .correct-answer-highlight { color: var(--gold); font-weight: 700; direction: ltr; }
+
+  /* ===== BUTTONS ===== */
+  .nav-row { display: flex; justify-content: center; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+
+  .btn-next {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    border: none; color: #fff;
+    padding: 12px 38px; border-radius: 30px;
+    font-family: 'Tajawal', sans-serif; font-size: 1rem; font-weight: 800;
+    cursor: pointer; transition: all 0.25s;
+    box-shadow: 0 4px 16px rgba(26,82,118,0.5);
+    display: none;
+  }
+  .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,82,118,0.6); }
+  .btn-next.visible { display: block; }
+
+  .btn-restart {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    border: none; color: #0A1628;
+    padding: 12px 32px; border-radius: 30px;
+    font-family: 'Tajawal', sans-serif; font-size: 1rem; font-weight: 900;
+    cursor: pointer; transition: all 0.25s;
+    box-shadow: 0 4px 16px rgba(244,208,63,0.35);
+  }
+  .btn-restart:hover { transform: translateY(-2px); }
+
+  /* ===== END SCREEN ===== */
+  .end-screen { display: none; text-align: center; padding: 40px 20px; animation: slideIn 0.5s ease; }
+  .end-trophy { font-size: 5rem; margin-bottom: 16px; }
+  .end-title { font-family: 'Cairo', sans-serif; font-size: 1.9rem; font-weight: 900; color: var(--gold); margin-bottom: 8px; }
+  .end-score-big { font-size: 3.5rem; font-weight: 900; color: var(--text); margin: 16px 0; }
+  .end-score-big span { color: var(--gold); }
+  .end-msg { font-size: 1.05rem; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; }
+  .end-stats { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 28px; }
+  .end-stat { background: var(--card); border: 2px solid var(--border); border-radius: 14px; padding: 16px 24px; min-width: 120px; }
+  .end-stat-num { font-size: 2rem; font-weight: 900; }
+  .end-stat-label { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+  .end-stat.c .end-stat-num { color: var(--teal); }
+  .end-stat.w .end-stat-num { color: var(--red); }
+  .end-stat.p .end-stat-num { color: var(--gold); }
+
+  @media(max-width: 500px) {
+    .header-title { font-size: 1.5rem; }
+    .question-en { font-size: 0.92rem; }
+    .option-btn { padding: 10px 12px; }
+  }
+
+  .confetti-piece {
+    position: fixed; border-radius: 2px;
+    animation: confettiFall linear forwards;
+    pointer-events: none; z-index: 999;
+  }
+  @keyframes confettiFall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  .footer-credit {
+    text-align: center; padding: 16px; color: var(--text-muted);
+    font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 20px;
+  }
+
+  .no-questions {
+    text-align: center; padding: 60px 20px; color: var(--text-muted);
+    font-size: 1.1rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <span class="header-flag">📚✏️🌍</span>
+  <div class="header-title">أساسيات اللغة الإنجليزية</div>
+  <span class="header-title-en">English Language Basics – Quiz</span>
+  <div class="header-subtitle">الصف الرابع | الصف الخامس والسادس | المرحلة الابتدائية</div>
+  <div class="stars-row">
+    <span class="star">⭐</span><span class="star">🎯</span><span class="star">💡</span><span class="star">⭐</span>
+  </div>
+</div>
+
+<!-- GRADE SELECTOR -->
+<div class="grade-bar">
+  <span class="grade-label">📋 اختر الصف:</span>
+  <button class="grade-btn active" id="gradeAll" onclick="filterGrade('all')">جميع الصفوف</button>
+  <button class="grade-btn" id="grade4" onclick="filterGrade('4')">الصف الرابع</button>
+  <button class="grade-btn" id="grade56" onclick="filterGrade('56')">الصف الخامس والسادس</button>
+</div>
+
+<!-- TOPIC SELECTOR -->
+<div class="settings-bar">
+  <span class="settings-label">🔖 اختر الموضوع:</span>
+  <button class="unit-btn active" id="topicAll" onclick="filterTopic('all')">الكل</button>
+  <button class="unit-btn" onclick="filterTopic('pronouns')">Pronouns ضمائر</button>
+  <button class="unit-btn" onclick="filterTopic('tobe')">Verb To Be يكون</button>
+  <button class="unit-btn" onclick="filterTopic('plural')">Plural & Singular جمع/مفرد</button>
+  <button class="unit-btn" onclick="filterTopic('ordinal')">Ordinal Numbers ترتيب</button>
+  <button class="unit-btn" onclick="filterTopic('present')">Present Simple مضارع بسيط</button>
+  <button class="unit-btn" onclick="filterTopic('continuous')">Present Continuous مستمر</button>
+  <button class="unit-btn" onclick="filterTopic('past')">Past Simple ماضي بسيط</button>
+  <button class="unit-btn" onclick="filterTopic('pastcont')">Past Continuous ماضي مستمر</button>
+  <button class="unit-btn" onclick="filterTopic('perfect')">Present Perfect تام</button>
+  <button class="unit-btn" onclick="filterTopic('articles')">Articles أدوات</button>
+  <button class="unit-btn" onclick="filterTopic('prepositions')">Prepositions حروف جر</button>
+  <button class="unit-btn" onclick="filterTopic('adjectives')">Adjectives & Comparatives صفات</button>
+  <button class="unit-btn" onclick="filterTopic('questions')">Question Words استفهام</button>
+  <button class="unit-btn" onclick="filterTopic('days')">Days & Months أيام/شهور</button>
+  <button class="unit-btn" onclick="filterTopic('thereis')">There is / There are</button>
+  <button class="unit-btn" onclick="filterTopic('possessives')">Possessives ملكية</button>
+  <button class="unit-btn" onclick="filterTopic('can')">Can / Cannot قدرة</button>
+</div>
+
+<!-- CREDIT -->
+<div class="credit-bar">
+  تصميم د/فواز &nbsp;|&nbsp; <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">📢 قناة التعليم</a>
+</div>
+
+<!-- SCORE BAR -->
+<div class="score-bar">
+  <div class="score-item score-correct">
+    <span>✅ صحيح:</span>
+    <span class="score-num" id="scoreCorrect">0</span>
+  </div>
+  <div class="score-item score-wrong">
+    <span>❌ خطأ:</span>
+    <span class="score-num" id="scoreWrong">0</span>
+  </div>
+  <div class="score-item score-total">
+    <span>📊 المجموع:</span>
+    <span class="score-num" id="scoreTotal">0</span>
+  </div>
+  <div style="width:100%">
+    <div class="progress-wrap">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ CONTAINER -->
+<div class="quiz-container">
+  <div id="quizArea">
+    <div class="question-counter" id="questionCounter">السؤال 1 من 0</div>
+    <div class="question-card" id="questionCard">
+      <div class="topic-badge" id="topicBadge">ضمائر الفاعل</div>
+      <div class="question-en" id="questionEn"></div>
+      <div class="question-ar" id="questionAr"></div>
+      <div class="options-grid" id="optionsGrid"></div>
+      <div class="feedback-panel" id="feedbackPanel">
+        <div class="feedback-icon" id="feedbackIcon"></div>
+        <div>
+          <div class="feedback-msg" id="feedbackMsg"></div>
+          <div class="feedback-answer" id="feedbackAnswer"></div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="btn-next" id="btnNext" onclick="nextQuestion()">السؤال التالي ◀</button>
+    </div>
+  </div>
+
+  <div class="end-screen" id="endScreen">
+    <div class="end-trophy" id="endTrophy">🏆</div>
+    <div class="end-title" id="endTitle">انتهت المسابقة!</div>
+    <div class="end-score-big"><span id="endPercent">0</span>%</div>
+    <div class="end-msg" id="endMsg"></div>
+    <div class="end-stats">
+      <div class="end-stat c">
+        <div class="end-stat-num" id="endCorrect">0</div>
+        <div class="end-stat-label">✅ إجابات صحيحة</div>
+      </div>
+      <div class="end-stat w">
+        <div class="end-stat-num" id="endWrong">0</div>
+        <div class="end-stat-label">❌ إجابات خاطئة</div>
+      </div>
+      <div class="end-stat p">
+        <div class="end-stat-num" id="endTotal">0</div>
+        <div class="end-stat-label">📝 إجمالي الأسئلة</div>
+      </div>
+    </div>
+    <button class="btn-restart" onclick="restartQuiz()">🔄 إعادة المسابقة</button>
+  </div>
+</div>
+
+<div class="footer-credit">
+  تصميم د/فواز | منصة أساسيات اللغة الإنجليزية - المرحلة الابتدائية 📚
+</div>
+
+<script>
+// ============================================================
+// QUESTIONS DATABASE
+// grade: '4' | '56' | 'both'
+// topic: pronouns | tobe | plural | ordinal | present | continuous | past | pastcont | perfect | articles | prepositions | adjectives | questions | days | thereis | possessives | can
+// ============================================================
+const allQuestions = [
+
+  // ========== PRONOUNS ==========
+  {
+    grade:'both', topic:'pronouns', topicName:'ضمائر الفاعل – Subject Pronouns',
+    en: "Which pronoun do we use for a male person?",
+    ar: "أيّ ضمير نستخدم للشخص الذكر؟",
+    options:[
+      {en:"She",ar:"هي"},
+      {en:"It",ar:"هي/هو (للأشياء)"},
+      {en:"He",ar:"هو"},
+      {en:"They",ar:"هم/هن"}
+    ], correct:2
+  },
+  {
+    grade:'both', topic:'pronouns', topicName:'ضمائر الفاعل – Subject Pronouns',
+    en: "Which pronoun do we use for a female person?",
+    ar: "أيّ ضمير نستخدم للشخص المؤنث؟",
+    options:[
+      {en:"He",ar:"هو"},
+      {en:"She",ar:"هي"},
+      {en:"We",ar:"نحن"},
+      {en:"It",ar:"هو/هي (للأشياء)"}
+    ], correct:1
+  },
+  {
+    grade:'both', topic:'pronouns', topicName:'ضمائر الفاعل – Subject Pronouns',
+    en: "Which pronoun do we use for things and animals?",
+    ar: "أيّ ضمير نستخدم للأشياء والحيوانات؟",
+    options:[
+      {en:"He",ar:"هو"},
+      {en:"She",ar:"هي"},
+      {en:"It",ar:"هو/هي"},
+      {en:"You",ar:"أنت/أنتِ"}
+    ], correct:2
+  },
+  {
+    grade:'both', topic:'pronouns', topicName:'ضمائر الفاعل – Subject Pronouns',
+    en: "Complete: '_____ are friends.' (about a group of people)",
+    ar: "أكمل: '_____ are friends.' (عن مجموعة من الناس)",
+    options:[
+      {en:"He",ar:"هو"},
+      {en:"She",ar:"هي"},
+      {en:"I",ar:"أنا"},
+      {en:"They",ar:"هم"}
+    ], correct:3
+  },
+  {
+    grade:'both', topic:'pronouns', topicName:'ضمائر الفاعل – Subject Pronouns',
+    en: "Complete: '_____ are in class.' (about myself and others)",
+    ar: "أكمل: '_____ are in class.' (أنا ومجموعة أخرى)",
+    options:[
+      {en:"I",ar:"أنا"},
+      {en:"We",ar:"نحن"},
+      {en:"You",ar:"أنت"},
+      {en:"They",ar:"هم"}
+    ], correct:1
+  },
+  {
+    grade:'both', topic:'pronouns', topicName:'ضمائر الفاعل – Subject Pronouns',
+    en: "Which sentence uses the correct pronoun? (talking about a cat)",
+    ar: "أيّ جملة تستخدم الضمير الصحيح؟ (نتحدث عن قطة)",
+    options:[
+      {en:"He is a cat.",ar:"هو قطة."},
+      {en:"She is a cat.",ar:"هي قطة."},
+      {en:"It is a cat.",ar:"هي/هو قطة."},
+      {en:"We is a cat.",ar:"نحن قطة."}
+    ], correct:2
+  },
+
+  // ========== VERB TO BE ==========
+  {
+    grade:'both', topic:'tobe', topicName:'فعل يكون – Verb To Be',
+    en: "Choose the correct form: 'I ___ a student.'",
+    ar: "اختر الشكل الصحيح: 'I ___ a student.'",
+    options:[
+      {en:"is",ar:"is"},
+      {en:"are",ar:"are"},
+      {en:"am",ar:"am"},
+      {en:"be",ar:"be"}
+    ], correct:2
+  },
+  {
+    grade:'both', topic:'tobe', topicName:'فعل يكون – Verb To Be',
+    en: "Choose the correct form: 'She ___ a teacher.'",
+    ar: "اختر الشكل الصحيح: 'She ___ a teacher.'",
+    options:[
+      {en:"am",ar:"am"},
+      {en:"is",ar:"is"},
+      {en:"are",ar:"are"},
+      {en:"were",ar:"were"}
+    ], correct:1
+  },
+  {
+    grade:'both', topic:'tobe', topicName:'فعل يكون – Verb To Be',
+    en: "Choose the correct form: 'They ___ students.'",
+    ar: "اختر الشكل الصحيح: 'They ___ students.'",
+    options:[
+      {en:"is",ar:"is"},
+      {en:"am",ar:"am"},
+      {en:"are",ar:"are"},
+      {en:"was",ar:"was"}
+    ], correct:2
+  },
+  {
+    grade:'both', topic:'tobe', topicName:'فعل يكون – Verb To Be',
+    en: "What is the negative short form of 'He is not'?",
+    ar: "ما الشكل المختصر لنفي 'He is not'؟",
+    options:[
+      {en:"He aren't",ar:"He aren't"},
+      {en:"He isn't",ar:"He isn't"},
+      {en:"He don't",ar:"He don't"},
+      {en:"He hasn't",ar:"He hasn't"}
+    ], correct:1
+  },
+  {
+    grade:'both', topic:'tobe', topicName:'فعل يكون – Verb To Be',
+    en: "How do we make a question with To Be? Example: You are a student → ?",
+    ar: "كيف نكوّن سؤالاً مع فعل يكون؟ مثال: You are a student → ?",
+    options:[
+      {en:"You are a student?",ar:"You are a student?"},
+      {en:"Are you a student?",ar:"Are you a student?"},
+      {en:"Do you a student?",ar:"Do you a student?"},
+      {en:"Is you a student?",ar:"Is you a student?"}
+    ], correct:1
+  },
+  {
+    grade:'both', topic:'tobe', topicName:'فعل يكون – Verb To Be',
+    en: "What is the contraction (short form) of 'We are'?",
+    ar: "ما الشكل المختصر لـ 'We are'؟",
+    options:[
+      {en:"We'm",ar:"We'm"},
+      {en:"We'd",ar:"We'd"},
+      {en:"We're",ar:"We're"},
+      {en:"We's",ar:"We's"}
+    ], correct:2
+  },
+  {
+    grade:'both', topic:'tobe', topicName:'فعل يكون – Verb To Be',
+    en: "'Is it a dog?' → What is the correct short answer (positive)?",
+    ar: "'Is it a dog?' → ما الإجابة القصيرة الصحيحة (إثباتاً)؟",
+    options:[
+      {en:"Yes, it is.",ar:"نعم، هو."},
+      {en:"Yes, it are.",ar:"نعم، هم."},
+      {en:"Yes, it am.",ar:"نعم، هو."},
+      {en:"Yes, is it.",ar:"نعم، هو."}
+    ], correct:0
+  },
+
+  // ========== PLURAL / SINGULAR ==========
+  {
+    grade:'both', topic:'plural', topicName:'المفرد والجمع – Singular & Plural',
+    en: "What is the plural of 'book'?",
+    ar: "ما جمع كلمة 'book'؟",
+    options:[
+      {en:"bookes",ar:"bookes"},
+      {en:"books",ar:"books"},
+      {en:"bookies",ar:"bookies"},
+      {en:"booksies",ar:"booksies"}
+    ], correct:1
+  },
+  {
+    grade:'both', topic:'plural', topicName:'المفرد والجمع – Singular & Plural',
+    en: "What is the plural of 'box'?",
+    ar: "ما جمع كلمة 'box'؟",
+    options:[
+      {en:"boxs",ar:"boxs"},
+      {en:"boxies",ar:"boxies"},
+      {en:"boxes",ar:"boxes"},
+      {en:"boxves",ar:"boxves"}
+    ], correct:2
+  },
+  {
+    grade:'both', topic:'plural', topicName:'المفرد والجمع – Singular & Plural',
+    en: "What is the plural of 'baby'?",
+    ar: "ما جمع كلمة 'baby'؟",
+    options:[
+      {en:"babys",ar:"babys"},
+      {en:"babies",ar:"babies"},
+      {en:"babes",ar:"babes"},
+      {en:"babyes",ar:"babyes"}
+    ], correct:1
+  },
+  {
+    grade:'both', topic:'plural', topicName:'المفرد والجمع – Singular & Plural',
+    en: "What is the plural of 'leaf'?",
+    ar: "ما جمع كلمة 'leaf'؟",
+    options:[
+      {en:"leafs",ar:"leafs"},
+      {en:"leafes",ar:"leafes"},
+      {en:"leaves",ar:"leaves"},
+      {en:"leafies",ar:"leafies"}
+    ], correct:2
+  },
+  {
+    grade:'both', topic:'plural', topicName:'المفرد والجمع – Singular & Plural',
+    en: "What is the plural of 'child'?",
+    ar: "ما جمع كلمة 'child'؟",
+    options:[
+      {en:"childs",ar:"childs"},
+      {en:"childes",ar:"childes"},
+      {en:"children",ar:"children"},
+      {en:"childies",ar:"childies"}
+    ], correct:2
+  },
+  {
+    grade:'both', topic:'plural', topicName:'المفرد والجمع – Singular & Plural',
+    en: "Which of these nouns does NOT change in the plural?",
+    ar: "أيّ من هذه الأسماء لا يتغيّر في الجمع؟",
+    options:[
+      {en:"cat",ar:"cat – قطة"},
+      {en:"fish",ar:"fish – سمكة"},
+      {en:"tree",ar:"tree – شجرة"},
+      {en:"book",ar:"book – كتاب"}
+    ], correct:1
+  },
+  {
+    grade:'both', topic:'plural', topicName:'المفرد والجمع – Singular & Plural',
+    en: "What is the plural of 'man'?",
+    ar: "ما جمع كلمة 'man'؟",
+    options:[
+      {en:"mans",ar:"mans"},
+      {en:"manes",ar:"manes"},
+      {en:"man",ar:"man"},
+      {en:"men",ar:"men"}
+    ], correct:3
+  },
+
+  // ========== ORDINAL NUMBERS ==========
+  {
+    grade:'both', topic:'ordinal', topicName:'أرقام الترتيب – Ordinal Numbers',
+    en: "What is the ordinal number of '1'?",
+    ar: "ما العدد الترتيبي لـ '1'؟",
+    options:[
+      {en:"oneth",ar:"oneth"},
+      {en:"first",ar:"first – الأول"},
+      {en:"firston",ar:"firston"},
+      {en:"one",ar:"one"}
+    ], correct:1
+  },
+  {
+    grade:'both', topic:'ordinal', topicName:'أرقام الترتيب – Ordinal Numbers',
+    en: "What is the ordinal number of '3'?",
+    ar: "ما العدد الترتيبي لـ '3'؟",
+    options:[
+      {en:"threeth",ar:"threeth"},
+      {en:"thirth",ar:"thirth"},
+      {en:"third",ar:"third – الثالث"},
+      {en:"three",ar:"three"}
+    ], correct:2
+  },
+  {
+    grade:'both', topic:'ordinal', topicName:'أرقام الترتيب – Ordinal Numbers',
+    en: "What is the ordinal number of '12'?",
+    ar: "ما العدد الترتيبي لـ '12'؟",
+    options:[
+      {en:"twelveth",ar:"twelveth"},
+      {en:"twelve",ar:"twelve"},
+      {en:"twelfth",ar:"twelfth – الثاني عشر"},
+      {en:"twelvieth",ar:"twelvieth"}
+    ], correct:2
+  },
+  {
+    grade:'both', topic:'ordinal', topicName:'أرقام الترتيب – Ordinal Numbers',
+    en: "Complete the sentence: 'She is in the ___ grade.' (Hint: grade 3)",
+    ar: "أكمل الجملة: 'She is in the ___ grade.' (الصف الثالث)",
+    options:[
+      {en:"three",ar:"three"},
+      {en:"third",ar:"third"},
+      {en:"thirdy",ar:"thirdy"},
+      {en:"threeth",ar:"threeth"}
+    ], correct:1
+  },
+  {
+    grade:'both', topic:'ordinal', topicName:'أرقام الترتيب – Ordinal Numbers',
+    en: "What is the abbreviation for 'second'?",
+    ar: "ما اختصار كلمة 'second' (الثاني)؟",
+    options:[
+      {en:"2th",ar:"2th"},
+      {en:"2st",ar:"2st"},
+      {en:"2nd",ar:"2nd"},
+      {en:"2rd",ar:"2rd"}
+    ], correct:2
+  },
+
+  // ========== SIMPLE PRESENT ==========
+  {
+    grade:'56', topic:'present', topicName:'المضارع البسيط – Simple Present',
+    en: "Choose the correct form: 'She ___ books every night.'",
+    ar: "اختر الشكل الصحيح: 'She ___ books every night.'",
+    options:[
+      {en:"read",ar:"read"},
+      {en:"reads",ar:"reads"},
+      {en:"reades",ar:"reades"},
+      {en:"reading",ar:"reading"}
+    ], correct:1
+  },
+  {
+    grade:'56', topic:'present', topicName:'المضارع البسيط – Simple Present',
+    en: "Choose the correct negative: 'She ___ play football.'",
+    ar: "اختر النفي الصحيح: 'She ___ play football.'",
+    options:[
+      {en:"don't",ar:"don't"},
+      {en:"doesn't",ar:"doesn't"},
+      {en:"isn't",ar:"isn't"},
+      {en:"wasn't",ar:"wasn't"}
+    ], correct:1
+  },
+  {
+    grade:'56', topic:'present', topicName:'المضارع البسيط – Simple Present',
+    en: "What is the correct question form: '___ he play tennis?'",
+    ar: "اختر الشكل الصحيح للسؤال: '___ he play tennis?'",
+    options:[
+      {en:"Do",ar:"Do"},
+      {en:"Does",ar:"Does"},
+      {en:"Is",ar:"Is"},
+      {en:"Has",ar:"Has"}
+    ], correct:1
+  },
+  {
+    grade:'56', topic:'present', topicName:'المضارع البسيط – Simple Present',
+    en: "What is the correct form of 'study' with He/She/It?",
+    ar: "ما الشكل الصحيح للفعل 'study' مع He/She/It؟",
+    options:[
+      {en:"studys",ar:"studys"},
+      {en:"studies",ar:"studies"},
+      {en:"studyes",ar:"studyes"},
+      {en:"studying",ar:"studying"}
+    ], correct:1
+  },
+  {
+    grade:'56', topic:'present', topicName:'المضارع البسيط – Simple Present',
+    en: "Which time word is used with the Simple Present?",
+    ar: "أيّ كلمة زمنية تُستخدم مع المضارع البسيط؟",
+    options:[
+      {en:"now",ar:"now – الآن"},
+      {en:"yesterday",ar:"yesterday – أمس"},
+      {en:"always",ar:"always – دائماً"},
+      {en:"at the moment",ar:"at the moment – في هذه اللحظة"}
+    ], correct:2
+  },
+  {
+    grade:'56', topic:'present', topicName:'المضارع البسيط – Simple Present',
+    en: "What is the irregular verb form: 'have' with He/She/It?",
+    ar: "ما شكل الفعل الشاذ 'have' مع He/She/It؟",
+    options:[
+      {en:"haves",ar:"haves"},
+      {en:"havies",ar:"havies"},
+      {en:"has",ar:"has"},
+      {en:"have",ar:"have"}
+    ], correct:2
+  },
+
+  // ========== PRESENT CONTINUOUS ==========
+  {
+    grade:'56', topic:'continuous', topicName:'المضارع المستمر – Present Continuous',
+    en: "Choose the correct form: 'She ___ playing outside.'",
+    ar: "اختر الشكل الصحيح: 'She ___ playing outside.'",
+    options:[
+      {en:"am",ar:"am"},
+      {en:"are",ar:"are"},
+      {en:"is",ar:"is"},
+      {en:"be",ar:"be"}
+    ], correct:2
+  },
+  {
+    grade:'56', topic:'continuous', topicName:'المضارع المستمر – Present Continuous',
+    en: "What is the correct -ing form of the verb 'write'?",
+    ar: "ما الشكل الصحيح لإضافة -ing للفعل 'write'؟",
+    options:[
+      {en:"writeing",ar:"writeing"},
+      {en:"writting",ar:"writting"},
+      {en:"writing",ar:"writing"},
+      {en:"writiing",ar:"writiing"}
+    ], correct:2
+  },
+  {
+    grade:'56', topic:'continuous', topicName:'المضارع المستمر – Present Continuous',
+    en: "What is the correct -ing form of the verb 'run'?",
+    ar: "ما الشكل الصحيح لإضافة -ing للفعل 'run'؟",
+    options:[
+      {en:"runing",ar:"runing"},
+      {en:"running",ar:"running"},
+      {en:"runeing",ar:"runeing"},
+      {en:"runnying",ar:"runnying"}
+    ], correct:1
+  },
+  {
+    grade:'56', topic:'continuous', topicName:'المضارع المستمر – Present Continuous',
+    en: "Which time word is used with the Present Continuous?",
+    ar: "أيّ كلمة زمنية تُستخدم مع المضارع المستمر؟",
+    options:[
+      {en:"always",ar:"always – دائماً"},
+      {en:"yesterday",ar:"yesterday – أمس"},
+      {en:"now / at the moment",ar:"now / at the moment – الآن"},
+      {en:"every day",ar:"every day – كل يوم"}
+    ], correct:2
+  },
+  {
+    grade:'56', topic:'continuous', topicName:'المضارع المستمر – Present Continuous',
+    en: "Choose the correct question: (they / playing football)",
+    ar: "اختر السؤال الصحيح: (they / playing football)",
+    options:[
+      {en:"Do they playing football?",ar:"Do they playing football?"},
+      {en:"Are they playing football?",ar:"Are they playing football?"},
+      {en:"Is they playing football?",ar:"Is they playing football?"},
+      {en:"They are playing football?",ar:"They are playing football?"}
+    ], correct:1
+  },
+
+  // ========== SIMPLE PAST ==========
+  {
+    grade:'56', topic:'past', topicName:'الماضي البسيط – Simple Past',
+    en: "What is the past form of 'walk'?",
+    ar: "ما صيغة الماضي للفعل 'walk'؟",
+    options:[
+      {en:"walking",ar:"walking"},
+      {en:"walks",ar:"walks"},
+      {en:"walked",ar:"walked"},
+      {en:"walkied",ar:"walkied"}
+    ], correct:2
+  },
+  {
+    grade:'56', topic:'past', topicName:'الماضي البسيط – Simple Past',
+    en: "What is the past form of 'go'?",
+    ar: "ما صيغة الماضي للفعل 'go'؟",
+    options:[
+      {en:"goed",ar:"goed"},
+      {en:"goes",ar:"goes"},
+      {en:"gone",ar:"gone"},
+      {en:"went",ar:"went"}
+    ], correct:3
+  },
+  {
+    grade:'56', topic:'past', topicName:'الماضي البسيط – Simple Past',
+    en: "What is the past form of 'eat'?",
+    ar: "ما صيغة الماضي للفعل 'eat'؟",
+    options:[
+      {en:"eated",ar:"eated"},
+      {en:"ate",ar:"ate"},
+      {en:"eaten",ar:"eaten"},
+      {en:"aten",ar:"aten"}
+    ], correct:1
+  },
+  {
+    grade:'56', topic:'past', topicName:'الماضي البسيط – Simple Past',
+    en: "Choose the correct negative: 'She ___ go to school.'",
+    ar: "اختر النفي الصحيح في الماضي: 'She ___ go to school.'",
+    options:[
+      {en:"doesn't",ar:"doesn't"},
+      {en:"don't",ar:"don't"},
+      {en:"didn't",ar:"didn't"},
+      {en:"wasn't",ar:"wasn't"}
+    ], correct:2
+  },
+  {
+    grade:'56', topic:'past', topicName:'الماضي البسيط – Simple Past',
+    en: "Which time word is used with the Simple Past?",
+    ar: "أيّ كلمة زمنية تُستخدم مع الماضي البسيط؟",
+    options:[
+      {en:"now",ar:"now – الآن"},
+      {en:"always",ar:"always – دائماً"},
+      {en:"yesterday",ar:"yesterday – أمس"},
+      {en:"already",ar:"already – بالفعل"}
+    ], correct:2
+  },
+  {
+    grade:'56', topic:'past', topicName:'الماضي البسيط – Simple Past',
+    en: "What is the past form of 'study'?",
+    ar: "ما صيغة الماضي للفعل 'study'؟",
+    options:[
+      {en:"studyed",ar:"studyed"},
+      {en:"studyed",ar:"studyed"},
+      {en:"studied",ar:"studied"},
+      {en:"studding",ar:"studding"}
+    ], correct:2
+  },
+  {
+    grade:'56', topic:'past', topicName:'الماضي البسيط – Simple Past',
+    en: "What is the past form of 'swim'?",
+    ar: "ما صيغة الماضي للفعل 'swim'؟",
+    options:[
+      {en:"swimmed",ar:"swimmed"},
+      {en:"swum",ar:"swum"},
+      {en:"swam",ar:"swam"},
+      {en:"swimied",ar:"swimied"}
+    ], correct:2
+  },
+
+  // ========== PAST CONTINUOUS ==========
+  {
+    grade:'56', topic:'pastcont', topicName:'الماضي المستمر – Past Continuous',
+    en: "Choose the correct form: 'I ___ sleeping at 9 PM.'",
+    ar: "اختر الشكل الصحيح: 'I ___ sleeping at 9 PM.'",
+    options:[
+      {en:"am",ar:"am"},
+      {en:"is",ar:"is"},
+      {en:"was",ar:"was"},
+      {en:"were",ar:"were"}
+    ], correct:2
+  },
+  {
+    grade:'56', topic:'pastcont', topicName:'الماضي المستمر – Past Continuous',
+    en: "Choose the correct form: 'They ___ playing when it rained.'",
+    ar: "اختر الشكل الصحيح: 'They ___ playing when it rained.'",
+    options:[
+      {en:"was",ar:"was"},
+      {en:"were",ar:"were"},
+      {en:"are",ar:"are"},
+      {en:"is",ar:"is"}
+    ], correct:1
+  },
+  {
+    grade:'56', topic:'pastcont', topicName:'الماضي المستمر – Past Continuous',
+    en: "Which sentence correctly combines Past Continuous + Simple Past?",
+    ar: "أيّ جملة تجمع بشكل صحيح بين الماضي المستمر والماضي البسيط؟",
+    options:[
+      {en:"I was reading when the phone rings.",ar:"I was reading when the phone rings."},
+      {en:"I was reading when the phone rang.",ar:"I was reading when the phone rang."},
+      {en:"I reading when the phone rang.",ar:"I reading when the phone rang."},
+      {en:"I were reading when the phone rang.",ar:"I were reading when the phone rang."}
+    ], correct:1
+  },
+  {
+    grade:'56', topic:'pastcont', topicName:'الماضي المستمر – Past Continuous',
+    en: "Which time word is typically used with the Past Continuous?",
+    ar: "أيّ كلمة زمنية تُستخدم مع الماضي المستمر؟",
+    options:[
+      {en:"always",ar:"always – دائماً"},
+      {en:"already",ar:"already – بالفعل"},
+      {en:"while / when",ar:"while / when – بينما / عندما"},
+      {en:"yet",ar:"yet – بعد"}
+    ], correct:2
+  },
+
+  // ========== PRESENT PERFECT ==========
+  {
+    grade:'56', topic:'perfect', topicName:'المضارع التام – Present Perfect',
+    en: "Choose the correct form: 'She ___ eaten lunch already.'",
+    ar: "اختر الشكل الصحيح: 'She ___ eaten lunch already.'",
+    options:[
+      {en:"have",ar:"have"},
+      {en:"has",ar:"has"},
+      {en:"had",ar:"had"},
+      {en:"is",ar:"is"}
+    ], correct:1
+  },
+  {
+    grade:'56', topic:'perfect', topicName:'المضارع التام – Present Perfect',
+    en: "What is the third form (V3) of the verb 'go'?",
+    ar: "ما التصريف الثالث للفعل 'go'؟",
+    options:[
+      {en:"went",ar:"went"},
+      {en:"going",ar:"going"},
+      {en:"gone",ar:"gone"},
+      {en:"goes",ar:"goes"}
+    ], correct:2
+  },
+  {
+    grade:'56', topic:'perfect', topicName:'المضارع التام – Present Perfect',
+    en: "Which time word is used with the Present Perfect?",
+    ar: "أيّ كلمة زمنية تُستخدم مع المضارع التام؟",
+    options:[
+      {en:"yesterday",ar:"yesterday – أمس"},
+      {en:"now",ar:"now – الآن"},
+      {en:"already / yet / ever",ar:"already / yet / ever"},
+      {en:"at the moment",ar:"at the moment – الآن"}
+    ], correct:2
+  },
+  {
+    grade:'56', topic:'perfect', topicName:'المضارع التام – Present Perfect',
+    en: "What is the third form (V3) of 'write'?",
+    ar: "ما التصريف الثالث للفعل 'write'؟",
+    options:[
+      {en:"wrote",ar:"wrote"},
+      {en:"written",ar:"written"},
+      {en:"writing",ar:"writing"},
+      {en:"writes",ar:"writes"}
+    ], correct:1
+  },
+  {
+    grade:'56', topic:'perfect', topicName:'المضارع التام – Present Perfect',
+    en: "'Have you ever been to Makkah?' → What is the correct short negative answer?",
+    ar: "'Have you ever been to Makkah?' → ما الإجابة القصيرة السلبية الصحيحة؟",
+    options:[
+      {en:"No, I didn't.",ar:"No, I didn't."},
+      {en:"No, I haven't.",ar:"No, I haven't."},
+      {en:"No, I don't.",ar:"No, I don't."},
+      {en:"No, I wasn't.",ar:"No, I wasn't."}
+    ], correct:1
+  },
+
+  // ========== ARTICLES ==========
+  {
+    grade:'both', topic:'articles', topicName:'أدوات التعريف والتنكير – Articles',
+    en: "Choose the correct article: '___ apple a day keeps the doctor away.'",
+    ar: "اختر الأداة الصحيحة: '___ apple a day keeps the doctor away.'",
+    options:[
+      {en:"a",ar:"a"},
+      {en:"an",ar:"an"},
+      {en:"the",ar:"the"},
+      {en:"No article",ar:"بدون أداة"}
+    ], correct:1
+  },
+  {
+    grade:'both', topic:'articles', topicName:'أدوات التعريف والتنكير – Articles',
+    en: "Choose the correct article: 'I have ___ dog.' (first mention, general)",
+    ar: "اختر الأداة الصحيحة: 'I have ___ dog.' (أول ذكر، عامة)",
+    options:[
+      {en:"an",ar:"an"},
+      {en:"the",ar:"the"},
+      {en:"a",ar:"a"},
+      {en:"No article",ar:"بدون أداة"}
+    ], correct:2
+  },
+  {
+    grade:'both', topic:'articles', topicName:'أدوات التعريف والتنكير – Articles',
+    en: "When do we use 'the'?",
+    ar: "متى نستخدم 'the'؟",
+    options:[
+      {en:"Before any noun",ar:"قبل أي اسم"},
+      {en:"When talking about something specific or known",ar:"عند التحدث عن شيء محدد أو معروف"},
+      {en:"Before nouns starting with a vowel sound",ar:"قبل الأسماء التي تبدأ بصوت متحرك"},
+      {en:"Only with plural nouns",ar:"فقط مع الجمع"}
+    ], correct:1
+  },
+  {
+    grade:'both', topic:'articles', topicName:'أدوات التعريف والتنكير – Articles',
+    en: "Choose the correct article: 'He is ___ honest man.' (honest starts with a vowel sound)",
+    ar: "اختر الأداة الصحيحة: 'He is ___ honest man.'",
+    options:[
+      {en:"a",ar:"a"},
+      {en:"an",ar:"an"},
+      {en:"the",ar:"the"},
+      {en:"No article",ar:"بدون أداة"}
+    ], correct:1
+  },
+  {
+    grade:'both', topic:'articles', topicName:'أدوات التعريف والتنكير – Articles',
+    en: "Which sentence is correct? (talking about cats in general)",
+    ar: "أيّ جملة صحيحة؟ (نتحدث عن القطط بشكل عام)",
+    options:[
+      {en:"I like a cats.",ar:"I like a cats."},
+      {en:"I like the cats.",ar:"I like the cats."},
+      {en:"I like cats.",ar:"I like cats."},
+      {en:"I like an cats.",ar:"I like an cats."}
+    ], correct:2
+  },
+
+  // ========== PREPOSITIONS ==========
+  {
+    grade:'both', topic:'prepositions', topicName:'حروف الجر – Prepositions',
+    en: "Choose the correct preposition: 'The meeting is ___ Monday.'",
+    ar: "اختر حرف الجر الصحيح: 'The meeting is ___ Monday.'",
+    options:[
+      {en:"in",ar:"in"},
+      {en:"at",ar:"at"},
+      {en:"on",ar:"on"},
+      {en:"by",ar:"by"}
+    ], correct:2
+  },
+  {
+    grade:'both', topic:'prepositions', topicName:'حروف الجر – Prepositions',
+    en: "Choose the correct preposition: 'She was born ___ 2015.'",
+    ar: "اختر حرف الجر الصحيح: 'She was born ___ 2015.'",
+    options:[
+      {en:"on",ar:"on"},
+      {en:"at",ar:"at"},
+      {en:"in",ar:"in"},
+      {en:"for",ar:"for"}
+    ], correct:2
+  },
+  {
+    grade:'both', topic:'prepositions', topicName:'حروف الجر – Prepositions',
+    en: "Choose the correct preposition: 'The cat is ___ the box.' (inside)",
+    ar: "اختر حرف الجر الصحيح للمكان: 'The cat is ___ the box.' (داخل)",
+    options:[
+      {en:"on",ar:"on – فوق"},
+      {en:"in",ar:"in – داخل"},
+      {en:"under",ar:"under – تحت"},
+      {en:"behind",ar:"behind – خلف"}
+    ], correct:1
+  },
+  {
+    grade:'both', topic:'prepositions', topicName:'حروف الجر – Prepositions',
+    en: "Choose the correct preposition: 'The book is ___ the table.' (on top of)",
+    ar: "اختر حرف الجر الصحيح: 'The book is ___ the table.' (فوق)",
+    options:[
+      {en:"in",ar:"in"},
+      {en:"at",ar:"at"},
+      {en:"on",ar:"on"},
+      {en:"under",ar:"under"}
+    ], correct:2
+  },
+  {
+    grade:'both', topic:'prepositions', topicName:'حروف الجر – Prepositions',
+    en: "Choose the correct preposition: 'The class starts ___ 8 o'clock.'",
+    ar: "اختر حرف الجر الصحيح: 'The class starts ___ 8 o'clock.'",
+    options:[
+      {en:"on",ar:"on"},
+      {en:"in",ar:"in"},
+      {en:"at",ar:"at"},
+      {en:"for",ar:"for"}
+    ], correct:2
+  },
+  {
+    grade:'both', topic:'prepositions', topicName:'حروف الجر – Prepositions',
+    en: "The shop is ___ the bank and the park. (between two things)",
+    ar: "The shop is ___ the bank and the park. (بين شيئين)",
+    options:[
+      {en:"next to",ar:"next to – بجانب"},
+      {en:"in front of",ar:"in front of – أمام"},
+      {en:"between",ar:"between – بين"},
+      {en:"behind",ar:"behind – خلف"}
+    ], correct:2
+  },
+
+  // ========== ADJECTIVES & COMPARATIVES ==========
+  {
+    grade:'both', topic:'adjectives', topicName:'الصفات والمقارنة – Adjectives & Comparatives',
+    en: "What is the comparative form of 'tall'?",
+    ar: "ما صيغة المقارنة للصفة 'tall'؟",
+    options:[
+      {en:"tallest",ar:"tallest"},
+      {en:"more tall",ar:"more tall"},
+      {en:"taller",ar:"taller"},
+      {en:"most tall",ar:"most tall"}
+    ], correct:2
+  },
+  {
+    grade:'both', topic:'adjectives', topicName:'الصفات والمقارنة – Adjectives & Comparatives',
+    en: "What is the superlative form of 'big'?",
+    ar: "ما صيغة التفضيل للصفة 'big'؟",
+    options:[
+      {en:"bigger",ar:"bigger"},
+      {en:"bigest",ar:"bigest"},
+      {en:"most big",ar:"most big"},
+      {en:"the biggest",ar:"the biggest"}
+    ], correct:3
+  },
+  {
+    grade:'both', topic:'adjectives', topicName:'الصفات والمقارنة – Adjectives & Comparatives',
+    en: "What is the comparative form of 'beautiful'?",
+    ar: "ما صيغة المقارنة للصفة 'beautiful'؟",
+    options:[
+      {en:"beautifuler",ar:"beautifuler"},
+      {en:"more beautiful",ar:"more beautiful"},
+      {en:"beautifulest",ar:"beautifulest"},
+      {en:"the most beautiful",ar:"the most beautiful"}
+    ], correct:1
+  },
+  {
+    grade:'both', topic:'adjectives', topicName:'الصفات والمقارنة – Adjectives & Comparatives',
+    en: "What is the comparative of 'good'?",
+    ar: "ما صيغة المقارنة للصفة 'good'؟",
+    options:[
+      {en:"gooder",ar:"gooder"},
+      {en:"goodest",ar:"goodest"},
+      {en:"better",ar:"better"},
+      {en:"more good",ar:"more good"}
+    ], correct:2
+  },
+  {
+    grade:'both', topic:'adjectives', topicName:'الصفات والمقارنة – Adjectives & Comparatives',
+    en: "What is the superlative of 'bad'?",
+    ar: "ما صيغة التفضيل للصفة 'bad'؟",
+    options:[
+      {en:"badder",ar:"badder"},
+      {en:"the worst",ar:"the worst"},
+      {en:"the baddest",ar:"the baddest"},
+      {en:"more bad",ar:"more bad"}
+    ], correct:1
+  },
+  {
+    grade:'both', topic:'adjectives', topicName:'الصفات والمقارنة – Adjectives & Comparatives',
+    en: "Complete: 'Ali is ___ than Omar.' (tall)",
+    ar: "أكمل: 'Ali is ___ than Omar.' (طويل)",
+    options:[
+      {en:"tall",ar:"tall"},
+      {en:"tallest",ar:"tallest"},
+      {en:"taller",ar:"taller"},
+      {en:"more tall",ar:"more tall"}
+    ], correct:2
+  },
+
+  // ========== QUESTION WORDS ==========
+  {
+    grade:'both', topic:'questions', topicName:'كلمات الاستفهام – Question Words',
+    en: "Which question word do we use to ask about a place?",
+    ar: "أيّ كلمة استفهام نستخدم للسؤال عن المكان؟",
+    options:[
+      {en:"When",ar:"When – متى"},
+      {en:"Why",ar:"Why – لماذا"},
+      {en:"Where",ar:"Where – أين"},
+      {en:"Who",ar:"Who – من"}
+    ], correct:2
+  },
+  {
+    grade:'both', topic:'questions', topicName:'كلمات الاستفهام – Question Words',
+    en: "Which question word do we use to ask about a reason?",
+    ar: "أيّ كلمة استفهام نستخدم للسؤال عن السبب؟",
+    options:[
+      {en:"What",ar:"What – ماذا"},
+      {en:"Why",ar:"Why – لماذا"},
+      {en:"How",ar:"How – كيف"},
+      {en:"Which",ar:"Which – أيّ"}
+    ], correct:1
+  },
+  {
+    grade:'both', topic:'questions', topicName:'كلمات الاستفهام – Question Words',
+    en: "'___ is your name?' – asking about a person's name",
+    ar: "'___ is your name?' – السؤال عن الاسم",
+    options:[
+      {en:"Who",ar:"Who – من"},
+      {en:"Where",ar:"Where – أين"},
+      {en:"What",ar:"What – ماذا"},
+      {en:"When",ar:"When – متى"}
+    ], correct:2
+  },
+  {
+    grade:'both', topic:'questions', topicName:'كلمات الاستفهام – Question Words',
+    en: "'___ many students are here?' – asking about a countable quantity",
+    ar: "'___ many students are here?' – السؤال عن عدد",
+    options:[
+      {en:"How",ar:"How"},
+      {en:"What",ar:"What"},
+      {en:"Which",ar:"Which"},
+      {en:"Whose",ar:"Whose"}
+    ], correct:0
+  },
+  {
+    grade:'both', topic:'questions', topicName:'كلمات الاستفهام – Question Words',
+    en: "'___ book is this?' – asking about ownership",
+    ar: "'___ book is this?' – السؤال عن الملكية",
+    options:[
+      {en:"Who",ar:"Who – من"},
+      {en:"Whose",ar:"Whose – لمن"},
+      {en:"Which",ar:"Which – أيّ"},
+      {en:"What",ar:"What – ماذا"}
+    ], correct:1
+  },
+  {
+    grade:'both', topic:'questions', topicName:'كلمات الاستفهام – Question Words',
+    en: "'___ old are you?' – asking about age",
+    ar: "'___ old are you?' – السؤال عن العمر",
+    options:[
+      {en:"What",ar:"What"},
+      {en:"Which",ar:"Which"},
+      {en:"How",ar:"How"},
+      {en:"Why",ar:"Why"}
+    ], correct:2
+  },
+
+  // ========== DAYS / MONTHS / SEASONS ==========
+  {
+    grade:'both', topic:'days', topicName:'الأيام والشهور والفصول – Days, Months & Seasons',
+    en: "Which day comes after Tuesday?",
+    ar: "أيّ يوم يأتي بعد الثلاثاء (Tuesday)؟",
+    options:[
+      {en:"Monday",ar:"الاثنين"},
+      {en:"Wednesday",ar:"الأربعاء"},
+      {en:"Thursday",ar:"الخميس"},
+      {en:"Friday",ar:"الجمعة"}
+    ], correct:1
+  },
+  {
+    grade:'both', topic:'days', topicName:'الأيام والشهور والفصول – Days, Months & Seasons',
+    en: "Which month is the first month of the year?",
+    ar: "ما الشهر الأول في السنة؟",
+    options:[
+      {en:"February",ar:"فبراير"},
+      {en:"March",ar:"مارس"},
+      {en:"January",ar:"يناير"},
+      {en:"December",ar:"ديسمبر"}
+    ], correct:2
+  },
+  {
+    grade:'both', topic:'days', topicName:'الأيام والشهور والفصول – Days, Months & Seasons',
+    en: "Which months belong to Summer?",
+    ar: "أيّ الشهور تنتمي إلى فصل الصيف (Summer)؟",
+    options:[
+      {en:"March, April, May",ar:"مارس، أبريل، مايو"},
+      {en:"June, July, August",ar:"يونيو، يوليو، أغسطس"},
+      {en:"September, October, November",ar:"سبتمبر، أكتوبر، نوفمبر"},
+      {en:"December, January, February",ar:"ديسمبر، يناير، فبراير"}
+    ], correct:1
+  },
+  {
+    grade:'both', topic:'days', topicName:'الأيام والشهور والفصول – Days, Months & Seasons',
+    en: "Which season comes with December, January, and February?",
+    ar: "أيّ فصل يأتي مع شهور ديسمبر، يناير، وفبراير؟",
+    options:[
+      {en:"Spring",ar:"الربيع"},
+      {en:"Summer",ar:"الصيف"},
+      {en:"Autumn",ar:"الخريف"},
+      {en:"Winter",ar:"الشتاء"}
+    ], correct:3
+  },
+  {
+    grade:'both', topic:'days', topicName:'الأيام والشهور والفصول – Days, Months & Seasons',
+    en: "What is 'September' in Arabic?",
+    ar: "ما ترجمة شهر 'September' بالعربية؟",
+    options:[
+      {en:"أكتوبر",ar:"أكتوبر"},
+      {en:"أغسطس",ar:"أغسطس"},
+      {en:"سبتمبر",ar:"سبتمبر"},
+      {en:"نوفمبر",ar:"نوفمبر"}
+    ], correct:2
+  },
+
+  // ========== THERE IS / THERE ARE ==========
+  {
+    grade:'both', topic:'thereis', topicName:'There is / There are',
+    en: "Choose the correct form: '___ a cat on the roof.'",
+    ar: "اختر الشكل الصحيح: '___ a cat on the roof.'",
+    options:[
+      {en:"There are",ar:"There are"},
+      {en:"There is",ar:"There is"},
+      {en:"There was",ar:"There was"},
+      {en:"There were",ar:"There were"}
+    ], correct:1
+  },
+  {
+    grade:'both', topic:'thereis', topicName:'There is / There are',
+    en: "Choose the correct form: '___ twenty students in the class.'",
+    ar: "اختر الشكل الصحيح: '___ twenty students in the class.'",
+    options:[
+      {en:"There is",ar:"There is"},
+      {en:"There am",ar:"There am"},
+      {en:"There are",ar:"There are"},
+      {en:"There has",ar:"There has"}
+    ], correct:2
+  },
+  {
+    grade:'both', topic:'thereis', topicName:'There is / There are',
+    en: "How do we make a question about a plural? (books on the shelf)",
+    ar: "كيف نكوّن سؤالاً عن الجمع؟ (كتب على الرف)",
+    options:[
+      {en:"Is there any books on the shelf?",ar:"Is there any books on the shelf?"},
+      {en:"Are there any books on the shelf?",ar:"Are there any books on the shelf?"},
+      {en:"There are books on the shelf?",ar:"There are books on the shelf?"},
+      {en:"Do there books on the shelf?",ar:"Do there books on the shelf?"}
+    ], correct:1
+  },
+
+  // ========== POSSESSIVES ==========
+  {
+    grade:'both', topic:'possessives', topicName:'الملكية – Possessives',
+    en: "Choose the correct possessive adjective: 'This is ___ pencil.' (I)",
+    ar: "اختر صفة الملكية الصحيحة: 'This is ___ pencil.' (أنا)",
+    options:[
+      {en:"me",ar:"me"},
+      {en:"my",ar:"my"},
+      {en:"I",ar:"I"},
+      {en:"mine",ar:"mine"}
+    ], correct:1
+  },
+  {
+    grade:'both', topic:'possessives', topicName:'الملكية – Possessives',
+    en: "Choose the correct possessive adjective: 'He loves ___ dog.' (He)",
+    ar: "اختر صفة الملكية الصحيحة: 'He loves ___ dog.' (هو)",
+    options:[
+      {en:"he",ar:"he"},
+      {en:"her",ar:"her"},
+      {en:"his",ar:"his"},
+      {en:"him",ar:"him"}
+    ], correct:2
+  },
+  {
+    grade:'both', topic:'possessives', topicName:'الملكية – Possessives',
+    en: "How do we show possession with a name? Example: (Ahmed - book)",
+    ar: "كيف نُعبّر عن الملكية باسم شخص؟ مثال: (أحمد - الكتاب)",
+    options:[
+      {en:"Ahmed book",ar:"Ahmed book"},
+      {en:"book of Ahmed",ar:"book of Ahmed"},
+      {en:"Ahmed's book",ar:"Ahmed's book"},
+      {en:"Ahmed is book",ar:"Ahmed is book"}
+    ], correct:2
+  },
+  {
+    grade:'both', topic:'possessives', topicName:'الملكية – Possessives',
+    en: "Choose the correct possessive: 'They forgot ___ homework.' (They)",
+    ar: "اختر صفة الملكية الصحيحة: 'They forgot ___ homework.'",
+    options:[
+      {en:"they",ar:"they"},
+      {en:"them",ar:"them"},
+      {en:"their",ar:"their"},
+      {en:"theirs",ar:"theirs"}
+    ], correct:2
+  },
+
+  // ========== CAN / CANNOT ==========
+  {
+    grade:'both', topic:'can', topicName:'الفعل المساعد – Can / Cannot',
+    en: "Choose the correct form: 'I ___ swim very fast.'",
+    ar: "اختر الشكل الصحيح: 'I ___ swim very fast.'",
+    options:[
+      {en:"cans",ar:"cans"},
+      {en:"can",ar:"can"},
+      {en:"could",ar:"could"},
+      {en:"is can",ar:"is can"}
+    ], correct:1
+  },
+  {
+    grade:'both', topic:'can', topicName:'الفعل المساعد – Can / Cannot',
+    en: "Choose the correct negative: 'She ___ drive yet.'",
+    ar: "اختر النفي الصحيح: 'She ___ drive yet.'",
+    options:[
+      {en:"doesn't can",ar:"doesn't can"},
+      {en:"isn't can",ar:"isn't can"},
+      {en:"cannot",ar:"cannot / can't"},
+      {en:"not can",ar:"not can"}
+    ], correct:2
+  },
+  {
+    grade:'both', topic:'can', topicName:'الفعل المساعد – Can / Cannot',
+    en: "How do we form a question with 'can'? (you / speak Arabic)",
+    ar: "كيف نكوّن سؤالاً مع 'can'؟ (أنت / تتكلم عربي)",
+    options:[
+      {en:"You can speak Arabic?",ar:"You can speak Arabic?"},
+      {en:"Do you can speak Arabic?",ar:"Do you can speak Arabic?"},
+      {en:"Can you speak Arabic?",ar:"Can you speak Arabic?"},
+      {en:"Is you can speak Arabic?",ar:"Is you can speak Arabic?"}
+    ], correct:2
+  },
+  {
+    grade:'both', topic:'can', topicName:'الفعل المساعد – Can / Cannot',
+    en: "'Can he jump?' → What is the correct short positive answer?",
+    ar: "'Can he jump?' → ما الإجابة القصيرة الإيجابية الصحيحة؟",
+    options:[
+      {en:"Yes, he can.",ar:"نعم، يستطيع."},
+      {en:"Yes, he is.",ar:"نعم، هو."},
+      {en:"Yes, he does.",ar:"نعم، يفعل."},
+      {en:"Yes, he cans.",ar:"نعم، يستطيع."}
+    ], correct:0
+  }
+
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let currentGrade = 'all';
+let currentTopic = 'all';
+let filteredQuestions = [];
+let currentIndex = 0;
+let scoreCorrect = 0;
+let scoreWrong = 0;
+let answered = false;
+
+const encouragements = [
+  "🌟 ممتاز! إجابة صحيحة تماماً!",
+  "🎉 رائع! أنت نجم!",
+  "✅ أحسنت! هذه الإجابة صحيحة!",
+  "🏆 إجابة صحيحة! استمر هكذا!",
+  "👏 ذكاء! إجابتك صحيحة!",
+  "💫 بارك الله فيك! إجابة ممتازة!",
+  "🎯 في الصميم! أحسنت!"
+];
+const wrongs = [
+  "❌ للأسف، هذه ليست الإجابة الصحيحة.",
+  "🔴 حاول مرة أخرى في السؤال القادم!",
+  "💡 ليست الإجابة الصحيحة، لكن تعلّم منها!",
+  "📚 الإجابة الصحيحة موضحة أدناه. استذكرها جيداً!",
+  "🔁 خطأ هذه المرة! لكن ستتحسن!"
+];
+
+function filterGrade(grade) {
+  currentGrade = grade;
+  document.querySelectorAll('.grade-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(grade === 'all' ? 'gradeAll' : grade === '4' ? 'grade4' : 'grade56').classList.add('active');
+  restartQuiz();
+}
+
+function filterTopic(topic) {
+  currentTopic = topic;
+  document.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  restartQuiz();
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function getFiltered() {
+  return allQuestions.filter(q => {
+    const gradeOk = currentGrade === 'all' || q.grade === currentGrade || q.grade === 'both';
+    const topicOk = currentTopic === 'all' || q.topic === currentTopic;
+    return gradeOk && topicOk;
+  });
+}
+
+function initQuiz() {
+  filteredQuestions = shuffle(getFiltered());
+  currentIndex = 0;
+  scoreCorrect = 0;
+  scoreWrong = 0;
+  answered = false;
+  updateScoreBar();
+  document.getElementById('quizArea').style.display = 'block';
+  document.getElementById('endScreen').style.display = 'none';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  if (currentIndex >= filteredQuestions.length) {
+    showEndScreen();
+    return;
+  }
+  if (filteredQuestions.length === 0) {
+    document.getElementById('quizArea').innerHTML = '<div class="no-questions">⚠️ لا توجد أسئلة لهذا الاختيار. حاول اختياراً آخر.</div>';
+    return;
+  }
+  answered = false;
+  const q = filteredQuestions[currentIndex];
+  document.getElementById('questionCounter').textContent = `السؤال ${currentIndex + 1} من ${filteredQuestions.length}`;
+  document.getElementById('topicBadge').textContent = q.topicName;
+  document.getElementById('questionEn').textContent = q.en;
+  document.getElementById('questionAr').textContent = q.ar;
+
+  const grid = document.getElementById('optionsGrid');
+  grid.innerHTML = '';
+  const letters = ['أ', 'ب', 'ج', 'د'];
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `
+      <div class="option-letter">${letters[i]}</div>
+      <div class="option-texts">
+        <div class="option-text-en">${opt.en}</div>
+        <div class="option-text-ar">${opt.ar}</div>
+      </div>`;
+    btn.onclick = () => selectAnswer(i, q.correct);
+    grid.appendChild(btn);
+  });
+
+  const fp = document.getElementById('feedbackPanel');
+  fp.className = 'feedback-panel';
+  fp.style.display = 'none';
+  document.getElementById('btnNext').classList.remove('visible');
+
+  const card = document.getElementById('questionCard');
+  card.style.animation = 'none';
+  void card.offsetWidth;
+  card.style.animation = 'slideIn 0.35s ease';
+}
+
+function selectAnswer(selected, correct) {
+  if (answered) return;
+  answered = true;
+
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b => b.disabled = true);
+
+  const fp = document.getElementById('feedbackPanel');
+  const q = filteredQuestions[currentIndex];
+
+  if (selected === correct) {
+    btns[selected].classList.add('correct');
+    scoreCorrect++;
+    fp.className = 'feedback-panel correct-fb';
+    fp.style.display = 'flex';
+    document.getElementById('feedbackIcon').textContent = '🎉';
+    document.getElementById('feedbackMsg').className = 'feedback-msg correct-msg';
+    document.getElementById('feedbackMsg').textContent = encouragements[Math.floor(Math.random() * encouragements.length)];
+    document.getElementById('feedbackAnswer').innerHTML = `<span class="correct-answer-highlight">${q.options[correct].en}</span>`;
+    launchConfetti();
+  } else {
+    btns[selected].classList.add('wrong');
+    btns[correct].classList.add('correct');
+    scoreWrong++;
+    fp.className = 'feedback-panel wrong-fb';
+    fp.style.display = 'flex';
+    document.getElementById('feedbackIcon').textContent = '💡';
+    document.getElementById('feedbackMsg').className = 'feedback-msg wrong-msg';
+    document.getElementById('feedbackMsg').textContent = wrongs[Math.floor(Math.random() * wrongs.length)];
+    document.getElementById('feedbackAnswer').innerHTML = `الإجابة الصحيحة: <span class="correct-answer-highlight">${q.options[correct].en}</span><br>${q.options[correct].ar}`;
+  }
+
+  updateScoreBar();
+  document.getElementById('btnNext').classList.add('visible');
+}
+
+function nextQuestion() {
+  currentIndex++;
+  renderQuestion();
+}
+
+function updateScoreBar() {
+  document.getElementById('scoreCorrect').textContent = scoreCorrect;
+  document.getElementById('scoreWrong').textContent = scoreWrong;
+  const total = currentIndex + (answered ? 1 : 0);
+  document.getElementById('scoreTotal').textContent = total;
+  const pct = filteredQuestions.length > 0 ? (total / filteredQuestions.length * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function showEndScreen() {
+  document.getElementById('quizArea').style.display = 'none';
+  const es = document.getElementById('endScreen');
+  es.style.display = 'block';
+
+  const total = filteredQuestions.length;
+  const pct = total > 0 ? Math.round(scoreCorrect / total * 100) : 0;
+
+  document.getElementById('endCorrect').textContent = scoreCorrect;
+  document.getElementById('endWrong').textContent = scoreWrong;
+  document.getElementById('endTotal').textContent = total;
+  document.getElementById('endPercent').textContent = pct;
+
+  let trophy, title, msg;
+  if (pct >= 90) { trophy = '🏆'; title = 'ممتاز! أداء رائع جداً!'; msg = 'أنت نجم المسابقة! نتيجتك ممتازة في أساسيات الإنجليزية. استمر في هذا المستوى الرفيع!'; }
+  else if (pct >= 75) { trophy = '🥇'; title = 'أحسنت! نتيجة جيدة جداً!'; msg = 'عمل رائع! أداؤك يدل على اجتهاد وتفوق. واصل المذاكرة وستصل للقمة!'; }
+  else if (pct >= 60) { trophy = '🥈'; title = 'جيد! يمكنك التحسن أكثر'; msg = 'لا بأس! نتيجتك جيدة ويمكنك التحسن بالمراجعة والإعادة.'; }
+  else { trophy = '📚'; title = 'راجع الدروس وحاول مجدداً!'; msg = 'لا تيأس! راجع أساسيات اللغة الإنجليزية من الملف وأعد المحاولة. المراجعة مفتاح النجاح.'; }
+
+  document.getElementById('endTrophy').textContent = trophy;
+  document.getElementById('endTitle').textContent = title;
+  document.getElementById('endMsg').textContent = msg;
+
+  if (pct >= 75) launchConfetti(50);
+}
+
+function restartQuiz() { initQuiz(); }
+
+function launchConfetti(count = 20) {
+  const colors = ['#F4D03F','#1A5276','#1ABC9C','#E74C3C','#2E86C1','#27AE60'];
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.top = '-10px';
+      el.style.background = colors[Math.floor(Math.random() * colors.length)];
+      el.style.width = (8 + Math.random() * 8) + 'px';
+      el.style.height = (8 + Math.random() * 8) + 'px';
+      el.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+      el.style.animationDelay = Math.random() * 0.5 + 's';
+      document.body.appendChild(el);
+      el.addEventListener('animationend', () => el.remove());
+    }, i * 50);
+  }
+}
+
+initQuiz();
+</script>
+</body>
+</html>
