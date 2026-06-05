@@ -767,28 +767,105 @@ function readFile(file){
       else wb=XLSX.read(e.target.result,{type:'array'});
       var ws=wb.Sheets[wb.SheetNames[0]];
       var all=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
-      // اكتشاف صف الرأس
-      var hi=0;
-      for(var i=0;i<Math.min(8,all.length);i++){
-        var rs=all[i].map(function(c){return String(c);}).join(' ');
-        if(/اسم|name|طالب|درجة|score|grade|mark|علامة/.test(rs)){hi=i;break;}
-        if(i>0&&!isNaN(parseFloat(all[i][1]))&&String(all[i][0]).trim()!=''){
-          hi=Math.max(0,i-1);
-          if(all[hi].every(function(c){return c===''||c===null;})) hi=i;
+
+      // =========================================================
+      // الكشف الذكي لصف الرأس — يدعم أنماط متعددة:
+      // 1. ملفات بسيطة: اسم الطالب | الدرجة
+      // 2. كشوف نور وأنظار: جدول عريض متعدد الأعمدة
+      // 3. ملفات بعناوين وفراغات قبل الجدول
+      // =========================================================
+      var hi = 0;
+      var nameCol = -1, scoreCol = -1;
+
+      // البحث في أول 40 صف
+      for(var i=0; i<Math.min(40,all.length); i++){
+        var row = all[i];
+        var rs = row.map(function(c){return String(c||'');}).join(' ');
+
+        // نمط 1: صف يحتوي على "اسم الطالب" و"المجموع" أو "الدرجة"
+        if(/اسم\s*(الطالب|الطلاب|الطالبة)/.test(rs)){
+          hi = i;
+          // إيجاد عمود الاسم والدرجة بدقة
+          for(var j=0;j<row.length;j++){
+            var cell = String(row[j]||'');
+            if(/اسم\s*(الطالب|الطلاب|الطالبة)/.test(cell)) nameCol=j;
+            if(/^المجموع$|^الدرجة\s*الكلية$|^الدرجة\s*النهائية$|^الدرجة$/.test(cell.trim())) scoreCol=j;
+            if(/^المجموع$/.test(cell.trim()) && scoreCol===-1) scoreCol=j;
+          }
+          break;
+        }
+
+        // نمط 2: صف بسيط يحتوي على اسم + درجة
+        if(/اسم|name|طالب/.test(rs) && /درجة|علامة|score|grade|mark|result|مجموع/.test(rs)){
+          hi = i;
           break;
         }
       }
-      rawData=all.slice(hi).filter(function(r){return r.some(function(c){return c!==''&&c!==null&&c!==undefined;});});
-      if(rawData.length>1){
-        var lr=rawData[rawData.length-1];
-        if(/معدل|مجموع|إجمالي|average|total|sum/i.test(String(lr[0]||'')))
-          rawData=rawData.slice(0,-1);
+
+      // استخراج البيانات من صف الرأس فصاعداً
+      var slice = all.slice(hi);
+
+      // =========================================================
+      // معالجة خاصة لكشف نور: nameCol و scoreCol محددان
+      // =========================================================
+      if(nameCol >= 0){
+        // بناء rawData مبسّط: [اسم الطالب, المجموع]
+        // الصف الأول = رأس مبسّط
+        var newRaw = [['اسم الطالب','الدرجة']];
+        // الصف الثاني قد يحتوي الدرجة القصوى — نتجاهله إذا كان رقماً كبيراً في عمود الاسم
+        var dataStart = 1;
+        // تحقق إذا كان الصف التالي يحتوي على درجة قصوى (مثل 100)
+        if(slice.length>1){
+          var nextRow = slice[1];
+          var possibleMax = parseFloat(nextRow[scoreCol]);
+          if(!isNaN(possibleMax) && possibleMax >= 90 && String(nextRow[nameCol]||'').trim() !== ''){
+            // قد يكون الصف الأول بيانات فعلية
+            dataStart = 1;
+          } else if(!isNaN(possibleMax) && possibleMax >= 90 && String(nextRow[nameCol]||'').trim() === ''){
+            dataStart = 2; // تجاهل صف الدرجة القصوى
+          }
+        }
+        for(var i=dataStart; i<slice.length; i++){
+          var row = slice[i];
+          var nm = String(row[nameCol]||'').trim();
+          var sc = parseFloat(row[scoreCol]);
+          // تجاهل صفوف التوقيع والفراغات والتذييل
+          if(!nm && isNaN(sc)) continue;
+          if(/توقيع|رصده|راجعه|املأه|\.{3,}/.test(nm)) continue;
+          if(nm && !isNaN(sc) || nm){
+            newRaw.push([nm || '', isNaN(sc)?'':sc]);
+          }
+        }
+        rawData = newRaw;
+      } else {
+        // المعالجة الاعتيادية
+        rawData = slice.filter(function(r){
+          return r.some(function(c){return c!==''&&c!==null&&c!==undefined;});
+        });
+        // حذف صف الدرجة القصوى إذا كان الاسم أرقاماً
+        if(rawData.length>2){
+          var r2 = rawData[1];
+          var firstCell = String(r2[0]||'').trim();
+          if(!isNaN(parseFloat(firstCell)) && parseFloat(firstCell)>=50){
+            rawData.splice(1,1);
+          }
+        }
+        // حذف آخر صف إذا كان مجموع/معدل
+        if(rawData.length>1){
+          var lr=rawData[rawData.length-1];
+          if(/معدل|مجموع|إجمالي|average|total|sum/i.test(String(lr[0]||'')))
+            rawData=rawData.slice(0,-1);
+        }
       }
-      if(rawData.length<2){toast('❌ لا توجد بيانات كافية','er');return;}
-      headers=rawData[0].map(function(h,i){return h!==''?String(h):'عمود '+(i+1);});
+
+      if(rawData.length<2){toast('❌ لا توجد بيانات كافية في الملف','er');return;}
+      headers=rawData[0].map(function(h,i){return h!==''&&h!==null?String(h):'عمود '+(i+1);});
       showPrev();
       toast('✅ تم قراءة الملف: '+(rawData.length-1)+' طالب','ok');
-    }catch(err){toast('❌ خطأ في قراءة الملف','er');}
+    }catch(err){
+      console.error(err);
+      toast('❌ خطأ في قراءة الملف: '+err.message,'er');
+    }
   };
   if(ext==='csv') r.readAsText(file,'UTF-8');
   else r.readAsArrayBuffer(file);
