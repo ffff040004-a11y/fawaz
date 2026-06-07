@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تقويم أم القرى ١٤٤٨هـ</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-dark: #8B6914;
+    --green: #1B4332;
+    --green-mid: #2D6A4F;
+    --green-light: #40916C;
+    --cream: #FDF8EE;
+    --cream2: #F5EDD8;
+    --text-dark: #1a1a1a;
+    --shadow: rgba(139, 105, 20, 0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--green);
+    min-height: 100vh;
+    direction: rtl;
+  }
+
+  /* ===== HEADER ===== */
+  .site-header {
+    background: linear-gradient(135deg, #0d2b1e 0%, #1B4332 40%, #2D6A4F 100%);
+    border-bottom: 3px solid var(--gold);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+    gap: 20px;
+  }
+
+  .header-logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .emblem {
+    width: 64px;
+    height: 64px;
+    background: radial-gradient(circle, var(--gold-light) 0%, var(--gold) 50%, var(--gold-dark) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    box-shadow: 0 0 20px rgba(201,168,76,0.5);
+    border: 2px solid var(--gold-light);
+    flex-shrink: 0;
+  }
+
+  .header-titles h1 {
+    font-family: 'Amiri', serif;
+    font-size: 26px;
+    color: var(--gold-light);
+    font-weight: 700;
+    line-height: 1.2;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+
+  .header-titles p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.75);
+    font-weight: 400;
+    margin-top: 2px;
+  }
+
+  .header-year {
+    text-align: center;
+  }
+
+  .year-badge {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light));
+    color: #fff;
+    padding: 6px 20px;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    box-shadow: 0 3px 12px var(--shadow);
+  }
+
+  .year-badge span {
+    display: block;
+    font-size: 12px;
+    font-weight: 400;
+    opacity: 0.9;
+    margin-top: 2px;
+  }
+
+  /* ===== NAV MONTHS ===== */
+  .months-nav {
+    background: #0d2b1e;
+    border-bottom: 2px solid rgba(201,168,76,0.3);
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold) transparent;
+  }
+
+  .months-nav-inner {
+    display: flex;
+    gap: 4px;
+    padding: 8px 16px;
+    min-width: max-content;
+    margin: 0 auto;
+  }
+
+  .month-nav-btn {
+    background: none;
+    border: 1px solid rgba(201,168,76,0.3);
+    color: rgba(255,255,255,0.7);
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.25s;
+    white-space: nowrap;
+    direction: rtl;
+  }
+
+  .month-nav-btn:hover,
+  .month-nav-btn.active {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--green);
+    font-weight: 700;
+    box-shadow: 0 2px 8px var(--shadow);
+  }
+
+  /* ===== MAIN ===== */
+  .main-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+
+  /* ===== LEGEND ===== */
+  .legend-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 12px;
+    padding: 12px 20px;
+    margin-bottom: 24px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.85);
+    font-weight: 500;
+  }
+
+  .legend-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  .dot-national   { background: #e63946; }
+  .dot-founding   { background: #e8a838; }
+  .dot-flag       { background: #6cc24a; }
+  .dot-cabinet    { background: #4a9eca; }
+  .dot-weekend    { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); }
+  .dot-eid        { background: linear-gradient(135deg, #9b59b6, #e74c3c); }
+
+  /* ===== CALENDAR GRID ===== */
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  @media (max-width: 1100px) {
+    .calendar-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .calendar-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ===== MONTH CARD ===== */
+  .month-card {
+    background: var(--cream);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(201,168,76,0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .month-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 40px rgba(0,0,0,0.5), 0 0 0 2px rgba(201,168,76,0.4);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .month-card:nth-child(1)  { animation-delay: 0.05s; }
+  .month-card:nth-child(2)  { animation-delay: 0.1s; }
+  .month-card:nth-child(3)  { animation-delay: 0.15s; }
+  .month-card:nth-child(4)  { animation-delay: 0.2s; }
+  .month-card:nth-child(5)  { animation-delay: 0.25s; }
+  .month-card:nth-child(6)  { animation-delay: 0.3s; }
+  .month-card:nth-child(7)  { animation-delay: 0.35s; }
+  .month-card:nth-child(8)  { animation-delay: 0.4s; }
+  .month-card:nth-child(9)  { animation-delay: 0.45s; }
+  .month-card:nth-child(10) { animation-delay: 0.5s; }
+  .month-card:nth-child(11) { animation-delay: 0.55s; }
+  .month-card:nth-child(12) { animation-delay: 0.6s; }
+
+  .month-header {
+    background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%);
+    padding: 14px 16px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--gold);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .month-header::before {
+    content: '';
+    position: absolute;
+    top: -20px; left: -20px;
+    width: 80px; height: 80px;
+    background: radial-gradient(circle, rgba(201,168,76,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .month-num {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Amiri', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    flex-shrink: 0;
+  }
+
+  .month-names {
+    text-align: center;
+    flex: 1;
+    padding: 0 10px;
+  }
+
+  .month-ar {
+    font-family: 'Amiri', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gold-light);
+    display: block;
+    line-height: 1.2;
+  }
+
+  .month-en {
+    font-size: 11px;
+    color: rgba(255,255,255,0.6);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    display: block;
+    margin-top: 2px;
+  }
+
+  /* ===== DAY LABELS ===== */
+  .day-labels {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background: linear-gradient(135deg, #0d2b1e, #1B4332);
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+  }
+
+  .day-label {
+    text-align: center;
+    padding: 7px 2px;
+    font-size: 10px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.65);
+    letter-spacing: 0.3px;
+  }
+
+  .day-label.weekend { color: rgba(201,168,76,0.85); }
+
+  /* ===== DAYS GRID ===== */
+  .days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    background: rgba(0,0,0,0.05);
+    padding: 6px 6px 8px;
+  }
+
+  .day-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 2px;
+    border-radius: 8px;
+    min-height: 42px;
+    position: relative;
+    cursor: default;
+    transition: background 0.15s;
+  }
+
+  .day-cell:hover { background: rgba(201,168,76,0.1); }
+
+  .day-cell.empty { pointer-events: none; }
+
+  .day-cell .hijri-num {
+    font-family: 'Amiri', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-dark);
+    line-height: 1;
+  }
+
+  .day-cell .greg-num {
+    font-size: 9px;
+    color: #888;
+    font-weight: 500;
+    margin-top: 2px;
+    line-height: 1;
+  }
+
+  /* Weekend */
+  .day-cell.friday,
+  .day-cell.saturday {
+    background: rgba(27,67,50,0.08);
+  }
+
+  .day-cell.friday .hijri-num,
+  .day-cell.saturday .hijri-num {
+    color: var(--green-mid);
+  }
+
+  /* Today */
+  .day-cell.today {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold)) !important;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px var(--shadow);
+  }
+  .day-cell.today .hijri-num { color: #fff !important; font-size: 16px; }
+  .day-cell.today .greg-num { color: rgba(255,255,255,0.8) !important; }
+
+  /* Special events */
+  .day-cell.national-day::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: #e63946;
+  }
+
+  .day-cell.founding-day::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: #e8a838;
+  }
+
+  .day-cell.flag-day::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: #6cc24a;
+  }
+
+  .day-cell.cabinet::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: #4a9eca;
+  }
+
+  .day-cell.eid {
+    background: linear-gradient(135deg, rgba(155,89,182,0.12), rgba(231,76,60,0.12));
+    border: 1px solid rgba(155,89,182,0.3);
+    border-radius: 8px;
+  }
+
+  .day-cell.eid .hijri-num { color: #7d3c98; }
+
+  /* ===== MONTH FOOTER ===== */
+  .month-footer {
+    background: #f5edda;
+    border-top: 1px solid rgba(201,168,76,0.25);
+    padding: 6px 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    min-height: 24px;
+  }
+
+  .event-tag {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 600;
+    direction: rtl;
+  }
+
+  .tag-national   { background: rgba(230,57,70,0.12);  color: #c0392b; }
+  .tag-founding   { background: rgba(232,168,56,0.15); color: #9a6700; }
+  .tag-flag       { background: rgba(108,194,74,0.15); color: #2d7d1a; }
+  .tag-eid        { background: rgba(155,89,182,0.12); color: #6c3483; }
+  .tag-cabinet    { background: rgba(74,158,202,0.12); color: #1a6b92; }
+
+  /* ===== SETTINGS ===== */
+  .settings-section {
+    background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+  }
+
+  .settings-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--gold-light);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .settings-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .setting-group label {
+    display: block;
+    font-size: 11px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+
+  .setting-select,
+  .setting-input {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(201,168,76,0.3);
+    color: #fff;
+    padding: 7px 12px;
+    border-radius: 8px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    direction: rtl;
+    min-width: 160px;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .setting-select:focus,
+  .setting-input:focus { outline: none; border-color: var(--gold); }
+
+  .setting-btn {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 3px 10px var(--shadow);
+    margin-top: 18px;
+  }
+
+  .setting-btn:hover { transform: translateY(-1px); box-shadow: 0 5px 14px var(--shadow); }
+
+  .designer-credit {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(201,168,76,0.2);
+    text-align: center;
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+  }
+
+  .designer-credit a {
+    color: var(--gold-light);
+    text-decoration: none;
+    font-weight: 700;
+    border-bottom: 1px dotted var(--gold);
+    transition: color 0.2s;
+  }
+
+  .designer-credit a:hover { color: #fff; }
+
+  /* ===== FOOTER ===== */
+  .site-footer {
+    text-align: center;
+    padding: 20px;
+    color: rgba(255,255,255,0.4);
+    font-size: 12px;
+    border-top: 1px solid rgba(201,168,76,0.15);
+    margin-top: 10px;
+  }
+
+  .site-footer span { color: var(--gold); }
+
+  /* ===== VIEW TOGGLE ===== */
+  .view-toggle {
+    display: flex;
+    gap: 6px;
+    background: rgba(0,0,0,0.3);
+    padding: 4px;
+    border-radius: 10px;
+    border: 1px solid rgba(201,168,76,0.2);
+  }
+
+  .view-btn {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.5);
+    padding: 6px 14px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+
+  .view-btn.active {
+    background: var(--gold);
+    color: var(--green);
+  }
+
+  /* Single month view */
+  .single-month-view .calendar-grid {
+    grid-template-columns: 1fr;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .single-month-view .month-card { display: none; }
+  .single-month-view .month-card.visible { display: block; }
+
+  /* Print */
+  @media print {
+    .site-header, .months-nav, .settings-section, .site-footer { display: none; }
+    body { background: #fff; }
+    .main-content { padding: 0; }
+    .calendar-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .month-card { box-shadow: none; border: 1px solid #ccc; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo">
+      <div class="emblem">🌙</div>
+      <div class="header-titles">
+        <h1>تقويم أم القرى</h1>
+        <p>المملكة العربية السعودية · وزارة المالية</p>
+      </div>
+    </div>
+    <div class="header-year">
+      <div class="year-badge">
+        ١٤٤٨ هـ
+        <span>٢٠٢٦ - ٢٠٢٧ م</span>
+      </div>
+    </div>
+    <div class="view-toggle">
+      <button class="view-btn active" onclick="setView('all')">كل الأشهر</button>
+      <button class="view-btn" onclick="setView('single')">شهر واحد</button>
+    </div>
+  </div>
+</header>
+
+<!-- MONTHS NAV -->
+<nav class="months-nav">
+  <div class="months-nav-inner" id="monthsNav"></div>
+</nav>
+
+<div class="main-content">
+
+  <!-- SETTINGS -->
+  <div class="settings-section">
+    <div class="settings-title">⚙️ الإعدادات</div>
+    <div class="settings-row">
+      <div class="setting-group">
+        <label>اختر الشهر</label>
+        <select class="setting-select" id="monthSelect" onchange="scrollToMonth(this.value)">
+          <option value="">— اختر شهراً —</option>
+        </select>
+      </div>
+      <div class="setting-group">
+        <label>حجم الخط</label>
+        <select class="setting-select" id="fontSizeSelect" onchange="changeFontSize(this.value)">
+          <option value="normal">عادي</option>
+          <option value="large">كبير</option>
+          <option value="small">صغير</option>
+        </select>
+      </div>
+      <div class="setting-group">
+        <label>الوضع</label>
+        <select class="setting-select" id="themeSelect" onchange="changeTheme(this.value)">
+          <option value="dark">داكن</option>
+          <option value="light">فاتح</option>
+        </select>
+      </div>
+      <button class="setting-btn" onclick="window.print()">🖨️ طباعة</button>
+    </div>
+    <div class="designer-credit">
+      تصميم د/فواز &nbsp;|&nbsp; تفضل للمزيد هنا
+      <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">قناة التيليجرام 📲</a>
+    </div>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend-bar">
+    <div class="legend-item"><div class="legend-dot dot-national"></div> اليوم الوطني</div>
+    <div class="legend-item"><div class="legend-dot dot-founding"></div> يوم التأسيس</div>
+    <div class="legend-item"><div class="legend-dot dot-flag"></div> يوم العلم</div>
+    <div class="legend-item"><div class="legend-dot dot-cabinet"></div> جلسات مجلس الوزراء</div>
+    <div class="legend-item"><div class="legend-dot dot-weekend"></div> إجازة نهاية الأسبوع</div>
+    <div class="legend-item"><div class="legend-dot dot-eid"></div> إجازة العيد</div>
+  </div>
+
+  <!-- CALENDAR GRID -->
+  <div class="calendar-grid" id="calendarGrid"></div>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  مع تحيات <span>وزارة المالية</span> - مصلحة مطابع الحكومة &nbsp;|&nbsp;
+  تصميم: <span>د/فواز</span>
+</footer>
+
+<script>
+// =============================================
+// DATA: 12 months of 1448H with Gregorian dates
+// =============================================
+const MONTHS_DATA = [
+  {
+    num: 1, nameAr: 'مـحـرم', numAr: '١',
+    enRange: 'JUN - JUL 2026',
+    days: 30,
+    startDay: 0, // Sunday=0
+    gregStart: { d:21, m:6, y:2026 }, // 1 Muharram = 21 Jun 2026 (approx)
+    events: {
+      1: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      8: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      15: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      22: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      29: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+    }
+  },
+  {
+    num: 2, nameAr: 'صـفـر', numAr: '٢',
+    enRange: 'JUL - AUG 2026',
+    days: 29,
+    startDay: 2,
+    gregStart: { d:21, m:7, y:2026 },
+    events: {
+      2: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      9: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      16: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      23: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+    }
+  },
+  {
+    num: 3, nameAr: 'ربيع الأول', numAr: '٣',
+    enRange: 'AUG - SEP 2026',
+    days: 30,
+    startDay: 4,
+    gregStart: { d:19, m:8, y:2026 },
+    events: {
+      1: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      8: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      12: { type: 'flag', label: 'يوم العلم' },
+      15: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      22: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      29: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+    }
+  },
+  {
+    num: 4, nameAr: 'ربيع الآخر', numAr: '٤',
+    enRange: 'SEP - OCT 2026',
+    days: 29,
+    startDay: 0,
+    gregStart: { d:18, m:9, y:2026 },
+    events: {
+      12: { type: 'national', label: 'اليوم الوطني ٩٦' },
+      1: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      8: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      15: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      22: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+    }
+  },
+  {
+    num: 5, nameAr: 'جمادى الأولى', numAr: '٥',
+    enRange: 'OCT - NOV 2026',
+    days: 30,
+    startDay: 2,
+    gregStart: { d:17, m:10, y:2026 },
+    events: {
+      1: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      8: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      15: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      22: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      29: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+    }
+  },
+  {
+    num: 6, nameAr: 'جمادى الآخرة', numAr: '٦',
+    enRange: 'NOV - DEC 2026',
+    days: 29,
+    startDay: 5,
+    gregStart: { d:16, m:11, y:2026 },
+    events: {
+      2: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      9: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      16: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      23: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+    }
+  },
+  {
+    num: 7, nameAr: 'رجـب', numAr: '٧',
+    enRange: 'DEC 2026 - JAN 2027',
+    days: 30,
+    startDay: 1,
+    gregStart: { d:15, m:12, y:2026 },
+    events: {
+      1: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      8: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      15: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      22: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      29: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+    }
+  },
+  {
+    num: 8, nameAr: 'شعبان', numAr: '٨',
+    enRange: 'JAN - FEB 2027',
+    days: 29,
+    startDay: 4,
+    gregStart: { d:14, m:1, y:2027 },
+    events: {
+      1: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      8: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      15: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      22: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+    }
+  },
+  {
+    num: 9, nameAr: 'رمضان', numAr: '٩',
+    enRange: 'FEB - MAR 2027',
+    days: 30,
+    startDay: 0,
+    gregStart: { d:12, m:2, y:2027 },
+    events: {
+      1: { type: 'eid', label: 'بداية رمضان المبارك' },
+      29: { type: 'eid', label: 'نهاية رمضان - رؤية الهلال' },
+      30: { type: 'eid', label: 'آخر يوم رمضان' },
+      8: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      15: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      22: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+    }
+  },
+  {
+    num: 10, nameAr: 'شـوال', numAr: '١٠',
+    enRange: 'MAR - APR 2027',
+    days: 29,
+    startDay: 3,
+    gregStart: { d:14, m:3, y:2027 },
+    events: {
+      1: { type: 'eid', label: 'عيد الفطر المبارك' },
+      2: { type: 'eid', label: 'إجازة عيد الفطر' },
+      3: { type: 'eid', label: 'إجازة عيد الفطر' },
+      4: { type: 'eid', label: 'إجازة عيد الفطر' },
+      5: { type: 'eid', label: 'إجازة عيد الفطر' },
+      8: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      15: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      22: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+    }
+  },
+  {
+    num: 11, nameAr: 'ذو القعدة', numAr: '١١',
+    enRange: 'APR - MAY 2027',
+    days: 30,
+    startDay: 6,
+    gregStart: { d:12, m:4, y:2027 },
+    events: {
+      1: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      8: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      15: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      22: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      29: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+    }
+  },
+  {
+    num: 12, nameAr: 'ذو الحجة', numAr: '١٢',
+    enRange: 'MAY - JUN 2027',
+    days: 29,
+    startDay: 2,
+    gregStart: { d:12, m:5, y:2027 },
+    events: {
+      9: { type: 'eid', label: 'يوم عرفة' },
+      10: { type: 'eid', label: 'عيد الأضحى المبارك' },
+      11: { type: 'eid', label: 'إجازة عيد الأضحى' },
+      12: { type: 'eid', label: 'إجازة عيد الأضحى' },
+      13: { type: 'eid', label: 'إجازة عيد الأضحى' },
+      14: { type: 'eid', label: 'إجازة عيد الأضحى' },
+      8: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+      22: { type: 'cabinet', label: 'جلسة مجلس الوزراء' },
+    }
+  }
+];
+
+const DAY_NAMES = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+
+// Today detection (Hijri approximate)
+function getTodayHijri() {
+  // Current date is 2026-06-07 (approx 11 Muharram 1448H)
+  return { month: 1, day: 17 }; // approximate
+}
+
+function getGregDate(monthData, hijriDay) {
+  const { d, m, y } = monthData.gregStart;
+  const date = new Date(y, m - 1, d + hijriDay - 1);
+  return date.getDate();
+}
+
+function buildMonthCard(month, idx) {
+  const today = getTodayHijri();
+  const eventTags = new Set();
+
+  // Day labels row
+  let labelsHTML = '';
+  DAY_NAMES.forEach((n, i) => {
+    const isWE = (i === 5 || i === 6);
+    labelsHTML += `<div class="day-label${isWE ? ' weekend' : ''}">${n.substring(0,6)}</div>`;
+  });
+
+  // Days
+  let daysHTML = '';
+  // Empty cells
+  for (let e = 0; e < month.startDay; e++) {
+    daysHTML += `<div class="day-cell empty"></div>`;
+  }
+
+  for (let d = 1; d <= month.days; d++) {
+    const dayOfWeek = (month.startDay + d - 1) % 7;
+    const isFri = dayOfWeek === 5;
+    const isSat = dayOfWeek === 6;
+    const gregDay = getGregDate(month, d);
+    const event = month.events[d];
+    const isToday = today.month === month.num && today.day === d;
+
+    let classes = 'day-cell';
+    if (isFri) classes += ' friday';
+    if (isSat) classes += ' saturday';
+    if (isToday) classes += ' today';
+    if (event) {
+      classes += ` ${event.type}-day ${event.type}`;
+      eventTags.add(event.type);
+    }
+
+    // Convert to arabic numerals
+    const hijriNumAr = toArabicNum(d);
+    const gregNumAr = gregDay;
+
+    daysHTML += `<div class="${classes}" title="${event ? event.label : ''}">
+      <span class="hijri-num">${hijriNumAr}</span>
+      <span class="greg-num">${gregDay}</span>
+    </div>`;
+  }
+
+  // Footer tags
+  let tagsHTML = '';
+  const tagMap = {
+    national: { cls:'tag-national', text:'اليوم الوطني' },
+    founding: { cls:'tag-founding', text:'يوم التأسيس' },
+    flag:     { cls:'tag-flag',     text:'يوم العلم' },
+    eid:      { cls:'tag-eid',      text:'إجازة العيد' },
+    cabinet:  { cls:'tag-cabinet',  text:'جلسات الوزراء' },
+  };
+  eventTags.forEach(t => {
+    if (tagMap[t]) {
+      tagsHTML += `<span class="event-tag ${tagMap[t].cls}">${tagMap[t].text}</span>`;
+    }
+  });
+
+  return `
+  <div class="month-card" id="month-${month.num}" data-month="${month.num}">
+    <div class="month-header">
+      <div class="month-num">${month.numAr}</div>
+      <div class="month-names">
+        <span class="month-ar">${month.nameAr}</span>
+        <span class="month-en">${month.enRange}</span>
+      </div>
+    </div>
+    <div class="day-labels">${labelsHTML}</div>
+    <div class="days-grid">${daysHTML}</div>
+    <div class="month-footer">${tagsHTML}</div>
+  </div>`;
+}
+
+function toArabicNum(n) {
+  return n.toString().replace(/[0-9]/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+}
+
+// Build everything
+function buildCalendar() {
+  const grid = document.getElementById('calendarGrid');
+  const nav = document.getElementById('monthsNav');
+  const sel = document.getElementById('monthSelect');
+
+  MONTHS_DATA.forEach((m, i) => {
+    grid.innerHTML += buildMonthCard(m, i);
+
+    // Nav button
+    const btn = document.createElement('button');
+    btn.className = 'month-nav-btn';
+    btn.textContent = m.nameAr;
+    btn.dataset.month = m.num;
+    btn.onclick = () => {
+      document.querySelectorAll('.month-nav-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      scrollToMonth(m.num);
+    };
+    nav.appendChild(btn);
+
+    // Select option
+    const opt = document.createElement('option');
+    opt.value = m.num;
+    opt.textContent = m.nameAr + ' — ' + m.enRange;
+    sel.appendChild(opt);
+  });
+}
+
+function scrollToMonth(num) {
+  const el = document.getElementById('month-' + num);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Highlight nav btn
+    document.querySelectorAll('.month-nav-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.month == num);
+    });
+  }
+}
+
+let currentView = 'all';
+function setView(v) {
+  currentView = v;
+  const grid = document.getElementById('calendarGrid');
+  const allBtns = document.querySelectorAll('.view-btn');
+  allBtns.forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+
+  if (v === 'all') {
+    grid.classList.remove('single-month-view');
+    document.querySelectorAll('.month-card').forEach(c => c.classList.remove('visible'));
+  } else {
+    grid.classList.add('single-month-view');
+    // Show current month
+    const todayM = getTodayHijri().month;
+    document.querySelectorAll('.month-card').forEach(c => {
+      c.classList.toggle('visible', c.dataset.month == todayM);
+    });
+  }
+}
+
+function changeFontSize(val) {
+  const sizes = { small: '85%', normal: '100%', large: '115%' };
+  document.body.style.fontSize = sizes[val] || '100%';
+}
+
+function changeTheme(val) {
+  if (val === 'light') {
+    document.documentElement.style.setProperty('--green', '#e8f5e9');
+    document.documentElement.style.setProperty('--green-mid', '#4caf50');
+    document.body.style.background = '#e8f5e9';
+    document.querySelectorAll('.month-header').forEach(el => {
+      el.style.background = 'linear-gradient(135deg, #2d7d1a, #4caf50)';
+    });
+  } else {
+    document.documentElement.style.setProperty('--green', '#1B4332');
+    document.documentElement.style.setProperty('--green-mid', '#2D6A4F');
+    document.body.style.background = '#1B4332';
+    document.querySelectorAll('.month-header').forEach(el => {
+      el.style.background = '';
+    });
+  }
+}
+
+// Intersection observer for nav highlight on scroll
+function initScrollSpy() {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const num = e.target.dataset.month;
+        document.querySelectorAll('.month-nav-btn').forEach(b => {
+          b.classList.toggle('active', b.dataset.month == num);
+        });
+      }
+    });
+  }, { threshold: 0.4 });
+
+  document.querySelectorAll('.month-card').forEach(c => observer.observe(c));
+}
+
+buildCalendar();
+initScrollSpy();
+</script>
+</body>
+</html>
