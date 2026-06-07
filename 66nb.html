@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>دمج أهداف الأداء الوظيفي والجدارات للكادر الإداري</title>
+<style>
+:root{
+  --bg:#f5f1e8; --ink:#1e2a2f; --muted:#64706d; --primary:#0f4c5c; --primary2:#2f7d72; --gold:#b9872d; --paper:#fffdf8; --soft:#e8efe8; --rose:#f8e9df;
+  --shadow:0 18px 45px rgba(18,42,42,.13); --radius:24px;
+}
+*{box-sizing:border-box} body{margin:0;background:linear-gradient(135deg,#f8f3e7,#eef6f1 45%,#f7efe5);font-family:"Tajawal","Segoe UI",Arial,sans-serif;color:var(--ink);line-height:1.75}
+.hero{min-height:100vh;padding:42px 6vw;display:grid;align-items:center;position:relative;overflow:hidden;background:radial-gradient(circle at 12% 18%,rgba(185,135,45,.18),transparent 28%),radial-gradient(circle at 80% 20%,rgba(47,125,114,.18),transparent 30%)}
+.hero:before{content:"";position:absolute;inset:-10%;background:linear-gradient(120deg,transparent,rgba(255,255,255,.55),transparent);transform:rotate(-8deg)}
+.card{position:relative;background:rgba(255,253,248,.9);backdrop-filter:blur(12px);border:1px solid rgba(15,76,92,.12);border-radius:var(--radius);box-shadow:var(--shadow);padding:36px;overflow:hidden}.card:after{content:"";position:absolute;inset:auto -80px -90px auto;width:220px;height:220px;border-radius:50%;background:rgba(47,125,114,.12)}
+h1{margin:0 0 12px;font-size:clamp(32px,5vw,62px);line-height:1.25;color:var(--primary);letter-spacing:-1px}.subtitle{font-size:clamp(18px,2.3vw,26px);color:#3d504f;margin:0 0 24px}.notice{border-right:6px solid var(--gold);background:#fff8e8;border-radius:18px;padding:18px 20px;margin-top:22px;font-size:18px}.badges{display:flex;gap:10px;flex-wrap:wrap;margin:24px 0}.badge{background:var(--soft);color:var(--primary);border:1px solid rgba(15,76,92,.12);border-radius:999px;padding:8px 14px;font-weight:700}.toolbar{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}.btn{border:0;background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;border-radius:16px;padding:12px 18px;font-weight:800;cursor:pointer;box-shadow:0 10px 24px rgba(15,76,92,.22);text-decoration:none;display:inline-flex;align-items:center;gap:8px}.btn.secondary{background:#fff;color:var(--primary);border:1px solid rgba(15,76,92,.18)}
+.page{padding:38px 5vw;break-inside:avoid;position:relative}.section-title{display:flex;align-items:center;gap:12px;margin:0 0 18px;color:var(--primary);font-size:30px}.section-title span{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--primary2),#8bb7a9);color:#fff}.intro-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}.mini{background:var(--paper);border:1px solid rgba(15,76,92,.11);border-radius:22px;padding:20px;box-shadow:0 10px 30px rgba(15,76,92,.07)}.mini h3{margin:0 0 8px;color:var(--primary)}
+table{width:100%;border-collapse:separate;border-spacing:0;background:var(--paper);border-radius:22px;overflow:hidden;box-shadow:var(--shadow);margin:14px 0 32px;border:1px solid rgba(15,76,92,.13)}th{background:linear-gradient(135deg,var(--primary),#123b45);color:#fff;font-size:17px;padding:16px;text-align:right}td{vertical-align:top;padding:16px;border-bottom:1px solid #edf0ec;border-left:1px solid #edf0ec}tr:last-child td{border-bottom:0}td:first-child{font-weight:800;color:var(--primary);width:27%}ul{margin:0;padding-right:20px}li{margin:4px 0}.editable td[contenteditable="true"], .editable input, .editable textarea, .editable select{outline:2px dashed transparent}.editable td[contenteditable="true"]:focus, input:focus, textarea:focus, select:focus{outline:2px dashed var(--gold);background:#fff9ed}
+.form-wrap{background:linear-gradient(180deg,#ffffff,#f7fbf8);border:1px solid rgba(15,76,92,.14);border-radius:28px;box-shadow:var(--shadow);padding:24px}.form-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}label{font-weight:800;color:var(--primary)}input,textarea,select{font-family:inherit;border:1px solid #d8e2dd;border-radius:14px;padding:12px;background:#fff;color:var(--ink);font-size:16px}textarea{min-height:92px;resize:vertical}.generated{margin-top:18px;background:#fff;border:1px dashed var(--primary2);border-radius:20px;padding:18px}.objective-row{display:grid;grid-template-columns:1.1fr .8fr .9fr auto;gap:10px;margin:10px 0}.objective-row textarea{min-height:70px}.icon{font-size:20px}.page-footer{margin-top:28px;text-align:center;color:var(--primary);font-weight:900}.more{display:block;color:var(--gold);font-weight:900;margin-top:5px;text-decoration:none}.last-cta{background:linear-gradient(135deg,var(--primary),var(--primary2));color:white;border-radius:28px;padding:34px;box-shadow:var(--shadow);text-align:center}.last-cta h2{font-size:36px;margin:0 0 12px}.print-only{display:none}
+@media(max-width:800px){.form-grid,.objective-row{grid-template-columns:1fr}.card{padding:24px}.page{padding:26px 14px}table{font-size:14px}th,td{padding:10px}}
+@media print{
+ body{background:white;font-size:12pt}.hero,.page{min-height:initial;padding:12mm}.toolbar,.no-print{display:none!important}.card,.mini,table,.form-wrap,.last-cta{box-shadow:none}.hero,.page{page-break-after:always}.page:last-child{page-break-after:auto}.page-footer{position:fixed;bottom:8mm;left:0;right:0;font-size:11pt}.print-only{display:block}a{color:inherit;text-decoration:none}td[contenteditable="true"]{outline:0}.notice{background:#fff;border:1px solid #ddd}th{background:#0f4c5c!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.last-cta{background:#0f4c5c!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<header class="hero page first-page">
+  <div class="card">
+    <h1>دمج أهداف الأداء الوظيفي والجدارات للكادر الإداري</h1>
+    <p class="subtitle">صياغة مهنية قابلة للقياس، تجمع بين نواتج العمل والجدارات السلوكية والمبادرة والتوثيق.</p>
+    <div class="badges"><span class="badge">أهداف قابلة للقياس</span><span class="badge">جدارات مدمجة</span><span class="badge">استمارة قابلة للتعديل</span><span class="badge">توليد أهداف ذكي محلي</span></div>
+    <div class="notice"><strong>تنبيه:</strong> هذا العمل هو مزيج من جهود مباركة من مكتب التعليم في أبي عريش والأخت المبدعة غادة السحيمي والأخت الإدارية عبير الخالدي والمديرة حليمه السميري.</div>
+    <div class="toolbar no-print"><button class="btn" onclick="window.print()">🖨️ طباعة / حفظ PDF</button><a class="btn secondary" href="#form">🪄 الانتقال لاستمارة الإداري/ة</a></div>
+    <div class="page-footer">تصميم د/فواز<a class="more" href="https://t.me/TAqhjT3MFVE1Yzk0">تفضل للمزيد<br>https://t.me/TAqhjT3MFVE1Yzk0</a></div>
+  </div>
+</header>
+
+<section class="page">
+  <h2 class="section-title"><span>1</span>منهجية الدمج والتحليل</h2>
+  <div class="intro-grid">
+    <div class="mini"><h3>ما تم دمجه</h3><p>تم جمع الأهداف التشغيلية المتكررة مثل المحاضر، النشرات، المعاملات، بيانات الطلاب/الطالبات، تقارير الغياب، الدعم الإداري، المناوبة، والتوثيق؛ ثم ربطها بالجدارات مثل المسؤولية، التواصل، المبادرة، العمل الجماعي، إدارة الوقت، التقنية، وضبط الانفعال.</p></div>
+    <div class="mini"><h3>منع التكرار</h3><p>بدلاً من تكرار الهدف نفسه لكل مهمة، صيغت الأهداف كمجالات عمل كبرى، مع مؤشرات مرنة تقبل تغيير العدد حسب واقع المدرسة ووصف الوظيفة.</p></div>
+    <div class="mini"><h3>قاعدة القياس</h3><p>كل هدف يتضمن ناتجاً، معياراً، شاهداً، ونسبة إنجاز أو عدد عمليات؛ وهذا يجعل الميثاق أسهل عند المتابعة والتقييم، ويريح الرأس من مطاردة الشواهد آخر السنة.</p></div>
+  </div>
+</section>
+
+<section class="page middle-page">
+  <h2 class="section-title"><span>2</span>نواتج العمل الإداري والتنظيمي</h2>
+  <table class="editable">
+    <thead><tr><th>الهدف الاستراتيجي/الجدارة</th><th>الوصف</th><th>مؤشرات الأداء</th></tr></thead>
+    <tbody>
+      <tr><td contenteditable="true">رفع كفاءة الإنجاز الإداري والتوثيق المدرسي</td><td contenteditable="true"><ul><li>ينجز/تنجز الإداري/ة المعاملات الصادرة والواردة ومحاضر الاجتماعات والتكليفات والنشرات وفق توجيهات المدير/ة أو الوكيل/ة.</li><li>يرتب/ترتب الملفات والسجلات والفهارس بطريقة تسهل الوصول للشواهد.</li><li>يربط/تربط كل ناتج عمل بالهدف المحدد في ميثاق الأداء.</li></ul></td><td contenteditable="true"><ul><li>عدد المعاملات المنجزة خلال العام.</li><li>نسبة الملفات المفهرسة والمحدثة.</li><li>عدد محاضر الاجتماعات والتكليفات والنشرات الموثقة.</li><li>توفر شواهد رقمية أو ورقية معتمدة.</li></ul></td></tr>
+      <tr><td contenteditable="true">المسؤولية والالتزام بجودة الناتج</td><td contenteditable="true"><ul><li>يتحمل/تتحمل الموظف/ة مسؤولية نواتج العمل دون إلقاء اللوم على الآخرين.</li><li>يلتزم/تلتزم بالوقت المحدد وبمستوى جودة يتوافق مع متطلبات المدرسة.</li></ul></td><td contenteditable="true"><ul><li>نسبة المهام المنجزة في وقتها.</li><li>عدد الملاحظات المصححة قبل الاعتماد.</li><li>درجة رضا الرئيس/ة المباشر/ة عن جودة التنفيذ.</li></ul></td></tr>
+      <tr><td contenteditable="true">إدارة الوقت وترتيب الأولويات</td><td contenteditable="true"><ul><li>ينظم/تنظم الإداري/ة المهام اليومية والأسبوعية وفق الأولوية، خاصة عند تعدد الأعمال أو وجود تكليفات إضافية.</li><li>يوازن/توازن بين المهام الروتينية والدعم الطارئ دون تعطيل الخدمة المدرسية.</li></ul></td><td contenteditable="true"><ul><li>خطة متابعة أسبوعية أو شهرية.</li><li>عدد المهام الإضافية المنجزة بجودة.</li><li>انخفاض الأعمال المتأخرة أو المعلقة.</li></ul></td></tr>
+    </tbody>
+  </table>
+  <div class="page-footer">تصميم د/فواز<a class="more" href="https://t.me/TAqhjT3MFVE1Yzk0">تفضل للمزيد<br>https://t.me/TAqhjT3MFVE1Yzk0</a></div>
+</section>
+
+<section class="page">
+  <h2 class="section-title"><span>3</span>بيانات الطلاب/الطالبات والمدرسة والأنظمة الإلكترونية</h2>
+  <table class="editable">
+    <thead><tr><th>الهدف الاستراتيجي/الجدارة</th><th>الوصف</th><th>مؤشرات الأداء</th></tr></thead>
+    <tbody>
+      <tr><td contenteditable="true">تحسين دقة بيانات الطلاب/الطالبات والمدرسة</td><td contenteditable="true"><ul><li>يدخل/تدخل الإداري/ة البيانات في الأنظمة المعتمدة ويحدث/تحدث بيانات المدرسة والطلاب/الطالبات والموظفين/الموظفات حسب الصلاحيات.</li><li>يستخرج/تستخرج الإحصاءات والبيانات المطلوبة لدعم القرار المدرسي.</li></ul></td><td contenteditable="true"><ul><li>عدد البيانات المحدثة في النظام.</li><li>نسبة الأخطاء المصححة قبل الرفع.</li><li>عدد التقارير والإحصاءات المستخرجة.</li><li>توثيق تاريخ التحديث واسم المعد/ة.</li></ul></td></tr>
+      <tr><td contenteditable="true">توظيف التقنية بفاعلية</td><td contenteditable="true"><ul><li>يستخدم/تستخدم الموظف/ة التقنية في إعداد التقارير والنماذج والجداول والفهارس وحفظ الشواهد.</li><li>يدعم/تدعم المستفيدين/المستفيدات في الوصول إلى النماذج والروابط والخدمات الإلكترونية.</li></ul></td><td contenteditable="true"><ul><li>عدد النماذج الإلكترونية أو الجداول المستخدمة.</li><li>نسبة الأرشفة الرقمية للشواهد.</li><li>عدد عمليات الدعم التقني أو الإجرائي المقدمة.</li></ul></td></tr>
+      <tr><td contenteditable="true">المتابعة اليومية للحضور والغياب والتأخر</td><td contenteditable="true"><ul><li>يرصد/ترصد الإداري/ة عمليات الحضور والغياب والتأخر للطلاب/الطالبات أو الموظفين/الموظفات بحسب الاختصاص.</li><li>يتابع/تتابع التواصل مع ولي الأمر أو الجهة المختصة عند الحاجة.</li></ul></td><td contenteditable="true"><ul><li>عدد عمليات الرصد الشهرية.</li><li>عدد تقارير الحصر الدورية.</li><li>عدد الاتصالات أو الإشعارات الموثقة.</li><li>نسبة اكتمال بيانات المتابعة.</li></ul></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="page">
+  <h2 class="section-title"><span>4</span>الجدارات السلوكية والتواصل وخدمة المستفيد/ة</h2>
+  <table class="editable">
+    <thead><tr><th>الهدف الاستراتيجي/الجدارة</th><th>الوصف</th><th>مؤشرات الأداء</th></tr></thead>
+    <tbody>
+      <tr><td contenteditable="true">التواصل الفعال ونقل المعلومات</td><td contenteditable="true"><ul><li>يتواصل/تتواصل الإداري/ة بوضوح وإيجاز وفي الوقت المناسب مع المدير/ة والزملاء/الزميلات والطلاب/الطالبات وأولياء الأمور.</li><li>ينقل/تنقل المعلومات ذات الصلة للمستهدفين/المستهدفات مع الالتزام بالتوثيق الصحيح.</li></ul></td><td contenteditable="true"><ul><li>عدد التعاميم أو الرسائل أو النشرات المنشورة.</li><li>توثيق قنوات التواصل والمستهدفين/المستهدفات.</li><li>انخفاض حالات نقص المعلومة أو تأخرها.</li></ul></td></tr>
+      <tr><td contenteditable="true">العمل ضمن مجموعة المدرسة</td><td contenteditable="true"><ul><li>يتعاون/تتعاون الموظف/ة مع مجموعة العمل واللجان والفرق المدرسية، ويستجيب/تستجيب لطلبات الدعم بصورة إيجابية.</li><li>يفهم/تفهم أثر دوره/دورها في تحقيق أهداف المدرسة ويشرح/تشرح ذلك عند الحاجة.</li></ul></td><td contenteditable="true"><ul><li>عدد مشاركات الدعم للجان أو الفرق.</li><li>عدد محاضر أو إجراءات تنفيذ موثقة.</li><li>مستوى رضا المستفيدين/المستفيدات من الدعم.</li></ul></td></tr>
+      <tr><td contenteditable="true">الاحترام وضبط الانفعال وإدارة المواقف</td><td contenteditable="true"><ul><li>يتعامل/تتعامل الإداري/ة مع الجميع باحترام، وينصت/تنصت بعناية، ويتصرف/تتصرف بحكمة في الأزمات والمواقف الطارئة.</li><li>يحافظ/تحافظ على سرية البيانات وكرامة المستفيد/ة.</li></ul></td><td contenteditable="true"><ul><li>خلو السجل من شكاوى متكررة مثبتة.</li><li>توثيق معالجة المواقف الطارئة وفق الإجراء.</li><li>ملاحظات إيجابية من الرئيس/ة المباشر/ة أو المستفيدين/المستفيدات.</li></ul></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="page">
+  <h2 class="section-title"><span>5</span>المبادرة والتحسين والتنمية المهنية</h2>
+  <table class="editable">
+    <thead><tr><th>الهدف الاستراتيجي/الجدارة</th><th>الوصف</th><th>مؤشرات الأداء</th></tr></thead>
+    <tbody>
+      <tr><td contenteditable="true">المبادرة في مواجهة التحديات</td><td contenteditable="true"><ul><li>يبادر/تبادر الموظف/ة برفع التحديات في الوقت المناسب وبكل شفافية.</li><li>يقترح/تقترح بدائل عملية وحلولاً قابلة للتنفيذ دون انتظار التوجيه التفصيلي في كل خطوة.</li></ul></td><td contenteditable="true"><ul><li>عدد المبادرات أو المقترحات التطويرية.</li><li>نسبة المبادرات المنفذة أو المعتمدة.</li><li>أثر المبادرة على سرعة الخدمة أو جودة الناتج.</li></ul></td></tr>
+      <tr><td contenteditable="true">تحسين جودة الخدمة المدرسية</td><td contenteditable="true"><ul><li>يركز/تركز الإداري/ة على رضا المستفيد/ة عند تنفيذ الأنشطة والخدمات اليومية.</li><li>يطور/تطور النماذج أو إجراءات العمل بما يقلل الجهد والتكرار.</li></ul></td><td contenteditable="true"><ul><li>زمن إنجاز الخدمة قبل التحسين وبعده.</li><li>عدد النماذج أو الإجراءات المحسنة.</li><li>نتيجة قياس رضا المستفيد/ة.</li></ul></td></tr>
+      <tr><td contenteditable="true">التنمية المهنية الذاتية</td><td contenteditable="true"><ul><li>يحدد/تحدد الموظف/ة احتياجاته/احتياجاتها التطويرية، ويشارك/تشارك في فرص تعلم مرتبطة بمهامه/مهامها.</li><li>ينقل/تنقل أثر التعلم إلى التطبيق العملي داخل المدرسة.</li></ul></td><td contenteditable="true"><ul><li>عدد ساعات أو برامج التطوير المهني.</li><li>شاهد تطبيق مهارة جديدة في العمل.</li><li>تحسن نواتج العمل أو انخفاض الأخطاء بعد التدريب.</li></ul></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="page" id="form">
+  <h2 class="section-title"><span>✍️</span>استمارة الإداري/ة القابلة للتعديل وتوليد الأهداف</h2>
+  <div class="form-wrap">
+    <div class="form-grid">
+      <div class="field"><label>اسم الإداري/ة</label><input id="empName" placeholder="اكتب/ي الاسم هنا"></div>
+      <div class="field"><label>المسمى الوظيفي</label><select id="role"><option>مساعد/ة إداري/ة</option><option>سكرتير/ة</option><option>مسجل/ة معلومات</option><option>أمين/ة مصادر التعلم</option><option>موجه/ة صحي/ة</option><option>منسق/ة نشاط</option><option>منسق/ة أمن وسلامة</option><option>موظف/ة خدمات</option><option>حارس/ة مدرسة</option></select></div>
+      <div class="field"><label>العام</label><input id="year" value="2025"></div>
+      <div class="field full"><label>وصف مختصر للمهام أو الاحتياج</label><textarea id="desc" placeholder="مثال: أرغب في أهداف عن المعاملات، تحديث بيانات الطلاب/الطالبات، متابعة الغياب، إعداد التقارير، وتنظيم الملفات."></textarea></div>
+      <div class="field"><label>عدد الأهداف المطلوبة</label><input id="count" type="number" min="1" max="8" value="4"></div>
+      <div class="field"><label>نمط القياس</label><select id="measure"><option>عدد + شاهد</option><option>نسبة إنجاز + شاهد</option><option>زمن إنجاز + جودة</option></select></div>
+      <div class="field"><label>المستهدف التقريبي</label><input id="target" placeholder="مثال: 10 / 20 / 90%"></div>
+    </div>
+    <div class="toolbar no-print"><button class="btn" onclick="generateObjectives()"><span class="icon">🪄</span> توليد الأهداف حسب الوصف</button><button class="btn secondary" onclick="addBlankRow()">➕ إضافة هدف فارغ</button><button class="btn secondary" onclick="window.print()">🖨️ طباعة الاستمارة</button></div>
+    <div class="generated" id="generatedArea">
+      <table id="objTable" class="editable"><thead><tr><th>الهدف</th><th>المعيار</th><th>الناتج المستهدف</th><th class="no-print">إجراء</th></tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+</section>
+
+<section class="page last-page">
+  <div class="last-cta">
+    <h2>قاعدة ذهبية للتقييم</h2>
+    <p>الهدف بلا شاهد مثل ملف بلا فهرس: موجود… لكن الله يعين من يبحث عنه. وثّق/وثقي أولاً بأول، واجعل/اجعلي كل ناتج مرتبطاً بهدف واضح وجداره ظاهرة.</p>
+  </div>
+  <h2 class="section-title"><span>✓</span>قائمة تحقق قبل اعتماد الميثاق</h2>
+  <table class="editable">
+    <thead><tr><th>البند</th><th>حالة التحقق</th><th>ملاحظات قابلة للتعديل</th></tr></thead>
+    <tbody>
+      <tr><td>الأهداف مصاغة بصيغة تشمل الإداري/ة أو الموظف/ة.</td><td contenteditable="true">منجز / يحتاج تعديل</td><td contenteditable="true"></td></tr>
+      <tr><td>كل هدف يحتوي على ناتج قابل للقياس.</td><td contenteditable="true">منجز / يحتاج تعديل</td><td contenteditable="true"></td></tr>
+      <tr><td>المؤشرات مرتبطة بعدد أو نسبة أو زمن أو جودة.</td><td contenteditable="true">منجز / يحتاج تعديل</td><td contenteditable="true"></td></tr>
+      <tr><td>الشواهد محددة: فهرس، تقرير، بيان، محضر، رابط، صورة، أو سجل.</td><td contenteditable="true">منجز / يحتاج تعديل</td><td contenteditable="true"></td></tr>
+      <tr><td>تم ربط الأهداف بالجدارات السلوكية المناسبة.</td><td contenteditable="true">منجز / يحتاج تعديل</td><td contenteditable="true"></td></tr>
+      <tr><td>المستهدفات قابلة للتغيير حسب ظروف العمل ووصف الوظيفة.</td><td contenteditable="true">منجز / يحتاج تعديل</td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+  <div class="page-footer">تصميم د/فواز<a class="more" href="https://t.me/TAqhjT3MFVE1Yzk0">تفضل للمزيد<br>https://t.me/TAqhjT3MFVE1Yzk0</a></div>
+</section>
+
+<script>
+const bank = {
+  "معاملات":["إنجاز عدد {target} معاملة صادرة وواردة خلال عام {year} وفق الضوابط المعتمدة مع توثيق الفهرس والشواهد.","متابعة تسليم عدد {target} معاملة في سجل التوديع خلال عام {year} مع توثيق تاريخ التسليم والمستلم/ة."],
+  "محاضر":["توثيق عدد {target} محضر اجتماع للجان أو الفرق المدرسية خلال عام {year} وفق النموذج المعتمد وحفظها في ملف منظم."],
+  "بيانات":["تحديث عدد {target} بيان من بيانات الطلاب/الطالبات أو المدرسة في النظام المعتمد خلال عام {year} مع مراجعة الدقة قبل الاعتماد.","استخراج عدد {target} تقرير أو إحصاء من بيانات المدرسة لدعم قرارات المدير/ة أو الوكيل/ة خلال عام {year}."],
+  "غياب":["إعداد عدد {target} تقرير حصر للغياب أو التأخر خلال عام {year} مع توثيق إجراءات المتابعة والتواصل."],
+  "تقارير":["إعداد عدد {target} تقرير إلكتروني أو ورقي حسب توجيه الرئيس/ة المباشر/ة خلال عام {year} مع إرفاق الشواهد."],
+  "ملفات":["تنسيق وفهرسة عدد {target} ملف إداري أو مدرسي خلال عام {year} بما يسهل الوصول إلى الشواهد والبيانات."],
+  "نشاط":["متابعة تنفيذ عدد {target} نشاط أو برنامج مدرسي خلال عام {year} مع توثيق خطة التنفيذ ونتائج المشاركة."],
+  "أمن":["المشاركة في تنفيذ عدد {target} إجراء أو خطة مرتبطة بالأمن والسلامة خلال عام {year} مع توثيق الدور المحدد للإداري/ة."],
+  "دعم":["تقديم عدد {target} عملية دعم إداري للعمليات المدرسية خلال عام {year} مع بيان نوع الدعم والمستفيد/ة."],
+  "تقنية":["توظيف التقنية في إعداد عدد {target} نموذج أو جدول أو رابط متابعة خلال عام {year} لتحسين سرعة الإنجاز ودقة البيانات."],
+  "default":["إنجاز عدد {target} مهمة مرتبطة بوصف وظيفة {role} خلال عام {year} وفق متطلبات الجودة والتوثيق المعتمد.","تقديم عدد {target} مبادرة أو مقترح تحسين في مجال {role} خلال عام {year} مع قياس أثرها على نواتج العمل."]
+};
+function fill(t){return t.replaceAll('{target}',document.getElementById('target').value||'10').replaceAll('{year}',document.getElementById('year').value||'2025').replaceAll('{role}',document.getElementById('role').value)}
+function generateObjectives(){
+ const desc=(document.getElementById('desc').value||'').toLowerCase(); const n=Math.max(1,Math.min(8,parseInt(document.getElementById('count').value||4))); const tbody=document.querySelector('#objTable tbody'); tbody.innerHTML='';
+ let pool=[]; Object.keys(bank).forEach(k=>{if(k!=='default' && desc.includes(k)) pool=pool.concat(bank[k]);}); if(pool.length===0) pool=bank.default.concat(bank['تقارير'],bank['ملفات'],bank['دعم']);
+ for(let i=0;i<n;i++){addRow(fill(pool[i%pool.length]), document.getElementById('measure').value, (document.getElementById('target').value||'حسب ظروف العمل')+' قابلة للتغيير حسب واقع العمل');}
+}
+function addRow(goal,metric,target){const tbody=document.querySelector('#objTable tbody'); const tr=document.createElement('tr'); tr.innerHTML=`<td contenteditable="true">${goal||''}</td><td contenteditable="true">${metric||''}</td><td contenteditable="true">${target||''}</td><td class="no-print"><button class="btn secondary" onclick="this.closest('tr').remove()">حذف</button></td>`; tbody.appendChild(tr)}
+function addBlankRow(){addRow('','','')}
+window.addEventListener('load',()=>{addRow('إنجاز عدد 10 مهام إدارية مرتبطة بوصف الوظيفة خلال عام 2025 وفق متطلبات الجودة والتوثيق المعتمد.','عدد + شاهد','10 قابلة للتغيير حسب واقع العمل')});
+</script>
+</body>
+</html>
