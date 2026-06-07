@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الإطار المتكامل للأداء الوظيفي 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   SKY BLOOM — فاتح أزرق سماوي زاهي 2025
+   ══════════════════════════════════════════ */
+:root {
+  --bg:         #EEF6FF;
+  --bg2:        #E2EFFC;
+  --bg3:        #F7FBFF;
+  --surface:    #FFFFFF;
+  --surface2:   #F4F9FF;
+  --sky:        #2980D9;
+  --sky-light:  #4AA3F5;
+  --sky-pale:   #DBF0FF;
+  --sky-deep:   #1460A8;
+  --aqua:       #13C5C0;
+  --aqua-light: #2EDBD5;
+  --mint:       #E0F8F6;
+  --text:       #0D2240;
+  --text-mid:   #2A4A70;
+  --text-soft:  #6080A8;
+  --border:     rgba(41,128,217,0.15);
+  --shadow-sm:  0 2px 14px rgba(20,96,168,0.08);
+  --shadow-md:  0 6px 30px rgba(20,96,168,0.13);
+  --shadow-lg:  0 16px 55px rgba(20,96,168,0.18);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  font-family:'Cairo','Tajawal',sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  direction:rtl;
+  overflow-x:hidden;
+}
+
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--sky-light); border-radius:3px; }
+
+#particles { position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none; opacity:0.55; }
+
+.progress-bar { position:fixed; top:64px; left:0; right:0; z-index:99; height:3px; background:rgba(41,128,217,0.12); }
+.progress-fill { height:100%; width:0%; background:linear-gradient(90deg,#2980D9,#13C5C0,#A066E8,#F5735A); transition:width 0.1s; }
+
+nav {
+  position:fixed; top:0; right:0; left:0; z-index:100;
+  background:rgba(245,250,255,0.94);
+  backdrop-filter:blur(24px);
+  border-bottom:1px solid rgba(41,128,217,0.18);
+  box-shadow:0 2px 20px rgba(20,96,168,0.07);
+  padding:0 2rem;
+  display:flex; align-items:center; justify-content:space-between;
+  height:64px;
+}
+.nav-logo { font-family:'Amiri',serif; font-size:1.05rem; color:var(--sky-deep); font-weight:700; }
+.nav-links { display:flex; gap:0.4rem; align-items:center; }
+.nav-links a {
+  color:var(--text-mid); text-decoration:none;
+  font-size:0.78rem; padding:5px 13px; border-radius:20px;
+  transition:all 0.25s; border:1px solid transparent; white-space:nowrap;
+}
+.nav-links a:hover { color:var(--sky); border-color:rgba(41,128,217,0.3); background:var(--sky-pale); }
+
+#hero {
+  position:relative; z-index:1;
+  min-height:100vh;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:80px 2rem 4rem;
+  overflow:hidden;
+  background:
+    radial-gradient(ellipse 100% 70% at 50% -5%, rgba(41,128,217,0.16) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 60% at 5% 85%, rgba(19,197,192,0.14) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 50% at 95% 60%, rgba(160,102,232,0.09) 0%, transparent 50%),
+    linear-gradient(160deg, #F0F8FF 0%, #E6F3FD 40%, #DBF0FF 100%);
+}
+
+.hero-ornament {
+  position:absolute; width:580px; height:580px; border-radius:50%;
+  border:1.5px solid rgba(41,128,217,0.12);
+  top:50%; left:50%; transform:translate(-50%,-50%);
+  animation:spin-slow 55s linear infinite; pointer-events:none;
+}
+.hero-ornament::before { content:''; position:absolute; inset:45px; border-radius:50%; border:1px solid rgba(19,197,192,0.1); }
+.hero-ornament::after  { content:''; position:absolute; inset:110px; border-radius:50%; border:1px dashed rgba(41,128,217,0.08); }
+@keyframes spin-slow { to { transform:translate(-50%,-50%) rotate(360deg); } }
+
+.hero-blob { position:absolute; border-radius:50%; filter:blur(70px); pointer-events:none; opacity:0.4; }
+.blob-1 { width:420px; height:420px; top:-100px; right:-100px; background:radial-gradient(circle,rgba(41,128,217,0.22),transparent 70%); }
+.blob-2 { width:320px; height:320px; bottom:-70px; left:-70px; background:radial-gradient(circle,rgba(19,197,192,0.2),transparent 70%); }
+.blob-3 { width:260px; height:260px; top:38%; left:3%; background:radial-gradient(circle,rgba(160,102,232,0.13),transparent 70%); }
+
+.alert-box {
+  position:relative; z-index:2;
+  background:linear-gradient(135deg,rgba(219,240,255,0.92),rgba(240,250,255,0.96));
+  border:1.5px solid rgba(41,128,217,0.38);
+  border-radius:18px; padding:1.3rem 2rem; margin-bottom:2.5rem;
+  max-width:780px; width:100%; text-align:center;
+  box-shadow:0 4px 22px rgba(41,128,217,0.12), inset 0 1px 0 rgba(255,255,255,0.75);
+  animation:fadeInDown 0.8s ease both;
+}
+.alert-box p { font-size:0.88rem; line-height:1.9; color:var(--text-mid); }
+.alert-box strong { color:var(--sky-deep); }
+
+.hero-badge {
+  position:relative; z-index:2;
+  display:inline-block;
+  background:linear-gradient(135deg,rgba(41,128,217,0.14),rgba(74,163,245,0.08));
+  border:1.5px solid rgba(41,128,217,0.32);
+  border-radius:30px; padding:6px 22px;
+  font-size:0.78rem; color:var(--sky); letter-spacing:3px;
+  margin-bottom:1.5rem;
+  animation:fadeInDown 1s ease 0.2s both;
+}
+
+.hero-title {
+  position:relative; z-index:2;
+  font-family:'Amiri',serif;
+  font-size:clamp(2.4rem,5.5vw,4.2rem); font-weight:700; line-height:1.35;
+  text-align:center;
+  background:linear-gradient(135deg,var(--text) 0%, var(--sky) 40%, var(--aqua) 75%, var(--text) 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  margin-bottom:1rem;
+  animation:fadeInDown 1s ease 0.4s both;
+}
+.hero-subtitle { position:relative; z-index:2; font-size:1.05rem; color:var(--text-mid); text-align:center; margin-bottom:0.7rem; animation:fadeInDown 1s ease 0.6s both; }
+.hero-year { position:relative; z-index:2; font-size:0.88rem; color:var(--aqua); text-align:center; margin-bottom:2.8rem; font-weight:600; animation:fadeInDown 1s ease 0.7s both; }
+
+.hero-domains {
+  position:relative; z-index:2;
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:0.9rem; max-width:800px; width:100%; margin-bottom:2.8rem;
+  animation:fadeInUp 1s ease 0.8s both;
+}
+.domain-chip {
+  background:rgba(255,255,255,0.78);
+  border:1.5px solid rgba(41,128,217,0.18);
+  border-radius:14px; padding:1rem; text-align:center; cursor:pointer;
+  transition:all 0.3s; text-decoration:none; color:inherit;
+  backdrop-filter:blur(10px); box-shadow:var(--shadow-sm);
+}
+.domain-chip:hover { background:rgba(255,255,255,0.97); border-color:rgba(41,128,217,0.45); transform:translateY(-5px); box-shadow:var(--shadow-md); }
+.domain-chip .chip-icon { font-size:1.7rem; margin-bottom:0.4rem; display:block; }
+.domain-chip .chip-num { display:block; font-size:0.62rem; color:var(--sky); letter-spacing:2px; margin-bottom:0.25rem; }
+.domain-chip .chip-title { font-size:0.78rem; color:var(--text-mid); line-height:1.4; }
+
+.hero-cta {
+  position:relative; z-index:2;
+  display:flex; gap:1rem; align-items:center; flex-wrap:wrap; justify-content:center;
+  animation:fadeInUp 1s ease 1s both;
+}
+.btn-primary {
+  background:linear-gradient(135deg,var(--sky),var(--sky-light));
+  color:#FFF; padding:13px 30px; border-radius:50px; text-decoration:none;
+  font-weight:700; font-size:0.88rem;
+  box-shadow:0 6px 22px rgba(41,128,217,0.38); transition:all 0.3s;
+  display:flex; align-items:center; gap:0.5rem;
+}
+.btn-primary:hover { transform:translateY(-2px); box-shadow:0 12px 32px rgba(41,128,217,0.48); }
+.btn-secondary {
+  background:rgba(255,255,255,0.85); color:var(--text-mid); padding:13px 30px;
+  border-radius:50px; text-decoration:none; font-size:0.88rem;
+  border:1.5px solid rgba(41,128,217,0.28); transition:all 0.3s; backdrop-filter:blur(8px);
+}
+.btn-secondary:hover { border-color:var(--sky); color:var(--sky); background:#FFF; }
+
+.scroll-hint { position:relative; z-index:2; margin-top:3rem; text-align:center; animation:fadeInUp 1s ease 1.2s both; }
+.scroll-hint span { font-size:0.72rem; color:var(--text-soft); display:block; margin-bottom:0.5rem; }
+.scroll-arrow {
+  width:26px; height:26px; margin:0 auto;
+  border-right:2px solid rgba(41,128,217,0.42); border-bottom:2px solid rgba(41,128,217,0.42);
+  transform:rotate(45deg); animation:bounce 2s infinite;
+}
+@keyframes bounce { 0%,100%{transform:rotate(45deg) translateY(0)} 50%{transform:rotate(45deg) translateY(6px)} }
+
+.credit-bar {
+  position:relative; z-index:1;
+  background:linear-gradient(90deg,#E8F4FF,#F2F9FF,#E8F4FF);
+  border-top:1px solid rgba(41,128,217,0.18); border-bottom:1px solid rgba(41,128,217,0.18);
+  padding:1.4rem 2rem; text-align:center;
+}
+.credit-bar p { font-size:0.84rem; color:var(--text-mid); line-height:2; }
+.credit-bar strong { color:var(--sky-deep); }
+
+.domains-nav {
+  position:relative; z-index:1; background:var(--surface);
+  border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+  padding:2rem; text-align:center;
+}
+.domains-nav-title { font-size:0.72rem; letter-spacing:4px; color:var(--text-soft); margin-bottom:1.4rem; }
+.domains-row { display:flex; justify-content:center; gap:0.5rem; flex-wrap:wrap; max-width:900px; margin:0 auto; }
+.dnav-item {
+  display:flex; align-items:center; gap:0.55rem;
+  background:var(--bg); border:1.5px solid var(--border);
+  border-radius:12px; padding:0.7rem 1.1rem;
+  text-decoration:none; color:inherit; transition:all 0.25s; box-shadow:var(--shadow-sm);
+}
+.dnav-item:hover { background:var(--sky-pale); border-color:rgba(41,128,217,0.38); box-shadow:var(--shadow-md); transform:translateY(-2px); }
+.dnav-item span:first-child { font-size:1.1rem; }
+.dnav-item span:last-child { font-size:0.76rem; color:var(--text-mid); }
+
+/* Domain accent palettes */
+.domain-1 { --accent:#2980D9; --accent-v:#4AA3F5; --accent-bg:#DBF0FF; --accent-bg2:#EEF8FF; --accent-bd:rgba(41,128,217,0.22); --accent-hd:#0D4A8A; }
+.domain-2 { --accent:#0EA89E; --accent-v:#22C9C3; --accent-bg:#D6F8F6; --accent-bg2:#EDFCFB; --accent-bd:rgba(14,168,158,0.22); --accent-hd:#066460; }
+.domain-3 { --accent:#7048D4; --accent-v:#9070EC; --accent-bg:#EAE0FB; --accent-bg2:#F5F0FE; --accent-bd:rgba(112,72,212,0.22); --accent-hd:#3E1A90; }
+.domain-4 { --accent:#E85D30; --accent-v:#F57848; --accent-bg:#FFE8DE; --accent-bg2:#FFF4EF; --accent-bd:rgba(232,93,48,0.22); --accent-hd:#8A2808; }
+.domain-5 { --accent:#1A9E56; --accent-v:#30C070; --accent-bg:#D4F7E4; --accent-bg2:#EBFBF2; --accent-bd:rgba(26,158,86,0.22); --accent-hd:#0A5E2E; }
+.domain-6 { --accent:#C830A0; --accent-v:#E050BE; --accent-bg:#FCE0F5; --accent-bg2:#FEF0FB; --accent-bd:rgba(200,48,160,0.22); --accent-hd:#7A0862; }
+
+.domain-section {
+  position:relative; padding:5rem 2rem; border-top:1px solid var(--border);
+  background:var(--bg3);
+}
+.domain-section:nth-child(even) { background:var(--surface2); }
+.domain-section::before {
+  content:''; position:absolute; top:0; right:0; width:45%; height:100%;
+  background:radial-gradient(ellipse at 85% 40%, var(--accent-bg) 0%, transparent 65%);
+  pointer-events:none;
+}
+
+.domain-inner { max-width:1300px; margin:0 auto; position:relative; }
+
+.domain-header {
+  display:flex; align-items:center; gap:1.8rem; margin-bottom:2.8rem;
+  opacity:0; transform:translateX(20px); transition:all 0.7s ease;
+}
+.domain-header.visible { opacity:1; transform:translateX(0); }
+.domain-header-icon {
+  width:70px; height:70px; border-radius:20px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:2rem; flex-shrink:0;
+  background:var(--accent-bg); border:2px solid var(--accent-bd);
+  box-shadow:var(--shadow-sm);
+}
+.domain-header-num { font-size:0.68rem; letter-spacing:4px; color:var(--accent); margin-bottom:0.35rem; font-weight:600; }
+.domain-header-title { font-family:'Amiri',serif; font-size:clamp(1.5rem,3vw,2.3rem); font-weight:700; color:var(--text); line-height:1.3; }
+.domain-header-sub { font-size:0.82rem; color:var(--text-soft); margin-top:0.4rem; }
+
+.table-card {
+  background:var(--surface); border:1.5px solid var(--accent-bd);
+  border-radius:22px; overflow:hidden; margin-bottom:1.8rem;
+  opacity:0; transform:translateY(35px); transition:all 0.6s ease;
+  box-shadow:var(--shadow-sm);
+}
+.table-card.visible { opacity:1; transform:translateY(0); }
+.table-card:hover { box-shadow:var(--shadow-md); transform:translateY(-2px); }
+
+.table-header {
+  background:linear-gradient(135deg, var(--accent-bg), rgba(255,255,255,0.6));
+  border-bottom:1.5px solid var(--accent-bd);
+  display:grid; grid-template-columns:220px 1fr 250px; text-align:center;
+}
+.th { padding:1rem 1.2rem; font-size:0.72rem; font-weight:700; letter-spacing:2px; color:var(--accent-hd); border-left:1.5px solid var(--accent-bd); }
+.th:last-child { border-left:none; }
+
+.table-row-item {
+  display:grid; grid-template-columns:220px 1fr 250px;
+  border-top:1px solid rgba(41,128,217,0.07); transition:background 0.2s;
+}
+.table-row-item:hover { background:var(--accent-bg2); }
+.table-row-item:nth-child(even) { background:rgba(240,248,255,0.55); }
+
+.td {
+  padding:1.2rem 1.4rem; border-left:1px solid rgba(41,128,217,0.07);
+  font-size:0.84rem; line-height:1.85; color:var(--text-mid); vertical-align:top;
+}
+.td:last-child { border-left:none; }
+.td.goal-name {
+  font-family:'Amiri',serif; font-size:0.98rem; font-weight:700; line-height:1.6;
+  color:var(--accent); text-align:center;
+  display:flex; flex-direction:column; justify-content:center; align-items:center; gap:0.5rem;
+  background:linear-gradient(180deg, var(--accent-bg), rgba(255,255,255,0.45));
+}
+.goal-icon { font-size:1.75rem; display:block; }
+.td ul { padding-right:0.5rem; }
+.td ul li { margin-bottom:0.5rem; list-style:none; }
+.td ul li::before { content:"◈ "; color:var(--accent-v); font-size:0.65rem; }
+.td.indicators ul li::before { content:"✦ "; color:var(--aqua); }
+.td.indicators { background:rgba(219,240,255,0.3); }
+
+footer {
+  position:relative; z-index:1;
+  background:linear-gradient(180deg,#DCF0FF,#C8E4FF);
+  border-top:1.5px solid rgba(41,128,217,0.22);
+  padding:3rem 2rem 2rem; text-align:center;
+}
+.footer-link {
+  display:inline-flex; align-items:center; gap:0.6rem;
+  background:rgba(255,255,255,0.8); border:1.5px solid rgba(41,128,217,0.32);
+  border-radius:14px; padding:1rem 2rem;
+  text-decoration:none; color:var(--sky-deep);
+  font-size:0.92rem; margin-bottom:1.5rem; transition:all 0.3s;
+  box-shadow:var(--shadow-sm);
+}
+.footer-link:hover { background:#FFF; transform:translateY(-2px); box-shadow:var(--shadow-md); }
+.footer-label { font-size:0.72rem; letter-spacing:3px; color:var(--text-soft); margin-bottom:0.8rem; }
+.footer-design { font-size:0.78rem; color:var(--text-soft); margin-top:1.5rem; }
+.footer-design strong { color:var(--sky-deep); }
+
+.back-top {
+  position:fixed; bottom:2rem; left:2rem; z-index:50;
+  width:46px; height:46px; border-radius:50%;
+  background:rgba(255,255,255,0.88); border:1.5px solid rgba(41,128,217,0.32);
+  color:var(--sky); font-size:1.1rem;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; text-decoration:none;
+  opacity:0; transition:all 0.3s;
+  backdrop-filter:blur(12px); box-shadow:var(--shadow-md);
+}
+.back-top.visible { opacity:1; }
+.back-top:hover { background:var(--sky-pale); transform:translateY(-3px); }
+
+@keyframes fadeInDown { from{opacity:0;transform:translateY(-18px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeInUp   { from{opacity:0;transform:translateY(18px)}  to{opacity:1;transform:translateY(0)} }
+
+@media print {
+  nav,#particles,.scroll-hint,.hero-ornament,.hero-blob,.back-top { display:none !important; }
+  body { background:white; }
+  .table-card { break-inside:avoid; border:1px solid #c8dff5; box-shadow:none; }
+}
+
+@media(max-width:900px){
+  .table-header,.table-row-item { grid-template-columns:1fr; }
+  .th { border-left:none; border-bottom:1px solid var(--accent-bd); }
+  .td { border-left:none; border-top:1px solid rgba(41,128,217,0.07); }
+  .td.goal-name { background:var(--accent-bg); }
+  .hero-domains { grid-template-columns:repeat(2,1fr); }
+  nav .nav-links { display:none; }
+}
+@media(max-width:600px) { .hero-domains { grid-template-columns:1fr 1fr; } }
+</style>
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">🌟 الإطار المتكامل للأداء الوظيفي</div>
+  <div class="nav-links">
+    <a href="#d1">📊 البيانات</a>
+    <a href="#d2">📋 الإداري</a>
+    <a href="#d3">📅 الحضور</a>
+    <a href="#d4">💎 الجدارات</a>
+    <a href="#d5">🌱 التنمية</a>
+    <a href="#d6">🛡️ الأمن</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-ornament"></div>
+  <div class="hero-blob blob-1"></div>
+  <div class="hero-blob blob-2"></div>
+  <div class="hero-blob blob-3"></div>
+
+  <div class="alert-box">
+    <span class="alert-icon">⚠️</span>
+    <p>
+      <strong>تنبيه مهم:</strong> هذا العمل هو مزيج من جهود مباركة من
+      <strong>مكتب التعليم في أبي عريش</strong> والأخت المبدعة
+      <strong>غادة السحيمي</strong> والأخت الإدارية
+      <strong>عبير الخالدي</strong> والمديرة
+      <strong>حليمة السميري</strong>
+    </p>
+  </div>
+
+  <div class="hero-badge">الإطار المتكامل ✦ 2025</div>
+
+  <h1 class="hero-title">الأداء الوظيفي للكادر الإداري/ة</h1>
+  <p class="hero-subtitle">دمج الأهداف الاستراتيجية والجدارات الوظيفية للمؤسسات التعليمية</p>
+  <p class="hero-year">✦ العام الدراسي 2025 ✦</p>
+
+  <div class="hero-domains">
+    <a href="#d1" class="domain-chip">
+      <span class="chip-icon">📊</span>
+      <span class="chip-num">المجال الأول</span>
+      <span class="chip-title">إدارة البيانات والمعلومات</span>
+    </a>
+    <a href="#d2" class="domain-chip">
+      <span class="chip-icon">📋</span>
+      <span class="chip-num">المجال الثاني</span>
+      <span class="chip-title">نواتج العمل الإداري</span>
+    </a>
+    <a href="#d3" class="domain-chip">
+      <span class="chip-icon">📅</span>
+      <span class="chip-num">المجال الثالث</span>
+      <span class="chip-title">متابعة الحضور والغياب</span>
+    </a>
+    <a href="#d4" class="domain-chip">
+      <span class="chip-icon">💎</span>
+      <span class="chip-num">المجال الرابع</span>
+      <span class="chip-title">الجدارات السلوكية</span>
+    </a>
+    <a href="#d5" class="domain-chip">
+      <span class="chip-icon">🌱</span>
+      <span class="chip-num">المجال الخامس</span>
+      <span class="chip-title">التنمية المهنية</span>
+    </a>
+    <a href="#d6" class="domain-chip">
+      <span class="chip-icon">🛡️</span>
+      <span class="chip-num">المجال السادس</span>
+      <span class="chip-title">الأمن والسلامة</span>
+    </a>
+  </div>
+
+  <div class="hero-cta">
+    <a href="#d1" class="btn-primary">🚀 ابدأ/ي الاستعراض</a>
+    <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" class="btn-secondary">📲 تفضل/ي للمزيد</a>
+  </div>
+
+  <div class="scroll-hint">
+    <span>مرر/ي للأسفل</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- CREDIT BAR -->
+<div class="credit-bar">
+  <p>
+    جهود مشتركة: <strong>مكتب التعليم بأبي عريش</strong> ✦
+    <strong>أ/غادة السحيمي</strong> ✦
+    <strong>أ/عبير الخالدي</strong> ✦
+    <strong>م/حليمة السميري</strong>
+  </p>
+</div>
+
+<!-- DOMAINS QUICK NAV -->
+<div class="domains-nav">
+  <p class="domains-nav-title">انتقل/ي إلى المجال</p>
+  <div class="domains-row">
+    <a href="#d1" class="dnav-item"><span>📊</span><span>إدارة البيانات والمعلومات</span></a>
+    <a href="#d2" class="dnav-item"><span>📋</span><span>نواتج العمل الإداري</span></a>
+    <a href="#d3" class="dnav-item"><span>📅</span><span>متابعة الحضور والغياب</span></a>
+    <a href="#d4" class="dnav-item"><span>💎</span><span>الجدارات السلوكية</span></a>
+    <a href="#d5" class="dnav-item"><span>🌱</span><span>التنمية المهنية</span></a>
+    <a href="#d6" class="dnav-item"><span>🛡️</span><span>الأمن والسلامة</span></a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     DOMAIN 1: DATA MANAGEMENT
+══════════════════════════════════════════ -->
+<section id="d1" class="domain-section domain-1">
+  <div class="domain-inner">
+    <div class="domain-header">
+      <div class="domain-header-icon">📊</div>
+      <div class="domain-header-text">
+        <div class="domain-header-num">المجال الأول</div>
+        <div class="domain-header-title">إدارة البيانات والمعلومات المدرسية</div>
+        <div class="domain-header-sub">جمع البيانات وتحليلها وأرشفتها وتحديثها عبر الأنظمة الإلكترونية كنظام نور</div>
+      </div>
+    </div>
+
+    <div class="table-card domain-1">
+      <div class="table-header">
+        <div class="th">الهدف الاستراتيجي / الجدارة</div>
+        <div class="th">الوصف التفصيلي</div>
+        <div class="th">مؤشرات الأداء</div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">🗂️</span>إدارة بيانات الطلاب/ات</div>
+        <div class="td"><ul>
+          <li>إنجاز ملفات القيد الورقية لطلاب/ات المدرسة من بداية العام الحالي</li>
+          <li>استخراج وطباعة كشوفات القيد الدراسي لكل فصل دراسي بمعدل مرة واحدة في الفصل</li>
+          <li>إعداد تقرير واحد لتدقيق بيانات طالبات/ات الصف الأول مع مطابقة وثائقهم/هن الرسمية</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>ملفات القيد المكتملة</li>
+          <li>كشوفات دورية كل فصل</li>
+          <li>تقرير تدقيق واحد عند بداية العام</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">💻</span>التسجيل الإلكتروني في نور</div>
+        <div class="td"><ul>
+          <li>تسليم وطباعة سجل قيد الطالبات/ات الإلكتروني عبر نور والتأكد من صحته مع الوثائق الرسمية</li>
+          <li>تحديث بيانات الطلاب/ات ببرنامج نور دوريًا وفق التعليمات الواردة</li>
+          <li>تسليم تقارير خاصة بتسجيل وقبول ونقل الطلاب/ات بمعدل تقرير كل فصل دراسي</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>سجل قيد إلكتروني محدَّث</li>
+          <li>تقرير نور بمعدل فصل دراسي</li>
+          <li>دقة البيانات مطابقة للوثائق</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">📈</span>الإحصاءات والتقارير الرقمية</div>
+        <div class="td"><ul>
+          <li>إنجاز وطباعة إحصاءات من نور خاصة بالمتقدمين/ات لاختبارات القبول</li>
+          <li>تسليم بيانات إحصائية عن عملية التسجيل والقبول بمعدل تقرير كل فصل</li>
+          <li>إدخال بيانات المدرسة والتقارير الإلكترونية وفق توجيه الرئيس/ة المباشر/ة</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>إحصاءات القبول والتسجيل</li>
+          <li>تقارير دورية كل فصل</li>
+          <li>دقة البيانات المُدخَلة</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">🗃️</span>أرشفة المعاملات وتصنيفها</div>
+        <div class="td"><ul>
+          <li>تنظيم وإعداد ملفي أرشفة إلكترونية لحفظ التعاميم الواردة والمعاملات الصادرة من بداية العام</li>
+          <li>تصنيف التعاميم الواردة حسب الجهة الواردة منها لتسهيل الرجوع إليها</li>
+          <li>إنجاز وتصنيف عدد من الخطابات والمعاملات الرسمية الصادرة حسب الفهرسة والتاريخ والجهة</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>ملفا أرشفة إلكترونية</li>
+          <li>فهرسة منتظمة حسب الجهة والتاريخ</li>
+          <li>تيسير استرجاع المعاملات</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">📦</span>بيانات الموظفين/ات والعهد</div>
+        <div class="td"><ul>
+          <li>إعداد بيانات تسليم واستلام العهدة لموظفات/ي المدرسة</li>
+          <li>إعداد بيانات بموجودات المستودع دوريًا</li>
+          <li>إعداد سجل العهد المدرسية متضمنًا الاجتماعات والنماذج والتقارير والمحاضر والتعاميم</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>بيانات عهدة مكتملة</li>
+          <li>جرد دوري للمستودع</li>
+          <li>سجل عهد مُحدَّث</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     DOMAIN 2: ADMIN OUTPUT
+══════════════════════════════════════════ -->
+<section id="d2" class="domain-section domain-2">
+  <div class="domain-inner">
+    <div class="domain-header">
+      <div class="domain-header-icon">📋</div>
+      <div class="domain-header-text">
+        <div class="domain-header-num">المجال الثاني</div>
+        <div class="domain-header-title">نواتج العمل الإداري والسكرتاري</div>
+        <div class="domain-header-sub">تحرير المعاملات والنشرات والتقارير وتنسيق الاجتماعات والملفات الإدارية</div>
+      </div>
+    </div>
+
+    <div class="table-card domain-2">
+      <div class="table-header">
+        <div class="th">الهدف الاستراتيجي / الجدارة</div>
+        <div class="th">الوصف التفصيلي</div>
+        <div class="th">مؤشرات الأداء</div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">📨</span>الاتصالات الإدارية الصادرة والواردة</div>
+        <div class="td"><ul>
+          <li>إعداد عدد من الخطابات والمعاملات الرسمية الصادرة للإدارة المدرسية خلال العام</li>
+          <li>إعداد عدد من المعاملات الواردة مع توثيق استلامها وتوديعها بسجل خاص</li>
+          <li>متابعة تسليم المعاملات في سجل التوديع والتأكد من وصولها للجهات المعنية</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>معاملات صادرة مكتملة</li>
+          <li>سجل استلام وتوديع منتظم</li>
+          <li>توثيق التواصل الرسمي</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">📢</span>إعداد النشرات والتكاليف</div>
+        <div class="td"><ul>
+          <li>تحرير نشرات لمدير/ة المدرسة خلال العام وفق التوجيهات</li>
+          <li>تحرير تكاليف لموظفي/ات المدرسة وفق الصلاحيات الممنوحة</li>
+          <li>إرسال منشورات وإعلانات لتفعيل الأنشطة والفعاليات عبر منصة التواصل الاجتماعي</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>نشرات موثَّقة في الفهرس</li>
+          <li>تكاليف رسمية مكتملة</li>
+          <li>إعلانات منتظمة عبر المنصة</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">🤝</span>توثيق الاجتماعات واللجان</div>
+        <div class="td"><ul>
+          <li>توثيق محاضر اجتماعات مدير/ة المدرسة خلال العام</li>
+          <li>توثيق محاضر اجتماعات اللجان المدرسية والفرق خلال العام</li>
+          <li>تنسيق وكتابة نماذج اجتماعات تتضمن اللجان والفرق وتوثيق محاضرها للإدارة</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>محاضر موثَّقة مفهرسة</li>
+          <li>عدد اجتماعات اللجان والفرق</li>
+          <li>اكتمال التوثيق في الوقت المحدد</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">📑</span>إعداد التقارير الإدارية</div>
+        <div class="td"><ul>
+          <li>إعداد تقارير إلكترونية وورقية حسب توجيه الرئيس/ة المباشر/ة</li>
+          <li>إنجاز عدد من التقارير الداخلية والتبليغات الخاصة بتوجيهات مدير/ة المدرسة</li>
+          <li>إعداد جداول الأعمال ونشرها وفق توجيهات مدير/ة ووكيل/ة المدرسة</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>تقارير في المواعيد المحددة</li>
+          <li>جداول أعمال منشورة مسبقًا</li>
+          <li>دقة البيانات والمعلومات</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">🗄️</span>تنظيم الملفات والسجلات</div>
+        <div class="td"><ul>
+          <li>تنسيق عدد من الملفات لمدير/ة المدرسة خلال العام</li>
+          <li>إعداد وتنظيم عدد من السجلات والملفات المتعددة المنظمة لمهام المدرسة</li>
+          <li>إعداد ملف القبول والتسجيل لحفظ نماذج التسجيل وإعلانات القبول وبيانات الطالبات/ات المعتمدة</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>ملفات منظمة ومكتملة</li>
+          <li>سهولة الاسترجاع</li>
+          <li>فهرسة واضحة لكل ملف</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">⚙️</span>دعم العمليات التنظيمية</div>
+        <div class="td"><ul>
+          <li>تنفيذ عدد من العمليات الداعمة للعمليات المدرسية التنظيمية والإدارية</li>
+          <li>إعداد استمارات الزيارات الصفية لمدير/ة المدرسة لمتابعة تطوير أداء الهيئة التعليمية</li>
+          <li>إعداد نماذج أدوات التقويم المدرسي وفق التوجيهات المعتمدة</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>دعم إداري فعّال</li>
+          <li>استمارات زيارات صفية مكتملة</li>
+          <li>أدوات تقويم جاهزة في الوقت المناسب</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     DOMAIN 3: ATTENDANCE
+══════════════════════════════════════════ -->
+<section id="d3" class="domain-section domain-3">
+  <div class="domain-inner">
+    <div class="domain-header">
+      <div class="domain-header-icon">📅</div>
+      <div class="domain-header-text">
+        <div class="domain-header-num">المجال الثالث</div>
+        <div class="domain-header-title">متابعة الحضور والغياب والانضباط</div>
+        <div class="domain-header-sub">رصد الغياب اليومي للطلاب/ات والموظفين/ات وتوثيقه والتواصل مع أولياء الأمور</div>
+      </div>
+    </div>
+
+    <div class="table-card domain-3">
+      <div class="table-header">
+        <div class="th">الهدف الاستراتيجي / الجدارة</div>
+        <div class="th">الوصف التفصيلي</div>
+        <div class="th">مؤشرات الأداء</div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">✅</span>رصد الحضور اليومي للطلاب/ات</div>
+        <div class="td"><ul>
+          <li>رصد عمليات حضور وغياب وتأخر الطلاب/ات عن المدرسة يوميًا</li>
+          <li>تفريغ وتثبيت جدول الغياب اليومي والتأخير الصباحي الإلكتروني ببرنامج نور</li>
+          <li>تعبئة الجدول الإلكتروني الخاص بتطبيق قواعد السلوك والمواظبة حسب النظام الحاسوبي ببرنامج نور</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>سجل غياب يومي مكتمل</li>
+          <li>جدول إلكتروني نور محدَّث</li>
+          <li>دقة البيانات اليومية</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">🔄</span>معالجة الغياب المتكرر</div>
+        <div class="td"><ul>
+          <li>تسليم نموذج إحالة الطلاب/ات المتكرر غيابهم/هن وإجراءات تأخيرهم/هن وفق الدليل الإجرائي بمعدل نموذج كل شهر</li>
+          <li>تسليم عدد من الإحصاءات حول غياب الطلاب/ات بمعدل إحصائية شهرية</li>
+          <li>تنفيذ خطط علاجية لطلاب/ات المدرسة للحد من الغياب بمعدل خطة لكل ترم</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>نماذج إحالة الغياب</li>
+          <li>إحصاءات شهرية دقيقة</li>
+          <li>خطط علاجية لكل ترم</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">📁</span>ملف الغياب والإشعارات</div>
+        <div class="td"><ul>
+          <li>حصر وإعداد ملف يضم إشعارات الغياب والتقارير الطبية والرسائل النصية خاصة بالطلاب/ات حسب المرحلة والصف</li>
+          <li>تنظيم وتصنيف ملف التقارير الطبية والإشعارات وإشعارات الغياب اليومي</li>
+          <li>تنفيذ وتفعيل ملف الانضباط متضمنًا برامج ونشرات توعوية وتقارير الغياب الشهرية</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>ملف غياب مصنَّف بالمرحلة والصف</li>
+          <li>تقارير طبية منظمة</li>
+          <li>ملف انضباط مفعَّل</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">📞</span>التواصل مع أولياء الأمور</div>
+        <div class="td"><ul>
+          <li>إجراء عمليات اتصال بأولياء الأمور يوميًا بشأن الغياب والتأخر</li>
+          <li>فهرسة ومتابعة سجل أرقام الاتصال اليومي بأولياء الأمور</li>
+          <li>إعداد السجلات الخاصة بعملية متابعة التأخير الصباحي للطلاب/ات والاستئذان اليومي</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>سجل اتصالات يومي موثَّق</li>
+          <li>نسبة التواصل مع أولياء الأمور</li>
+          <li>سجل متابعة التأخر مكتمل</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">🏢</span>غياب الموظفين/ات ودوامهم/هن</div>
+        <div class="td"><ul>
+          <li>إعداد سجل الدوام الرسمي لمتابعة حضور وغياب منسوبي/ات المدرسة يوميًا</li>
+          <li>متابعة تثبيت عدد العمليات الإلكترونية لغياب منسوبي/ات المدرسة في برنامج نور يوميًا</li>
+          <li>متابعة اعتماد الطلبات الموجهة من الموظفات/ين الخاصة بالغياب والإجازات ببرنامج فارس يوميًا</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>سجل دوام رسمي يومي</li>
+          <li>عمليات نور مثبَّتة</li>
+          <li>طلبات مُعتمدة ببرنامج فارس</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">🏥</span>التقارير الطبية والإجازات</div>
+        <div class="td"><ul>
+          <li>إعداد سجل التقارير الطبية والإجازات بأنواعها وفهرستها من بداية العام الدراسي</li>
+          <li>متابعة عدد من نماذج مساءلة الموظفين/ات عن الغياب يوميًا للعام الحالي</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>سجل تقارير طبية مكتمل</li>
+          <li>نماذج مساءلة موثَّقة يوميًا</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     DOMAIN 4: BEHAVIORAL COMPETENCIES
+══════════════════════════════════════════ -->
+<section id="d4" class="domain-section domain-4">
+  <div class="domain-inner">
+    <div class="domain-header">
+      <div class="domain-header-icon">💎</div>
+      <div class="domain-header-text">
+        <div class="domain-header-num">المجال الرابع</div>
+        <div class="domain-header-title">الجدارات السلوكية والقيادية</div>
+        <div class="domain-header-sub">الجدارات التي تُحدد السلوك المهني والعلاقات الإنسانية وإدارة الذات في بيئة العمل</div>
+      </div>
+    </div>
+
+    <div class="table-card domain-4">
+      <div class="table-header">
+        <div class="th">الهدف الاستراتيجي / الجدارة</div>
+        <div class="th">الوصف التفصيلي</div>
+        <div class="th">مؤشرات الأداء</div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">🗣️</span>التواصل الفعّال</div>
+        <div class="td"><ul>
+          <li>القدرة على التعبير الواضح شفهيًا وكتابيًا مع المستفيدين/ات والزملاء</li>
+          <li>الاستماع الفعّال وتبادل المعلومات بدقة ووقت مناسب</li>
+          <li>استخدام لغة مهنية لائقة في جميع قنوات التواصل الرسمية وغير الرسمية</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>وضوح الرسائل المكتوبة والشفهية</li>
+          <li>رضا المستفيدين/ات عن جودة التواصل</li>
+          <li>الالتزام بآداب المراسلات الرسمية</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">⭐</span>الالتزام والمسؤولية</div>
+        <div class="td"><ul>
+          <li>الحضور المنتظم والالتزام بمواعيد الدوام الرسمي</li>
+          <li>إنجاز المهام المكلَّف/ة بها في المواعيد المحددة دون تأخير</li>
+          <li>تحمُّل المسؤولية الكاملة عن نتائج العمل المُسنَد/ة</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>معدل الالتزام بالدوام</li>
+          <li>نسبة إنجاز المهام في وقتها</li>
+          <li>تقييم الرئيس/ة المباشر/ة</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">🤲</span>العمل بروح الفريق</div>
+        <div class="td"><ul>
+          <li>التعاون مع مجموعة العمل والمساهمة الفعلية في تحقيق الأهداف المشتركة</li>
+          <li>تقديم الدعم للزملاء وتبادل المعرفة والخبرات بشكل إيجابي</li>
+          <li>المشاركة الفاعلة في اللجان والفرق المدرسية والمبادرة بالأفكار البنّاءة</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>مستوى التعاون مع الزملاء</li>
+          <li>المشاركة في أعمال اللجان</li>
+          <li>شهادات الأقران ورضا الفريق</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">🧩</span>حل المشكلات واتخاذ القرار</div>
+        <div class="td"><ul>
+          <li>تشخيص المشكلات الإدارية بدقة وتقديم بدائل حلول منطقية وقابلة للتطبيق</li>
+          <li>اتخاذ القرارات اليومية بشكل مستقل ضمن نطاق الصلاحيات المُخوَّلة</li>
+          <li>الرجوع إلى الرئيس/ة المباشر/ة عند المسائل التي تتجاوز الصلاحيات</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>نسبة الحلول المُنفَّذة</li>
+          <li>سرعة الاستجابة للمشكلات</li>
+          <li>جودة القرارات اليومية</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">⏰</span>إدارة الوقت والأولويات</div>
+        <div class="td"><ul>
+          <li>ترتيب المهام اليومية حسب الأهمية والإلحاح وإنجازها بكفاءة</li>
+          <li>تجنُّب التسويف والعمل على الإنجاز المتقدم للمهام المتكررة</li>
+          <li>إعداد خطط عمل دورية (يومية/أسبوعية) والالتزام بتنفيذها</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>نسبة إنجاز المهام في وقتها</li>
+          <li>قلة التأخير في التسليم</li>
+          <li>جودة خطط العمل الدورية</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">🌊</span>الاتزان الانفعالي والمرونة</div>
+        <div class="td"><ul>
+          <li>التحكم في ردود الأفعال تحت ضغط العمل والظروف الطارئة</li>
+          <li>التكيُّف الإيجابي مع المتغيرات والتعديلات التي تطرأ على بيئة العمل</li>
+          <li>الحفاظ على الهدوء والموضوعية في التعامل مع المواقف الصعبة</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>مؤشر الاستقرار الوظيفي</li>
+          <li>تقييم المدير/ة في المواقف الضاغطة</li>
+          <li>شكاوى سوء التصرف (تكون صفرًا)</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     DOMAIN 5: PROFESSIONAL DEVELOPMENT
+══════════════════════════════════════════ -->
+<section id="d5" class="domain-section domain-5">
+  <div class="domain-inner">
+    <div class="domain-header">
+      <div class="domain-header-icon">🌱</div>
+      <div class="domain-header-text">
+        <div class="domain-header-num">المجال الخامس</div>
+        <div class="domain-header-title">التنمية المهنية والمؤسسية</div>
+        <div class="domain-header-sub">الأنشطة والبرامج المُسهِمة في تطوير الكفاءة الذاتية ودعم المؤسسة التعليمية</div>
+      </div>
+    </div>
+
+    <div class="table-card domain-5">
+      <div class="table-header">
+        <div class="th">الهدف الاستراتيجي / الجدارة</div>
+        <div class="th">الوصف التفصيلي</div>
+        <div class="th">مؤشرات الأداء</div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">🌟</span>برامج تعزيز القيم</div>
+        <div class="td"><ul>
+          <li>متابعة تنفيذ برامج معززة لقيم الدين والوطن والحفاظ عليه خلال العام</li>
+          <li>المساهمة في المناسبات الوطنية والتربوية والتعليمية بمعدل تقرير تقييمي لكل فصل دراسي</li>
+          <li>تفعيل برامج رضا المستفيد/ة وقياس اتجاهاته/ها نحو المدرسة من خلال استمارات دورية</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>برامج قيم منفَّذة</li>
+          <li>تقارير تقييم الأنشطة</li>
+          <li>استمارات رضا المستفيد/ة</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">📚</span>التطوير المهني الذاتي</div>
+        <div class="td"><ul>
+          <li>المشاركة في دورات تدريبية ومبادرات تطوير الكفاءة الذاتية خلال العام</li>
+          <li>تقديم عدد من المقترحات التطويرية لدعم تحقيق أهداف المدرسة</li>
+          <li>الاطلاع المستمر على المستجدات في مجال الإدارة المدرسية والتنمية المهنية</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>عدد الدورات المُكتمَلة</li>
+          <li>مقترحات تطويرية مقدَّمة</li>
+          <li>تقييم الانعكاس المهني للتدريب</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">🏆</span>دعم التميز والمكافآت</div>
+        <div class="td"><ul>
+          <li>إعداد وتنظيم ملف خاص بنظام التكافل المدرسي والمكافآت والإعانات حسب الدليل الإجرائي</li>
+          <li>توزيع نماذج استمارات بيانات الطلاب/ات الذين تنطبق عليهم/هن شروط التكافل والإعانات</li>
+          <li>إشعار أولياء الأمور برسائل نصية إلكترونية بموافقة صرف الإعانة للطلاب/ات المستحقين/ات</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>ملف تكافل منظَّم ومكتمل</li>
+          <li>نماذج استمارات موزَّعة</li>
+          <li>إشعارات أولياء الأمور بالوقت المحدد</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">🤝</span>منسقة العمل التطوعي</div>
+        <div class="td"><ul>
+          <li>اعتماد الخطة العامة للتطوع بالمدرسة ومجالاتها وتوقيت تنفيذها</li>
+          <li>تنفيذ ومتابعة ملف حقيبة العمل التطوعي متضمنًا دليل التطوع وخطوات التسجيل وإضافة الساعات</li>
+          <li>إنجاز وثائق العمل التطوعي للطالبات/ات وحفظها بعد الاعتماد</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>خطة تطوع معتمدة</li>
+          <li>ملف حقيبة تطوع مكتمل</li>
+          <li>وثائق موثَّقة للطالبات/ات</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">📡</span>تفعيل الإعلام المدرسي</div>
+        <div class="td"><ul>
+          <li>إعداد تقارير إعلامية عن التغطيات الإعلامية للبرامج والفعاليات بمعدل ثلاثة تقارير لكل فصل</li>
+          <li>متابعة وإنجاز تغريدات وإعلانات وفعاليات وأنشطة المدرسة ونشرها في الحسابات الرسمية يوميًا</li>
+          <li>إعداد ملف شامل بالإعلام المدرسي متضمنًا مواعيد الاجتماعات والنشرات والتعاميم والخطط</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>تقارير إعلامية لكل فصل</li>
+          <li>تغريدات وإعلانات يومية منتظمة</li>
+          <li>ملف إعلام مدرسي مكتمل</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     DOMAIN 6: SAFETY
+══════════════════════════════════════════ -->
+<section id="d6" class="domain-section domain-6">
+  <div class="domain-inner">
+    <div class="domain-header">
+      <div class="domain-header-icon">🛡️</div>
+      <div class="domain-header-text">
+        <div class="domain-header-num">المجال السادس</div>
+        <div class="domain-header-title">الأمن والسلامة والبيئة المدرسية</div>
+        <div class="domain-header-sub">إجراءات الصيانة والنظافة والأمن وضمان بيئة تعليمية آمنة ومحفِّزة</div>
+      </div>
+    </div>
+
+    <div class="table-card domain-6">
+      <div class="table-header">
+        <div class="th">الهدف الاستراتيجي / الجدارة</div>
+        <div class="th">الوصف التفصيلي</div>
+        <div class="th">مؤشرات الأداء</div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">🔧</span>الصيانة والبيئة المدرسية</div>
+        <div class="td"><ul>
+          <li>إعداد تقرير شامل حول تطبيق إجراءات الصيانة للمبنى المدرسي ومرافقه قبل نهاية العام الدراسي</li>
+          <li>إصدار ومتابعة الخطابات الدورية الصادرة بطلبات الصيانة المطلوبة والمتكررة للجهات المعنية شهريًا</li>
+          <li>حفظ وإعداد ملف خاص بنماذج إجراءات الصيانة العامة للمبنى المدرسي خلال العام</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>تقرير صيانة شامل</li>
+          <li>خطابات صيانة دورية شهرية</li>
+          <li>ملف نماذج صيانة مكتمل</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">🧹</span>النظافة والمستلزمات</div>
+        <div class="td"><ul>
+          <li>حصر وتسليم بيان إحصائي عن مستلزمات النظافة اليومية بمعدل بيان في بداية كل شهر دراسي</li>
+          <li>إعداد وتقديم تقرير عن عروض أسعار المؤسسات والشركات لإدارة المدرسة لتأمين عمالة النظافة</li>
+          <li>مراجعة وتدقيق تقارير ومستندات المبالغ المرصودة لتأمين أدوات النظافة وفقًا للبنود المالية شهريًا</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>بيان إحصائي شهري</li>
+          <li>تقرير عروض الأسعار</li>
+          <li>تدقيق المستندات المالية شهريًا</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">🛡️</span>الأمن والسلامة المدرسية</div>
+        <div class="td"><ul>
+          <li>تنظيم ملف عام خاص بمهام منسقة/ة الأمن والسلامة المدرسية متضمنًا التعاميم والخطابات والنماذج</li>
+          <li>تنفيذ وتسليم خطط الإخلاء للأمن والسلامة المدرسية بمعدل خطة لكل فصل دراسي</li>
+          <li>إعداد تقارير شهرية حول تطبيق إجراءات صيانة معدات الأمن والسلامة والتواصل مع الجهات المعنية</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>ملف أمن وسلامة منظَّم</li>
+          <li>خطط إخلاء لكل فصل دراسي</li>
+          <li>تقارير صيانة معدات شهرية</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">🔍</span>جولات التفقد والإشراف</div>
+        <div class="td"><ul>
+          <li>تنفيذ ومتابعة جولة إشرافية ومناوبية يومية خاصة بمتابعة وجبة الأطفال</li>
+          <li>مراجعة وتدقيق التقارير المقدَّمة يوميًا من المعلمين/ات والإداريين/ات المناوبين/ات</li>
+          <li>إعداد وتنظيم سجل توزيع مهام الإشراف والمناوبة اليومي حسب الدليل الإجرائي المعتمد</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>جولات يومية موثَّقة</li>
+          <li>تقارير مناوبة مراجَعة</li>
+          <li>سجل توزيع المهام مكتمل</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">🌿</span>تقييم البيئة المدرسية</div>
+        <div class="td"><ul>
+          <li>إنجاز استمارات نتائج تقويم البيئة المدرسية في نظام نور متضمنةً الخطة العلاجية</li>
+          <li>تحديد وتنفيذ استمارات الرسم الكروكي للمساقط المدرسية المحددة لمواقع المرافق في البيئة المدرسية</li>
+          <li>تنفيذ برامج توعوية ونشرات تثقيفية حول تحقيق الأمن والسلامة المدرسية</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>استمارات تقويم البيئة مكتملة</li>
+          <li>خطة علاجية معتمدة في نور</li>
+          <li>برامج توعوية ونشرات تثقيفية</li>
+        </ul></div>
+      </div>
+
+      <div class="table-row-item">
+        <div class="td goal-name"><span class="goal-icon">👮</span>حراسة المبنى المدرسي</div>
+        <div class="td"><ul>
+          <li>تنفيذ عمليات حراسة أمنية وجولة إشرافية ومناوبية يومية للمحافظة على المبنى المدرسي</li>
+          <li>تدوين وإعداد سجل لمتابعة تسجيل بيانات الزوار والمراجعين/ات والتأكد من هويتهم/هن يوميًا</li>
+          <li>إنجاز وتنظيم عملية متابعة دخول وخروج الطلاب/ات مع الأبواب الرئيسية للمبنى المدرسي</li>
+        </ul></div>
+        <div class="td indicators"><ul>
+          <li>سجل زوار يومي مكتمل</li>
+          <li>عمليات حراسة متواصلة</li>
+          <li>متابعة دخول وخروج منتظمة</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p class="footer-label">تفضل/ي للمزيد</p>
+  <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" class="footer-link">
+    <span>📲</span>
+    <span>https://t.me/TAqhjT3MFVE1Yzk0</span>
+  </a>
+  <p class="footer-design">تصميم <strong>د/فواز</strong> ✦ الإطار المتكامل للأداء الوظيفي 2025</p>
+</footer>
+
+<!-- BACK TO TOP -->
+<a href="#hero" class="back-top" id="backTop">↑</a>
+
+<script>
+// ── PARTICLES
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.size = Math.random() * 1.5 + 0.3;
+    this.speedX = (Math.random() - 0.5) * 0.3;
+    this.speedY = (Math.random() - 0.5) * 0.3;
+    this.opacity = Math.random() * 0.2 + 0.04;
+    this.color = ['41,128,217', '19,197,192', '112,72,212', '14,168,158'][Math.floor(Math.random()*4)];
+  }
+  update() {
+    this.x += this.speedX; this.y += this.speedY;
+    if(this.x<0||this.x>canvas.width||this.y<0||this.y>canvas.height) this.reset();
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(${this.color},${this.opacity})`;
+    ctx.fill();
+  }
+}
+
+for(let i=0;i<120;i++) particles.push(new Particle());
+
+function animParticles() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(animParticles);
+}
+animParticles();
+
+// ── SCROLL PROGRESS
+window.addEventListener('scroll', () => {
+  const prog = document.getElementById('progress');
+  const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+  prog.style.width = pct + '%';
+  document.getElementById('backTop').classList.toggle('visible', window.scrollY > 400);
+});
+
+// ── INTERSECTION OBSERVER
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting) e.target.classList.add('visible');
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.section-header, .table-card, .domain-header').forEach(el => observer.observe(el));
+
+// ── STAGGER TABLE CARDS
+document.querySelectorAll('.table-card').forEach((card, i) => {
+  card.style.transitionDelay = (i * 0.1) + 's';
+});
+</script>
+</body>
+</html>
