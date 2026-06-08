@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مسابقة اللغة الإنجليزية - الاختبار المركزي</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #FF7B2C;
+    --orange-light: #FFB347;
+    --teal: #2BBFA4;
+    --teal-dark: #1A9A83;
+    --gold: #F5C842;
+    --bg: #FFF8F0;
+    --card-bg: #FFFFFF;
+    --text-dark: #2D2D2D;
+    --text-mid: #555;
+    --correct: #22C55E;
+    --wrong: #EF4444;
+    --shadow: 0 8px 32px rgba(255,123,44,0.13);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    direction: rtl;
+    overflow-x: hidden;
+  }
+
+  /* ===== DECORATIVE BG ===== */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -120px; right: -120px;
+    width: 420px; height: 420px;
+    background: radial-gradient(circle, #FFB34733 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -100px; left: -100px;
+    width: 380px; height: 380px;
+    background: radial-gradient(circle, #2BBFA422 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(135deg, #FF7B2C 0%, #FFB347 60%, #F5C842 100%);
+    padding: 28px 24px 22px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(255,123,44,0.3);
+  }
+  .header::before {
+    content: '⭐';
+    position: absolute; top: 10px; right: 20px;
+    font-size: 2rem; opacity: .5; animation: spin 6s linear infinite;
+  }
+  .header::after {
+    content: '🌟';
+    position: absolute; top: 10px; left: 20px;
+    font-size: 2rem; opacity: .5; animation: spin 8s linear infinite reverse;
+  }
+  @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+  .header h1 {
+    font-size: 1.9rem;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    letter-spacing: 1px;
+  }
+  .header p {
+    color: rgba(255,255,255,0.92);
+    font-size: 1rem;
+    margin-top: 6px;
+    font-weight: 600;
+  }
+
+  /* ===== SETTINGS PANEL ===== */
+  .settings-panel {
+    max-width: 640px;
+    margin: 32px auto 0;
+    padding: 28px 24px;
+    background: var(--card-bg);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    position: relative; z-index: 1;
+  }
+  .settings-panel h2 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--orange);
+    text-align: center;
+    margin-bottom: 22px;
+  }
+  .setting-group { margin-bottom: 18px; }
+  .setting-group label {
+    display: block;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    font-size: .98rem;
+  }
+  .grade-btns, .unit-btns {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .grade-btn, .unit-btn {
+    padding: 9px 18px;
+    border: 2.5px solid #e5e7eb;
+    border-radius: 12px;
+    background: #f9fafb;
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 700;
+    font-size: .95rem;
+    color: var(--text-mid);
+    transition: all .2s;
+  }
+  .grade-btn:hover, .unit-btn:hover { border-color: var(--orange); color: var(--orange); }
+  .grade-btn.active, .unit-btn.active {
+    background: var(--orange);
+    border-color: var(--orange);
+    color: #fff;
+    box-shadow: 0 3px 12px rgba(255,123,44,0.3);
+  }
+  .count-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .count-row input[type=range] {
+    flex: 1;
+    accent-color: var(--orange);
+  }
+  .count-val {
+    font-weight: 800;
+    font-size: 1.15rem;
+    color: var(--orange);
+    min-width: 32px;
+    text-align: center;
+  }
+  .start-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--orange), var(--orange-light));
+    color: #fff;
+    border: none;
+    border-radius: 16px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 900;
+    cursor: pointer;
+    margin-top: 10px;
+    box-shadow: 0 5px 20px rgba(255,123,44,0.35);
+    transition: transform .15s, box-shadow .15s;
+    letter-spacing: .5px;
+  }
+  .start-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,123,44,0.45); }
+  .start-btn:active { transform: translateY(0); }
+
+  /* ===== ATTRIBUTION ===== */
+  .attribution {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 2px dashed #f0e0d0;
+    text-align: center;
+  }
+  .attribution p {
+    font-size: .93rem;
+    color: var(--text-mid);
+    font-weight: 600;
+  }
+  .attribution a {
+    color: var(--teal);
+    text-decoration: none;
+    font-weight: 700;
+  }
+  .attribution a:hover { text-decoration: underline; }
+
+  /* ===== QUIZ SCREEN ===== */
+  #quiz-screen {
+    display: none;
+    max-width: 640px;
+    margin: 28px auto 0;
+    padding: 0 16px 40px;
+    position: relative; z-index: 1;
+  }
+
+  .progress-bar-wrap {
+    background: #ffe8d4;
+    border-radius: 12px;
+    height: 10px;
+    margin-bottom: 18px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--orange), var(--gold));
+    border-radius: 12px;
+    transition: width .5s cubic-bezier(.4,0,.2,1);
+  }
+  .quiz-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .q-counter {
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--orange);
+  }
+  .score-badge {
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+    color: #fff;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-weight: 800;
+    font-size: .92rem;
+  }
+
+  .question-card {
+    background: var(--card-bg);
+    border-radius: 22px;
+    padding: 28px 24px 22px;
+    box-shadow: var(--shadow);
+    margin-bottom: 18px;
+    animation: slideUp .35s ease;
+  }
+  @keyframes slideUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+  .q-grade-tag {
+    display: inline-block;
+    background: #fff3e8;
+    color: var(--orange);
+    font-size: .82rem;
+    font-weight: 700;
+    padding: 3px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+    border: 1.5px solid #ffd4b0;
+  }
+  .question-text {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  .question-text .en { direction: ltr; display: inline-block; }
+
+  .options-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+  }
+  .option-btn {
+    width: 100%;
+    padding: 13px 18px;
+    border: 2.5px solid #e8ecf0;
+    border-radius: 14px;
+    background: #f8fafc;
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    text-align: right;
+    transition: all .18s;
+    position: relative;
+    overflow: hidden;
+  }
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--orange);
+    background: #fff8f3;
+    color: var(--orange);
+    transform: translateX(-3px);
+  }
+  .option-btn.correct {
+    background: #dcfce7;
+    border-color: var(--correct);
+    color: #166534;
+    font-weight: 800;
+    animation: correctPop .35s ease;
+  }
+  .option-btn.wrong {
+    background: #fee2e2;
+    border-color: var(--wrong);
+    color: #991b1b;
+  }
+  .option-btn.reveal-correct {
+    background: #dcfce7;
+    border-color: var(--correct);
+    color: #166534;
+    animation: pulse .5s ease;
+  }
+  @keyframes correctPop { 0%{transform:scale(1)} 50%{transform:scale(1.03)} 100%{transform:scale(1)} }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.6} }
+
+  /* ===== FEEDBACK TOAST ===== */
+  .feedback-toast {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-60px);
+    background: #fff;
+    border-radius: 18px;
+    padding: 16px 28px;
+    box-shadow: 0 8px 40px rgba(0,0,0,.18);
+    text-align: center;
+    font-weight: 800;
+    font-size: 1.3rem;
+    z-index: 999;
+    transition: transform .4s cubic-bezier(.34,1.56,.64,1);
+    pointer-events: none;
+    min-width: 260px;
+    border: 3px solid transparent;
+  }
+  .feedback-toast.show { transform: translateX(-50%) translateY(0); }
+  .feedback-toast.correct-toast { border-color: var(--correct); color: #166534; }
+  .feedback-toast.wrong-toast { border-color: var(--wrong); color: #991b1b; }
+  .feedback-toast .emoji { font-size: 2rem; display: block; margin-bottom: 4px; }
+
+  /* ===== CONFETTI ===== */
+  .confetti-piece {
+    position: fixed;
+    width: 10px; height: 10px;
+    opacity: 0;
+    animation: confettiFall 1.2s ease-out forwards;
+    pointer-events: none;
+    z-index: 998;
+    border-radius: 2px;
+  }
+  @keyframes confettiFall {
+    0%  { opacity:1; transform: translateY(0) rotate(0deg) scale(1); }
+    100%{ opacity:0; transform: translateY(300px) rotate(720deg) scale(.3); }
+  }
+
+  /* ===== NEXT BTN ===== */
+  .next-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+    color: #fff;
+    border: none;
+    border-radius: 16px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 4px;
+    box-shadow: 0 4px 18px rgba(43,191,164,0.3);
+    transition: transform .15s;
+    display: none;
+  }
+  .next-btn:hover { transform: translateY(-2px); }
+
+  /* ===== RESULTS ===== */
+  #results-screen {
+    display: none;
+    max-width: 560px;
+    margin: 36px auto 40px;
+    padding: 0 16px;
+    position: relative; z-index: 1;
+    text-align: center;
+  }
+  .results-card {
+    background: var(--card-bg);
+    border-radius: 28px;
+    padding: 40px 28px 32px;
+    box-shadow: var(--shadow);
+    animation: slideUp .5s ease;
+  }
+  .results-emoji { font-size: 4rem; margin-bottom: 12px; }
+  .results-title {
+    font-size: 1.7rem;
+    font-weight: 900;
+    color: var(--orange);
+    margin-bottom: 8px;
+  }
+  .results-score {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: var(--teal);
+    line-height: 1;
+    margin: 16px 0 6px;
+  }
+  .results-out {
+    color: var(--text-mid);
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  .results-msg {
+    background: #f0fdf4;
+    border: 2px solid #86efac;
+    border-radius: 14px;
+    padding: 14px 20px;
+    font-weight: 700;
+    color: #166534;
+    font-size: 1.05rem;
+    margin-bottom: 24px;
+  }
+  .results-msg.low {
+    background: #fff7ed;
+    border-color: #fed7aa;
+    color: #9a3412;
+  }
+  .restart-btn {
+    padding: 14px 36px;
+    background: linear-gradient(135deg, var(--orange), var(--orange-light));
+    color: #fff;
+    border: none;
+    border-radius: 16px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 4px 18px rgba(255,123,44,0.35);
+    transition: transform .15s;
+  }
+  .restart-btn:hover { transform: translateY(-2px); }
+
+  .results-attribution {
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 2px dashed #f0e0d0;
+    font-size: .9rem;
+    color: var(--text-mid);
+    font-weight: 600;
+  }
+  .results-attribution a { color: var(--teal); font-weight: 700; text-decoration: none; }
+
+  @media (max-width: 500px) {
+    .header h1 { font-size: 1.4rem; }
+    .question-text { font-size: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <h1>🏆 مسابقة اللغة الإنجليزية</h1>
+  <p>الاختبار المركزي — الفصل الثاني</p>
+</div>
+
+<!-- SETTINGS -->
+<div class="settings-panel" id="settings-screen">
+  <h2>⚙️ إعداد المسابقة</h2>
+
+  <div class="setting-group">
+    <label>📚 اختر الصف الدراسي</label>
+    <div class="grade-btns">
+      <button class="grade-btn active" data-grade="4" onclick="selectGrade(4,this)">رابع</button>
+      <button class="grade-btn" data-grade="5" onclick="selectGrade(5,this)">خامس</button>
+      <button class="grade-btn" data-grade="6" onclick="selectGrade(6,this)">سادس</button>
+      <button class="grade-btn" data-grade="all" onclick="selectGrade('all',this)">الكل</button>
+    </div>
+  </div>
+
+  <div class="setting-group">
+    <label>🔢 عدد الأسئلة</label>
+    <div class="count-row">
+      <input type="range" id="q-count" min="5" max="30" value="10" step="5" oninput="document.getElementById('qval').textContent=this.value">
+      <span class="count-val" id="qval">10</span>
+    </div>
+  </div>
+
+  <button class="start-btn" onclick="startQuiz()">🚀 ابدأ المسابقة</button>
+
+  <div class="attribution">
+    <p>تصميم د/فواز &nbsp;|&nbsp; تفضل للمزيد هنا &nbsp;<a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">📲 قناة التيليجرام</a></p>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz-screen">
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="prog-fill" style="width:0%"></div>
+  </div>
+  <div class="quiz-meta">
+    <span class="q-counter" id="q-counter">السؤال 1 / 10</span>
+    <span class="score-badge" id="score-badge">✅ 0</span>
+  </div>
+  <div class="question-card" id="question-card">
+    <div class="q-grade-tag" id="q-grade-tag">رابع</div>
+    <p class="question-text" id="question-text"></p>
+    <ul class="options-list" id="options-list"></ul>
+  </div>
+  <button class="next-btn" id="next-btn" onclick="nextQuestion()">التالي ←</button>
+</div>
+
+<!-- RESULTS -->
+<div id="results-screen">
+  <div class="results-card">
+    <div class="results-emoji" id="res-emoji">🎉</div>
+    <div class="results-title">انتهت المسابقة!</div>
+    <div class="results-score" id="res-score">0</div>
+    <div class="results-out" id="res-out">من 10</div>
+    <div class="results-msg" id="res-msg">أحسنت!</div>
+    <button class="restart-btn" onclick="restart()">🔄 مسابقة جديدة</button>
+    <div class="results-attribution">
+      تصميم د/فواز &nbsp;|&nbsp; <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">تفضل للمزيد هنا 📲</a>
+    </div>
+  </div>
+</div>
+
+<!-- FEEDBACK TOAST -->
+<div class="feedback-toast" id="feedback-toast">
+  <span class="emoji" id="toast-emoji">✅</span>
+  <span id="toast-msg">يا سلام! إجابة صحيحة!</span>
+</div>
+
+<script>
+/* ========== DATA ========== */
+const allQuestions = [
+  // ===== GRADE 4 =====
+  {g:4, q:"What is the correct pronoun? (هو) ______ is tall.", opts:["I","He","She","They"], a:1},
+  {g:4, q:"Choose the correct word: The lion is a wild ______.", opts:["animal","plant","food","toy"], a:0},
+  {g:4, q:"Complete: I ______ visit my grandmother every week.", opts:["like to","liking","likes","to like"], a:0},
+  {g:4, q:"Which word means (صداع) headache?", opts:["toothache","headache","stomachache","backache"], a:1},
+  {g:4, q:"Choose the correct answer: We need ______ protect our planet.", opts:["to","for","of","in"], a:0},
+  {g:4, q:"The weather today is sunny. What does (sunny) mean?", opts:["مطير","غائم","مشمس","عاصف"], a:2},
+  {g:4, q:"Complete: Khalid ______ a toothache.", opts:["have","has","had","are"], a:1},
+  {g:4, q:"Choose the verb: She wants ______ to school early.", opts:["go","going","to go","goes"], a:2},
+  {g:4, q:"Which word means (أسد) in English?", opts:["Tiger","Lion","Bear","Fox"], a:1},
+  {g:4, q:"I like ______ the beach to play in the sand.", opts:["visit","visiting","visited","visits"], a:1},
+  {g:4, q:"The Earth is our ______.", opts:["school","home","market","planet"], a:3},
+  {g:4, q:"Complete: Alifa enjoys ______ in the rain.", opts:["stand","standing","stands","stood"], a:1},
+  {g:4, q:"What does (frightened) mean?", opts:["سعيد","خائف","غاضب","هادئ"], a:1},
+  {g:4, q:"Choose: They ______ to touch each other.", opts:["try","tries","trying","to try"], a:0},
+  {g:4, q:"Complete: You have ______ your homework.", opts:["finish","to finish","finishing","finishes"], a:1},
+  {g:4, q:"What does (weather) mean?", opts:["طقس","مكان","وقت","طعام"], a:0},
+  {g:4, q:"Which place is in nature? I like visiting the ______.", opts:["mall","school","desert","hospital"], a:2},
+  {g:4, q:"Complete: (rain → ______) What is the adjective form?", opts:["rainy","raining","rained","rains"], a:0},
+  {g:4, q:"Choose: She ______ sleeping early.", opts:["hate","hates","hating","hated"], a:1},
+  {g:4, q:"October Fun is about ______.", opts:["الطقس","الحوادث","الحياة البرية","المرح الخارجي"], a:3},
+
+  // ===== GRADE 5 =====
+  {g:5, q:"What is your favorite kind of story? My favorite kind of story is ______ .", opts:["comedy","a comedy","comedies","comical"], a:1},
+  {g:5, q:"Complete: She (have – has) ______ taken the money.", opts:["have","has","had","having"], a:1},
+  {g:5, q:"What does (fairy tale) mean?", opts:["قصة واقعية","حكاية خيالية","فيلم وثائقي","مسرحية"], a:1},
+  {g:5, q:"Choose: Is the cat (when – that) ______ lives here.", opts:["when","that","which","who"], a:2},
+  {g:5, q:"Complete: They (was – were) helping Mum in the kitchen.", opts:["was","were","are","is"], a:1},
+  {g:5, q:"What does (animation) mean?", opts:["صورة ثابتة","رسوم متحركة","كتاب مصور","مسلسل وثائقي"], a:1},
+  {g:5, q:"Complete: He (was – were) hiking in the forest.", opts:["was","were","is","are"], a:0},
+  {g:5, q:"The unit Storylines talks about ______.", opts:["أنواع القصص","الرحلات","الملابس","الطقس"], a:0},
+  {g:5, q:"What does (taxi) mean?", opts:["حافلة","قطار","سيارة أجرة","دراجة"], a:2},
+  {g:5, q:"Choose: Why don't they (study – studying) hard?", opts:["study","studying","studied","studies"], a:0},
+  {g:5, q:"Complete: He (has – have) ______ booked the hotel.", opts:["has","have","had","having"], a:0},
+  {g:5, q:"What does (terminal) mean?", opts:["محطة / صالة","مطعم","مدرسة","ملعب"], a:0},
+  {g:5, q:"Complete: Were they surfing? Yes, they ______.", opts:["was","were","did","are"], a:1},
+  {g:5, q:"Choose the correct: It is (blue/a blue) shirt with black jac...", opts:["blue","a blue","the blue","blues"], a:1},
+  {g:5, q:"What does (crown) mean?", opts:["قلادة","تاج","حذاء","معطف"], a:1},
+  {g:5, q:"What does (necklace) mean?", opts:["تاج","قفاز","قلادة","حزام"], a:2},
+  {g:5, q:"Complete: How about (play-playing) basketball?", opts:["play","playing","played","plays"], a:1},
+  {g:5, q:"What does (fishing rod) mean?", opts:["صنارة الصيد","قارب صيد","شبكة صيد","خطاف"], a:0},
+  {g:5, q:"Complete: They (walked – walking) in the park yesterday.", opts:["walked","walking","walks","walk"], a:0},
+  {g:5, q:"The unit Outfits talks about ______.", opts:["الأزياء والملابس","الرحلات","القصص","الأنشطة الخارجية"], a:0},
+
+  // ===== GRADE 6 (same as 5 pool with slight differences, or use 5) =====
+  {g:6, q:"What is the correct answer? She (was – were) making a sandwich.", opts:["was","were","is","are"], a:0},
+  {g:6, q:"Complete: Have you ever traveled on a plane before? Yes, I ______.", opts:["have","has","had","did"], a:0},
+  {g:6, q:"What does (hiking boots) mean?", opts:["حذاء المشي في الجبال","حقيبة سفر","خيمة","مجداف"], a:0},
+  {g:6, q:"Choose: Is he (like – likes) living here? She ______ living here.", opts:["like","likes","liked","liking"], a:1},
+  {g:6, q:"What does (reckless) mean?", opts:["حذر","متهور","هادئ","سريع"], a:1},
+  {g:6, q:"Complete: She (has – have) ______ finished (yet – yet).", opts:["has ... yet","have ... yet","has ... just","have ... just"], a:0},
+  {g:6, q:"The unit Trips is about ______.", opts:["الرحلات والسفر","الملابس","الطقس","القصص"], a:0},
+  {g:6, q:"What does (arrivals) mean in an airport?", opts:["المغادرون","الوصول","التذاكر","الحجز"], a:1},
+  {g:6, q:"Complete: They (walked – walking) ______ in the park yesterday.", opts:["walked","walking","walk","walks"], a:0},
+  {g:6, q:"Choose: Me (he – him) helped ______ ride his bike.", opts:["he","him","his","himself"], a:1},
+  {g:6, q:"What does (outdoor activities) mean?", opts:["أنشطة داخلية","أنشطة خارجية","ألعاب إلكترونية","دروس خصوصية"], a:1},
+  {g:6, q:"Complete: How about (study – studying) hard?", opts:["study","studying","studied","studies"], a:1},
+  {g:6, q:"Leen ______ at the arrivals terminal.", opts:["arrived","arriving","arrive","arrives"], a:0},
+  {g:6, q:"What does (Storylines) unit mainly talk about?", opts:["أنواع القصص","الرحلات","الأزياء","الحوادث"], a:0},
+  {g:6, q:"Choose: Is your favorite outfit? It is ______ blue shirt.", opts:["a","an","the","—"], a:0},
+];
+
+/* ===== STATE ===== */
+let selectedGrade = 4;
+let quizQuestions = [];
+let currentIdx = 0;
+let score = 0;
+let answered = false;
+
+const correctMessages = [
+  { emoji: "🌟", msg: "يا سلام! إجابة رائعة!" },
+  { emoji: "🎯", msg: "ممتاز! أصبت تماماً!" },
+  { emoji: "🏆", msg: "عبقري! هذا صحيح!" },
+  { emoji: "✨", msg: "أحسنت! استمر هكذا!" },
+  { emoji: "🎉", msg: "رائع جداً! إجابة صحيحة!" },
+  { emoji: "💫", msg: "يا سلام عليك! صح!" },
+  { emoji: "🌈", msg: "ممتاز! إجابتك صحيحة!" },
+];
+const wrongMessages = [
+  { emoji: "💡", msg: "حظ أوفر! لاحظ الجواب الصحيح." },
+  { emoji: "📚", msg: "راجع الدرس، ستتحسن!" },
+  { emoji: "🔄", msg: "حاول مجدداً في المرة القادمة!" },
+  { emoji: "💪", msg: "لا تيأس! المحاولة تعلّم." },
+  { emoji: "🌟", msg: "خطأ هذه المرة، لكنك قادر!" },
+];
+
+function selectGrade(g, btn) {
+  selectedGrade = g;
+  document.querySelectorAll('.grade-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function startQuiz() {
+  const count = parseInt(document.getElementById('q-count').value);
+  let pool = selectedGrade === 'all' ? allQuestions : allQuestions.filter(q => q.g == selectedGrade);
+  // shuffle
+  pool = pool.sort(() => Math.random() - .5).slice(0, Math.min(count, pool.length));
+  quizQuestions = pool;
+  currentIdx = 0;
+  score = 0;
+  document.getElementById('settings-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  showQuestion();
+}
+
+function showQuestion() {
+  answered = false;
+  const q = quizQuestions[currentIdx];
+  const total = quizQuestions.length;
+  document.getElementById('prog-fill').style.width = ((currentIdx / total) * 100) + '%';
+  document.getElementById('q-counter').textContent = `السؤال ${currentIdx + 1} / ${total}`;
+  document.getElementById('score-badge').textContent = `✅ ${score}`;
+
+  const gradeMap = {4:'رابع', 5:'خامس', 6:'سادس'};
+  document.getElementById('q-grade-tag').textContent = gradeMap[q.g] || 'عام';
+  document.getElementById('question-text').innerHTML = q.q;
+
+  const ol = document.getElementById('options-list');
+  ol.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const li = document.createElement('li');
+    li.innerHTML = `<button class="option-btn" onclick="selectAnswer(${i},this)">${opt}</button>`;
+    ol.appendChild(li);
+  });
+
+  // Re-animate card
+  const card = document.getElementById('question-card');
+  card.style.animation = 'none';
+  requestAnimationFrame(() => { card.style.animation = 'slideUp .35s ease'; });
+
+  document.getElementById('next-btn').style.display = 'none';
+}
+
+function selectAnswer(idx, btn) {
+  if (answered) return;
+  answered = true;
+  const q = quizQuestions[currentIdx];
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b => b.disabled = true);
+
+  if (idx === q.a) {
+    btn.classList.add('correct');
+    score++;
+    showFeedback(true);
+    launchConfetti();
+  } else {
+    btn.classList.add('wrong');
+    btns[q.a].classList.add('reveal-correct');
+    showFeedback(false);
+  }
+  document.getElementById('score-badge').textContent = `✅ ${score}`;
+
+  // Show next after delay
+  setTimeout(() => {
+    document.getElementById('next-btn').style.display = 'block';
+    document.getElementById('next-btn').textContent = currentIdx + 1 < quizQuestions.length ? 'التالي ←' : '🏁 عرض النتيجة';
+  }, 1200);
+}
+
+function nextQuestion() {
+  currentIdx++;
+  if (currentIdx < quizQuestions.length) {
+    showQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function showResults() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('results-screen').style.display = 'block';
+  const total = quizQuestions.length;
+  const pct = (score / total) * 100;
+  document.getElementById('res-score').textContent = score;
+  document.getElementById('res-out').textContent = `من ${total} سؤال`;
+  document.getElementById('prog-fill').style.width = '100%';
+
+  let emoji, msg, low = false;
+  if (pct === 100) { emoji = '🏆'; msg = 'مثالي! درجة كاملة! أنت نجم المسابقة ⭐'; }
+  else if (pct >= 80) { emoji = '🎉'; msg = 'ممتاز! أداء رائع جداً! 👏'; }
+  else if (pct >= 60) { emoji = '😊'; msg = 'جيد! استمر في المذاكرة وستتحسن أكثر!'; }
+  else { emoji = '📚'; msg = 'راجع الدرس مرة أخرى، أنت قادر على التحسن!'; low = true; }
+
+  document.getElementById('res-emoji').textContent = emoji;
+  const msgEl = document.getElementById('res-msg');
+  msgEl.textContent = msg;
+  if (low) msgEl.classList.add('low'); else msgEl.classList.remove('low');
+
+  launchConfetti(pct >= 60 ? 60 : 10);
+}
+
+function restart() {
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('settings-screen').style.display = 'block';
+}
+
+/* ===== FEEDBACK TOAST ===== */
+function showFeedback(correct) {
+  const toast = document.getElementById('feedback-toast');
+  const msgs = correct ? correctMessages : wrongMessages;
+  const pick = msgs[Math.floor(Math.random() * msgs.length)];
+  document.getElementById('toast-emoji').textContent = pick.emoji;
+  document.getElementById('toast-msg').textContent = pick.msg;
+  toast.className = 'feedback-toast show ' + (correct ? 'correct-toast' : 'wrong-toast');
+  setTimeout(() => { toast.className = 'feedback-toast'; }, 1800);
+}
+
+/* ===== CONFETTI ===== */
+function launchConfetti(count = 30) {
+  const colors = ['#FF7B2C','#FFB347','#F5C842','#2BBFA4','#FF6B6B','#6C63FF','#00C9A7'];
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.top = '10vh';
+      el.style.background = colors[Math.floor(Math.random() * colors.length)];
+      el.style.width = (8 + Math.random() * 10) + 'px';
+      el.style.height = (8 + Math.random() * 10) + 'px';
+      el.style.borderRadius = Math.random() > .5 ? '50%' : '2px';
+      el.style.animationDuration = (.8 + Math.random() * .8) + 's';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 1800);
+    }, i * 25);
+  }
+}
+</script>
+</body>
+</html>
