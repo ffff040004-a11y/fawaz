@@ -518,9 +518,9 @@
 </div>
 
 <!-- FEEDBACK TOAST -->
-<div class="feedback-toast" id="feedback-toast">
-  <span class="emoji" id="toast-emoji">✅</span>
-  <span id="toast-msg">يا سلام! إجابة صحيحة!</span>
+<div class="feedback-toast" id="feedback-toast" style="display:none;">
+  <span class="emoji" id="toast-emoji"></span>
+  <span id="toast-msg"></span>
 </div>
 
 <script>
@@ -729,8 +729,12 @@ function showFeedback(correct) {
   const pick = msgs[Math.floor(Math.random() * msgs.length)];
   document.getElementById('toast-emoji').textContent = pick.emoji;
   document.getElementById('toast-msg').textContent = pick.msg;
+  toast.style.display = 'block';
   toast.className = 'feedback-toast show ' + (correct ? 'correct-toast' : 'wrong-toast');
-  setTimeout(() => { toast.className = 'feedback-toast'; }, 1800);
+  setTimeout(() => {
+    toast.className = 'feedback-toast';
+    setTimeout(() => { toast.style.display = 'none'; }, 400);
+  }, 1800);
 }
 
 /* ===== CONFETTI ===== */
