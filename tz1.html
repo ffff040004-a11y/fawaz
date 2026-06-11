@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختبار ذوي الأعذار والغائبين</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#edf2f7;font-family:'Cairo',sans-serif;color:#1a2a3a;direction:rtl;padding:0 0 40px;}
+
+/* HEADER */
+.hdr{background:linear-gradient(150deg,#1a3a6a 0%,#2458a8 50%,#1a3a6a 100%);padding:34px 24px 26px;text-align:center;position:relative;overflow:hidden;}
+.hdr::before{content:'';position:absolute;top:-70px;right:-70px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.09);}
+.hdr::after{content:'';position:absolute;bottom:-60px;left:-60px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.07);}
+.hdr-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:30px;padding:5px 18px;margin-bottom:14px;font-size:12px;color:#fff;font-weight:700;}
+.hdr h1{font-size:clamp(20px,5vw,36px);font-weight:900;color:#fff;line-height:1.3;}
+.hdr h1 span{color:#ffe580;}
+.hdr-sub{margin:12px auto 0;max-width:720px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:10px;padding:10px 18px;font-size:13px;line-height:1.7;color:rgba(255,255,255,.9);}
+
+.wrap{max-width:920px;margin:0 auto;padding:0 14px;}
+
+/* SECTION */
+.sec-title{display:flex;align-items:center;gap:10px;margin:22px 0 10px;font-size:15px;font-weight:900;}
+.sec-bar{width:5px;height:26px;border-radius:3px;flex-shrink:0;}
+.sec-num{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;flex-shrink:0;}
+
+/* CARD */
+.card{background:#fff;border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,.08);overflow:hidden;margin-bottom:10px;animation:up .5s ease both;}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.card-head{display:flex;align-items:center;gap:12px;padding:12px 18px;}
+.card-icon{font-size:22px;flex-shrink:0;}
+.card-title{font-size:14px;font-weight:900;color:#fff;line-height:1.3;}
+.card-sub{font-size:11px;color:rgba(255,255,255,.82);margin-top:2px;}
+.card-body{padding:6px 18px 14px;}
+
+/* ITEM */
+.item{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid #eef2f6;font-size:13px;line-height:1.7;color:#2a3a4a;}
+.item:last-child{border-bottom:none;}
+.dot{width:24px;height:24px;min-width:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#fff;margin-top:2px;}
+
+/* SUB */
+.sub{background:#f6fafd;border-radius:10px;border-right:4px solid;margin:8px 0 4px;}
+.sub-hd{padding:9px 14px;font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px;}
+.sub-bd{padding:4px 14px 10px;}
+.sub-bd .item{font-size:12.5px;}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0;}
+@media(max-width:560px){.g2{grid-template-columns:1fr;}}
+.g-card{background:#fff;border-radius:12px;border:1px solid #dde8f0;overflow:hidden;box-shadow:0 3px 10px rgba(0,0,0,.06);}
+.g-card-head{padding:10px 14px;font-size:13px;font-weight:800;color:#fff;display:flex;align-items:center;gap:8px;}
+.g-card-body{padding:8px 14px 12px;}
+.g-card-body .item{font-size:12.5px;}
+
+/* HIGHLIGHT */
+.hl{border-radius:11px;padding:13px 18px;margin:10px 0;font-size:13px;line-height:1.8;border-right:5px solid;display:flex;align-items:flex-start;gap:12px;}
+.hl-icon{font-size:22px;flex-shrink:0;}
+
+/* COLOR THEMES */
+.t-blue .card-head{background:linear-gradient(135deg,#1a5276,#2471a3);}
+.t-blue .dot{background:#2471a3;}
+.t-blue .sub{border-color:#2471a3;}
+.t-blue .sub-hd{background:#d6eaf8;color:#1a3a5a;}
+.t-blue .g-card-head{background:linear-gradient(135deg,#1a5276,#2980b9);}
+
+.t-green .card-head{background:linear-gradient(135deg,#145a32,#1e8449);}
+.t-green .dot{background:#1e8449;}
+.t-green .sub{border-color:#1e8449;}
+.t-green .sub-hd{background:#d5f5e3;color:#0a4020;}
+.t-green .g-card-head{background:linear-gradient(135deg,#145a32,#27ae60);}
+
+.t-amber .card-head{background:linear-gradient(135deg,#784212,#b7770d);}
+.t-amber .dot{background:#b7770d;}
+.t-amber .sub{border-color:#b7770d;}
+.t-amber .sub-hd{background:#fef9e7;color:#5a3a00;}
+
+.t-purple .card-head{background:linear-gradient(135deg,#4a235a,#7d3c98);}
+.t-purple .dot{background:#7d3c98;}
+.t-purple .sub{border-color:#7d3c98;}
+.t-purple .sub-hd{background:#f5eef8;color:#4a235a;}
+
+.t-red .card-head{background:linear-gradient(135deg,#922b21,#e74c3c);}
+.t-red .dot{background:#c0392b;}
+
+.t-teal .card-head{background:linear-gradient(135deg,#0e6655,#17a589);}
+.t-teal .dot{background:#17a589;}
+.t-teal .g-card-head{background:linear-gradient(135deg,#0e6655,#17a589);}
+
+/* REF */
+.ref-box{background:#e8f5e9;border:1px solid #a5d6a7;border-radius:10px;padding:10px 16px;margin:14px 0 0;font-size:12px;color:#2e7d32;display:flex;align-items:center;gap:8px;}
+
+/* FOOTER */
+.footer{text-align:center;padding:26px 20px 14px;border-top:2px dashed #c0d8e8;margin-top:20px;}
+.footer-cta{font-size:13px;color:#5a7a9a;margin-bottom:10px;font-weight:700;}
+.footer-link{display:inline-block;background:linear-gradient(135deg,#0070cc,#0099ee);color:#fff;text-decoration:none;padding:10px 30px;border-radius:30px;font-size:14px;font-weight:700;box-shadow:0 4px 14px rgba(0,120,200,.25);margin-bottom:12px;}
+.footer-end{font-size:12px;color:#7a9ab8;margin-top:4px;}
+.footer-end span{color:#b88010;font-weight:700;}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-badge">🎓 الفصل السابع – وزارة التعليم</div>
+  <h1>اختبار ذوي <span>الأعذار والغائبين</span></h1>
+  <div class="hdr-sub">أحكام وضوابط اختبار الطلاب الغائبين بعذر أو بدون عذر، ومواعيد اختباراتهم حسب المرحلة الدراسية</div>
+</div>
+
+<div class="wrap">
+
+<!-- ══ 1. القواعد العامة ══ -->
+<div class="sec-title">
+  <div class="sec-bar" style="background:#2471a3;"></div>
+  <div class="sec-num" style="background:#2471a3;">١</div>
+  <span style="color:#1a5276;">القواعد العامة للغياب والاختبار البديل</span>
+</div>
+
+<div class="card t-blue" style="animation-delay:.04s">
+  <div class="card-head"><div class="card-icon">📋</div><div class="card-title">أحكام الغياب والاختبار البديل – البنود (١–٤)</div></div>
+  <div class="card-body">
+    <div class="item"><div class="dot">١</div><div><strong>البند ١:</strong> إذا تغيب الطالب بعذر مقبول عن مادة أو أكثر في اختبار نهاية إحدى الفترات الدراسية أو اختبار الدور الثاني، <strong>يحق له دخول الاختبار البديل</strong>.</div></div>
+    <div class="item"><div class="dot">٢</div><div><strong>البند ٢:</strong> يؤدي الطالب الغائب بعذر اختبار الغائبين بنفس الدرجة المخصصة للاختبار الذي تغيب عنه، مع الأخذ بالاعتبار أنه يُمنع اختبار أي طالب بعد انتهاء الفترة المحددة لاختبار الطلاب المتغيبين بعذر، ماعدا الحالات التي تقدر "لجنة الاختبارات الطارئة" ظرف غيابها.</div></div>
+    <div class="item"><div class="dot">٣</div><div><strong>البند ٣:</strong> يجب على إدارة المدرسة إعداد جداول منظمة للاختبارات البديلة للطلاب المتغيبين بعذر.</div></div>
+  </div>
+</div>
+
+<!-- ══ 2. الأعذار المقبولة ══ -->
+<div class="sec-title" style="margin-top:16px;">
+  <div class="sec-bar" style="background:#1e8449;"></div>
+  <div class="sec-num" style="background:#1e8449;">٢</div>
+  <span style="color:#145a32;">الأعذار المقبولة عند تغيب الطالب – البند (٥)</span>
+</div>
+
+<div class="card t-green" style="animation-delay:.07s">
+  <div class="card-head"><div class="card-icon">✅</div><div class="card-title">الأعذار المقبولة الخمسة</div></div>
+  <div class="card-body">
+    <div class="item"><div class="dot">١</div><div><strong>٥-١</strong> الطالب الذي يُثبت بتقارير طبية معتمدة أن ظروفه المرضية منعته من تأدية جميع الاختبارات أو بعضها أثناء انعقادها، أو قبل انعقادها بفترة وجيزة.</div></div>
+    <div class="item"><div class="dot">٢</div><div><strong>٥-٢</strong> الطالب المرافق لأحد أفراد عائلته المنوم في المستشفى بموجب تقرير طبي معتمد، سواء كان من داخل البلاد أو خارجها.</div></div>
+    <div class="item"><div class="dot">٣</div><div><strong>٥-٣</strong> الطالب الذي يُتوفى أحد أفراد عائلته أثناء الاختبارات، أو قبل انعقادها بفترة وجيزة.</div></div>
+    <div class="item"><div class="dot">٤</div><div><strong>٥-٤</strong> الطالب الذي يتعرض للتعطيل من قِبل الجهات الأمنية بسبب حادث مروري، أو ما شابهه بعد إثبات ذلك بإفادة رسمية من الجهة الأمنية.</div></div>
+    <div class="item"><div class="dot">٥</div><div><strong>٥-٥</strong> الحالات المرضية أو الاستثنائية التي تقدرها لجنة التوجيه الطلابي في المدرسة.</div></div>
+  </div>
+</div>
+
+<!-- ══ 3. دراسة العذر ══ -->
+<div class="card t-amber" style="animation-delay:.10s">
+  <div class="card-head"><div class="card-icon">🔍</div><div class="card-title">البند (٦) – دراسة العذر من قِبل لجنة التوجيه الطلابي</div></div>
+  <div class="card-body">
+    <div class="item"><div class="dot">◆</div><div>يتم دراسة العذر من قِبل لجنة التوجيه الطلابي بالمدرسة، ويُقبل إن كان من الأعذار المذكورة سابقًا، وإذا لم يكن منها فتقرر اللجنة مدى وجاهة العذر لدخول الطالب الاختبار البديل، والحالات الخاصة برفعها بشأنها إلى إدارة تقويم الأداء المعرفي والمهاري.</div></div>
+  </div>
+</div>
+
+<!-- ══ 4. الاستشارة الطبية ══ -->
+<div class="card t-red" style="animation-delay:.12s">
+  <div class="card-head"><div class="card-icon">🏥</div><div class="card-title">البند (٧) – الاستشارة المناسبة قبل الاختبار</div></div>
+  <div class="card-body">
+    <div class="item"><div class="dot">◆</div><div>تقديم الاستشارة المناسبة لمن يعاني من ظرف صحي يعيقه عن دخول الاختبار، وتأجيله لموعد الغائبين بعذر، وذلك بعد التأكد من عدم قدرة الطالب على أداء الاختبار بشكل يعكس المستوى الحقيقي للطالب.</div></div>
+  </div>
+</div>
+
+<!-- ══ 5. تنبيه مهم ══ -->
+<div class="hl" style="border-color:#e74c3c;background:#fdedec;">
+  <div class="hl-icon">⚠️</div>
+  <div style="font-size:13px;color:#5a0000;line-height:1.75;"><strong>البند (٨) – تنبيه مهم:</strong> يجب على مدير المدرسة والقائمين على الاختبارات التوضيح للطلاب بأن الذي يدخل الاختبار <strong>لا يحق له إعادته إلا في الدور الثاني</strong>.</div>
+</div>
+
+<!-- ══ 6. مواعيد اختبارات الغائبين ══ -->
+<div class="sec-title" style="margin-top:16px;">
+  <div class="sec-bar" style="background:#7d3c98;"></div>
+  <div class="sec-num" style="background:#7d3c98;">٣</div>
+  <span style="color:#4a235a;">مواعيد اختبارات الغائبين – البند (٣)</span>
+</div>
+
+<!-- غائبون بعذر: ابتدائي ومتوسطة -->
+<div class="card t-purple" style="animation-delay:.15s">
+  <div class="card-head"><div class="card-icon">🏫</div>
+    <div>
+      <div class="card-title">٣-١ الغائبون بعذر – المرحلتان الابتدائية والمتوسطة</div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="item"><div class="dot">١</div><div><strong>٣-١-١</strong> خلال الأسبوع الأول من بداية الفترة الدراسية التالية للفترة الدراسية التي تغيب فيها الطالب.</div></div>
+    <div class="item"><div class="dot">٢</div><div><strong>٣-١-٢</strong> مع اختبار الدور الثاني؛ لمن تغيب عن اختبار نهاية العام الدراسي.</div></div>
+    <div class="item"><div class="dot">٣</div><div><strong>٣-١-٣</strong> مع عودة المعلمين قبل بداية العام الدراسي؛ لمن تغيب عن اختبار الدور الثاني.</div></div>
+  </div>
+</div>
+
+<!-- غائبون بعذر: ثانوية -->
+<div class="card t-purple" style="animation-delay:.18s">
+  <div class="card-head"><div class="card-icon">🏛️</div>
+    <div>
+      <div class="card-title">٣-٢ الغائبون بعذر – المرحلة الثانوية</div>
+      <div class="card-sub">في نفس موعد اختبار الدور الثاني</div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="item"><div class="dot">١</div><div><strong>٣-٢-١</strong> خلال الأسبوع الأول من بداية الفترة الدراسية التالية للفترة الدراسية التي تغيب فيها الطالب.</div></div>
+    <div class="item"><div class="dot">٢</div><div><strong>٣-٢-٢</strong> مع اختبار الدور الثاني لمواد الإخفاق في اختبار نهاية العام الدراسي.</div></div>
+    <div class="item"><div class="dot">٣</div><div><strong>٣-٢-٣</strong> يُستثنى من المدة المحددة في الفقرتين السابقتين (٣-٢-١، ٣-٢-٢) الحالات التي تستثنيها لجنة الاختبارات الطارئة.</div></div>
+  </div>
+</div>
+
+<!-- ══ 7. غائبون بدون عذر ══ -->
+<div class="sec-title" style="margin-top:16px;">
+  <div class="sec-bar" style="background:#c0392b;"></div>
+  <div class="sec-num" style="background:#c0392b;">٤</div>
+  <span style="color:#922b21;">الغائبون بدون عذر</span>
+</div>
+
+<div class="g2">
+  <!-- ابتدائي ومتوسطة بدون عذر -->
+  <div class="g-card">
+    <div class="g-card-head" style="background:linear-gradient(135deg,#922b21,#e74c3c);">
+      <span style="font-size:18px;">🏫</span>
+      <span style="font-size:13px;font-weight:800;">٣-٣ المرحلتان الابتدائية والمتوسطة</span>
+    </div>
+    <div class="g-card-body">
+      <div class="item"><div class="dot" style="background:#c0392b;">١</div><div><strong>٣-٣-١</strong> يعتبر مكملاً في المادة، وعليه دخول اختبار الدور الثاني.</div></div>
+      <div class="item"><div class="dot" style="background:#c0392b;">٢</div><div><strong>٣-٣-٢</strong> الطالب الذي يتغيب عن دخول اختبار الدور الثاني؛ يعتبر راسبًا ويُعيد السنة.</div></div>
+    </div>
+  </div>
+
+  <!-- ثانوية بدون عذر -->
+  <div class="g-card">
+    <div class="g-card-head" style="background:linear-gradient(135deg,#922b21,#e74c3c);">
+      <span style="font-size:18px;">🏛️</span>
+      <span style="font-size:13px;font-weight:800;">٣-٤ المرحلة الثانوية</span>
+    </div>
+    <div class="g-card-body">
+      <div class="item" style="padding-top:6px;"><div style="font-size:12.5px;color:#5a3a3a;line-height:1.7;">في نفس موعد اختبار الدور الثاني والذي تم تحديد مواعيده على النحو التالي:</div></div>
+      <div class="item"><div class="dot" style="background:#c0392b;">١</div><div><strong>٣-٤-١</strong> خلال الأسبوع الأول من بداية الفترة الدراسية التالية للفترة التي تغيب فيها الطالب.</div></div>
+      <div class="item"><div class="dot" style="background:#c0392b;">٢</div><div><strong>٣-٤-٢</strong> مع اختبار الدور الثاني لمواد الإخفاق في اختبار نهاية العام الدراسي.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Reference -->
+<div class="ref-box">📚 <strong>المرجع:</strong> دليل الاختبارات – ص ٧٨ و ٧٩</div>
+
+<!-- Footer -->
+<div class="footer">
+  <div class="footer-cta">✨ تفضل للمزيد</div>
+  <a class="footer-link" href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">📢 قناة التيليغرام</a>
+  <div class="footer-end">نهاية المقالة — المرجع: دليل الاختبارات ص ٧٨ و ٧٩</div>
+  <div class="footer-end" style="margin-top:4px;">تصميم <span>د/ فواز</span></div>
+</div>
+
+</div>
+</body>
+</html>

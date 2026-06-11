@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>شروط وضوابط التصحيح الآلي</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background:#eef3f8;
+  font-family:'Cairo',sans-serif;
+  color:#1a2a3a;
+  direction:rtl;
+  padding:0 0 40px;
+}
+
+/* ── HEADER ── */
+.hdr{
+  background:linear-gradient(150deg,#1a5276 0%,#2471a3 50%,#1a5276 100%);
+  padding:34px 24px 26px;
+  text-align:center;
+  position:relative;overflow:hidden;
+}
+.hdr::before{content:'';position:absolute;top:-70px;right:-70px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.09);}
+.hdr::after{content:'';position:absolute;bottom:-60px;left:-60px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.07);}
+.hdr-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:30px;padding:5px 18px;margin-bottom:14px;font-size:12px;color:#fff;font-weight:700;}
+.hdr h1{font-size:clamp(19px,4.8vw,34px);font-weight:900;color:#fff;line-height:1.3;}
+.hdr h1 span{color:#ffe580;}
+.hdr-sub{margin:12px auto 0;max-width:700px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:10px;padding:10px 18px;font-size:13px;line-height:1.7;color:rgba(255,255,255,.9);}
+
+/* phases ribbon */
+.phases{display:flex;justify-content:center;gap:0;flex-wrap:wrap;background:#fff;border-bottom:2px solid #dde8f0;padding:0;}
+.phase-tab{padding:12px 22px;font-size:13px;font-weight:800;border-left:1px solid #dde8f0;display:flex;align-items:center;gap:7px;}
+.phase-tab:last-child{border-left:none;}
+.phase-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+
+.wrap{max-width:920px;margin:0 auto;padding:0 14px;}
+
+/* ── PHASE HEADER ── */
+.phase-hdr{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 20px;
+  border-radius:14px 14px 0 0;
+  margin-top:22px;
+}
+.phase-num{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:900;color:#fff;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.35);flex-shrink:0;}
+.phase-title{font-size:16px;font-weight:900;color:#fff;line-height:1.3;}
+.phase-sub{font-size:11.5px;color:rgba(255,255,255,.82);margin-top:2px;}
+.phase-body{background:#fff;border-radius:0 0 14px 14px;border:1px solid #dde8f0;border-top:none;padding:6px 18px 16px;box-shadow:0 4px 16px rgba(0,0,0,.07);margin-bottom:4px;}
+
+/* ── CARD ── */
+.card{background:#f7fafd;border-radius:11px;border:1px solid #dde8f0;overflow:hidden;margin:10px 0;animation:up .5s ease both;}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.card-head{display:flex;align-items:center;gap:10px;padding:10px 16px;}
+.card-icon{font-size:20px;flex-shrink:0;}
+.card-title{font-size:13.5px;font-weight:800;color:#fff;}
+.card-body{padding:8px 16px 12px;background:#fff;}
+
+/* ── ITEM ── */
+.item{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid #eef2f6;font-size:13px;line-height:1.7;color:#2a3a4a;}
+.item:last-child{border-bottom:none;}
+.dot{width:22px;height:22px;min-width:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#fff;margin-top:2px;}
+
+/* sub section */
+.sub{background:#f0f6fb;border-radius:9px;border-right:4px solid;margin:8px 0 4px;}
+.sub-head{padding:8px 13px;font-size:12.5px;font-weight:800;display:flex;align-items:center;gap:7px;}
+.sub-body{padding:4px 13px 10px;}
+.sub-body .item{font-size:12.5px;}
+
+/* grid */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:580px){.g2{grid-template-columns:1fr;}}
+
+/* highlight */
+.hl{border-radius:10px;padding:12px 16px;margin:8px 0;font-size:13px;line-height:1.75;border-right:5px solid;display:flex;align-items:flex-start;gap:10px;}
+.hl-icon{font-size:20px;flex-shrink:0;}
+
+/* COLOR THEMES */
+/* Phase 1 – teal */
+.ph1-hdr{background:linear-gradient(135deg,#0e7c6a,#16a085);}
+.ph1 .card-head{background:linear-gradient(135deg,#0e7c6a,#1abc9c);}
+.ph1 .dot{background:#16a085;}
+.ph1 .sub{border-color:#1abc9c;}
+.ph1 .sub-head{background:#e0f5f1;color:#0a5c4e;}
+
+/* Phase 2 – blue */
+.ph2-hdr{background:linear-gradient(135deg,#1a5276,#2471a3);}
+.ph2 .card-head{background:linear-gradient(135deg,#1a5276,#2980b9);}
+.ph2 .dot{background:#2471a3;}
+.ph2 .sub{border-color:#2980b9;}
+.ph2 .sub-head{background:#d6eaf8;color:#1a3a5a;}
+
+/* Phase 3 – purple */
+.ph3-hdr{background:linear-gradient(135deg,#6c3483,#9b59b6);}
+.ph3 .card-head{background:linear-gradient(135deg,#6c3483,#9b59b6);}
+.ph3 .dot{background:#8e44ad;}
+.ph3 .sub{border-color:#9b59b6;}
+.ph3 .sub-head{background:#f5eef8;color:#4a235a;}
+
+/* orange accent */
+.t-ora .card-head{background:linear-gradient(135deg,#d35400,#e67e22);}
+.t-ora .dot{background:#e67e22;}
+
+/* green accent */
+.t-grn .card-head{background:linear-gradient(135deg,#1e8449,#27ae60);}
+.t-grn .dot{background:#27ae60;}
+
+/* note box */
+.note{background:#fff8e1;border:1px solid #ffe082;border-radius:10px;padding:12px 16px;margin:10px 0;font-size:13px;line-height:1.75;color:#5a3a00;display:flex;align-items:flex-start;gap:10px;}
+
+/* ── STEP FLOW ── */
+.flow{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;}
+.flow-step{
+  background:#fff;border:1px solid #dde8f0;
+  border-radius:10px;padding:10px 14px;
+  flex:1;min-width:150px;
+  font-size:12.5px;line-height:1.65;color:#2a3a4a;
+  text-align:center;
+  position:relative;
+}
+.flow-step-num{width:26px;height:26px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;}
+
+/* ref */
+.ref-box{background:#e8f5e9;border:1px solid #a5d6a7;border-radius:10px;padding:10px 16px;margin:14px 0 0;font-size:12px;color:#2e7d32;display:flex;align-items:center;gap:8px;}
+
+/* footer */
+.footer{text-align:center;padding:26px 20px 14px;border-top:2px dashed #c0d8e8;margin-top:20px;}
+.footer-cta{font-size:13px;color:#5a7a9a;margin-bottom:10px;font-weight:700;}
+.footer-link{display:inline-block;background:linear-gradient(135deg,#0070cc,#0099ee);color:#fff;text-decoration:none;padding:10px 30px;border-radius:30px;font-size:14px;font-weight:700;box-shadow:0 4px 14px rgba(0,120,200,.25);margin-bottom:12px;}
+.footer-end{font-size:12px;color:#7a9ab8;margin-top:4px;}
+.footer-end span{color:#b88010;font-weight:700;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-badge">🎓 وزارة التعليم – المملكة العربية السعودية</div>
+  <h1>شروط وضوابط <span>التصحيح الآلي</span></h1>
+  <div class="hdr-sub">١٤-٥ تُنفَّذ ضوابط وإجراءات التصحيح الآلي على ثلاث مراحل رئيسية، ولكل مرحلة ضوابط محددة يجب الالتزام بها؛ لضمان جودة التصحيح ودقة النتائج.</div>
+</div>
+
+<!-- PHASES RIBBON -->
+<div class="phases">
+  <div class="phase-tab"><div class="phase-dot" style="background:#16a085;"></div>المرحلة الأولى: الإعداد والتهيئة</div>
+  <div class="phase-tab"><div class="phase-dot" style="background:#2471a3;"></div>المرحلة الثانية: أثناء الاختبار</div>
+  <div class="phase-tab"><div class="phase-dot" style="background:#8e44ad;"></div>المرحلة الثالثة: التصحيح وإصدار النتائج</div>
+</div>
+
+<div class="wrap">
+
+<!-- ══════════════════════════════════════
+     المرحلة الأولى: ما قبل الاختبار
+══════════════════════════════════════ -->
+<div class="phase-hdr ph1-hdr">
+  <div class="phase-num">١</div>
+  <div>
+    <div class="phase-title">المرحلة الأولى: ما قبل الاختبار (مرحلة الإعداد والتهيئة)</div>
+    <div class="phase-sub">١٤-٥-١ الضوابط التجهيزية والتنظيمية قبل بدء الاختبار</div>
+  </div>
+</div>
+<div class="phase-body ph1">
+
+  <div class="card" style="animation-delay:.04s">
+    <div class="card-head"><div class="card-icon">📋</div><div class="card-title">ضوابط الالتزام والمسؤوليات الإدارية</div></div>
+    <div class="card-body">
+      <div class="item"><div class="dot">١</div><div><strong>١٤-٥-١-١</strong> الالتزام بضوابط بناء وإعداد الأسئلة لكل مادة وفقًا لما ورد في دليل الاختبارات.</div></div>
+      <div class="item"><div class="dot">٢</div><div><strong>١٤-٥-١-٢</strong> مناسبة أدوات عملية التقويم لطلاب ذوي الإعاقة وفقًا لطبيعة احتياجات كل فئة.</div></div>
+      <div class="item"><div class="dot">٣</div><div><strong>١٤-٥-١-٣</strong> مدير المدرسة مسؤول عن جهاز وبرنامج التصحيح الآلي بما في ذلك كلمة المرور.</div></div>
+      <div class="item"><div class="dot">٤</div><div><strong>١٤-٥-١-٤</strong> تقوم إدارة المدرسة بإسناد مسؤولية العمل على جهاز التصحيح الآلي وبرامجه وأدواته إلى اثنين من المعلمين ذوي الخبرة في الحاسب الآلي ويُكلَّفان رسميًا، ويكونان مسؤولَيْن عن المحافظة على سلامة البرنامج والبيانات المدخَلة وسريتها وكلمة المرور الخاصة بجهاز الحاسب الآلي وبرنامج التصحيح الآلي وحماية أجهزة الحاسب وإعداداته من الاختراقات والفيروسات وحفظ نسخة احتياطية من النتائج في ذاكرة خارجية؛ على أن يحصلا أولاً بأول على التدريب الكافي من الشركة الموردة للجهاز أو البرنامج.</div></div>
+      <div class="item"><div class="dot">٥</div><div><strong>١٤-٥-١-٥</strong> إحاطة المعلمين بأن التصحيح الآلي اختياري.</div></div>
+      <div class="item"><div class="dot">٦</div><div><strong>١٤-٥-١-٦</strong> تدريب المعلمين على استخدام جهاز التصحيح الآلي.</div></div>
+      <div class="item"><div class="dot">٧</div><div><strong>١٤-٥-١-٧</strong> تزويد أعضاء فريق التصحيح الآلي في المدرسة بالضوابط المنظَّمة لعمليات التصحيح.</div></div>
+    </div>
+  </div>
+
+  <!-- نوعا الإجابة النموذجية -->
+  <div class="card" style="animation-delay:.07s">
+    <div class="card-head"><div class="card-icon">📄</div><div class="card-title">١٤-٥-١-٨ نوعا الإجابة النموذجية المطلوبة</div></div>
+    <div class="card-body">
+      <div class="sub" style="border-color:#16a085;">
+        <div class="sub-head" style="background:#e0f5f1;color:#0a5c4e;">✅ النوع الأول: الإجابة النموذجية المكتوبة على ورقة الأسئلة</div>
+        <div class="sub-body">
+          <div class="item"><div class="dot" style="background:#16a085;">◆</div><div>تكون وافية تمامًا، وتوزع الدرجات لكل سؤال على الهامش الأيسر منها وتحدد الدرجة الجزئية والكلية، بحيث يُستخدم هذا النموذج في التصحيح والمراجعة والتدقيق في حال توقف جهاز التصحيح الآلي عن العمل لأي سبب.</div></div>
+        </div>
+      </div>
+      <div class="sub" style="border-color:#16a085;margin-top:6px;">
+        <div class="sub-head" style="background:#e0f5f1;color:#0a5c4e;">✅ النوع الثاني: إجابة نموذجية بتظليل بطاقة الطالب "نموذج التصحيح الآلي"</div>
+        <div class="sub-body">
+          <div class="item"><div class="dot" style="background:#16a085;">◆</div><div>تُستخدم مفتاحًا لبرنامج التصحيح الآلي.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ضوابط الإعداد التقني -->
+  <div class="card" style="animation-delay:.10s">
+    <div class="card-head"><div class="card-icon">⚙️</div><div class="card-title">ضوابط إعداد الأسئلة وبطاقة الإجابة تقنيًا</div></div>
+    <div class="card-body">
+      <div class="item"><div class="dot">٩</div><div><strong>١٤-٥-١-٩</strong> التأكد من ترقيم إجابات الأسئلة بشكل متسلسل وواضح ومتطابق مع الترقيم الموجود في ورقة الأسئلة.</div></div>
+      <div class="item"><div class="dot">١٠</div><div><strong>١٤-٥-١-١٠</strong> توقيع المعلم واعتماده شكلَ ومحتوى نموذج مفتاح الإجابة وتو افقه مع نموذج الأسئلة في تطابق الأرقام والفقرات والحروف والرموز المستخدَمة.</div></div>
+      <div class="item"><div class="dot">١١</div><div><strong>١٤-٥-١-١١</strong> التأكد من تو افق بطاقة إجابة الطالب مع متطلبات جهاز التصحيح الآلي من حيث مقاس البطاقة وتصميمها، واستخدام ورق عالي الجودة لضمان عدم تمزقه أو تأثره أثناء المعالجة.</div></div>
+      <div class="item"><div class="dot">١٢</div><div><strong>١٤-٥-١-١٢</strong> التأكد (بعد كتابة الأسئلة) من مناسبة نموذج المصحح الآلي للاختبار (عدد فقرات الصح والخطأ، عدد فقرات الاختيار من متعدد، عدد فقرات المزاوجة، المقالي... إلخ).</div></div>
+      <div class="item"><div class="dot">١٣</div><div><strong>١٤-٥-١-١٣</strong> حل نموذج الإجابة الآلي، والتأكد من مطابقة الأسئلة وترتيبها مع أسئلة الاختبار.</div></div>
+      <div class="item"><div class="dot">١٤</div><div><strong>١٤-٥-١-١٤</strong> التأكد من مناسبة النموذج للمادة (عربي، إنجليزي).</div></div>
+      <div class="item"><div class="dot">١٥</div><div><strong>١٤-٥-١-١٥</strong> فرز وترتيب بطاقات الإجابة حسب (أسماء الطلاب أو أرقام جلوسهم أو توزيع اللجان).</div></div>
+      <div class="item"><div class="dot">١٦</div><div><strong>١٤-٥-١-١٦</strong> تتولى إدارة المدرسة تدريب الطلاب على استخدام بطاقة الإجابة في التصحيح الآلي من خلال تنفيذ التصحيح الآلي في الاختبارات القصيرة أثناء الفترة الدراسية؛ لتعويدهم على طريقة التعامل معها ورصد السلبيات ومعالجتها.</div></div>
+      <div class="item"><div class="dot">١٧</div><div><strong>١٤-٥-١-١٧</strong> تنفيذ اختبار تجريبي للنظام قبل البدء؛ للتحقق من دقة النظام وكفاءته.</div></div>
+    </div>
+  </div>
+
+</div><!-- end phase 1 body -->
+
+
+<!-- ══════════════════════════════════════
+     المرحلة الثانية: أثناء الاختبار
+══════════════════════════════════════ -->
+<div class="phase-hdr ph2-hdr" style="margin-top:20px;">
+  <div class="phase-num">٢</div>
+  <div>
+    <div class="phase-title">المرحلة الثانية: أثناء تطبيق الاختبار</div>
+    <div class="phase-sub">١٤-٥-٢ التأكيد على الطلاب الالتزام بالتعليمات الآتية</div>
+  </div>
+</div>
+<div class="phase-body ph2">
+
+  <div class="card" style="animation-delay:.13s">
+    <div class="card-head"><div class="card-icon">✏️</div><div class="card-title">تعليمات تظليل البطاقة للطلاب</div></div>
+    <div class="card-body">
+      <div class="item"><div class="dot">١</div><div><strong>١٤-٥-٢-١</strong> تظليل الخانات بشكل كامل باستخدام القلم الرصاص، وعدم تجاوز حدود الشكل أو الضغط بقوة على الورقة خشية إتلافها.</div></div>
+      <div class="item"><div class="dot">٢</div><div><strong>١٤-٥-٢-٢</strong> تجنب الطرق الخاطئة أثناء التظليل مثل (وضع علامات أو رموز).</div></div>
+      <div class="item"><div class="dot">٣</div><div><strong>١٤-٥-٢-٣</strong> عدم تظليل إجابتين لنفس السؤال.</div></div>
+      <div class="item"><div class="dot">٤</div><div><strong>١٤-٥-٢-٤</strong> عدم ترك سؤال بدون تظليل إجابته.</div></div>
+      <div class="item"><div class="dot">٥</div><div><strong>١٤-٥-٢-٥</strong> عدم ثني ورقة الإجابة أو جزء منها أو شطب الزوايا أو العبث بها بأي شكل أو الكتابة بأي شيء آخر على بطاقة الإجابة المخصصة للتصحيح الآلي.</div></div>
+      <div class="item"><div class="dot">٦</div><div><strong>١٤-٥-٢-٦</strong> مراعاة أن يكون التظليل من اليسار إلى اليمين في ورقة الإجابة الآلية لمادة اللغة الإنجليزية.</div></div>
+      <div class="item"><div class="dot">٧</div><div><strong>١٤-٥-٢-٧</strong> مراعاة تظليل الفقرات وفقًا للتسلسل الصحيح للأسئلة.</div></div>
+    </div>
+  </div>
+
+</div><!-- end phase 2 body -->
+
+
+<!-- ══════════════════════════════════════
+     المرحلة الثالثة: التصحيح وإصدار النتائج
+══════════════════════════════════════ -->
+<div class="phase-hdr ph3-hdr" style="margin-top:20px;">
+  <div class="phase-num">٣</div>
+  <div>
+    <div class="phase-title">المرحلة الثالثة: بعد انتهاء الاختبار (التصحيح وإصدار النتائج)</div>
+    <div class="phase-sub">١٤-٥-٣ ضوابط ما بعد انتهاء الاختبار</div>
+  </div>
+</div>
+<div class="phase-body ph3">
+
+  <div class="card" style="animation-delay:.16s">
+    <div class="card-head"><div class="card-icon">🔍</div><div class="card-title">فحص أوراق الإجابة قبل التصحيح الآلي</div></div>
+    <div class="card-body">
+      <div class="item"><div class="dot">١</div><div><strong>١٤-٥-٣-١</strong> تظليل نموذج الإجابة، وعدم ثني النموذج ليتمكن الجهاز من قراءته بشكل صحيح.</div></div>
+      <div class="item"><div class="dot">٢</div><div><strong>١٤-٥-٣-٢</strong> سلامة تظليل الجزء الخاص بالسؤال المقالي بتظليل خانة (الآحاد) عندما تكون درجة السؤال (٩) درجات أو أقل.</div></div>
+      <div class="item"><div class="dot">٣</div><div><strong>١٤-٥-٣-٣</strong> عدم وجود ورقة أسئلة أو أي ورقة أخرى قبل التصحيح ليس لها علاقة بالنماذج.</div></div>
+      <div class="item"><div class="dot">٤</div><div><strong>١٤-٥-٣-٤</strong> عدم وجود أوراق مقلوبة بين أوراق التصحيح الآلي.</div></div>
+      <div class="item"><div class="dot">٥</div><div><strong>١٤-٥-٣-٥</strong> عدد الأوراق المسموحة ضوئيًا ومطابقتها مع أعداد الطلاب المختبَرين دون تكرار الأسماء.</div></div>
+      <div class="item"><div class="dot">٦</div><div><strong>١٤-٥-٣-٦</strong> تو افق بيانات الطلاب المدخَلة في برنامج التصحيح الآلي مع البيانات الموجودة في النظام الإلكتروني المعتمد.</div></div>
+      <div class="item"><div class="dot">٧</div><div><strong>١٤-٥-٣-٧</strong> ترتيب أوراق إجابة الطلاب حسب اللجان؛ ليسهل الرجوع إليها عند الحاجة لمراجعتها.</div></div>
+      <div class="item"><div class="dot">٨</div><div><strong>١٤-٥-٣-٨</strong> إنشاء مجلد شامل للصفوف ومواد الاختبار من قِبل معلم المادة، لحفظ نسخة من صور إجابات الطلاب.</div></div>
+    </div>
+  </div>
+
+  <div class="card" style="animation-delay:.19s">
+    <div class="card-head"><div class="card-icon">📊</div><div class="card-title">ضوابط الرصد والمتابعة بعد التصحيح</div></div>
+    <div class="card-body">
+      <div class="item"><div class="dot">٩</div><div><strong>١٤-٥-٣-٩</strong> معلم المادة والمعلم المراجع مسؤولان عن مراجعة إجابات الطلاب التي لم يقرأها جهاز التصحيح الآلي بأي سبب آخر، واتخاذ القرار المناسب في قبول الإجابة أو عدمها واعتمادها في البرنامج.</div></div>
+      <div class="item"><div class="dot">١٠</div><div><strong>١٤-٥-٣-١٠</strong> مراجعة معلم المادة والمعلم المراجع عيناتٍ عشوائية وتصحيحها يدويًا ومطابقتها مع النموذج للتأكد من سلامة التصحيح، ويتأكد ذلك عند عدم حصول أحد الطلاب على الدرجة الكاملة في الاختبار.</div></div>
+      <div class="item"><div class="dot">١١</div><div><strong>١٤-٥-٣-١١</strong> اتخاذ الحلول المناسبة في حالة وجود خلل في جهاز التصحيح الآلي وإيقاف العمل به فيما يضمن حفظ حقوق الطلاب وإجاباتهم ودرجاتهم.</div></div>
+      <div class="item"><div class="dot">١٢</div><div><strong>١٤-٥-٣-١٢</strong> تحتفظ نتائج الطلاب بعد التصحيح الآلي في ذاكرة الآلي وفي إحدى أدوات تخزين المعلومات الخاصة بالمدرسة.</div></div>
+      <div class="item"><div class="dot">١٣</div><div><strong>١٤-٥-٣-١٣</strong> معلم المادة والمعلم مسؤول عن رصد الدرجات في النظام الإلكتروني المعتمد ومطابقة كشف الدرجات المستخرَج بعد الرصد على أوراق الإجابة مع أحد أعضاء لجنة التحكم والضبط والتوقيع على الكشوف وطباعة الكشف مرة أخرى مع إبقاء الكشف السابق.</div></div>
+      <div class="item"><div class="dot">١٤</div><div><strong>١٤-٥-٣-١٤</strong> يُطبَّق على التصحيح الآلي ما يطبق على التصحيح اليدوي من حيث الالتزام بالتصحيح والرصد والمراجعة والتدقيق الواردة في هذا الفصل "تصحيح الاختبار".</div></div>
+      <div class="item"><div class="dot">١٥</div><div><strong>١٤-٥-٣-١٥</strong> توجيه المعلمين بأهمية الاحتفاظ بكل ما يتعلق باختباراتهم والتعامل مع الأوراق والكشوف وما تضمنه البند "سادسًا" في هذا الفصل الاختبار.</div></div>
+    </div>
+  </div>
+
+</div><!-- end phase 3 body -->
+
+<!-- خطأ في الرصد -->
+<div class="note" style="margin-top:16px;">
+  <div class="hl-icon">⚠️</div>
+  <div><strong>البند (٥١) – عند حدوث خطأ في رصد درجة طالب أو تصحيح أوراقه:</strong><br>
+  • <strong>١٥-١</strong> تُثبَّت الدرجة المرصودة إن كانت في مصلحة الطالب.<br>
+  • <strong>١٥-٢</strong> يتم تصحيح الرصد إن كانت الدرجة المرصودة ليست في مصلحة الطالب.
+  </div>
+</div>
+
+<!-- Reference -->
+<div class="ref-box">
+  📚 <strong>المرجع:</strong> دليل الاختبارات – صفحات ٥٩-٦٣
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <div class="footer-cta">✨ تفضل للمزيد</div>
+  <a class="footer-link" href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">📢 قناة التيليغرام</a>
+  <div class="footer-end">نهاية المقالة — المرجع: دليل الاختبارات ص ٥٩-٦٣</div>
+  <div class="footer-end" style="margin-top:4px;">تصميم <span>د/ فواز</span></div>
+</div>
+
+</div>
+</body>
+</html>
