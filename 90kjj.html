@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>توضيح الاستبانات المعتمدة في الأدلة</title>
+  <style>
+    :root {
+      --bg: #f6f3eb;
+      --card: #ffffff;
+      --ink: #1f2933;
+      --muted: #5f6b7a;
+      --gold: #b8892f;
+      --green: #0f766e;
+      --blue: #2563eb;
+      --red: #b91c1c;
+      --soft-gold: #fff7df;
+      --soft-green: #e8f7f4;
+      --soft-blue: #eef5ff;
+      --border: #eadfca;
+      --shadow: 0 18px 45px rgba(64, 49, 25, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Tahoma", "Arial", sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(184,137,47,0.16), transparent 34%),
+        linear-gradient(135deg, #fbfaf6 0%, var(--bg) 100%);
+      color: var(--ink);
+      line-height: 1.85;
+    }
+
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 32px 18px 44px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border-radius: 34px;
+      padding: 36px 30px;
+      background:
+        linear-gradient(135deg, rgba(15,118,110,0.95), rgba(31,41,51,0.96)),
+        url("data:image/svg+xml,%3Csvg width='160' height='160' viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.12'%3E%3Cpath d='M0 80h160M80 0v160'/%3E%3Ccircle cx='80' cy='80' r='56'/%3E%3C/g%3E%3C/svg%3E");
+      color: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      left: -70px;
+      top: -70px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 50%;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.13);
+      border: 1px solid rgba(255,255,255,0.22);
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(28px, 5vw, 48px);
+      letter-spacing: -0.8px;
+      line-height: 1.25;
+    }
+
+    .hero p {
+      max-width: 850px;
+      margin: 0;
+      color: rgba(255,255,255,0.88);
+      font-size: 18px;
+    }
+
+    .alert {
+      margin: 24px 0;
+      background: linear-gradient(135deg, #fff7df, #fffdf7);
+      border: 1px solid #ead9aa;
+      border-right: 8px solid var(--gold);
+      border-radius: 24px;
+      padding: 22px 22px;
+      box-shadow: 0 10px 30px rgba(184,137,47,0.10);
+    }
+
+    .alert h2 {
+      margin: 0 0 8px;
+      color: #7a5416;
+      font-size: 24px;
+    }
+
+    .alert p { margin: 0; color: #4c3a1a; font-size: 17px; }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin: 26px 0;
+    }
+
+    .step {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: 0 12px 24px rgba(31,41,51,0.06);
+      text-align: center;
+    }
+
+    .step .num {
+      width: 42px;
+      height: 42px;
+      margin: 0 auto 10px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      color: #fff;
+      font-weight: 800;
+      background: var(--green);
+    }
+
+    .step strong { display: block; font-size: 17px; margin-bottom: 4px; }
+    .step span { color: var(--muted); font-size: 14px; }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+      margin-top: 24px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+    }
+
+    .card-header {
+      padding: 24px 24px 18px;
+      color: #fff;
+      min-height: 142px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-header::after {
+      content: "";
+      position: absolute;
+      inset-inline-start: -40px;
+      top: -50px;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.13);
+    }
+
+    .achievement .card-header { background: linear-gradient(135deg, #0f766e, #115e59); }
+    .excellence .card-header { background: linear-gradient(135deg, #1d4ed8, #1e3a8a); }
+
+    .badge {
+      display: inline-flex;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.22);
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.35;
+    }
+
+    .card-body { padding: 24px; flex: 1; }
+
+    .task-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      color: var(--ink);
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 19px;
+      flex: none;
+    }
+
+    .achievement .icon { background: var(--soft-green); color: var(--green); }
+    .excellence .icon { background: var(--soft-blue); color: var(--blue); }
+
+    .card p { margin: 0 0 16px; color: var(--muted); font-size: 16px; }
+
+    .mini-list {
+      margin: 0 0 20px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .mini-list li {
+      position: relative;
+      padding: 10px 38px 10px 10px;
+      border-bottom: 1px dashed #e7dfd0;
+      color: #374151;
+    }
+
+    .mini-list li::before {
+      content: "✓";
+      position: absolute;
+      right: 0;
+      top: 10px;
+      width: 25px;
+      height: 25px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: #f3f4f6;
+      color: var(--green);
+      font-weight: 800;
+    }
+
+    .link-box {
+      margin-top: auto;
+      padding: 16px;
+      border-radius: 20px;
+      background: #faf8f1;
+      border: 1px solid #ece1c8;
+    }
+
+    .copy-note {
+      margin: 0 0 12px;
+      color: #4b5563;
+      font-size: 14px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      text-decoration: none;
+      color: #fff;
+      padding: 14px 16px;
+      border-radius: 16px;
+      font-weight: 800;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .achievement .btn { background: linear-gradient(135deg, #0f766e, #14b8a6); }
+    .excellence .btn { background: linear-gradient(135deg, #2563eb, #60a5fa); }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 22px rgba(0,0,0,.14);
+    }
+
+    .note-final {
+      margin-top: 24px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 20px;
+      color: var(--muted);
+      box-shadow: 0 10px 24px rgba(31,41,51,0.06);
+    }
+
+    .note-final strong { color: var(--red); }
+
+    .footer {
+      margin-top: 26px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .print-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin: 22px 0 0;
+      flex-wrap: wrap;
+    }
+
+    .print-btn {
+      border: 0;
+      cursor: pointer;
+      padding: 12px 18px;
+      border-radius: 14px;
+      color: #fff;
+      background: #1f2933;
+      font-weight: 800;
+      font-family: inherit;
+    }
+
+    @media (max-width: 850px) {
+      .cards, .flow { grid-template-columns: 1fr; }
+      .hero { padding: 28px 22px; border-radius: 24px; }
+      .card h3 { font-size: 24px; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .page { max-width: none; padding: 0; }
+      .hero, .card, .alert, .note-final { box-shadow: none; break-inside: avoid; }
+      .print-actions { display: none; }
+      .btn { color: #000; background: #fff !important; border: 1px solid #000; }
+      a::after { content: ""; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="eyebrow">📌 توضيح تنظيمي مختصر</div>
+      <h1>الاستبانات المعتمدة في الأدلة</h1>
+      <p>
+        هذا العرض يوضح الاستبانات الواردة في الأدلة دون توسّع غير منصوص عليه، مع روابط مباشرة لإنشاء نسخة من النماذج واستخدامها في حساب المدرسة.
+      </p>
+    </section>
+
+    <section class="alert">
+      <h2>تنبيه مهم</h2>
+      <p>
+        لا توجد استبانات لقياس اتجاهات أو رضا المتعلمين إلا ما ورد في الأدلة. وقد كثرت الاستبانات وتعددت المبالغات في تنوعها، بينما الحقيقة أن الأدلة لم تنص إلا على هاتين الاستبانتين، ولكل منهما شرح وتوضيح واستمارات في الدليل.
+      </p>
+    </section>
+
+    <section class="flow" aria-label="خطوات استخدام الروابط">
+      <div class="step">
+        <div class="num">1</div>
+        <strong>افتح الرابط</strong>
+        <span>اضغط على زر إنشاء نسخة.</span>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <strong>اختر إنشاء نسخة</strong>
+        <span>سيتم نسخ النموذج إلى حسابك.</span>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <strong>استخدم النموذج</strong>
+        <span>تصبح النسخة ملكًا لحسابك وقابلة للإرسال.</span>
+      </div>
+    </section>
+
+    <section class="cards">
+      <article class="card achievement">
+        <div class="card-header">
+          <span class="badge">لجنة التحصيل الدراسي</span>
+          <h3>قياس رضا أولياء الأمور عن التحصيل الدراسي ونتائجه</h3>
+        </div>
+        <div class="card-body">
+          <div class="task-title"><span class="icon">👨‍👩‍👧</span>الغرض من الاستبانة</div>
+          <p>
+            قياس رضا أولياء الأمور عن التحصيل الدراسي ونتائجه، وإشراكهم في معالجات ضعف التحصيل الدراسي لأبنائهم.
+          </p>
+          <ul class="mini-list">
+            <li>تحديد مستوى رضا أولياء الأمور عن نتائج التحصيل الدراسي.</li>
+            <li>تعزيز الشراكة مع الأسرة في معالجة ضعف التحصيل.</li>
+            <li>استخدام النتائج في التوصيات والإجراءات العلاجية.</li>
+          </ul>
+          <div class="link-box">
+            <p class="copy-note">اضغط على الرابط، ثم اختر <strong>إنشاء نسخة</strong> لتصبح النسخة ملكًا لحسابك.</p>
+            <a class="btn" href="https://docs.google.com/forms/d/1ntoUt-KgIH15FJ2qNBXJIvAbRlJw0qQHjUC1CgU1zwA/copy" target="_blank" rel="noopener noreferrer">🔗 إنشاء نسخة من استبانة لجنة التحصيل الدراسي</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="card excellence">
+        <div class="card-header">
+          <span class="badge">لجنة التميز</span>
+          <h3>رصد اتجاهات الطلاب وقياس رضا المستفيدين</h3>
+        </div>
+        <div class="card-body">
+          <div class="task-title"><span class="icon">🏫</span>الغرض من الاستبانة</div>
+          <p>
+            رصد اتجاهات الطلاب نحو المدرسة، وتقديم التوصيات اللازمة لمدير المدرسة، وإعداد استطلاعات قياس رضا المستفيدين من خدمات المدرسة.
+          </p>
+          <ul class="mini-list">
+            <li>رصد اتجاهات الطلاب نحو المدرسة بصورة منظمة.</li>
+            <li>تحليل رضا المستفيدين من خدمات المدرسة.</li>
+            <li>تقديم توصيات عملية لمدير المدرسة بناءً على النتائج.</li>
+          </ul>
+          <div class="link-box">
+            <p class="copy-note">اضغط على الرابط، ثم اختر <strong>إنشاء نسخة</strong> لتصبح النسخة ملكًا لحسابك.</p>
+            <a class="btn" href="https://docs.google.com/forms/d/1u-b4f4yNPFlzXtldirCLNpvmgJHszvgSbca3W-ZCeHg/copy" target="_blank" rel="noopener noreferrer">🔗 إنشاء نسخة من استبانة لجنة التميز</a>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="note-final">
+      <strong>الخلاصة:</strong>
+      يكتفى بما ورد في الأدلة من هذه الاستبانات، دون إضافة استبانات متكررة أو متشعبة لا تستند إلى نص واضح. اختصار الطريق هنا أفضل من فتح “مول استبانات” على المدرسة.
+    </section>
+
+    <div class="print-actions">
+      <button class="print-btn" onclick="window.print()">🖨️</button>
+    </div>
+
+    <footer class="footer">
+      <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" rel="noopener noreferrer" style="color:#0f766e;font-weight:800;text-decoration:none;">انقر للمزيد</a>
+      <br />
+      <span style="display:inline-block;margin-top:8px;font-weight:800;color:#1f2933;">تصميم د/فواز</span>
+    </footer>
+  </main>
+</body>
+</html>
