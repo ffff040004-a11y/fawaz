@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>المعايير المهنية للمدربين</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Tajawal',sans-serif;direction:rtl;background:#0a0f1e;color:#f8fafc;min-height:100vh;overflow-x:hidden}
+.screen{display:none;min-height:100vh;animation:fadeIn .4s ease}
+.screen.active{display:flex;flex-direction:column;align-items:center}
+@keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+@keyframes twinkle{from{opacity:.2}to{opacity:.5}}
+@keyframes fireworkFly{0%{transform:translateY(0) scale(1);opacity:1}60%{transform:translateY(38vh) scale(7);opacity:.7}100%{transform:translateY(38vh) scale(1);opacity:0}}
+.stars-bg{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:radial-gradient(2px 2px at 6% 15%,#fff,transparent),radial-gradient(1px 1px at 22% 52%,#fcd34d,transparent),radial-gradient(2px 2px at 55% 10%,#fff,transparent),radial-gradient(1px 1px at 72% 65%,#f59e0b,transparent),radial-gradient(2px 2px at 42% 80%,#fff,transparent),radial-gradient(1px 1px at 85% 25%,#fbbf24,transparent),radial-gradient(2px 2px at 15% 85%,#fff,transparent),radial-gradient(1px 1px at 62% 45%,#fcd34d,transparent);
+  opacity:.35;animation:twinkle 4s ease-in-out infinite alternate}
+.home-fab{position:fixed;top:1rem;left:1rem;z-index:1000;display:flex;align-items:center;gap:.35rem;padding:.45rem .9rem;background:rgba(10,15,30,.85);backdrop-filter:blur(12px);border:1px solid rgba(251,191,36,.3);border-radius:999px;color:#e2e8f0;font-family:'Tajawal',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(0,0,0,.4)}
+.home-fab:hover{background:rgba(180,83,9,.3);border-color:rgba(251,191,36,.6);color:#fcd34d;transform:translateY(-2px)}
+.hc-overlay{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;padding:1rem;animation:fadeIn .2s ease}
+.hc-box{background:rgba(20,15,5,.96);border:1px solid rgba(251,191,36,.4);border-radius:1.5rem;padding:2rem;max-width:380px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.6);animation:popIn .25s cubic-bezier(.175,.885,.32,1.275)}
+.hc-box p{font-size:1.1rem;font-weight:700;color:#f1f5f9;line-height:1.7;margin-bottom:1.25rem}
+.hc-box small{display:block;font-size:.82rem;color:#f87171;font-weight:500;margin-top:.35rem}
+.hc-btns{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap}
+.hc-yes{padding:.7rem 1.3rem;background:linear-gradient(135deg,#dc2626,#b91c1c);border:none;border-radius:.75rem;color:#fff;font-family:'Tajawal',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s}
+.hc-no{padding:.7rem 1.3rem;background:linear-gradient(135deg,#b45309,#92400e);border:none;border-radius:.75rem;color:#fff;font-family:'Tajawal',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s}
+
+/* INTRO */
+#intro{background:linear-gradient(135deg,#0a0f1e 0%,#1c1005 50%,#0a0f1e 100%);justify-content:center;padding:1rem;position:relative}
+.intro-card{position:relative;z-index:1;background:rgba(30,20,5,.88);backdrop-filter:blur(20px);border:1px solid rgba(251,191,36,.35);border-radius:2rem;padding:2.5rem 2rem;max-width:640px;width:100%;box-shadow:0 0 60px rgba(180,83,9,.12),0 25px 50px rgba(0,0,0,.5);animation:popIn .6s ease}
+.nafes-badge{display:inline-flex;align-items:center;gap:.4rem;background:linear-gradient(135deg,#b45309,#92400e);color:#fef3c7;padding:.3rem 1rem;border-radius:999px;font-size:.82rem;font-weight:700;margin-bottom:.75rem;letter-spacing:.5px}
+.intro-title{font-family:'Amiri',serif;font-size:3.8rem;font-weight:700;text-align:center;line-height:1.1;margin-bottom:.35rem}
+.title-nafes{background:linear-gradient(135deg,#fcd34d,#f59e0b,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 20px rgba(245,158,11,.5))}
+.intro-subtitle2{text-align:center;font-size:1rem;font-weight:700;color:#fcd34d;margin-bottom:.4rem;letter-spacing:.5px}
+.intro-sub3{display:flex;justify-content:center;gap:.75rem;margin-bottom:.6rem;flex-wrap:wrap}
+.tag{background:rgba(255,255,255,.08);border:1px solid rgba(251,191,36,.3);padding:.2rem .75rem;border-radius:999px;font-size:.85rem;color:#fef3c7}
+.text-badge{background:linear-gradient(90deg,rgba(180,83,9,.3),rgba(146,64,14,.25));border:1px solid rgba(251,191,36,.4);padding:.4rem 1.5rem;border-radius:999px;font-size:.9rem;font-weight:600;color:#fcd34d;display:inline-block;text-align:center;width:100%;margin-bottom:1.25rem}
+.stages-row{display:flex;align-items:center;justify-content:center;gap:.4rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.s-chip{background:rgba(255,255,255,.06);border:1px solid rgba(251,191,36,.2);padding:.3rem .7rem;border-radius:.5rem;font-size:.76rem;color:#fef3c7}
+.arr{color:#f59e0b;font-size:1.1rem}
+label.nlabel{display:block;font-size:.9rem;font-weight:600;color:#fcd34d;margin-bottom:.5rem}
+input[type=text]{width:100%;padding:.75rem 1rem;background:rgba(255,255,255,.06);border:2px solid rgba(251,191,36,.35);border-radius:.75rem;color:#fff;font-family:'Tajawal',sans-serif;font-size:1rem;text-align:right;outline:none;transition:border-color .2s;margin-bottom:.35rem}
+input[type=text]:focus{border-color:#f59e0b}
+input::placeholder{color:rgba(255,255,255,.3)}
+.err{color:#f87171;font-size:.85rem;margin-bottom:.5rem;min-height:1.2rem}
+.start-btn{width:100%;padding:1rem;background:linear-gradient(135deg,#b45309,#92400e);border:none;border-radius:1rem;color:#fff;font-family:'Tajawal',sans-serif;font-size:1.2rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:all .2s;box-shadow:0 4px 20px rgba(180,83,9,.4);margin-bottom:.75rem;margin-top:.5rem}
+.start-btn:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(180,83,9,.6)}
+.settings-toggle{width:100%;padding:.6rem;background:transparent;border:1px solid rgba(255,255,255,.15);border-radius:.75rem;color:#94a3b8;font-family:'Tajawal',sans-serif;font-size:.9rem;cursor:pointer;margin-bottom:.75rem;transition:all .2s}
+.settings-box{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1);border-radius:1rem;padding:1rem;margin-bottom:1rem;display:none}
+.settings-box.open{display:block}
+.srow{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:.75rem;flex-wrap:wrap}
+.srow label{font-size:.9rem;color:#cbd5e1}
+.time-btns{display:flex;gap:.4rem;flex-wrap:wrap}
+.tbtn{padding:.3rem .6rem;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:.5rem;color:#cbd5e1;font-family:'Tajawal',sans-serif;font-size:.8rem;cursor:pointer;transition:all .2s}
+.tbtn.active{background:#b45309;border-color:#b45309;color:#fff}
+footer.foot{text-align:center;margin-top:1.25rem;padding-top:1rem;border-top:1px solid rgba(251,191,36,.15);font-size:.82rem;color:#78716c;line-height:2}
+.dua{color:#f59e0b;font-weight:700}
+
+/* READING */
+#reading{background:linear-gradient(160deg,#07091e 0%,#1a0e00 50%,#07091e 100%);padding:1rem}
+.r-header{text-align:center;padding:1.5rem 1rem 1rem;max-width:750px;width:100%}
+.r-badge{display:inline-flex;align-items:center;gap:.4rem;background:linear-gradient(135deg,#b45309,#92400e);padding:.35rem 1.2rem;border-radius:999px;font-size:.85rem;font-weight:700;margin-bottom:.75rem}
+.r-title{font-family:'Amiri',serif;font-size:2.2rem;font-weight:700;color:#e2e8f0;margin-bottom:.5rem}
+.r-meta{display:flex;justify-content:center;gap:.75rem;color:#a16207;font-size:.85rem;flex-wrap:wrap}
+.passage-card{background:linear-gradient(135deg,rgba(180,83,9,.15),rgba(146,64,14,.12));border:1px solid rgba(251,191,36,.25);border-radius:1.5rem;padding:2rem 2.5rem;max-width:750px;width:100%;margin:1rem 0;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.p-deco{height:3px;border-radius:999px;background:linear-gradient(90deg,transparent,#b45309,#f59e0b,transparent);margin:.75rem 0}
+.p-deco.top{margin-top:0;margin-bottom:1.5rem}
+.p-deco.bottom{margin-bottom:0;margin-top:1.5rem}
+.p-para{font-family:'Tajawal',sans-serif;font-size:1rem;line-height:2.1;color:#e2e8f0;text-align:justify;margin-bottom:1rem}
+.p-para:last-child{margin-bottom:0}
+.p-formula{background:rgba(180,83,9,.12);border:1px solid rgba(251,191,36,.25);border-radius:.75rem;padding:.5rem 1.2rem;margin:.4rem 0;font-size:.95rem;text-align:center;color:#fcd34d}
+.p-author{text-align:center;font-size:.8rem;color:#92400e;margin-top:.5rem}
+.hint-box{display:flex;align-items:center;gap:.5rem;background:rgba(180,83,9,.1);border:1px solid rgba(251,191,36,.25);border-radius:.75rem;padding:.6rem 1rem;font-size:.85rem;color:#fcd34d;max-width:750px;width:100%;margin-bottom:1rem}
+.r-actions{max-width:750px;width:100%;margin-bottom:1.5rem}
+.confirm-read-btn{width:100%;padding:1rem;background:linear-gradient(135deg,#b45309,#92400e);border:none;border-radius:1rem;color:#fff;font-family:'Tajawal',sans-serif;font-size:1.1rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.6rem;transition:all .2s;box-shadow:0 4px 20px rgba(180,83,9,.4)}
+.confirm-box{text-align:center;display:none}
+.confirm-box.show{display:block}
+.confirm-msg{color:#fcd34d;font-size:1rem;font-weight:600;margin-bottom:.75rem;margin-top:.75rem}
+.cbns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.go-btn{padding:.75rem 1.5rem;background:linear-gradient(135deg,#b45309,#92400e);border:none;border-radius:.75rem;color:#fff;font-family:'Tajawal',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s}
+.back-btn{padding:.75rem 1.5rem;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.2);border-radius:.75rem;color:#cbd5e1;font-family:'Tajawal',sans-serif;font-size:1rem;cursor:pointer;transition:all .2s}
+
+/* QUIZ */
+#quiz{background:linear-gradient(160deg,#07091e 0%,#1a0c00 60%,#07091e 100%);padding:0}
+.q-topbar{width:100%;max-width:700px;display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;gap:.5rem;flex-wrap:wrap}
+.stage-pill{display:inline-flex;align-items:center;gap:.3rem;padding:.35rem .9rem;border-radius:999px;font-size:.85rem;font-weight:700;color:#fff}
+.qprog-text{font-size:.85rem;color:#94a3b8}
+.player-chip{font-size:.82rem;color:#fcd34d;background:rgba(180,83,9,.15);padding:.3rem .7rem;border-radius:999px;border:1px solid rgba(251,191,36,.3)}
+.q-pbar-wrap{width:100%;max-width:700px;height:5px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden;margin-bottom:.5rem;padding:0 1rem}
+.q-pbar-fill{height:100%;border-radius:999px;transition:width .5s ease}
+.q-main{flex:1;width:100%;max-width:700px;padding:.5rem 1rem;display:flex;flex-direction:column;gap:.75rem}
+.timer-wrap{display:flex;justify-content:center}
+.timer-svg{width:60px;height:60px}
+.q-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:1.25rem;padding:1.25rem 1.5rem}
+.q-text{font-family:'Tajawal',sans-serif;font-size:1.15rem;font-weight:700;color:#f1f5f9;line-height:1.9;text-align:center}
+.opts-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+@media(max-width:520px){.opts-grid{grid-template-columns:1fr}}
+.opt-btn{display:flex;align-items:center;gap:.6rem;padding:.75rem 1rem;background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.12);border-radius:1rem;color:#e2e8f0;font-family:'Tajawal',sans-serif;font-size:.93rem;font-weight:500;cursor:pointer;text-align:right;transition:all .2s;min-height:56px;width:100%}
+.opt-btn:hover:not(:disabled){background:rgba(255,255,255,.12);border-color:rgba(251,191,36,.3);transform:translateY(-2px)}
+.opt-btn:disabled{cursor:default}
+.opt-btn.correct{background:rgba(34,197,94,.15);border-color:#22c55e;color:#86efac}
+.opt-btn.wrong{background:rgba(239,68,68,.15);border-color:#ef4444;color:#fca5a5}
+.opt-btn.dimmed{opacity:.4}
+.opt-letter{font-weight:800;font-size:1rem;background:rgba(255,255,255,.1);border-radius:.5rem;min-width:30px;height:30px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.opt-text{flex:1}
+.opt-icon{font-size:1.1rem;margin-right:auto}
+.exp-box{border-radius:1rem;padding:1rem 1.25rem;font-size:.9rem;line-height:1.7;animation:fadeIn .3s ease;display:none}
+.exp-box.show{display:block}
+.exp-box.cor{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#bbf7d0}
+.exp-box.wrg{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fecaca}
+.exp-hdr{font-weight:800;font-size:1rem;margin-bottom:.5rem}
+.next-btn{width:100%;padding:.9rem;border:none;border-radius:1rem;color:#fff;font-family:'Tajawal',sans-serif;font-size:1.05rem;font-weight:700;cursor:pointer;transition:all .2s;animation:fadeIn .3s ease;display:none}
+.next-btn.show{display:block}
+.next-btn:hover{filter:brightness(1.15);transform:translateY(-2px)}
+.q-score-bar{width:100%;max-width:700px;display:flex;justify-content:space-between;padding:.5rem 1rem;font-size:.85rem;color:#64748b}
+.q-foot{text-align:center;padding:.75rem 1rem;font-size:.78rem;color:#57534e;line-height:2;width:100%}
+.q-foot .dua{color:#f59e0b;font-weight:700}
+
+/* STAGE COMPLETE */
+#stagecomplete{background:linear-gradient(135deg,#07091e 0%,#1a0c00 60%,#07091e 100%);justify-content:center;padding:1rem}
+.sc-card{background:rgba(25,15,5,.85);backdrop-filter:blur(20px);border:1px solid rgba(251,191,36,.35);border-radius:2rem;padding:2.5rem;max-width:480px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:popIn .4s cubic-bezier(.175,.885,.32,1.275)}
+.sc-badge{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:0 auto 1rem}
+.sc-title{font-family:'Amiri',serif;font-size:1.8rem;font-weight:700;color:#e2e8f0;margin-bottom:.75rem}
+.sc-stars{font-size:2rem;margin-bottom:.75rem;letter-spacing:4px}
+.sc-score-disp{display:flex;align-items:baseline;justify-content:center;gap:.25rem;margin-bottom:.5rem}
+.sc-sn{font-size:3.5rem;font-weight:900;color:#f1f5f9}
+.sc-ss{font-size:2rem;color:#64748b}
+.sc-st{font-size:2rem;color:#94a3b8}
+.sc-pct{font-size:1.5rem;font-weight:800;margin-bottom:.75rem}
+.sc-msg{color:#cbd5e1;font-size:1.05rem;font-weight:600;margin-bottom:.6rem;line-height:1.5}
+.sc-nhint{font-size:.85rem;color:#64748b;margin-bottom:1.2rem}
+.sc-next-btn{width:100%;padding:1rem;background:linear-gradient(135deg,#b45309,#92400e);border:none;border-radius:1rem;color:#fff;font-family:'Tajawal',sans-serif;font-size:1.05rem;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(180,83,9,.4)}
+.sc-next-btn:hover{transform:translateY(-2px)}
+
+/* RESULTS */
+#results{background:linear-gradient(135deg,#07091e 0%,#1a0c00 50%,#07091e 100%);justify-content:center;padding:1rem;position:relative;overflow:hidden}
+.fw-wrap{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.fw{position:absolute;top:-20px;width:4px;height:4px;border-radius:50%;background:radial-gradient(circle,#fcd34d,#f59e0b,#fbbf24);animation:fireworkFly 3s ease-in-out infinite}
+.res-card{position:relative;z-index:10;background:rgba(25,15,5,.9);backdrop-filter:blur(20px);border:1px solid rgba(251,191,36,.45);border-radius:2rem;padding:2rem;max-width:600px;width:100%;box-shadow:0 0 60px rgba(180,83,9,.12),0 25px 60px rgba(0,0,0,.6);animation:popIn .5s cubic-bezier(.175,.885,.32,1.275)}
+.res-top{text-align:center;margin-bottom:1.25rem}
+.rank-icon{font-size:4rem;margin-bottom:.5rem;filter:drop-shadow(0 0 20px gold)}
+.res-title{font-family:'Amiri',serif;font-size:1.8rem;font-weight:700;color:#e2e8f0;margin-bottom:.5rem}
+.res-stars{font-size:1.8rem;letter-spacing:4px;margin-bottom:.35rem}
+.res-rank-lbl{font-size:1.4rem;font-weight:800}
+.big-score{display:flex;align-items:baseline;justify-content:center;gap:.3rem;background:rgba(255,255,255,.05);border-radius:1rem;padding:1rem;margin-bottom:1.25rem}
+.bs-n{font-size:3.5rem;font-weight:900;color:#f8fafc}
+.bs-s{font-size:2rem;color:#475569}
+.bs-t{font-size:2rem;color:#94a3b8}
+.bs-p{font-size:1.2rem;color:#fcd34d;font-weight:700;margin-right:.5rem}
+.bd-title{font-size:1rem;font-weight:700;color:#94a3b8;margin-bottom:.75rem;text-align:center}
+.bd-list{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.25rem}
+.bd-row{display:flex;align-items:center;justify-content:space-between;gap:.75rem;background:rgba(255,255,255,.04);border-radius:.75rem;padding:.6rem .9rem}
+.bd-stage{display:flex;align-items:center;gap:.4rem;font-size:.85rem;color:#cbd5e1;min-width:140px}
+.bd-right{display:flex;align-items:center;gap:.6rem;flex:1;justify-content:flex-end}
+.bd-bar-wrap{flex:1;height:6px;background:rgba(255,255,255,.1);border-radius:999px;overflow:hidden;max-width:100px}
+.bd-bar-fill{height:100%;border-radius:999px}
+.bd-score{font-size:.9rem;font-weight:700;min-width:35px;text-align:right}
+.res-msg{text-align:center;color:#cbd5e1;font-size:1rem;font-weight:600;margin-bottom:1.25rem;padding:.75rem;background:rgba(255,255,255,.04);border-radius:.75rem;line-height:1.5}
+.restart-btn{width:100%;padding:.9rem;background:linear-gradient(135deg,#b45309,#92400e);border:none;border-radius:1rem;color:#fff;font-family:'Tajawal',sans-serif;font-size:1.05rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:all .2s;margin-bottom:1rem;box-shadow:0 4px 20px rgba(180,83,9,.4)}
+.restart-btn:hover{transform:translateY(-2px)}
+.res-foot{text-align:center;font-size:.8rem;color:#57534e;line-height:2;padding-top:.75rem;border-top:1px solid rgba(251,191,36,.15)}
+.res-foot .dua{color:#f59e0b;font-weight:700}
+</style>
+</head>
+<body>
+<div class="stars-bg"></div>
+<button class="home-fab" id="homeFab" onclick="askGoHome()" style="display:none">🏠 <span>الرئيسية</span></button>
+<div class="hc-overlay" id="hcOverlay" style="display:none">
+  <div class="hc-box">
+    <p>⚠️ هل تريد العودة للصفحة الرئيسية؟<small>سيتم فقدان تقدّمك الحالي</small></p>
+    <div class="hc-btns">
+      <button class="hc-yes" onclick="confirmGoHome()">نعم، العودة 🏠</button>
+      <button class="hc-no" onclick="cancelGoHome()">لا، أكمل ▶</button>
+    </div>
+  </div>
+</div>
+
+<!-- INTRO -->
+<div id="intro" class="screen active">
+  <div class="intro-card">
+    <div style="text-align:center;margin-bottom:1.5rem">
+      <h1 class="intro-title"><span class="title-nafes">المعايير المهنية للمدربين</span></h1>
+      <div class="intro-subtitle2">اختبر نفسك</div>
+      <div class="intro-sub3">
+        <span class="tag">د. طلال الأشرم</span>
+        <span class="tag">الرخصة المهنية</span>
+      </div>
+      <div class="text-badge">الاستعداد لاختبار الرخصة المهنية للمدربين — ETEC</div>
+    </div>
+    <div class="stages-row">
+      <div class="s-chip">🏛️ البنية والمصطلحات</div>
+      <div class="arr">←</div>
+      <div class="s-chip">📚 المعرفة والممارسات</div>
+      <div class="arr">←</div>
+      <div class="s-chip">🧠 الأسس العلمية</div>
+      <div class="arr">←</div>
+      <div class="s-chip">⚖️ القيم والمواقف</div>
+    </div>
+    <label class="nlabel">اكتب اسمك للبدء:</label>
+    <input type="text" id="playerName" placeholder="اسم المدرب / المتدرب" maxlength="30">
+    <div class="err" id="nameErr"></div>
+    <button class="start-btn" onclick="startGame()"><span>ابدأ الاختبار</span><span>🚀</span></button>
+    <button class="settings-toggle" onclick="toggleSettings()">⚙️ الإعدادات ▼</button>
+    <div class="settings-box" id="settingsBox">
+      <div class="srow">
+        <label>وقت كل سؤال:</label>
+        <div class="time-btns">
+          <button class="tbtn" onclick="setTime(15,this)">15ث</button>
+          <button class="tbtn" onclick="setTime(20,this)">20ث</button>
+          <button class="tbtn active" onclick="setTime(30,this)">30ث</button>
+          <button class="tbtn" onclick="setTime(45,this)">45ث</button>
+          <button class="tbtn" onclick="setTime(60,this)">60ث</button>
+        </div>
+      </div>
+    </div>
+    <footer class="foot">
+      <span class="dua">الشكر موصول لمعدّها د. طلال الأشرم</span><br>
+      <span style="color:#94a3b8">تصميم د/فواز &nbsp;·&nbsp; <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" style="color:#fcd34d;text-decoration:none;font-weight:700">تفضل للمزيد هنا</a></span>
+    </footer>
+  </div>
+</div>
+
+<!-- READING -->
+<div id="reading" class="screen">
+  <div class="r-header">
+    <div class="r-badge">📋 مراجعة المفاهيم الأساسية</div>
+    <h2 class="r-title">المعايير المهنية للمدربين</h2>
+    <div class="r-meta">
+      <span>هيئة تقويم التعليم والتدريب — ETEC</span><span>|</span><span id="readingPlayer"></span>
+    </div>
+  </div>
+  <div class="passage-card">
+    <div class="p-deco top"></div>
+    <p class="p-para"><strong>📌 البنية والمصطلحات:</strong> المعايير المهنية للمدربين تضم <strong>أربعة مجالات</strong> رئيسية: المعرفة المهنية، الممارسات المهنية، القيم والمسؤوليات المهنية، ومهارات المستقبل. وتشتمل على <strong>١٠ معايير رئيسة و٢٤ معياراً فرعياً</strong>. الرخصة المهنية موافقةٌ رسميةٌ من الهيئة محدَّدة المدة والنشاط، وليست شهادةً دائمة.</p>
+    <div class="p-formula">تسلسل عمل المدرب: تخطيط ← تصميم ← تنفيذ ← تقويم</div>
+    <p class="p-para"><strong>📌 المعرفة والممارسات:</strong> المعيار ٢ يتعلق بأنماط التدريب المباشر والإلكتروني. التقويم التشخيصي يسبق التدريب لتحديد نقطة الانطلاق. التقويم التكويني يتم أثناء التدريب لكشف الفجوات. بيئة التدريب المثلى (المعيار ٤): مرنة محفِّزة آمنة. الخطة التدريبية تشمل النطاق والأولويات والأساليب ومؤشرات التحقق.</p>
+    <div class="p-formula">ترتيب تصميم الخبرة: نواتج التعلم ← المحتوى ← الاستراتيجيات ← أدوات التقويم</div>
+    <p class="p-para"><strong>📌 الأسس العلمية:</strong> السلوكية: التغيير بالتعزيز والتكرار (سكنر). المعرفية: تقليل الحِمل المعرفي والربط بالسابق. البنائية الاجتماعية: منطقة النمو القريب والسقالات (فيجوتسكي). الأندراغوجيا (نولز): الأقرب لتدريب الكبار. كولب: خبرة ← تأمل ← تجريد ← تجريب. نموذج ADDIE يبدأ بالتحليل. أعلى تصنيف بلوم المحدَّث: الابتكار. كيركباتريك: رد الفعل ← التعلم ← السلوك ← النتائج. فيليبس أضاف العائد على الاستثمار (ROI).</p>
+    <p class="p-para" style="margin-bottom:0"><strong>📌 القيم والمواقف:</strong> المعيار ٦: تحمل المسؤولية والانضباط. المعيار ٧: النزاهة (الإفصاح عن تضارب المصالح)، سرية البيانات، احترام الملكية الفكرية، قيم المواطنة. المعيار ٨: التطوير المهني يبدأ بالتأمل الذاتي. المعيار ٩: التعاون وتنظيم العواطف. المعيار ١٠: الكفاءة الرقمية والمسؤولية.</p>
+    <div class="p-deco bottom"></div>
+    <div class="p-author">مستخلص من: المعايير المهنية للمدربين — د. طلال الأشرم</div>
+  </div>
+  <div class="hint-box">
+    <span style="font-size:1.1rem">💡</span>
+    <span>راجع المفاهيم جيداً — الاختبار يقيس التطبيق لا الحفظ</span>
+  </div>
+  <div class="r-actions">
+    <button class="confirm-read-btn" id="confirmReadBtn" onclick="confirmRead()"><span>راجعتُ المفاهيم وأنا مستعد</span><span>✅</span></button>
+    <div class="confirm-box" id="confirmBox">
+      <p class="confirm-msg">هل أنت متأكد من الانتقال إلى الأسئلة؟</p>
+      <div class="cbns">
+        <button class="go-btn" onclick="goToQuiz()">نعم، ابدأ الأسئلة 🎯</button>
+        <button class="back-btn" onclick="backToRead()">لا، سأراجع مجدداً 📋</button>
+      </div>
+    </div>
+  </div>
+  <footer class="foot" style="margin-top:auto">
+    <span class="dua">الشكر موصول لمعدّها د. طلال الأشرم</span>
+  </footer>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz" class="screen">
+  <div class="q-topbar">
+    <div class="stage-pill" id="stagePill"></div>
+    <div class="qprog-text" id="qProgText"></div>
+    <div class="player-chip" id="qPlayerChip"></div>
+  </div>
+  <div class="q-pbar-wrap"><div class="q-pbar-fill" id="qPbarFill"></div></div>
+  <div class="q-main">
+    <div class="timer-wrap">
+      <svg class="timer-svg" viewBox="0 0 60 60">
+        <circle cx="30" cy="30" r="26" fill="none" stroke="#1c1005" stroke-width="5"/>
+        <circle id="timerArc" cx="30" cy="30" r="26" fill="none" stroke="#f59e0b" stroke-width="5"
+          stroke-linecap="round" stroke-dasharray="163.36" stroke-dashoffset="0"
+          transform="rotate(-90 30 30)" style="transition:stroke-dashoffset 1s linear,stroke .3s"/>
+        <text id="timerTxt" x="30" y="35" text-anchor="middle" font-size="14" font-weight="bold" fill="#f59e0b"></text>
+      </svg>
+    </div>
+    <div class="q-card">
+      <p class="q-text" id="qText"></p>
+    </div>
+    <div class="opts-grid" id="optsGrid"></div>
+    <div class="exp-box" id="expBox">
+      <div class="exp-hdr" id="expHdr"></div>
+      <p id="expText"></p>
+    </div>
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()"></button>
+  </div>
+  <div class="q-score-bar">
+    <span>الدرجات: <strong id="qScore">0</strong> / <span id="qAnswered">0</span></span>
+    <span id="qStageNum"></span>
+  </div>
+  <div class="q-foot"><span class="dua">الشكر موصول لمعدّها د. طلال الأشرم</span></div>
+</div>
+
+<!-- STAGE COMPLETE -->
+<div id="stagecomplete" class="screen">
+  <div class="sc-card">
+    <div class="sc-badge" id="scBadge"></div>
+    <h2 class="sc-title" id="scTitle"></h2>
+    <div class="sc-stars" id="scStars"></div>
+    <div class="sc-score-disp">
+      <span class="sc-sn" id="scScore"></span><span class="sc-ss">/</span><span class="sc-st" id="scTotal"></span>
+    </div>
+    <div class="sc-pct" id="scPct"></div>
+    <p class="sc-msg" id="scMsg"></p>
+    <p class="sc-nhint" id="scHint"></p>
+    <button class="sc-next-btn" id="scNextBtn" onclick="nextStage()"></button>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="results" class="screen">
+  <div class="fw-wrap" id="fwWrap"></div>
+  <div class="res-card">
+    <div class="res-top">
+      <div class="rank-icon" id="rankIcon"></div>
+      <h2 class="res-title" id="resTitle"></h2>
+      <div class="res-stars" id="resStars"></div>
+      <div class="res-rank-lbl" id="resRankLbl"></div>
+    </div>
+    <div class="big-score">
+      <div class="bs-n" id="bsN"></div><div class="bs-s">/</div>
+      <div class="bs-t" id="bsT"></div><div class="bs-p" id="bsP"></div>
+    </div>
+    <h3 class="bd-title">تفصيل المراحل:</h3>
+    <div class="bd-list" id="bdList"></div>
+    <div class="res-msg" id="resMsg"></div>
+    <button class="restart-btn" onclick="restartGame()"><span>🔄</span><span>أعد الاختبار</span></button>
+    <div class="res-foot"><span class="dua">الشكر موصول لمعدّها د. طلال الأشرم</span></div>
+  </div>
+</div>
+
+<script>
+const STAGES = [
+  { id:'structure', title:'البنية والمصطلحات',     icon:'🏛️', color:'#0f766e' },
+  { id:'practice',  title:'المعرفة والممارسات',    icon:'📚', color:'#1d4ed8' },
+  { id:'science',   title:'الأسس العلمية',          icon:'🧠', color:'#7c3aed' },
+  { id:'values',    title:'القيم والمواقف التطبيقية', icon:'⚖️', color:'#b45309' },
+];
+
+const QUESTIONS = {
+  structure:[
+    { q:'كم عدد المجالات الرئيسية للمعايير المهنية للمدربين؟',
+      opts:['ثلاثة','أربعة','خمسة','ستة'], cor:1,
+      exp:'أربعة مجالات: المعرفة المهنية، الممارسات المهنية، القيم والمسؤوليات، ومهارات المستقبل.' },
+    { q:'عدد المعايير الرئيسية والفرعية على التوالي:',
+      opts:['٨ و٢٠','١٠ و٢٤','١٢ و٣٠','١٠ و٢٠'], cor:1,
+      exp:'عشرة معايير رئيسة وأربعة وعشرون معياراً فرعياً.' },
+    { q:'«مواصفات تحدِّد ما يجب أن يعرفه المدرب ويستطيع أداءه» تعريف لـ:',
+      opts:['الرخصة المهنية','المعايير المهنية','نموذج التدريب','الخبرات التدريبية'], cor:1,
+      exp:'هذا هو تعريف المعايير المهنية كما ورد في الوثيقة الرسمية.' },
+    { q:'الرخصة المهنية تتميز بأنها:',
+      opts:['شهادة علمية دائمة','موافقة رسمية محدَّدة المدة والنشاط','توصية غير ملزمة','مؤهل أكاديمي'], cor:1,
+      exp:'الرخصة إذن مزاولة محدَّد المدة والنشاط، وليست شهادةً دائمة.' },
+    { q:'الترتيب الصحيح لمهام المدرب الأساسية:',
+      opts:['تنفيذ ← تخطيط ← تقويم ← تصميم','تخطيط ← تصميم ← تنفيذ ← تقويم','تصميم ← تخطيط ← تقويم ← تنفيذ','تقويم ← تنفيذ ← تصميم ← تخطيط'], cor:1,
+      exp:'الدورة المنطقية: تخطيط ← تصميم ← تنفيذ ← تقويم.' },
+    { q:'مدرب يُنتج المعرفة ويبتكر مبادرات ويُدرِّب المدربين. هذا يصف:',
+      opts:['المستوى الأول','المستوى الثاني','المستوى الثالث','متدرباً'], cor:2,
+      exp:'إنتاج المعرفة وتدريب المدربين سمة المستوى الثالث.' },
+    { q:'أيٌّ من التالي من الموارد المساعدة لا من الخبرات التدريبية؟',
+      opts:['أساليب التقويم','الأنشطة','أفلام المحاكاة','الاستراتيجيات'], cor:2,
+      exp:'الموارد المساعدة وسائط داعمة كالصور والأفلام والمحاكاة.' },
+  ],
+  practice:[
+    { q:'مراعاة الفروق الفردية وأنماط التعلم تستلزم:',
+      opts:['فرض أسلوب واحد','تنويع الأساليب','تجاهل الفروق','تقليل الوقت'], cor:1,
+      exp:'تنويع الأساليب هو الذي يُلبِّي الفروق الفردية.' },
+    { q:'التقويم الذي يسبق التدريب لتحديد نقطة الانطلاق:',
+      opts:['التكويني','الختامي','التشخيصي','الذاتي'], cor:2,
+      exp:'التقويم التشخيصي يسبق التدريب لتحديد المستوى الأولي.' },
+    { q:'أول خطوة مهنية عند تصميم برنامج جديد:',
+      opts:['تجهيز العرض','تحليل الاحتياجات وسوق العمل','اختيار القاعة','كتابة الاختبار'], cor:1,
+      exp:'التحليل يسبق التصميم دائماً — هذا جوهر المعيار الأول.' },
+    { q:'بيئة التدريب المثلى وفق المعيار ٤:',
+      opts:['صارمة تنافسية','مرنة محفِّزة آمنة تدعم جودة الحياة','ثابتة لا تتغير','متمركزة حول المدرب'], cor:1,
+      exp:'المعيار ٤ ينصُّ على بيئة مرنة محفِّزة آمنة تدعم جودة الحياة.' },
+    { q:'الترتيب الصحيح لتصميم خبرة تدريبية:',
+      opts:['الأنشطة ← المحتوى ← النواتج','نواتج التعلم ← المحتوى ← الاستراتيجيات ← أدوات التقويم','التقويم ← التنفيذ ← التخطيط','القاعة ← التقرير'], cor:1,
+      exp:'نبدأ بتحديد النواتج ثم المحتوى فالاستراتيجيات فأدوات التقويم.' },
+    { q:'التغذية الراجعة الفعّالة:',
+      opts:['نهائية فقط','مستمرة موجِّهة للتطوير','عقابية','عابرة دون متابعة'], cor:1,
+      exp:'التغذية الراجعة المستمرة توجّه التطوير المستقبلي.' },
+    { q:'بعد جمع بيانات التقويم، الإجراء الصحيح:',
+      opts:['حفظها دون استخدام','تحليلها وتفسيرها وإعداد تقارير بتوصيات','إتلافها','نشرها دون ضوابط'], cor:1,
+      exp:'المعيار ٥: تحليل وتفسير وإعداد تقارير تحسين.' },
+  ],
+  science:[
+    { q:'«التعلُّم تغيُّر سلوكي بالتعزيز والتكرار» نظرية:',
+      opts:['المعرفية','السلوكية','البنائية','الإنسانية'], cor:1,
+      exp:'النظرية السلوكية (سكنر): التعلم تغيير في السلوك عبر التعزيز.' },
+    { q:'تقليل الحِمل المعرفي والربط بالمعرفة السابقة من توظيفات:',
+      opts:['السلوكية','المعرفية','الاجتماعية','التجريبية'], cor:1,
+      exp:'النظرية المعرفية تُعنى بمعالجة المعلومات وتقليل الحِمل المعرفي.' },
+    { q:'«منطقة النمو القريب» والسقالات التعليمية تعود إلى:',
+      opts:['سكنر','فيجوتسكي','ماسلو','كولب'], cor:1,
+      exp:'فيجوتسكي (البنائية الاجتماعية): منطقة النمو القريب والسقالات.' },
+    { q:'النظرية الأوثق صلة بتدريب الكبار:',
+      opts:['السلوكية','الأندراغوجيا','الجشطلت','المعرفية'], cor:1,
+      exp:'الأندراغوجيا (نولز): نظرية تعلُّم الكبار البالغين.' },
+    { q:'دورة «خبرة ← تأمُّل ← تجريد ← تجريب» تصف نموذج:',
+      opts:['ADDIE','كولب','كيركباتريك','بلوم'], cor:1,
+      exp:'التعلُّم التجريبي لكولب يتكوَّن من أربع مراحل متتالية.' },
+    { q:'أعلى مستوياتٍ في تصنيف بلوم المحدَّث:',
+      opts:['التذكُّر','التطبيق','التقويم','الابتكار'], cor:3,
+      exp:'الابتكار هو قمة تصنيف بلوم المحدَّث عام 2001.' },
+    { q:'المستوى الثالث في نموذج كيركباتريك يقيس:',
+      opts:['رد الفعل','التعلُّم','السلوك ونقل الأثر','النتائج'], cor:2,
+      exp:'المستوى الثالث = السلوك: قياس انتقال أثر التدريب لبيئة العمل.' },
+    { q:'المرحلة الأولى في نموذج ADDIE:',
+      opts:['التصميم','التحليل','التطوير','التقويم'], cor:1,
+      exp:'ADDIE يبدأ بـ Analysis (التحليل) ثم Design فDevelopment فImplementation فEvaluation.' },
+  ],
+  values:[
+    { q:'عند اكتشاف تضارب مصالح، التصرف الصحيح:',
+      opts:['تجاهله','الإفصاح عنه','الانسحاب من المهنة','تأجيله'], cor:1,
+      exp:'النزاهة تستوجب الإفصاح عن تضارب المصالح (المعيار ٧).' },
+    { q:'سرية بيانات المتدربين تقع في:',
+      opts:['المعيار ٤','المعيار ٧','المعيار ٩','المعيار ١٠'], cor:1,
+      exp:'سرية البيانات وأمن المعلومات ضمن المعيار ٧.' },
+    { q:'إنجاز المهام في وقتها والانضباط يندرج تحت:',
+      opts:['المعيار ٦','المعيار ٨','المعيار ٩','المعيار ١٠'], cor:0,
+      exp:'تحمُّل المسؤولية والانضباط ضمن المعيار ٦.' },
+    { q:'عطل تقني مفاجئ أثناء الجلسة؛ المدرب المستعد:',
+      opts:['ينهي الجلسة','يطبِّق خطة بديلة بمرونة','ينتظر دون فعل','يلوم المتدربين'], cor:1,
+      exp:'التفكير الناقد والإبداعي ووجود بديل يحفظ سير الجلسة (المعيار ٣).' },
+    { q:'اكتشاف سوء فهم أثناء البرنامج يستدعي:',
+      opts:['تجاهله للنهاية','تقويماً تكوينياً ومعالجةً فورية','خصم درجات','تأجيل المعالجة'], cor:1,
+      exp:'التقويم التكويني يكشف الفجوة مبكراً لمعالجتها فوراً.' },
+    { q:'تحليل الأدلة والحجج واتخاذ قرار منطقي مهارة:',
+      opts:['تفكير إبداعي','تفكير ناقد','تواصل لفظي','تنظيم عاطفي'], cor:1,
+      exp:'تقويم الحجج والأدلة = تفكير ناقد (المعيار ٩).' },
+    { q:'أنسب بداية لخطة التطوير المهني:',
+      opts:['نسخ خطة زميل','التأمل الذاتي وجمع التغذية الراجعة','حضور أي دورة','تأجيل التطوير'], cor:1,
+      exp:'خطة التطوير تبدأ بتشخيص ذاتي وتغذية راجعة (المعيار ٨).' },
+    { q:'نشاط هيمنت عليه فئة وانسحبت أخرى؛ المعالجة الصحيحة:',
+      opts:['ترك الأمر','مجموعات صغيرة وأدوار موزَّعة','إنهاء النشاط','مكافأة المهيمنين'], cor:1,
+      exp:'الأدوار الموزَّعة تضمن مشاركة الجميع وتحقق التعاون (المعيار ٩).' },
+  ],
+};
+
+const LETTERS=['أ','ب','ج','د'];
+let playerName='',timePerQ=30,stageIdx=0,qIdx=0,score=0;
+let answered=false,timerInt=null,timeLeft=30;
+let stageScores={},stageTotals={};
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('homeFab').style.display=id==='intro'?'none':'flex';
+  window.scrollTo(0,0);
+}
+function askGoHome(){document.getElementById('hcOverlay').style.display='flex';}
+function cancelGoHome(){document.getElementById('hcOverlay').style.display='none';}
+function confirmGoHome(){document.getElementById('hcOverlay').style.display='none';clearInterval(timerInt);restartGame();}
+function toggleSettings(){document.getElementById('settingsBox').classList.toggle('open');}
+function setTime(t,btn){timePerQ=t;document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function startGame(){
+  const n=document.getElementById('playerName').value.trim();
+  if(!n){document.getElementById('nameErr').textContent='يرجى كتابة اسمك أولاً';return;}
+  document.getElementById('nameErr').textContent='';
+  playerName=n;stageIdx=0;qIdx=0;score=0;stageScores={};stageTotals={};
+  document.getElementById('readingPlayer').textContent='مرحباً، '+playerName;
+  document.getElementById('confirmReadBtn').style.display='flex';
+  document.getElementById('confirmBox').classList.remove('show');
+  showScreen('reading');
+}
+function confirmRead(){document.getElementById('confirmReadBtn').style.display='none';document.getElementById('confirmBox').classList.add('show');}
+function backToRead(){document.getElementById('confirmReadBtn').style.display='flex';document.getElementById('confirmBox').classList.remove('show');}
+function goToQuiz(){startStage();showScreen('quiz');}
+function currentStage(){return STAGES[stageIdx];}
+function currentQList(){return QUESTIONS[currentStage().id];}
+function startStage(){qIdx=0;score=0;answered=false;renderQuestion();}
+function renderQuestion(){
+  const st=currentStage(),qs=currentQList(),q=qs[qIdx],total=qs.length;
+  const pill=document.getElementById('stagePill');
+  pill.textContent=st.icon+' '+st.title;pill.style.background=st.color;
+  document.getElementById('qProgText').textContent='سؤال '+(qIdx+1)+' من '+total;
+  document.getElementById('qPlayerChip').textContent='👤 '+playerName;
+  document.getElementById('qPbarFill').style.background=st.color;
+  document.getElementById('qPbarFill').style.width=((qIdx/total)*100)+'%';
+  document.getElementById('qText').textContent=q.q;
+  const grid=document.getElementById('optsGrid');grid.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');btn.className='opt-btn';
+    btn.innerHTML=`<span class="opt-letter">${LETTERS[i]}</span><span class="opt-text">${opt}</span>`;
+    btn.onclick=()=>selectAnswer(i);grid.appendChild(btn);
+  });
+  document.getElementById('expBox').classList.remove('show','cor','wrg');
+  document.getElementById('nextBtn').classList.remove('show');
+  document.getElementById('qScore').textContent=score;
+  document.getElementById('qAnswered').textContent=0;
+  document.getElementById('qStageNum').textContent='المرحلة '+(stageIdx+1)+' / '+STAGES.length;
+  answered=false;startTimer();
+}
+function startTimer(){
+  clearInterval(timerInt);timeLeft=timePerQ;updateTimerUI();
+  timerInt=setInterval(()=>{timeLeft--;updateTimerUI();if(timeLeft<=0){clearInterval(timerInt);handleTimeout();}},1000);
+}
+function updateTimerUI(){
+  const circ=2*Math.PI*26,pct=timeLeft/timePerQ,offset=circ*(1-pct);
+  const color=timeLeft>15?'#f59e0b':timeLeft>8?'#ef4444':'#dc2626';
+  const arc=document.getElementById('timerArc');
+  arc.style.strokeDashoffset=offset;arc.style.stroke=color;
+  const txt=document.getElementById('timerTxt');
+  txt.textContent=timeLeft;txt.setAttribute('fill',color);
+}
+function handleTimeout(){if(answered)return;answered=true;const q=currentQList()[qIdx];showExplanation(false,q,-1);highlightOptions(q.cor,-1);showNext();}
+function selectAnswer(i){
+  if(answered)return;answered=true;clearInterval(timerInt);
+  const q=currentQList()[qIdx],correct=i===q.cor;
+  if(correct)score++;
+  showExplanation(correct,q,i);highlightOptions(q.cor,i);showNext();
+  document.getElementById('qScore').textContent=score;
+  document.getElementById('qAnswered').textContent=qIdx+1;
+}
+function highlightOptions(cor,sel){
+  document.querySelectorAll('.opt-btn').forEach((btn,i)=>{
+    btn.disabled=true;
+    if(i===cor){btn.classList.add('correct');btn.innerHTML+='<span class="opt-icon">✅</span>';}
+    else if(i===sel){btn.classList.add('wrong');btn.innerHTML+='<span class="opt-icon">❌</span>';}
+    else btn.classList.add('dimmed');
+  });
+}
+function showExplanation(correct,q,sel){
+  const box=document.getElementById('expBox'),hdr=document.getElementById('expHdr');
+  box.classList.add('show');
+  if(sel===-1){hdr.textContent='⏰ انتهى الوقت!';box.classList.add('wrg');}
+  else if(correct){hdr.textContent='✅ إجابة صحيحة!';box.classList.add('cor');}
+  else{hdr.textContent='❌ إجابة خاطئة';box.classList.add('wrg');}
+  document.getElementById('expText').innerHTML='<strong>الإجابة الصحيحة:</strong> '+q.opts[q.cor]+'<br><strong>التبرير:</strong> '+q.exp;
+}
+function showNext(){
+  const btn=document.getElementById('nextBtn'),isLast=qIdx===currentQList().length-1;
+  btn.style.background=currentStage().color;
+  btn.textContent=isLast?'عرض نتيجة المرحلة 🏆':'السؤال التالي ←';
+  btn.classList.add('show');
+}
+function nextQuestion(){
+  const qs=currentQList();
+  if(qIdx<qs.length-1){qIdx++;renderQuestion();}
+  else{stageScores[currentStage().id]=score;stageTotals[currentStage().id]=qs.length;showStageComplete();}
+}
+function showStageComplete(){
+  const st=currentStage(),total=stageTotals[st.id],sc=stageScores[st.id];
+  const pct=Math.round((sc/total)*100),stars=pct>=90?3:pct>=60?2:1;
+  const badge=document.getElementById('scBadge');
+  badge.textContent=st.icon;badge.style.background=st.color;badge.style.boxShadow='0 0 30px '+st.color;
+  document.getElementById('scTitle').textContent='انتهت: '+st.title;
+  document.getElementById('scStars').textContent='⭐'.repeat(stars)+'☆'.repeat(3-stars);
+  document.getElementById('scScore').textContent=sc;document.getElementById('scTotal').textContent=total;
+  const pctEl=document.getElementById('scPct');pctEl.textContent=pct+'%';pctEl.style.color=st.color;
+  const msgs=['💪 راجع المحتوى وحاول مجدداً!','👍 جيد! تعمَّق أكثر','👏 أحسنت! أداء رائع!','🌟 ممتاز! إجابات مثالية!'];
+  document.getElementById('scMsg').textContent=pct===100?msgs[3]:pct>=80?msgs[2]:pct>=60?msgs[1]:msgs[0];
+  const isLast=stageIdx===STAGES.length-1;
+  document.getElementById('scHint').textContent=!isLast?'المرحلة التالية: '+STAGES[stageIdx+1].title:'';
+  document.getElementById('scNextBtn').textContent=!isLast?'انتقل للمرحلة التالية ←':'عرض النتائج النهائية 🏆';
+  showScreen('stagecomplete');
+}
+function nextStage(){
+  if(stageIdx<STAGES.length-1){stageIdx++;startStage();showScreen('quiz');}
+  else showResults();
+}
+function showResults(){
+  let total=0,sc=0;
+  STAGES.forEach(s=>{total+=stageTotals[s.id]||0;sc+=stageScores[s.id]||0;});
+  const pct=total>0?Math.round((sc/total)*100):0;
+  const rank=pct>=90?{lbl:'مُتقِن للمعايير',icon:'🥇',color:'#f59e0b'}:pct>=75?{lbl:'ممتاز',icon:'🥈',color:'#94a3b8'}:pct>=60?{lbl:'جيد جداً',icon:'🥉',color:'#cd7c2f'}:{lbl:'جيد',icon:'🎖️',color:'#0f766e'};
+  const stars=pct>=90?5:pct>=75?4:pct>=60?3:pct>=40?2:1;
+  document.getElementById('rankIcon').textContent=rank.icon;
+  document.getElementById('resTitle').textContent='نتائجك يا '+playerName;
+  document.getElementById('resStars').textContent='⭐'.repeat(stars)+'☆'.repeat(5-stars);
+  document.getElementById('resRankLbl').textContent=rank.lbl;document.getElementById('resRankLbl').style.color=rank.color;
+  document.getElementById('bsN').textContent=sc;document.getElementById('bsT').textContent=total;document.getElementById('bsP').textContent='('+pct+'%)';
+  const list=document.getElementById('bdList');list.innerHTML='';
+  STAGES.forEach(st=>{
+    const s=stageScores[st.id]||0,t=stageTotals[st.id]||0,p=t>0?Math.round((s/t)*100):0;
+    list.innerHTML+=`<div class="bd-row"><div class="bd-stage"><span>${st.icon}</span><span>${st.title}</span></div><div class="bd-right"><div class="bd-bar-wrap"><div class="bd-bar-fill" style="width:${p}%;background:${st.color}"></div></div><span class="bd-score" style="color:${st.color}">${s}/${t}</span></div></div>`;
+  });
+  const msgs=['📚 راجع الكتاب وأعِد الاختبار!','💪 راجع نقاط الضعف!','👏 جاهز للرخصة تقريباً!','🌟 مستعد تماماً للرخصة المهنية!'];
+  document.getElementById('resMsg').textContent=pct===100?msgs[3]:pct>=75?msgs[2]:pct>=50?msgs[1]:msgs[0];
+  const fw=document.getElementById('fwWrap');fw.innerHTML='';
+  for(let i=0;i<14;i++){const d=document.createElement('div');d.className='fw';d.style.left=(5+Math.random()*85)+'%';d.style.animationDelay=(i*.25)+'s';fw.appendChild(d);}
+  showScreen('results');
+}
+function restartGame(){playerName='';stageIdx=0;qIdx=0;score=0;stageScores={};stageTotals={};document.getElementById('playerName').value='';showScreen('intro');}
+</script>
+</body>
+</html>
