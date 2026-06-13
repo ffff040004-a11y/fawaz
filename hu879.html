@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نافس لغتي – ثالث ابتدائي</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:"Segoe UI","Tahoma","Arial Unicode MS","Traditional Arabic","Arial",sans-serif;
+  background:linear-gradient(135deg,#0a1f4d 0%,#0d7a6e 60%,#12a899 100%);
+  min-height:100vh;direction:rtl;
+}
+
+/* ===== HEADER ===== */
+.header{background:linear-gradient(90deg,#0a1f4d,#0d7a6e);text-align:center;position:relative;overflow:hidden;}
+.header::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:radial-gradient(ellipse at center,rgba(245,166,35,.18) 0%,transparent 70%);
+  animation:shimmer 4s ease-in-out infinite;}
+@keyframes shimmer{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.1);opacity:1}}
+.header-inner{position:relative;z-index:1;padding:26px 20px 16px}
+.stars-row{display:flex;justify-content:center;gap:8px;margin-bottom:10px;font-size:22px}
+.star{animation:twinkle 1.5s ease-in-out infinite}
+.star:nth-child(2){animation-delay:.3s}.star:nth-child(3){animation-delay:.6s}
+.star:nth-child(4){animation-delay:.9s}.star:nth-child(5){animation-delay:1.2s}
+@keyframes twinkle{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+.h1{font-size:clamp(24px,6vw,44px);font-weight:900;color:#fff;text-shadow:0 2px 16px rgba(0,0,0,.4);line-height:1.2}
+.h1 .gold{color:#f5a623}
+.h2{font-size:clamp(13px,3vw,19px);font-weight:600;color:rgba(255,255,255,.85);margin-top:6px}
+.trophy{font-size:clamp(28px,6vw,46px);animation:bounce 2s ease-in-out infinite;margin-top:6px}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+/* SCOREBOARD */
+.scoreboard{display:flex;justify-content:center;gap:clamp(8px,3vw,28px);padding:14px 20px;
+  background:rgba(255,255,255,.07);flex-wrap:wrap}
+.score-box{background:rgba(255,255,255,.12);border:2px solid rgba(245,166,35,.5);
+  border-radius:16px;padding:10px 22px;text-align:center;min-width:100px}
+.score-box .num{font-size:clamp(22px,5vw,34px);font-weight:900;color:#f5a623;line-height:1}
+.score-box .lbl{font-size:13px;color:rgba(255,255,255,.8);margin-top:3px}
+.prog-wrap{width:90%;max-width:580px;margin:0 auto 14px;background:rgba(255,255,255,.15);
+  border-radius:50px;height:10px;overflow:hidden}
+.prog-bar{height:100%;background:linear-gradient(90deg,#f5a623,#ff9800);
+  border-radius:50px;transition:width .5s cubic-bezier(.4,0,.2,1);width:0%}
+
+/* ===== MAIN ===== */
+.main{max-width:820px;margin:0 auto;padding:22px 14px 40px}
+
+/* CATEGORY */
+.cat-badge{text-align:center;margin-bottom:16px;animation:fadeUp .5s ease}
+.cat-badge span{display:inline-block;background:linear-gradient(135deg,#f5a623,#ff9800);
+  color:#0a1f4d;font-weight:800;font-size:clamp(13px,3vw,17px);padding:7px 22px;
+  border-radius:50px;box-shadow:0 4px 14px rgba(245,166,35,.4)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+
+/* QUESTION CARD */
+.q-card{background:#fff;border-radius:22px;box-shadow:0 8px 30px rgba(10,31,77,.13);
+  padding:clamp(18px,4vw,34px);margin-bottom:18px;position:relative;overflow:hidden;
+  animation:cardIn .4s cubic-bezier(.4,0,.2,1);border-top:5px solid #0d7a6e}
+@keyframes cardIn{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.q-num{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;
+  background:linear-gradient(135deg,#0a1f4d,#0d7a6e);color:#fff;font-weight:900;font-size:17px;
+  border-radius:50%;margin-bottom:12px;box-shadow:0 4px 12px rgba(13,122,110,.4)}
+.q-text{font-size:clamp(15px,3.5vw,20px);font-weight:700;color:#0a1f4d;line-height:1.8;
+  margin-bottom:18px;white-space:pre-line}
+.q-text .hl{color:#0d7a6e;font-weight:900}
+
+/* OPTIONS */
+.options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:480px){.options{grid-template-columns:1fr}}
+.opt-btn{display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#f0f7ff,#e8f4f8);
+  border:2.5px solid #c9dff0;border-radius:13px;padding:13px 16px;
+  font-family:inherit;font-size:clamp(14px,2.5vw,16px);font-weight:600;
+  color:#0a1f4d;cursor:pointer;transition:all .22s cubic-bezier(.4,0,.2,1);
+  text-align:right;width:100%;position:relative}
+.opt-btn:hover:not(:disabled){background:linear-gradient(135deg,#dff0ff,#cce8f8);
+  border-color:#12a899;transform:translateY(-2px);box-shadow:0 6px 18px rgba(13,122,110,.18)}
+.opt-btn .let{display:inline-flex;align-items:center;justify-content:center;
+  min-width:32px;height:32px;background:linear-gradient(135deg,#0d7a6e,#0a1f4d);
+  color:#fff;font-weight:900;font-size:14px;border-radius:7px;flex-shrink:0;transition:all .22s}
+.opt-btn.correct{background:linear-gradient(135deg,#dcfce7,#bbf7d0)!important;
+  border-color:#22c55e!important;color:#166534;animation:pulse .45s ease}
+.opt-btn.correct .let{background:#22c55e}
+.opt-btn.wrong{background:linear-gradient(135deg,#fee2e2,#fecaca)!important;
+  border-color:#ef4444!important;color:#991b1b;animation:shake .45s ease}
+.opt-btn.wrong .let{background:#ef4444}
+.opt-btn:disabled{cursor:not-allowed}
+@keyframes pulse{0%{transform:scale(1)}35%{transform:scale(1.04)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}
+  40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+
+/* NEXT BTN */
+.next-btn{display:none;margin:18px auto 0;background:linear-gradient(135deg,#f5a623,#ff9800);
+  color:#0a1f4d;border:none;border-radius:50px;padding:13px 42px;
+  font-family:inherit;font-size:clamp(14px,3vw,17px);font-weight:900;cursor:pointer;
+  transition:all .22s;box-shadow:0 6px 22px rgba(245,166,35,.4);animation:fadeUp .4s ease}
+.next-btn:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 10px 28px rgba(245,166,35,.5)}
+
+/* FINAL */
+.final{display:none;text-align:center;background:#fff;border-radius:26px;
+  padding:clamp(28px,6vw,56px) clamp(18px,5vw,48px);box-shadow:0 8px 30px rgba(10,31,77,.13)}
+.final.on{display:block;animation:cardIn .5s cubic-bezier(.4,0,.2,1)}
+.f-medal{font-size:clamp(56px,12vw,86px);animation:bounce 1s ease-in-out infinite}
+.f-title{font-size:clamp(20px,5vw,34px);font-weight:900;color:#0a1f4d;margin:14px 0 6px}
+.f-score{font-size:clamp(44px,10vw,70px);font-weight:900;color:#0d7a6e;margin:8px 0}
+.f-stars{font-size:clamp(26px,7vw,40px);margin:12px 0}
+.f-msg{font-size:clamp(14px,3vw,17px);color:#555;line-height:1.8;margin:8px 0 26px}
+.restart-btn{background:linear-gradient(135deg,#0a1f4d,#0d7a6e);color:#fff;border:none;
+  border-radius:50px;padding:14px 46px;font-family:inherit;font-size:clamp(14px,3vw,18px);
+  font-weight:900;cursor:pointer;transition:all .28s;box-shadow:0 8px 26px rgba(10,31,77,.3)}
+.restart-btn:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 14px 34px rgba(10,31,77,.38)}
+
+/* FEEDBACK OVERLAY */
+.backdrop{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:900;
+  opacity:0;pointer-events:none;transition:opacity .28s}
+.backdrop.on{opacity:1;pointer-events:auto}
+.fb-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+  z-index:910;pointer-events:none;opacity:0;transition:opacity .28s}
+.fb-overlay.on{opacity:1;pointer-events:auto}
+.fb-box{background:#fff;border-radius:26px;padding:32px 36px;text-align:center;
+  max-width:380px;width:90%;box-shadow:0 18px 56px rgba(0,0,0,.22);
+  transform:scale(.72);transition:transform .32s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden}
+.fb-overlay.on .fb-box{transform:scale(1)}
+.fb-emoji{font-size:60px;margin-bottom:10px;animation:popIn .45s ease}
+@keyframes popIn{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+.fb-title{font-size:24px;font-weight:900;margin-bottom:7px}
+.fb-title.ok{color:#0d7a6e}.fb-title.no{color:#ef4444}
+.fb-msg{font-size:15px;color:#555;line-height:1.75;margin-bottom:18px}
+.fb-btn{background:linear-gradient(135deg,#0d7a6e,#0a1f4d);color:#fff;border:none;
+  border-radius:50px;padding:11px 36px;font-family:inherit;font-size:16px;font-weight:800;
+  cursor:pointer;transition:all .22s;box-shadow:0 6px 18px rgba(13,122,110,.35)}
+.fb-btn:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(13,122,110,.44)}
+
+/* CONFETTI */
+.confetti-wrap{position:absolute;top:0;left:0;right:0;pointer-events:none;height:100%;overflow:hidden;border-radius:26px}
+.conf{position:absolute;top:-10px;width:10px;height:14px;border-radius:3px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(420px) rotate(720deg);opacity:0}}
+
+/* FOOTER */
+.footer{text-align:center;padding:18px 16px 28px;color:rgba(255,255,255,.72);font-size:14px;line-height:2}
+.footer a{color:#f5a623;text-decoration:none;font-weight:700}
+.footer a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="stars-row">
+      <span class="star">⭐</span><span class="star">⭐</span><span class="star">⭐</span>
+      <span class="star">⭐</span><span class="star">⭐</span>
+    </div>
+    <div class="h1"><span class="gold">نافس</span> لغتي &nbsp;|&nbsp; ثالث ابتدائي</div>
+    <div class="h2">📚 اختبر نفسك ذاتيًا</div>
+    <div class="trophy">🏆</div>
+  </div>
+  <div class="scoreboard">
+    <div class="score-box"><div class="num" id="sOk">0</div><div class="lbl">✅ صحيح</div></div>
+    <div class="score-box"><div class="num" id="sWrong">0</div><div class="lbl">❌ خطأ</div></div>
+    <div class="score-box"><div class="num" id="sTotal">0</div><div class="lbl">📋 الإجمالي</div></div>
+  </div>
+  <div class="prog-wrap"><div class="prog-bar" id="progBar"></div></div>
+</div>
+
+<div class="main">
+  <div id="quizArea">
+    <div class="cat-badge"><span id="catLabel">📖 مرادفات المفردات</span></div>
+    <div class="q-card" id="qCard">
+      <div class="q-num" id="qNum">1</div>
+      <div class="q-text" id="qText"></div>
+      <div class="options" id="optsArea"></div>
+    </div>
+    <div style="text-align:center">
+      <button class="next-btn" id="nextBtn" onclick="nextQ()">السؤال التالي ←</button>
+    </div>
+  </div>
+  <div class="final" id="finalDiv">
+    <div class="f-medal" id="fMedal">🏆</div>
+    <div class="f-title" id="fTitle"></div>
+    <div class="f-score" id="fScore"></div>
+    <div class="f-stars" id="fStars"></div>
+    <div class="f-msg" id="fMsg"></div>
+    <button class="restart-btn" onclick="restartQuiz()">🔄 أعد الاختبار من البداية</button>
+  </div>
+</div>
+
+<div class="footer">
+  تصميم د/ فواز &nbsp;|&nbsp; تفضل للمزيد هنا &nbsp;
+  <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">https://t.me/TAqhjT3MFVE1Yzk0</a>
+</div>
+
+<div class="backdrop" id="bd"></div>
+<div class="fb-overlay" id="fbOv">
+  <div class="fb-box" id="fbBox">
+    <div class="confetti-wrap" id="cWrap"></div>
+    <div class="fb-emoji" id="fbEmoji">🌟</div>
+    <div class="fb-title" id="fbTitle">أحسنت!</div>
+    <div class="fb-msg" id="fbMsg"></div>
+    <button class="fb-btn" onclick="closeFb()">استمر ←</button>
+  </div>
+</div>
+
+<script>
+var Qs=[
+  // مرادفات
+  {c:"📖 مرادفات المفردات",q:"في يومٍ صيفيٍّ حارٍّ، عَطِشَ الغُرابُ كثيراً، وبحث عن الماءِ فلم يجده.\nما معنى كلمة (عَطِشَ) ؟",o:["احتاجَ للنوم","احتاجَ للماء","جَلَسَ","شَرِبَ"],a:1},
+  {c:"📖 مرادفات المفردات",q:"أَلْقَى عَلَيْهِ سُؤَالاً.\nما مرادف كلمة (أَلْقَى) ؟",o:["أَسْقَطَ","أَكْسَرَه","طَرَحَ عَلَيْهِ","نَادَاهُ"],a:2},
+  {c:"📖 مرادفات المفردات",q:"أَرَادَ الثَّعْلَبُ الصَّغِيرُ أَنْ يُجَرِّبَ مَهَارَتَهُ فِي الصَّيْدِ.\nما مرادف كلمة (أَرَادَ) ؟",o:["اسْتَطَاعَ","احْتَاجَ","أَخَذَ","بَدَأَ"],a:1},
+  {c:"📖 مرادفات المفردات",q:"شَعَرَ الثَّعْلَبُ الصَّغِيرُ بِالْخَوْفِ.\nما مرادف كلمة (شَعَرَ) ؟",o:["أَحَسَّ","فَكَّرَ","تَأَكَّدَ","نَهَضَ"],a:0},
+  {c:"📖 مرادفات المفردات",q:"اقْتَرَبَ مِنْ أَصْغَرِهِمْ، وَأَطْبَقَ عَلَيْهِ بِفَكَّيْهِ.\nما مرادف كلمة (أَطْبَقَ) ؟",o:["سَلَّمَ عَلَيْه","أَكَلَ مَعَه","أَمْسَكَهُ بِأَسْنَانِهِ","سَأَلَ عَنْه"],a:2},
+  {c:"📖 مرادفات المفردات",q:"أَطْبَقَ عَيْنَيْهِ.\nما مرادف كلمة (أَطْبَقَ) في هذا السياق ؟",o:["سَكَتَ عَنِ الْكَلَامِ","غَسَلَهَا","هَجَمَ عَلَيْهَا","أَغْمَضَهَا"],a:3},
+  {c:"📖 مرادفات المفردات",q:"وَأَفْلَتَ الأَرْنَبُ الصَّغِيرُ.\nما مرادف كلمة (أَفْلَتَ) ؟",o:["نَامَ","شَرِبَ","ضَحِكَ","هَرَبَ"],a:3},
+  {c:"📖 مرادفات المفردات",q:"وَشَعَرَ بِالسَّعَادَةِ الْغَامِرَةِ.\nما معنى كلمة (الْغَامِرَة) ؟",o:["الْوَاسِعَة","الْقَلِيلَة","الْبَسِيطَة","الْكَثِيرَة"],a:0},
+  {c:"📖 مرادفات المفردات",q:"غَمَرَ الْمَاءُ الأرضَ.\nما معنى كلمة (غَمَرَ) ؟",o:["أَحَسَّ بِهِ إِحْسَاساً قَوِيّاً","كَثُرَ وَعَلَا","غَطَّاهُم بَالَغَ فِي الْإِحْسَانِ","كَلَّمَهُ بِأُنْسٍ وَوُدٍّ"],a:1},
+  {c:"📖 مرادفات المفردات",q:"ما معنى كلمة (بَثَّاً) ؟",o:["أَعْمَال","عَرْضاً","الطَّقْس","الجَوّ"],a:1},
+  {c:"📖 مرادفات المفردات",q:"ما مرادف كلمة (الطَّقْس) ؟",o:["حَالَةُ الجَوّ","التَّكْيِيف","الهَوَاء","السَّحَاب"],a:0},
+  {c:"📖 مرادفات المفردات",q:"ما مرادف كلمة (مُهِمَّات) ؟",o:["تَجْرِبَة","صِنَاعِيَّة","أَعْمَال","مَعْلُومَات"],a:2},
+  {c:"📖 مرادفات المفردات",q:"مرادف كلمة (الدِّرْهَم):",o:["نَزَلَ بِهِمُ الْمَوْت","أَوْرَاق نَقْدِيَّة","عُمْلَات مَعْدَنِيَّة","مَعَادِن ثَمِينَة"],a:2},
+  // أضداد
+  {c:"🔄 أضداد المفردات",q:"كَانَ هُنَاكَ سِنْجَابٌ صَغِيرٌ يُدْعَى سَنْجُوب.\nمَا مُضَادُّ كَلِمَةِ (صَغِير) ؟",o:["كَبِير","كَثِير","سَرِيع","جَمِيل"],a:0},
+  {c:"🔄 أضداد المفردات",q:"أُمِّي تُحِبُّ الْوُرُودَ كَثِيراً.\nمَا مُضَادُّ كَلِمَةِ (تُحِبُّ) ؟",o:["تَأْتِي","تَذْهَبُ","تَسْتَطِيع","تَكْرَهُ"],a:3},
+  {c:"🔄 أضداد المفردات",q:"قَالَتِ النَّحْلَةُ بِفَرَحٍ: شُكْراً كَثِيراً لَكَ.\nمَا مُضَادُّ كَلِمَةِ (بِفَرَح) ؟",o:["بِخَوْف","بِسُرْعَة","بِحُزْن","بِشَغَف"],a:2},
+  {c:"🔄 أضداد المفردات",q:"بَحَثَ سَنْجُوبٌ عَنْ وَرْدَةٍ جَدِيدَةٍ.\nمَا مُضَادُّ كَلِمَةِ (جَدِيدَة) ؟",o:["حَدِيثَة","قَدِيمَة","قَرِيبَة","بَعِيدَة"],a:1},
+  {c:"🔄 أضداد المفردات",q:"لَنْ أَتَمَكَّنَ مِنْ إِهْدَاءِ أُمِّي وَرْدَةً.\nمَا مُضَادُّ كَلِمَةِ (أَتَمَكَّن) ؟",o:["أَعْجَز","أَرَى","أَفْعَل","أَقْدِر"],a:0},
+  {c:"🔄 أضداد المفردات",q:"إِذَا قَطَفْتَهَا لَنْ يَبْقَى لِي بَيْتٌ.\nمَا مُضَادُّ كَلِمَةِ (قَطَفْتَهَا) ؟",o:["قَطَعْتَهَا","سَلَّمْتَ عَلَيْهَا","سَقَيْتَهَا","تَرَكْتَهَا"],a:3},
+  {c:"🔄 أضداد المفردات",q:"مَرَّ سَنْجُوبٌ وَأُمُّهُ عَلَى شَجَرَةِ بَلُّوطٍ ضَخْمَةٍ.\nمَا مُضَادُّ كَلِمَةِ (ضَخْمَة) ؟",o:["قَصِيرَة","طَوِيلَة","ضَئِيلَة","سَرِيعَة"],a:2},
+  {c:"🔄 أضداد المفردات",q:"ضِدُّ كَلِمَةِ (سَعِيد):",o:["حَزِين","مَسْرُور","فَرِح","مُبْتَهِج"],a:0},
+  {c:"🔄 أضداد المفردات",q:"الْعَلَاقَةُ بَيْنَ (يَجُوعُ) وَ (يَشْبَعُ):",o:["تَرَادُف","تَضَاد","تَطَابُق","تَشَابُه"],a:1},
+  {c:"🔄 أضداد المفردات",q:"ضِدُّ كَلِمَةِ (اتَّسَعَ):",o:["وَاسِع","رَحُبَ","ضَاقَ","كَبِر"],a:2},
+  {c:"🔄 أضداد المفردات",q:"مُضَادُّ كَلِمَةِ (أَعْطَتْهَا):",o:["سَلَّمَتْ عَلَيْهَا","نَامَتْ عِنْدَهَا","قَدَّمَتْ لَهَا","أَخَذَتْ مِنْهَا"],a:3},
+  // مذكر مؤنث
+  {c:"🏷️ مذكر ومؤنث",q:"أَخْتَارُ الْكَلِمَةَ الْمُذَكَّرَة:",o:["مَلْعَب","مَدْرَسَة","حَدِيقَة","رَوْضَة"],a:0},
+  {c:"🏷️ مذكر ومؤنث",q:"أَخْتَارُ الْكَلِمَةَ الْمُؤَنَّثَة:",o:["فَصْل","مَسْجِد","مَكْتَبَة","مَجْلِس"],a:2},
+  {c:"🏷️ مذكر ومؤنث",q:"مُذَكَّرُ كَلِمَةِ (بِنْت):",o:["بَنَات","وَلَد","أَوْلَاد","أَصْدِقَاء"],a:1},
+  {c:"🏷️ مذكر ومؤنث",q:"كَتَبَ الطَّالِبُ الْوَاجِبَ.\nعِنْدَ تَحْوِيلِ الْجُمْلَةِ مِنْ مُذَكَّرٍ لِمُؤَنَّثٍ تُصْبِح:",o:["كَتَبَ الطَّالِبُ الْوَاجِبَاتِ","كَتَبَتِ الطَّالِبَةُ الْوَاجِبَ","كَتَبَتِ الطَّالِبُ الْوَاجِبَ","كَتَبَتِ الطَّالِبَةُ الْوَاجِبَاتِ"],a:1},
+  {c:"🏷️ مذكر ومؤنث",q:"مِنَ الْكَلِمَاتِ: (بَيْتٌ / مَسْرَحٌ / مُعَلِّمٌ / نَافِذَةٌ)\nالْكَلِمَةُ الْمُؤَنَّثَةُ هِيَ:",o:["بَيْت","مُعَلِّم","نَافِذَة","مَسْرَح"],a:2},
+  {c:"🏷️ مذكر ومؤنث",q:"الكلمة الْمُؤَنَّثَة مِمَّا يَلِي:\n(قِصَّة / كِتَاب / أَخَذَ / مُفِيد)",o:["كِتَاب","قِصَّة","مُفِيد","أَخَذَ"],a:1},
+  {c:"🏷️ مذكر ومؤنث",q:"جَاءَ سِرْبٌ مِنَ الْحَمَامِ تَقُودُهُ حَمَامَةٌ .........\nأَكْمِلِ الْجُمْلَةَ بِالنَّعْتِ الصَّحِيح:",o:["صَغِير","أَبْيَض","كَبِير","بَيْضَاء"],a:3},
+  // اسم فعل حرف
+  {c:"📝 اسم وفعل وحرف",q:"قَالَ الْمُعَلِّمُ: أَنْتَ نَشِيطٌ وَمَاهِرٌ.\nالْفِعْلُ فِي هَذِهِ الْجُمْلَةِ هُوَ:",o:["مَاهِر","يَا","الْمُعَلِّم","قَالَ"],a:3},
+  {c:"📝 اسم وفعل وحرف",q:"حَاوَلَتِ الْحَمَامَاتُ السَّيْرَ وَهُنَّ فِي الشَّبَكَةِ.\nالْحَرْفُ فِي هَذِهِ الْجُمْلَةِ هُوَ:",o:["حَاوَلَتِ","الْحَمَامَاتُ","فِي","الشَّبَكَةِ"],a:2},
+  {c:"📝 اسم وفعل وحرف",q:"جَلَسَ الْبَعْضُ تَحْتَ ظِلَالِ الْأَشْجَارِ يَلْتَقِطُونَ ثِمَارَ الْعِنَبِ وَالتُّوت.\nالْحَرْفُ فِي هَذِهِ الْجُمْلَةِ هُوَ:",o:["يَلْتَقِطُونَ","ثِمَارَ الْعِنَب","وَ","الْبَعْض"],a:2},
+  {c:"📝 اسم وفعل وحرف",q:"أَخَذَ سَنْجُوبٌ يَقْفِزُ، وَيَتَنَقَّلُ بَيْنَ الْوُرُودِ فِي الْبُسْتَانِ.\nكَمْ عَدَدُ الْأَفْعَالِ فِي الْجُمْلَةِ؟",o:["خَمْسَة","ثَلَاثَة","أَرْبَعَة","لَا يُوجَد"],a:1},
+  {c:"📝 اسم وفعل وحرف",q:"مِنَ الكلمات: (بَيْتٌ / مَسْرَحٌ / مُعَلِّمٌ / يَشْرَبُ)\nالْكَلِمَةُ الْمُخْتَلِفَة هِيَ:",o:["بَيْت","مُعَلِّم","يَشْرَبُ","مَسْرَح"],a:2},
+  {c:"📝 اسم وفعل وحرف",q:"الْكَلِمَةُ الَّتِي تَدُلُّ عَلَى فِعْل:",o:["الْبَاب","فِي","الْبِنْت","سَأَلَ"],a:3},
+  {c:"📝 اسم وفعل وحرف",q:"مَا نَوْعُ كَلِمَةِ (عَائِشَة) ؟",o:["اسْم","فِعْل","حَرْفُ جَرّ","حَرْفُ عَطْف"],a:0},
+  {c:"📝 اسم وفعل وحرف",q:"يَنْقَسِمُ الْكَلَامُ إِلَى:",o:["الفعل الماضي والمضارع","جملة اسمية وجملة فعلية","اسْمٌ وَفِعْلٌ وَحَرْف","أَفْعَالٌ نَاقِصَة"],a:2},
+  {c:"📝 اسم وفعل وحرف",q:"وَضَعَ أَحَدُ الصَّيَّادِينَ فِي أَيَّامِ الصَّيْفِ شَبَكَةً كَبِيرَةً.\nالْفِعْلُ فِي هَذِهِ الْجُمْلَةِ هُوَ:",o:["أَحَد","فِي","وَضَعَ","الصَّيْف"],a:2},
+  // مفرد مثنى جمع
+  {c:"🔢 مفرد ومثنى وجمع",q:"بَصْمَةُ الإِصْبَعِ أَشْكَالٌ مَوْجُودَةٌ فِي بَاطِنِ الْيَدِ.\nمُفْرَدُ كَلِمَةِ (أَشْكَال):",o:["شَكْلَانِ","شَكْلَه","شَكْل","جَمِيعُ مَا سَبَق"],a:2},
+  {c:"🔢 مفرد ومثنى وجمع",q:"مِنَ الكلمات: (مَدَارِس / بُيُوت / فَصْل / مَسَاجِد)\nالْكَلِمَةُ الْمُخْتَلِفَة هِيَ:",o:["مَسَاجِد","بُيُوت","فَصْل","مَدَارِس"],a:2},
+  {c:"🔢 مفرد ومثنى وجمع",q:"مَا مُثَنَّى كَلِمَةِ (الطَّالِب) ؟",o:["الطَّالِبَات","الطَّالِب","الطَّالِبَان","جَمِيعُ مَا سَبَق"],a:2},
+  {c:"🔢 مفرد ومثنى وجمع",q:"يَتَأَلَّفُ جِسْمُ النَّمْلَةِ مِنْ ثَلَاثَةِ أَقْسَامٍ رَئِيسَةٍ.\nمُفْرَدُ كَلِمَةِ (أَقْسَام):",o:["قِسْمَانِ","قِسْم","قِسْمَات","جَمِيعُ مَا سَبَق"],a:1},
+  {c:"🔢 مفرد ومثنى وجمع",q:"مِنَ الكلمات: (حَفْل / سَيَّارَة / قِطَار / طَائِرَات)\nالْكَلِمَةُ الْمُخْتَلِفَةُ مِنْ حَيْثُ الْعَدَد:",o:["سَيَّارَة","قِطَار","طَائِرَات","حَفْل"],a:2},
+  {c:"🔢 مفرد ومثنى وجمع",q:"رَدَّتِ الْحَمَامَةُ: أَنَا قَائِدَةُ هَذِهِ الْحَمَامَاتِ.\nالْكَلِمَةُ الْجَمْع هِيَ:",o:["الْحَمَامَة","الْحَمَامَات","قَائِدَة","أَنَا"],a:1},
+  {c:"🔢 مفرد ومثنى وجمع",q:"وَصَلَ الْمُسَافِرُ إِلَى الْمَطَارِ.\nعِنْدَ تَحْوِيلِ الْجُمْلَةِ مِنَ الْمُفْرَدِ لِلْجَمْعِ تُصْبِح:",o:["وَصَلَ الْمُسَافِرَانِ إِلَى الْمَطَار","وَصَلَتِ الْمُسَافِرَةُ إِلَى الْمَطَار","وَصَلُوا الْمُسَافِرَ إِلَى الْمَطَار","وَصَلَ الْمُسَافِرُونَ إِلَى الْمَطَار"],a:3},
+  {c:"🔢 مفرد ومثنى وجمع",q:"الكلمة الْمُثَنَّى مِمَّا يَلِي:\n(بِنْتَانِ / بُسْتَان / مَسَاكِين / حَسَّان)",o:["بُسْتَان","بِنْتَانِ","حَسَّان","مَسَاكِين"],a:1},
+  {c:"🔢 مفرد ومثنى وجمع",q:"مَا جَمْع كَلِمَةِ (الْقِصَّة) ؟",o:["الْكُتُب","الْقِصَص","الأَقْصُوصَة","الْقِصَّتَان"],a:1},
+  {c:"🔢 مفرد ومثنى وجمع",q:"مَا مُفْرَد كَلِمَةِ (عَنَاوِين) ؟",o:["عُنْوَان","أَعْوُنَه","عَوْن","عُنْوَانَان"],a:0},
+  // معنى في السياق
+  {c:"💡 المعنى في السياق",q:"إِذَا قَطَفْتَ الْوُرُودَ فَإِنَّهَا تَذْبُل.\nمَا مَعْنَى كَلِمَةِ (تَذْبُل) ؟",o:["تَيْبَس","تَكْبُر","تَمْشِي","تَشْرَب"],a:0},
+  {c:"💡 المعنى في السياق",q:"ذَبَلَ الْجِسْمُ.\nمَا مَعْنَى كَلِمَةِ (ذَبَلَ) ؟",o:["دَبَّ فِيهِ الْيُبْسُ","فَقَدَتْ بَرِيقَهَا","تَجَعَّدَ","ضَمُرَ وَهَزُلَ"],a:3},
+  {c:"💡 المعنى في السياق",q:"ذَبَلَتْ عَيْنُهُ.\nمَا مَعْنَى كَلِمَةِ (ذَبَلَتْ) ؟",o:["دَبَّ فِيهَا الْيُبْسُ","فَقَدَتْ بَرِيقَهَا","تَجَعَّدَتْ","ضَمُرَتْ وَهَزُلَتْ"],a:1},
+  {c:"💡 المعنى في السياق",q:"يُمْكِنُ اسْتِخْدَامُ كَلِمَةِ (مَرَّتْ) فِي:",o:["مَرَّتِ السَّيَّارَةُ مُسْرِعَةً","مَرَّتِ السَّحَابَةُ مِنْ فَوْقِ الْمَنْزِل","مَرَّتِ السَّنَةُ الدِّرَاسِيَّة","جَمِيعُ مَا سَبَق"],a:3},
+  {c:"💡 المعنى في السياق",q:"مَا مَعْنَى كَلِمَةِ (الإِيثَار) ؟",o:["كَفُّ الأَذَى","التَّكَبُّر","حُبُّ الْغَيْرِ عَنِ النَّفْس","الْحُزْن"],a:2},
+  // همزات وفهم النص
+  {c:"✏️ أنواع الهمزات",q:"مَا نَوْعُ هَمْزَةِ كَلِمَةِ (أَخَذَتْ) ؟",o:["هَمْزَةُ قَطْع","هَمْزَةُ وَصْل","هَمْزَةٌ مُتَوَسِّطَة","لَا يُوجَد"],a:0},
+  {c:"📜 فهم النص",q:"فِي عَهْدِ الْخَلِيفَةِ ......... أَصَابَ النَّاسَ جَفَافٌ وَجُوعٌ شَدِيدَان:",o:["أَبُو بَكْرٍ الصِّدِّيق","عُثْمَانُ بْنُ عَفَّان","عَلِيُّ بْنُ أَبِي طَالِب","عُمَرُ بْنُ الْخَطَّاب"],a:1},
+  {c:"📜 فهم النص",q:"جَاءَتْ قَافِلَةُ جِمَالٍ ......... :",o:["عِنْدَ الشُّرُوق","عِنْدَ مَغْرِبِ الشَّمْس","عِنْدَ الظُّهْر","عِنْدَ الْعَصْر"],a:0}
+];
+
+var correctMsgs=[
+  {e:"🌟",t:"رائع جداً!",m:"ما شاء الله عليك! إجابتك صحيحة تماماً، أنت نجم لامع في سماء التفوق! استمر بهذا الأداء الرائع."},
+  {e:"🏆",t:"أحسنت يا بطل!",m:"إجابة صحيحة في مكانها! عقلك يعمل بشكل ممتاز، واصل التألق يا أذكى الطلاب!"},
+  {e:"🎉",t:"ممتاز يا عبقري!",m:"لقد أصبت الهدف! إجابتك صائبة، أنت فخر لأهلك ومعلمك. هكذا يكون المتفوق!"},
+  {e:"⭐",t:"يا سلام عليك!",m:"عظيم! ذاكرتك قوية ومعلوماتك ممتازة. أنت على الطريق الصحيح نحو النجاح الباهر!"},
+  {e:"💪",t:"أنت الأفضل!",m:"أحسنت الإجابة! كل سؤال تجيبه يجعلك أقوى وأعلم. استمر ولا تتوقف!"},
+  {e:"🌸",t:"جميل ومميز!",m:"ما أجمل أن تكون متفوقاً! أجبت بدقة ومهارة، وهذا يدل على اجتهادك ومثابرتك."},
+  {e:"🌈",t:"بارك الله فيك!",m:"إجابة صحيحة من شخص مجتهد! التعلم يزيد العقل نوراً، وأنت تسطع الآن كالنجوم!"}
+];
+var wrongMsgs=[
+  {e:"💫",t:"لا بأس، حاول مرة أخرى!",m:"الإجابة الصحيحة مضاءة الآن. كل خطأ هو درس يجعلك أقوى وأحكم. لا تستسلم!"},
+  {e:"🌱",t:"لا تحزن، أنت تتعلم!",m:"الخطأ هو بداية الصواب! انظر إلى الإجابة الصحيحة وتذكرها جيداً، المثابر دائماً ينجح!"},
+  {e:"🔥",t:"لا تستسلم يا بطل!",m:"قارب الهدف! الإجابة الصحيحة أمامك، ركّز معها وستتذكرها للأبد. أنت قادر!"},
+  {e:"⚡",t:"قريب من الصواب!",m:"الصحيحة مضاءة لك الآن. خذ وقتك في الإجابات القادمة، النجاح للصابرين!"},
+  {e:"🎯",t:"ركّز واستمر!",m:"لا بأس! العلم بالتعلم. الإجابة الصحيحة أمامك، ستتقنها في المرة القادمة بإذن الله!"}
+];
+
+var cur=0,score=0,wrong=0,answered=false,shuffled=[];
+
+function shuffle(a){var b=[].concat(a);for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t}return b}
+
+function initQuiz(){
+  shuffled=shuffle(Qs);
+  cur=0;score=0;wrong=0;answered=false;
+  document.getElementById('sOk').textContent='0';
+  document.getElementById('sWrong').textContent='0';
+  document.getElementById('sTotal').textContent=shuffled.length;
+  document.getElementById('progBar').style.width='0%';
+  document.getElementById('finalDiv').className='final';
+  document.getElementById('quizArea').style.display='block';
+  renderQ();
+}
+
+function renderQ(){
+  if(cur>=shuffled.length){showFinal();return;}
+  answered=false;
+  var q=shuffled[cur];
+  document.getElementById('catLabel').textContent=q.c;
+  document.getElementById('qNum').textContent=cur+1;
+  document.getElementById('qText').textContent=q.q;
+  var lets=['أ','ب','ج','د'];
+  var area=document.getElementById('optsArea');
+  area.innerHTML='';
+  for(var i=0;i<q.o.length;i++){
+    (function(idx){
+      var btn=document.createElement('button');
+      btn.className='opt-btn';
+      var span=document.createElement('span');
+      span.className='let';
+      span.textContent=lets[idx];
+      btn.appendChild(span);
+      btn.appendChild(document.createTextNode(q.o[idx]));
+      btn.onclick=function(){checkAns(idx,q.a,btn)};
+      area.appendChild(btn);
+    })(i);
+  }
+  document.getElementById('nextBtn').style.display='none';
+  var card=document.getElementById('qCard');
+  card.style.animation='none';
+  setTimeout(function(){card.style.animation='';},10);
+}
+
+function checkAns(chosen,correct,clickedBtn){
+  if(answered)return;
+  answered=true;
+  var btns=document.getElementById('optsArea').getElementsByClassName('opt-btn');
+  for(var i=0;i<btns.length;i++){
+    btns[i].disabled=true;
+    if(i===correct)btns[i].classList.add('correct');
+    else if(btns[i]===clickedBtn&&chosen!==correct)btns[i].classList.add('wrong');
+  }
+  var ok=chosen===correct;
+  if(ok){score++;document.getElementById('sOk').textContent=score;}
+  else{wrong++;document.getElementById('sWrong').textContent=wrong;}
+  document.getElementById('progBar').style.width=Math.round(((cur+1)/shuffled.length)*100)+'%';
+  showFb(ok);
+}
+
+function showFb(ok){
+  var msgs=ok?correctMsgs:wrongMsgs;
+  var m=msgs[Math.floor(Math.random()*msgs.length)];
+  document.getElementById('fbEmoji').textContent=m.e;
+  document.getElementById('fbTitle').textContent=m.t;
+  document.getElementById('fbTitle').className='fb-title '+(ok?'ok':'no');
+  document.getElementById('fbMsg').textContent=m.m;
+  var cw=document.getElementById('cWrap');
+  cw.innerHTML='';
+  if(ok){
+    var colors=['#f5a623','#22c55e','#0d7a6e','#e84393','#3b82f6','#f59e0b','#ec4899'];
+    for(var i=0;i<20;i++){
+      var p=document.createElement('div');
+      p.className='conf';
+      p.style.left=Math.random()*100+'%';
+      p.style.background=colors[Math.floor(Math.random()*colors.length)];
+      p.style.animationDelay=(Math.random()*.5)+'s';
+      p.style.animationDuration=(.9+Math.random()*.6)+'s';
+      p.style.transform='rotate('+Math.floor(Math.random()*360)+'deg)';
+      cw.appendChild(p);
+    }
+  }
+  document.getElementById('bd').className='backdrop on';
+  document.getElementById('fbOv').className='fb-overlay on';
+}
+
+function closeFb(){
+  document.getElementById('bd').className='backdrop';
+  document.getElementById('fbOv').className='fb-overlay';
+  cur++;
+  if(cur>=shuffled.length)showFinal();
+  else renderQ();
+}
+
+function nextQ(){cur++;renderQ();}
+
+function showFinal(){
+  document.getElementById('quizArea').style.display='none';
+  var fd=document.getElementById('finalDiv');
+  fd.className='final on';
+  var total=shuffled.length;
+  var pct=Math.round((score/total)*100);
+  document.getElementById('fScore').textContent=score+' / '+total;
+  var medal,title,msg,stars;
+  if(pct===100){medal='🥇';title='مثالي! أنت نجم متألق!';msg='سبحان الله! إجابات كلها صحيحة! أنت فخر الجميع، واصل هذا التميز والنجاح الرائع.';stars='⭐⭐⭐⭐⭐';}
+  else if(pct>=80){medal='🥈';title='ممتاز! أداء رائع!';msg='ما شاء الله عليك! أداؤك ممتاز جداً، وبقليل من المراجعة ستصل للكمال!';stars='⭐⭐⭐⭐';}
+  else if(pct>=60){medal='🥉';title='جيد! استمر في التعلم!';msg='أحسنت! لديك قاعدة جيدة، راجع المواضيع التي أخطأت فيها وستتحسن أكثر.';stars='⭐⭐⭐';}
+  else{medal='📚';title='لا تستسلم، أنت تتقدم!';msg='لا بأس! كل بداية صعبة. المثابرة هي مفتاح النجاح، راجع دروسك وحاول مرة أخرى!';stars='⭐⭐';}
+  document.getElementById('fMedal').textContent=medal;
+  document.getElementById('fTitle').textContent=title;
+  document.getElementById('fMsg').textContent=msg;
+  document.getElementById('fStars').textContent=stars;
+}
+
+function restartQuiz(){initQuiz();}
+
+window.onload=function(){initQuiz();};
+</script>
+</body>
+</html>
