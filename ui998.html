@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نافس رياضيات — سادس ابتدائي | اختبر نفسك ذاتياً</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', 'Arial', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(135deg, #0f4c81 0%, #1a6fa8 40%, #0d7c4e 100%);
+    direction: rtl;
+  }
+  header {
+    text-align: center;
+    padding: 24px 16px 12px;
+  }
+  .header-box {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 20px;
+    padding: 12px 28px;
+    backdrop-filter: blur(8px);
+  }
+  .header-box h1 { color: #fff; font-size: 1.5rem; font-weight: 800; line-height: 1.4; }
+  .header-box p  { color: rgba(255,255,255,0.88); font-size: 0.95rem; margin-top: 4px; }
+  main {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 8px 16px 16px;
+  }
+  .card-wrap { width: 100%; max-width: 640px; }
+  .card {
+    background: #fff;
+    border-radius: 28px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    padding: 32px;
+    text-align: center;
+    animation: fadeInUp 0.35s ease;
+  }
+  @keyframes fadeInUp {
+    from { opacity:0; transform:translateY(18px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  .emoji-big { font-size: 4rem; margin-bottom: 12px; display: block; }
+  .card h2 { font-size: 1.45rem; font-weight: 800; color: #1a2d4e; margin-bottom: 8px; }
+  .card .sub { color: #6b7280; font-size: 0.95rem; margin-bottom: 20px; line-height: 1.6; }
+  .topics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 22px;
+  }
+  .topic-badge {
+    border-radius: 14px;
+    border: 1.5px solid;
+    padding: 7px 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+  .t1 { background:#dbeafe; color:#1d4ed8; border-color:#bfdbfe; }
+  .t2 { background:#ede9fe; color:#6d28d9; border-color:#ddd6fe; }
+  .t3 { background:#dcfce7; color:#166534; border-color:#bbf7d0; }
+  .t4 { background:#ffedd5; color:#9a3412; border-color:#fed7aa; }
+  .t5 { background:#fef9c3; color:#854d0e; border-color:#fde68a; }
+  .t6 { background:#fce7f3; color:#9d174d; border-color:#fbcfe8; }
+  .t7 { background:#ccfbf1; color:#0f766e; border-color:#99f6e4; }
+  .info-box {
+    text-align: right;
+    background: #f9fafb;
+    border-radius: 16px;
+    padding: 14px 18px;
+    margin-bottom: 22px;
+    font-size: 0.9rem;
+    color: #4b5563;
+    line-height: 2;
+  }
+  .btn-main {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 18px;
+    background: linear-gradient(90deg, #0f4c81, #0d7c4e);
+    color: #fff;
+    font-size: 1.15rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.22);
+    transition: transform .15s;
+  }
+  .btn-main:active { transform: scale(0.97); }
+  .btn-sec {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e5e7eb;
+    border-radius: 18px;
+    background: #fff;
+    color: #4b5563;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background .15s;
+  }
+  .btn-sec:hover { background: #f3f4f6; }
+  /* Progress */
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .progress-label { color: #fff; font-size: 0.85rem; font-weight: 600; white-space: nowrap; }
+  .progress-bar-bg {
+    flex: 1;
+    background: rgba(255,255,255,0.22);
+    border-radius: 99px;
+    height: 10px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, #facc15, #4ade80);
+    transition: width 0.5s ease;
+  }
+  /* Quiz card */
+  .quiz-card {
+    background: #fff;
+    border-radius: 28px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    overflow: hidden;
+    animation: fadeInUp 0.3s ease;
+  }
+  .topic-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 99px;
+    border: 1.5px solid;
+    margin: 16px 16px 0;
+  }
+  .question-text {
+    padding: 14px 20px 18px;
+    font-size: 1.08rem;
+    font-weight: 700;
+    color: #1a2d4e;
+    line-height: 1.7;
+    text-align: right;
+  }
+  .options-list { padding: 0 16px; }
+  .option-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 2px solid #e5e7eb;
+    border-radius: 18px;
+    background: #f9fafb;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 10px;
+    text-align: right;
+    color: #1f2937;
+    transition: background .15s, border-color .15s;
+    direction: rtl;
+  }
+  .option-btn:hover:not(:disabled) { background: #eff6ff; border-color: #93c5fd; }
+  .option-btn:disabled { cursor: default; }
+  .option-btn.correct  { background: #f0fdf4; border-color: #22c55e; color: #14532d; }
+  .option-btn.wrong    { background: #fef2f2; border-color: #f87171; color: #7f1d1d; }
+  .option-btn.faded    { background: #f9fafb; border-color: #e5e7eb; color: #9ca3af; }
+  .opt-label {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.88rem;
+    flex-shrink: 0;
+    transition: background .15s, color .15s;
+  }
+  .option-btn.correct .opt-label { background: #22c55e; color: #fff; }
+  .option-btn.wrong   .opt-label { background: #f87171; color: #fff; }
+  .feedback-box {
+    margin: 6px 16px 0;
+    padding: 11px 16px;
+    border-radius: 16px;
+    font-size: 0.97rem;
+    font-weight: 700;
+    text-align: center;
+    animation: fadeInUp 0.3s ease;
+    border: 1.5px solid;
+  }
+  .feedback-ok   { background:#f0fdf4; border-color:#86efac; color:#166534; }
+  .feedback-fail { background:#fffbeb; border-color:#fcd34d; color:#92400e; }
+  .next-wrap { padding: 14px 16px 20px; }
+  .mini-score {
+    display: flex;
+    justify-content: center;
+    gap: 22px;
+    margin-top: 10px;
+    color: #fff;
+    font-size: 0.87rem;
+    font-weight: 600;
+  }
+  /* Result */
+  .score-circle-wrap {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 20px;
+  }
+  .score-circle-wrap svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .score-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .score-pct  { font-size: 2rem; font-weight: 900; color: #1a2d4e; }
+  .score-frac { font-size: 0.78rem; color: #6b7280; }
+  .stars { font-size: 1.6rem; letter-spacing: 2px; margin-bottom: 18px; }
+  .result-msg {
+    border-radius: 18px;
+    padding: 14px 18px;
+    font-size: 0.97rem;
+    font-weight: 700;
+    border: 1.5px solid;
+    margin-bottom: 22px;
+    text-align: center;
+  }
+  .breakdown {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .breakdown-item {
+    border-radius: 16px;
+    padding: 14px 8px;
+    text-align: center;
+  }
+  .breakdown-item .num { font-size: 2rem; font-weight: 900; }
+  .breakdown-item .lbl { font-size: 0.72rem; color: #6b7280; margin-top: 2px; }
+  .bi-green { background:#f0fdf4; } .bi-green .num { color:#16a34a; }
+  .bi-red   { background:#fef2f2; } .bi-red .num   { color:#ef4444; }
+  .bi-blue  { background:#eff6ff; } .bi-blue .num  { color:#2563eb; }
+  /* Footer */
+  footer { text-align: center; padding: 14px 16px; }
+  .footer-box {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 14px;
+    padding: 8px 20px;
+  }
+  .footer-box p { color: #fff; font-size: 0.88rem; }
+  .footer-box a { color: #fde047; font-weight: 700; text-decoration: underline; }
+  .footer-box a:hover { color: #fef9c3; }
+
+  @media (max-width: 480px) {
+    .card { padding: 20px 14px; }
+    .header-box h1 { font-size: 1.15rem; }
+    .topics-grid { grid-template-columns: 1fr; }
+    .question-text { font-size: 0.97rem; }
+    .option-btn { font-size: 0.92rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-box">
+    <h1>🧮 نافس رياضيات — سادس ابتدائي</h1>
+    <p>اختبر نفسك ذاتياً</p>
+  </div>
+</header>
+
+<main>
+  <div class="card-wrap" id="app"></div>
+</main>
+
+<footer>
+  <div class="footer-box">
+    <p>تصميم د/فواز &nbsp;|&nbsp;
+      <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" rel="noopener">تفضّل للمزيد هنا 👈</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+const QUESTIONS = [
+  // ── العمليات الأساسية ────────────────────────────────────────────────────
+  { id:1, topic:"العمليات الأساسية", tc:"t1",
+    text:"يقوم مزارع بغرس ١٠٠٠ وردة في حديقة الحي، ويرغب في الانتهاء من هذه المهمة خلال ٨ أيام، فما عدد الورود التي يجب أن يغرسها في اليوم الواحد؟",
+    opts:[{l:"أ",t:"١٢٥"},{l:"ب",t:"١٥٠"},{l:"ج",t:"١٧٥"},{l:"د",t:"٢٠٠"}], correct:"أ" },
+
+  { id:2, topic:"العمليات الأساسية", tc:"t1",
+    text:"ما ناتج: ١٤٢٥١٣ + ٣٥٨٢٧٢ = ؟",
+    opts:[{l:"أ",t:"٤٠٠٧٨٥"},{l:"ب",t:"٤٤٩٧٨٥"},{l:"ج",t:"٥٠٠٧٨٥"},{l:"د",t:"٥٠٩٧٨٥"}], correct:"ج" },
+
+  { id:3, topic:"العمليات الأساسية", tc:"t1",
+    text:"تقوم سارة بتركيب قطع من عملها الفني، إذا كانت تركّب ٥٣ قطعة في اليوم الواحد، فكم قطعةً ركّبتها سارة خلال ٦ أيام؟",
+    opts:[{l:"أ",t:"٣٠٠"},{l:"ب",t:"٣٠٩"},{l:"ج",t:"٣١٨"},{l:"د",t:"٣٢٤"}], correct:"ج" },
+
+  { id:4, topic:"العمليات الأساسية", tc:"t1",
+    text:"ذهبت أسرة مكوّنة من ٥ أشخاص إلى رحلة بحرية ومعهم ٥٢٠ ريالاً، دفعوا ٥٥ ريالاً عن كل فرد لركوب السفينة، و٦ ريالات عن كل فرد للصيد بالسنارة. فكم ريالاً بقي معهم؟",
+    opts:[{l:"أ",t:"١٥٠"},{l:"ب",t:"٢٠٠"},{l:"ج",t:"٢١٥"},{l:"د",t:"٣٣٠"}], correct:"ج" },
+
+  { id:5, topic:"العمليات الأساسية", tc:"t1",
+    text:"شارك ٦ طلاب بالتساوي في وضع ٢٤٠٠ كتاب على أرفف المكتبة، كم كتاباً وضع كل طالب؟",
+    opts:[{l:"أ",t:"٢٥٠"},{l:"ب",t:"٣٠٠"},{l:"ج",t:"٣٥٠"},{l:"د",t:"٤٠٠"}], correct:"د" },
+
+  { id:6, topic:"العمليات الأساسية", tc:"t1",
+    text:"في عام ١٤٤٠هـ يكون قد مضى ٣٩ عاماً على إنشاء مدرسة. في أيّ عام تمّ إنشاؤها؟",
+    opts:[{l:"أ",t:"١٤٠٦هـ"},{l:"ب",t:"١٤٠٥هـ"},{l:"ج",t:"١٤٠٢هـ"},{l:"د",t:"١٤٠١هـ"}], correct:"د" },
+
+  { id:7, topic:"العمليات الأساسية", tc:"t1",
+    text:"ذهب خالد وأربعة من أصدقائه إلى حديقة الحيوانات، وكانت قيمة التذكرة الواحدة ٥ ريالات. فكم قيمة التذاكر جميعاً؟",
+    opts:[{l:"أ",t:"٣٠ ريالاً"},{l:"ب",t:"٢٥ ريالاً"},{l:"ج",t:"٢٠ ريالاً"},{l:"د",t:"١٥ ريالاً"}], correct:"ب" },
+
+  { id:8, topic:"العمليات الأساسية", tc:"t1",
+    text:"لدى خالد ٦٠ ضيفاً مدعواً، إذا كانت كل طاولة تستوعب ٦ من الضيوف، فكم طاولةً يحتاج خالد؟",
+    opts:[{l:"أ",t:"١٢"},{l:"ب",t:"١١"},{l:"ج",t:"١٠"},{l:"د",t:"٨"}], correct:"ج" },
+
+  { id:9, topic:"العمليات الأساسية", tc:"t1",
+    text:"ادّخر أحمد وإخوته الثلاثة مبلغاً قدره ٤٣٧٥ ريالاً، ويريدون تقاسمه بالتساوي. كم ريالاً نصيب كل منهم؟",
+    opts:[{l:"أ",t:"١٠٩٣ ويتبقى ٣ ريالات"},{l:"ب",t:"١١٩٣ ويتبقى ٣ ريالات"},{l:"ج",t:"١٢٩٣ ويتبقى ٣ ريالات"},{l:"د",t:"١٣٩٣ ويتبقى ٣ ريالات"}], correct:"أ" },
+
+  // ── العامل المشترك الأكبر والكسور ──────────────────────────────────────────
+  { id:10, topic:"العامل المشترك الأكبر والكسور", tc:"t2",
+    text:"يزرع ماجد ٣٠ نبتة فاصوليا، و٤٥ نبتة بازلاء في حديقته. إذا أراد أن يزرع العدد نفسه من النباتات في كل صف بحيث يحتوي الصف على صنف واحد فقط، فما أكبر عدد يمكن أن يزرعه في كل صف؟",
+    opts:[{l:"أ",t:"١٠"},{l:"ب",t:"١٥"},{l:"ج",t:"٥"},{l:"د",t:"٣"}], correct:"ب" },
+
+  { id:11, topic:"العامل المشترك الأكبر والكسور", tc:"t2",
+    text:"هناك ١٢ سيارة يابانية الصنع بين ٣٠ سيارة موجودة في موقف للسيارات. عبِّر عن ذلك بكسر اعتيادي في أبسط صورة.",
+    opts:[{l:"أ",t:"١٢/٣٠"},{l:"ب",t:"٣/٦"},{l:"ج",t:"٢/٥"},{l:"د",t:"٤/١٠"}], correct:"ج" },
+
+  { id:12, topic:"العامل المشترك الأكبر والكسور", tc:"t2",
+    text:"عدد مكوّن من ستة أرقام، مجموع أرقامه يقبل القسمة على ٣. أيّ الأعداد التالية يتحقق فيه هذا الشرط؟",
+    opts:[{l:"أ",t:"١٠٠٠٠١"},{l:"ب",t:"١١١١١١"},{l:"ج",t:"٣٠٠١"},{l:"د",t:"١٠١٠١"}], correct:"ب" },
+
+  // ── العبارات الجبرية والمعادلات ─────────────────────────────────────────────
+  { id:13, topic:"العبارات الجبرية والمعادلات", tc:"t3",
+    text:"ما قيمة العبارة العددية: ٢٥ + ٨ ÷ ٢ ؟",
+    opts:[{l:"أ",t:"١٦٫٥"},{l:"ب",t:"٣٣"},{l:"ج",t:"٣٠"},{l:"د",t:"٢٩"}], correct:"د" },
+
+  { id:14, topic:"العبارات الجبرية والمعادلات", tc:"t3",
+    text:"إذا كانت ن = ٨، ما الفرق بين قيمة العبارة ٣ن والعبارة ن + ن؟",
+    opts:[{l:"أ",t:"٣ن أكبر من ن+ن"},{l:"ب",t:"٣ن أصغر من ن+ن"},{l:"ج",t:"٣ن تساوي ن+ن"},{l:"د",t:"لا يمكن معرفة الفرق"}], correct:"أ" },
+
+  { id:15, topic:"العبارات الجبرية والمعادلات", tc:"t3",
+    text:"في إحدى المدارس يزيد عدد طلاب الصف الخامس ٦ طلاب على عدد طلاب الصف السادس البالغ ٢١ طالباً. أيّ العبارات تمثّل عدد طلاب الخامس؟",
+    opts:[{l:"أ",t:"١٥ = ٦ - ٢١"},{l:"ب",t:"ع - ٢١ = ٢١"},{l:"ج",t:"٢٧ = ٦ + ٢١"},{l:"د",t:"ع + ٦ = ٢٦"}], correct:"ج" },
+
+  { id:16, topic:"العبارات الجبرية والمعادلات", tc:"t3",
+    text:"إذا كانت س = ٣٢، ص = ٤، ع = ٢؛ فما قيمة العبارة: س ÷ ص - ع ؟",
+    opts:[{l:"أ",t:"٦"},{l:"ب",t:"١٠"},{l:"ج",t:"١٦"},{l:"د",t:"٣٦"}], correct:"أ" },
+
+  { id:17, topic:"العبارات الجبرية والمعادلات", tc:"t3",
+    text:"ما قيمة: ٥٠ ÷ ١٠ × ٦ - ١٥ ؟",
+    opts:[{l:"أ",t:"٣٠"},{l:"ب",t:"١٧"},{l:"ج",t:"٧٦"},{l:"د",t:"١٥"}], correct:"د" },
+
+  { id:18, topic:"العبارات الجبرية والمعادلات", tc:"t3",
+    text:"أيّ الأعداد التالية عدد أوّلي؟",
+    opts:[{l:"أ",t:"٦٢"},{l:"ب",t:"١٤٥"},{l:"ج",t:"٣١٨"},{l:"د",t:"٤١"}], correct:"د" },
+
+  { id:19, topic:"العبارات الجبرية والمعادلات", tc:"t3",
+    text:"حلّ المعادلة ذهنياً: ص - ٣ = ٣",
+    opts:[{l:"أ",t:"٦"},{l:"ب",t:"٠"},{l:"ج",t:"٣"},{l:"د",t:"١"}], correct:"أ" },
+
+  { id:20, topic:"العبارات الجبرية والمعادلات", tc:"t3",
+    text:"إذا كانت م = ٣، أيّ العبارات التالية قيمتها صفر؟",
+    opts:[{l:"أ",t:"٢م - ٣"},{l:"ب",t:"٢ + م - ٣"},{l:"ج",t:"م² - ٣"},{l:"د",t:"٢(م - ٣)"}], correct:"د" },
+
+  // ── الأعداد العشرية ─────────────────────────────────────────────────────────
+  { id:21, topic:"الأعداد العشرية", tc:"t4",
+    text:"العدد (أربعة واثنان وثلاثون من ألف) بالصيغة القياسية هو:",
+    opts:[{l:"أ",t:"٣٢٫٤"},{l:"ب",t:"٤٫٣٢"},{l:"ج",t:"٤٫٠٣٢"},{l:"د",t:"٣٢٫١٠٠٠٤"}], correct:"ج" },
+
+  { id:22, topic:"الأعداد العشرية", tc:"t4",
+    text:"يُقرَّب العدد العشري ٤٢٫٢٥٩ إلى أقرب جزء من مئة ليصبح:",
+    opts:[{l:"أ",t:"٤٢٫٢٥"},{l:"ب",t:"٤٢٫٢٦"},{l:"ج",t:"٤٣"},{l:"د",t:"٤٢٫٣"}], correct:"ب" },
+
+  { id:23, topic:"الأعداد العشرية", tc:"t4",
+    text:"في العدد ٦١٫٥٩٣، ما الرقم الذي يقع في منزلة الأجزاء من عشرة؟",
+    opts:[{l:"أ",t:"٥"},{l:"ب",t:"٩"},{l:"ج",t:"١"},{l:"د",t:"٦"}], correct:"أ" },
+
+  { id:24, topic:"الأعداد العشرية", tc:"t4",
+    text:"أيّ الأعداد التالية أكبر من ٨٫٠٤٢ ؟",
+    opts:[{l:"أ",t:"٨٫٠٤٢٠"},{l:"ب",t:"٨٫٠٤١"},{l:"ج",t:"٨٫٠٤٠٢"},{l:"د",t:"٨٫٤٢"}], correct:"د" },
+
+  { id:25, topic:"الأعداد العشرية", tc:"t4",
+    text:"أيّ الأعداد التالية يساوي العدد ١٧٫٧٥ ؟",
+    opts:[{l:"أ",t:"١٫٧٧٥"},{l:"ب",t:"١٧٫٠٧٥"},{l:"ج",t:"١٧٫٧٧٥٠"},{l:"د",t:"١٧٫٧٥٠٠"}], correct:"د" },
+
+  { id:26, topic:"الأعداد العشرية", tc:"t4",
+    text:"سعر قارورة عصير ٤٫٢٥ ريال، وسعر قارورة ماء ١٫٩٥ ريال. قدِّر مجموع سعريهما تقريباً:",
+    opts:[{l:"أ",t:"٧ ريالات"},{l:"ب",t:"٦ ريالات"},{l:"ج",t:"٥ ريالات"},{l:"د",t:"٤ ريالات"}], correct:"ب" },
+
+  // ── عمليات الكسور العشرية ───────────────────────────────────────────────────
+  { id:27, topic:"عمليات الكسور العشرية", tc:"t5",
+    text:"ناتج الجمع: ١٧٫٣ + ٢٫٤ = ؟",
+    opts:[{l:"أ",t:"١٩٫٠"},{l:"ب",t:"١٤٫٩"},{l:"ج",t:"١٩٫٧"},{l:"د",t:"٢٠"}], correct:"ج" },
+
+  { id:28, topic:"عمليات الكسور العشرية", tc:"t5",
+    text:"اشترت فرح زجاجة عصير بـ ٤٫٥٠ ريالاً، وقارورة ماء بـ ٢٫٧٥ ريالاً، وعلبة لبن بـ ١٫٢٥ ريالاً. ما مجموع ما دفعته؟",
+    opts:[{l:"أ",t:"٩٫٢٥ ريالاً"},{l:"ب",t:"٨٫٥٠ ريالاً"},{l:"ج",t:"٧٫٧٥ ريالاً"},{l:"د",t:"٧٫٢٥ ريالاً"}], correct:"ب" },
+
+  { id:29, topic:"عمليات الكسور العشرية", tc:"t5",
+    text:"ناتج الطرح: ٤٢٫٥٨ - ٣٠٫٣٥ = ؟",
+    opts:[{l:"أ",t:"١٢٫٢٣"},{l:"ب",t:"١٢٫٠٠"},{l:"ج",t:"١٠٫٤١"},{l:"د",t:"٩٫٢٣"}], correct:"أ" },
+
+  { id:30, topic:"عمليات الكسور العشرية", tc:"t5",
+    text:"لدى نجار لوح خشب طوله ٧٫٥٠ م، قطع منه ٢٫٧٥ م. ما المتبقي من اللوح؟",
+    opts:[{l:"أ",t:"٤٫٧٥ م"},{l:"ب",t:"٤٫٥٠ م"},{l:"ج",t:"٥٫٢٥ م"},{l:"د",t:"٥ م"}], correct:"أ" },
+
+  { id:31, topic:"عمليات الكسور العشرية", tc:"t5",
+    text:"ناتج الضرب: ٢٫٥ × ١٫٢ = ؟",
+    opts:[{l:"أ",t:"٣٠٠"},{l:"ب",t:"٣٠"},{l:"ج",t:"٣"},{l:"د",t:"٠٫٣"}], correct:"ج" },
+
+  { id:32, topic:"عمليات الكسور العشرية", tc:"t5",
+    text:"ناتج القسمة: ٩٫٤٥ ÷ ٣ = ؟",
+    opts:[{l:"أ",t:"٣٫٠١٥"},{l:"ب",t:"٣٫١٥"},{l:"ج",t:"٤٫١٤"},{l:"د",t:"٦٫٢"}], correct:"ب" },
+
+  { id:33, topic:"عمليات الكسور العشرية", tc:"t5",
+    text:"اشترك ٤ أصدقاء في شراء كرتون برتقال كتلته ١٤٫٨ كجم. ما نصيب كل منهم؟",
+    opts:[{l:"أ",t:"١٫٥ كجم"},{l:"ب",t:"٢٫١ كجم"},{l:"ج",t:"٣٫٢ كجم"},{l:"د",t:"٣٫٧ كجم"}], correct:"د" },
+
+  // ── التمثيل البياني والإحصاء ────────────────────────────────────────────────
+  { id:34, topic:"التمثيل البياني والإحصاء", tc:"t6",
+    text:"ما أنسب طريقة لتمثيل التغيّر في درجات الحرارة خلال ١٠ أيام متتالية؟",
+    opts:[{l:"أ",t:"التمثيل بالنقاط"},{l:"ب",t:"التمثيل بالأعمدة"},{l:"ج",t:"التمثيل بالخطوط"},{l:"د",t:"التمثيل بالقطاعات الدائرية"}], correct:"ج" },
+
+  { id:35, topic:"التمثيل البياني والإحصاء", tc:"t6",
+    text:"ما أنسب طريقة لتمثيل الفاكهة المفضلة لدى طلاب الصف السادس الابتدائي؟",
+    opts:[{l:"أ",t:"التمثيل بالنقاط"},{l:"ب",t:"التمثيل بالأعمدة"},{l:"ج",t:"التمثيل بالخطوط"},{l:"د",t:"التمثيل بالقطاعات الدائرية"}], correct:"د" },
+
+  { id:36, topic:"التمثيل البياني والإحصاء", tc:"t6",
+    text:"أيّ مقاييس النزعة المركزية يعتبر غير مناسب لوصف مجموعة البيانات: {٤، ٩٢، ٩٦، ٩٦}؟",
+    opts:[{l:"أ",t:"المتوسط الحسابي"},{l:"ب",t:"المنوال"},{l:"ج",t:"المدى"},{l:"د",t:"الوسيط"}], correct:"أ" },
+
+  { id:37, topic:"التمثيل البياني والإحصاء", tc:"t6",
+    text:"يريد حامد شراء دراجة. مدى أسعار الدراجات ١٧٠ ريالاً، وأعلى سعر ٣٩٠ ريالاً. فما سعر أرخص دراجة؟",
+    opts:[{l:"أ",t:"١٢٢ ريالاً"},{l:"ب",t:"٥٢٠ ريالاً"},{l:"ج",t:"٥٦٠ ريالاً"},{l:"د",t:"٢٢٠ ريالاً"}], correct:"د" },
+
+  { id:38, topic:"التمثيل البياني والإحصاء", tc:"t6",
+    text:"أيّ مجموعات البيانات التالية يعدّ الرقم ٤ منوالاً لها؟",
+    opts:[{l:"أ",t:"{١، ٢، ٣، ٤}"},{l:"ب",t:"{٣، ٤، ٦}"},{l:"ج",t:"{٤، ٤، ٥، ٥، ٥}"},{l:"د",t:"{٤، ٤، ٥، ٢}"}], correct:"د" },
+
+  // ── الاحتمالات والمتوسطات ──────────────────────────────────────────────────
+  { id:39, topic:"الاحتمالات والمتوسطات", tc:"t7",
+    text:"بطاقات مرقّمة من ١ إلى ١٥. ما احتمال سحب بطاقة تحمل الرقم ٨ أو أكبر؟",
+    opts:[{l:"أ",t:"٧/١٥"},{l:"ب",t:"٨/١٥"},{l:"ج",t:"١/٢"},{l:"د",t:"٩/١٥"}], correct:"ب" },
+
+  { id:40, topic:"الاحتمالات والمتوسطات", tc:"t7",
+    text:"أجرى محمد ٤ اختبارات وكانت درجاته: ٧٤، ٧٦، ٧٨، ٨٣. كم يجب أن يحصل في الاختبار الخامس ليصبح معدّله ٨٠؟",
+    opts:[{l:"أ",t:"٨٩"},{l:"ب",t:"٩٠"},{l:"ج",t:"٩١"},{l:"د",t:"٩٢"}], correct:"أ" }
+];
+
+const CORRECT_MSGS = [
+  "🌟 رائع! إجابة صحيحة تماماً! أنتَ نجم الرياضيات!",
+  "✨ ممتاز! عقلك الرياضي يتألّق!",
+  "🏆 إجابة صحيحة! أحسنتَ، استمر في هذا التميّز!",
+  "🎉 بارك الله فيك! هذا صحيح، أنتَ تُبدع!",
+  "💡 إجابة مثالية! ذهنك حاضر وسريع!",
+  "🌠 أحسنتَ! كل سؤال تجيب عليه يزيدك قوةً ومعرفةً!",
+];
+const WRONG_MSGS = [
+  "💪 لا تستسلم! المحاولة الأولى ليست النهاية، راجع الإجابة الصحيحة واستمر!",
+  "🤔 الإجابة الصحيحة أمامك الآن، تأمّلها جيداً وستتذكرها دائماً!",
+  "📚 الخطأ بوّابة التعلّم! لقد تعلّمتَ شيئاً جديداً اليوم!",
+  "🔄 لا بأس! كل عالم بدأ بخطأ ثم تعلّم وأتقن!",
+  "🌱 الصواب أمامك! استوعبه جيداً وستنجح في المرة القادمة!",
+];
+const rand = arr => arr[Math.floor(Math.random() * arr.length)];
+const shuffle = arr => [...arr].sort(() => Math.random() - 0.5);
+
+let state = { screen:"welcome", shuffled:[], idx:0, score:0, wrong:0, selected:null, revealed:false, feedback:null };
+const app = document.getElementById("app");
+
+function setState(patch) { Object.assign(state, patch); render(); }
+
+// ── Render ────────────────────────────────────────────────────────────────────
+function render() {
+  if (state.screen === "welcome") renderWelcome();
+  else if (state.screen === "quiz")   renderQuiz();
+  else                                renderResult();
+}
+
+function renderWelcome() {
+  app.innerHTML = `
+  <div class="card">
+    <span class="emoji-big">📐</span>
+    <h2>مرحباً بك في مسابقة الرياضيات!</h2>
+    <p class="sub">ستجد أمامك <strong style="color:#1d4ed8">${QUESTIONS.length} سؤالاً</strong> تغطّي مهارات الصف السادس الابتدائي المقرّرة في اختبار نافس:</p>
+    <div class="topics-grid">
+      <div class="topic-badge t1">العمليات الأساسية</div>
+      <div class="topic-badge t2">العامل المشترك الأكبر والكسور</div>
+      <div class="topic-badge t3">العبارات الجبرية والمعادلات</div>
+      <div class="topic-badge t4">الأعداد العشرية</div>
+      <div class="topic-badge t5">عمليات الكسور العشرية</div>
+      <div class="topic-badge t6">التمثيل البياني والإحصاء</div>
+      <div class="topic-badge t7">الاحتمالات والمتوسطات</div>
+    </div>
+    <div class="info-box">
+      ✅ لكل سؤال أربعة خيارات — اختر الإجابة الصحيحة<br>
+      💬 ستظهر رسالة تشجيع فور اختيارك<br>
+      📊 ستحصل على نتيجتك الكاملة في النهاية
+    </div>
+    <button class="btn-main" onclick="startQuiz()">🚀 ابدأ الاختبار الآن!</button>
+  </div>`;
+}
+
+function renderQuiz() {
+  const q = state.shuffled[state.idx];
+  const total = state.shuffled.length;
+  const pct = Math.round(((state.idx + (state.revealed ? 1 : 0)) / total) * 100);
+  const isLast = state.idx + 1 >= total;
+
+  const optsHtml = q.opts.map(o => {
+    let cls = "";
+    if (state.revealed) {
+      if (o.l === q.correct)       cls = "correct";
+      else if (o.l === state.selected) cls = "wrong";
+      else                          cls = "faded";
+    }
+    const icon = state.revealed
+      ? (o.l === q.correct ? "✓" : (o.l === state.selected ? "✗" : o.l))
+      : o.l;
+    return `<button class="option-btn ${cls}" ${state.revealed?"disabled":""} onclick="choose('${o.l}')">
+      <span class="opt-label">${icon}</span>${o.t}
+    </button>`;
+  }).join("");
+
+  const feedbackHtml = state.feedback
+    ? `<div class="feedback-box ${state.feedback.ok ? "feedback-ok" : "feedback-fail"}">${state.feedback.msg}</div>`
+    : "";
+
+  const nextHtml = state.revealed
+    ? `<div class="next-wrap"><button class="btn-main" onclick="nextQ()">${isLast ? "🏁 عرض النتيجة النهائية" : "السؤال التالي ←"}</button></div>`
+    : "";
+
+  app.innerHTML = `
+  <div class="progress-row">
+    <span class="progress-label">سؤال ${state.idx+1} / ${total}</span>
+    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
+    <span class="progress-label">${pct}%</span>
+  </div>
+  <div class="quiz-card">
+    <span class="topic-tag ${q.tc}">${q.topic}</span>
+    <p class="question-text">${q.text}</p>
+    <div class="options-list">${optsHtml}</div>
+    ${feedbackHtml}
+    ${nextHtml}
+  </div>
+  <div class="mini-score">
+    <span>✅ صحيح: ${state.score}</span>
+    <span>❌ خطأ: ${state.wrong}</span>
+  </div>`;
+}
+
+function renderResult() {
+  const total = state.shuffled.length;
+  const pct = Math.round((state.score / total) * 100);
+  const circ = 263.89; // 2πr where r=42
+  const filled = (pct / 100) * circ;
+  const color = pct>=80 ? "#22c55e" : pct>=60 ? "#f59e0b" : "#ef4444";
+  const stars = [1,2,3,4,5].map(i =>
+    `<span style="opacity:${i <= Math.ceil(pct/20) ? 1 : 0.2}">⭐</span>`).join("");
+  const msgText = pct>=90 ? "🌟 ممتاز! أنتَ متميّز في الرياضيات وجاهز لاختبار نافس!"
+    : pct>=80 ? "🏆 جيد جداً! أداء رائع، استمر في المراجعة لتصل للقمة!"
+    : pct>=60 ? "💡 جيد! لديك أساس قوي، ركّز على المهارات التي أخطأت فيها!"
+    : pct>=40 ? "📚 تحتاج لمزيد من المراجعة، لكن لا تيأس — التكرار مفتاح النجاح!"
+    : "💪 لا تستسلم! راجع دروسك وعد للاختبار مرة أخرى — ستتحسن كثيراً!";
+  const msgCls = pct>=80 ? "background:#f0fdf4;border-color:#86efac;color:#166534"
+    : pct>=60 ? "background:#fffbeb;border-color:#fcd34d;color:#92400e"
+    : "background:#eff6ff;border-color:#bfdbfe;color:#1e40af";
+
+  app.innerHTML = `
+  <div class="card">
+    <span class="emoji-big">${pct>=80?"🏆":pct>=60?"🌟":pct>=40?"📚":"💪"}</span>
+    <h2>انتهى الاختبار!</h2>
+    <p class="sub">نتيجتك النهائية</p>
+    <div class="score-circle-wrap">
+      <svg viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="42" fill="none" stroke="#e5e7eb" stroke-width="10"/>
+        <circle cx="50" cy="50" r="42" fill="none" stroke="${color}" stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="${filled} ${circ}"
+          style="transition:stroke-dasharray 1s ease"/>
+      </svg>
+      <div class="score-overlay">
+        <span class="score-pct">${pct}%</span>
+        <span class="score-frac">${state.score} / ${total}</span>
+      </div>
+    </div>
+    <div class="stars">${stars}</div>
+    <div class="result-msg" style="${msgCls}">${msgText}</div>
+    <div class="breakdown">
+      <div class="breakdown-item bi-green"><div class="num">${state.score}</div><div class="lbl">إجابات صحيحة</div></div>
+      <div class="breakdown-item bi-red"><div class="num">${state.wrong}</div><div class="lbl">إجابات خاطئة</div></div>
+      <div class="breakdown-item bi-blue"><div class="num">${total}</div><div class="lbl">مجموع الأسئلة</div></div>
+    </div>
+    <button class="btn-main" onclick="startQuiz()">🔄 إعادة الاختبار</button>
+    <button class="btn-sec" onclick="setState({screen:'welcome'})">🏠 الصفحة الرئيسية</button>
+  </div>`;
+}
+
+// ── Actions ───────────────────────────────────────────────────────────────────
+function startQuiz() {
+  setState({
+    screen:"quiz",
+    shuffled: shuffle(QUESTIONS),
+    idx:0, score:0, wrong:0,
+    selected:null, revealed:false, feedback:null
+  });
+}
+function choose(label) {
+  if (state.revealed) return;
+  const q = state.shuffled[state.idx];
+  const ok = label === q.correct;
+  setState({
+    selected: label,
+    revealed: true,
+    score: ok ? state.score + 1 : state.score,
+    wrong: ok ? state.wrong : state.wrong + 1,
+    feedback: { msg: rand(ok ? CORRECT_MSGS : WRONG_MSGS), ok }
+  });
+}
+function nextQ() {
+  if (state.idx + 1 >= state.shuffled.length) {
+    setState({ screen:"result" });
+    return;
+  }
+  setState({ idx: state.idx + 1, selected:null, revealed:false, feedback:null });
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
