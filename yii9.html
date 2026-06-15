@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>حاسبة المعدل التراكمي للمرحلة الثانوية</title>
+  <style>
+    :root {
+      --dark-green: #1A5276;
+      --med-green:  #1E8449;
+      --teal:       #148F77;
+      --gold:       #B7950B;
+      --light:      #EAF4FB;
+      --white:      #FFFFFF;
+      --shadow:     0 6px 28px rgba(0,0,0,0.13);
+      --radius:     16px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(145deg, #D5F5E3 0%, #EAF4FB 100%);
+      min-height: 100vh;
+      direction: rtl;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 16px 60px;
+    }
+
+    /* ===== الرأس ===== */
+    .header {
+      background: linear-gradient(135deg, var(--dark-green), var(--teal));
+      color: var(--white);
+      text-align: center;
+      padding: 30px 28px 24px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      width: 100%;
+      max-width: 600px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute; top: -50px; left: -50px;
+      width: 180px; height: 180px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 50%;
+    }
+    .header h1 {
+      font-size: clamp(1.3rem, 4vw, 1.9rem);
+      font-weight: 800;
+      position: relative; z-index: 1;
+    }
+    .header p {
+      margin-top: 8px;
+      font-size: 0.95rem;
+      opacity: 0.85;
+      position: relative; z-index: 1;
+    }
+
+    /* ===== بطاقة المعادلة ===== */
+    .formula-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      box-shadow: var(--shadow);
+      width: 100%;
+      max-width: 600px;
+      margin-bottom: 24px;
+      border-right: 6px solid var(--teal);
+      font-size: 0.95rem;
+      color: #333;
+      line-height: 1.8;
+    }
+    .formula-card strong { color: var(--dark-green); }
+    .badges {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+      justify-content: center;
+    }
+    .badge {
+      padding: 7px 18px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      border: 2px solid;
+    }
+    .b1 { color: var(--dark-green); border-color: var(--dark-green); background: #EBF5FB; }
+    .b2 { color: var(--med-green);  border-color: var(--med-green);  background: #EAFAF1; }
+    .b3 { color: var(--teal);       border-color: var(--teal);       background: #E8F8F5; }
+
+    /* ===== بطاقة الإدخال ===== */
+    .input-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 28px 28px 24px;
+      box-shadow: var(--shadow);
+      width: 100%;
+      max-width: 600px;
+      margin-bottom: 24px;
+    }
+    .input-card h2 {
+      text-align: center;
+      color: var(--dark-green);
+      font-size: 1.15rem;
+      margin-bottom: 22px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--light);
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      background: #F8FBFF;
+      border-radius: 12px;
+      padding: 14px 18px;
+      border: 2px solid #E0EAF4;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .field:focus-within {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 4px rgba(20,143,119,0.12);
+    }
+
+    .field-label {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .field-label .name {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--dark-green);
+    }
+    .field-label .weight {
+      font-size: 0.82rem;
+      color: #888;
+    }
+
+    .field-label .dot {
+      display: inline-block;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    .dot-y1 { background: var(--dark-green); }
+    .dot-y2 { background: var(--med-green); }
+    .dot-y3 { background: var(--teal); }
+
+    .field input[type="number"] {
+      width: 110px;
+      padding: 10px 14px;
+      border: 2px solid #BDC3C7;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 1.15rem;
+      font-family: inherit;
+      font-weight: 700;
+      color: var(--dark-green);
+      background: #FEF9E7;
+      transition: border-color 0.2s;
+      direction: ltr;
+      flex-shrink: 0;
+    }
+    .field input[type="number"]:focus {
+      outline: none;
+      border-color: var(--teal);
+    }
+    .field input[type="number"].invalid {
+      border-color: #E74C3C;
+      background: #FDEDEC;
+    }
+    .field input[type="number"].valid {
+      border-color: var(--med-green);
+      background: #EAFAF1;
+    }
+
+    /* ===== زر الحساب ===== */
+    .calc-btn {
+      display: block;
+      width: 100%;
+      max-width: 600px;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--dark-green), var(--teal));
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius);
+      font-size: 1.15rem;
+      font-family: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: transform 0.15s, box-shadow 0.15s;
+      margin-bottom: 24px;
+      letter-spacing: 0.5px;
+    }
+    .calc-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,0.18); }
+    .calc-btn:active { transform: translateY(0); }
+
+    .reset-btn {
+      display: block;
+      width: 100%;
+      max-width: 600px;
+      padding: 12px;
+      background: transparent;
+      color: #888;
+      border: 2px solid #ddd;
+      border-radius: var(--radius);
+      font-size: 0.95rem;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 28px;
+      transition: all 0.2s;
+    }
+    .reset-btn:hover { border-color: #C0392B; color: #C0392B; }
+
+    /* ===== بطاقة النتيجة ===== */
+    .result-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      width: 100%;
+      max-width: 600px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      display: none;
+      animation: popIn 0.4s ease;
+    }
+    .result-card.show { display: block; }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .result-top {
+      padding: 20px 24px 16px;
+    }
+    .result-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .result-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #F8FBFF;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 0.95rem;
+    }
+    .result-row .rlabel { color: #555; font-weight: 600; }
+    .result-row .rvalue { font-weight: 800; font-size: 1.05rem; color: var(--dark-green); }
+    .result-row .rcontrib { font-size: 0.85rem; color: #888; margin-top: 2px; }
+
+    /* ===== المعدل الكبير ===== */
+    .gpa-big {
+      border-radius: var(--radius);
+      padding: 28px 20px;
+      text-align: center;
+      color: var(--white);
+      transition: background 0.4s;
+    }
+    .gpa-big .lbl { font-size: 1rem; opacity: 0.9; margin-bottom: 6px; }
+    .gpa-big .num {
+      font-size: clamp(3rem, 10vw, 5rem);
+      font-weight: 900;
+      letter-spacing: 2px;
+      line-height: 1;
+    }
+    .gpa-big .grade-tag {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 7px 28px;
+      background: rgba(255,255,255,0.25);
+      border-radius: 50px;
+      font-size: 1.3rem;
+      font-weight: 800;
+    }
+
+    /* ===== شريط التقدم ===== */
+    .bar-wrap {
+      background: #E0E0E0;
+      border-radius: 50px;
+      height: 12px;
+      margin: 16px 24px 6px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 50px;
+      background: linear-gradient(90deg, var(--med-green), var(--teal));
+      transition: width 0.8s ease;
+      width: 0%;
+    }
+    .bar-label {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #999;
+      margin-bottom: 16px;
+    }
+
+    /* ===== جدول التقديرات ===== */
+    .legend-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      width: 100%;
+      max-width: 600px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .legend-head {
+      background: linear-gradient(135deg, var(--dark-green), var(--teal));
+      color: var(--white);
+      padding: 13px 20px;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .legend-table { width: 100%; border-collapse: collapse; }
+    .legend-table th {
+      background: var(--med-green);
+      color: var(--white);
+      padding: 10px;
+      text-align: center;
+      font-size: 0.88rem;
+    }
+    .legend-table td {
+      padding: 10px;
+      text-align: center;
+      border-bottom: 1px solid #F0F0F0;
+      font-size: 0.88rem;
+    }
+    .legend-table tr:last-child td { border-bottom: none; }
+    .dot-c {
+      display: inline-block;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      vertical-align: middle;
+    }
+
+    /* ===== رسالة خطأ ===== */
+    .error-msg {
+      color: #C0392B;
+      font-size: 0.88rem;
+      text-align: center;
+      margin-top: -16px;
+      margin-bottom: 10px;
+      display: none;
+    }
+    .error-msg.show { display: block; }
+
+    /* ===== الفوتر ===== */
+    footer {
+      text-align: center;
+      color: #666;
+      font-size: 0.9rem;
+      line-height: 2;
+      max-width: 600px;
+      width: 100%;
+    }
+    footer a {
+      color: var(--teal);
+      font-weight: 700;
+      text-decoration: none;
+    }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<!-- الرأس -->
+<div class="header">
+  <h1>&#127979; حاسبة المعدل التراكمي</h1>
+  <p>المرحلة الثانوية &mdash; نظام المسارات</p>
+</div>
+
+<!-- بطاقة المعادلة -->
+<div class="formula-card">
+  <strong>المعادلة الرسمية:</strong><br>
+  المعدل التراكمي = (معدل السنة الأولى &times; 20%) + (معدل السنة الثانية &times; 40%) + (معدل السنة الثالثة &times; 40%)
+  <div class="badges">
+    <span class="badge b1">السنة الأولى &times; 20%</span>
+    <span class="badge b2">السنة الثانية &times; 40%</span>
+    <span class="badge b3">السنة الثالثة &times; 40%</span>
+  </div>
+</div>
+
+<!-- بطاقة الإدخال -->
+<div class="input-card">
+  <h2>&#9998; أدخل معدلات السنوات الثلاث</h2>
+  <div class="field-group">
+
+    <div class="field">
+      <div class="field-label">
+        <span class="name"><span class="dot dot-y1"></span> معدل السنة الأولى</span>
+        <span class="weight">الوزن في التراكمي: 20%</span>
+      </div>
+      <input type="number" id="y1" min="0" max="100" step="0.01"
+             placeholder="مثال: 85.50" oninput="validateField(this)" />
+    </div>
+
+    <div class="field">
+      <div class="field-label">
+        <span class="name"><span class="dot dot-y2"></span> معدل السنة الثانية</span>
+        <span class="weight">الوزن في التراكمي: 40%</span>
+      </div>
+      <input type="number" id="y2" min="0" max="100" step="0.01"
+             placeholder="مثال: 88.00" oninput="validateField(this)" />
+    </div>
+
+    <div class="field">
+      <div class="field-label">
+        <span class="name"><span class="dot dot-y3"></span> معدل السنة الثالثة</span>
+        <span class="weight">الوزن في التراكمي: 40%</span>
+      </div>
+      <input type="number" id="y3" min="0" max="100" step="0.01"
+             placeholder="مثال: 91.25" oninput="validateField(this)" />
+    </div>
+
+  </div>
+</div>
+
+<!-- رسالة خطأ -->
+<p class="error-msg" id="err-msg">&#9888; يرجى إدخال أرقام صحيحة بين 0 و 100 في جميع الحقول</p>
+
+<!-- زر الحساب -->
+<button class="calc-btn" onclick="calculate()">&#9654; احسب المعدل التراكمي</button>
+
+<!-- زر إعادة التعيين -->
+<button class="reset-btn" onclick="resetAll()">&#8635; إعادة تعيين</button>
+
+<!-- بطاقة النتيجة -->
+<div class="result-card" id="result-card">
+  <div class="result-top">
+    <div class="result-rows">
+      <div class="result-row">
+        <div>
+          <div class="rlabel">معدل السنة الأولى</div>
+          <div class="rcontrib" id="contrib-y1">المساهمة: —</div>
+        </div>
+        <div class="rvalue" id="rv-y1">—</div>
+      </div>
+      <div class="result-row">
+        <div>
+          <div class="rlabel">معدل السنة الثانية</div>
+          <div class="rcontrib" id="contrib-y2">المساهمة: —</div>
+        </div>
+        <div class="rvalue" id="rv-y2">—</div>
+      </div>
+      <div class="result-row">
+        <div>
+          <div class="rlabel">معدل السنة الثالثة</div>
+          <div class="rcontrib" id="contrib-y3">المساهمة: —</div>
+        </div>
+        <div class="rvalue" id="rv-y3">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- المعدل الكبير -->
+  <div class="gpa-big" id="gpa-big">
+    <div class="lbl">المعدل التراكمي الإجمالي</div>
+    <div class="num" id="gpa-num">—</div>
+    <div class="grade-tag" id="gpa-grade">—</div>
+  </div>
+
+  <!-- شريط التقدم -->
+  <div class="bar-wrap"><div class="bar-fill" id="bar-fill"></div></div>
+  <p class="bar-label" id="bar-label"></p>
+</div>
+
+<!-- جدول التقديرات -->
+<div class="legend-card">
+  <div class="legend-head">&#128218; جدول التقديرات المرجعي</div>
+  <table class="legend-table">
+    <thead>
+      <tr><th>التقدير</th><th>النسبة</th><th>الرمز</th><th>اللون</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong style="color:#1E8449">ممتاز</strong></td><td>90 – 100</td><td>A+</td><td><span class="dot-c" style="background:#1E8449"></span></td></tr>
+      <tr><td><strong style="color:#1A5276">جيد جداً</strong></td><td>80 – 89</td><td>B+</td><td><span class="dot-c" style="background:#2E86C1"></span></td></tr>
+      <tr><td><strong style="color:#B7950B">جيد</strong></td><td>70 – 79</td><td>C+</td><td><span class="dot-c" style="background:#D4AC0D"></span></td></tr>
+      <tr><td><strong style="color:#CA6F1E">مقبول</strong></td><td>60 – 69</td><td>D+</td><td><span class="dot-c" style="background:#CA6F1E"></span></td></tr>
+      <tr><td><strong style="color:#C0392B">ضعيف</strong></td><td>أقل من 60</td><td>F</td><td><span class="dot-c" style="background:#C0392B"></span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- الفوتر -->
+<footer>
+  تصميم د/فواز &nbsp;&nbsp;|&nbsp;&nbsp; تفضل للمزيد هنا &nbsp;
+  <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" rel="noopener">&#128279; قناة التيليجرام</a>
+</footer>
+
+<script>
+  function validateField(inp) {
+    const v = parseFloat(inp.value);
+    inp.classList.remove("valid","invalid");
+    if (inp.value === "") return;
+    if (isNaN(v) || v < 0 || v > 100) inp.classList.add("invalid");
+    else inp.classList.add("valid");
+  }
+
+  function getGrade(p) {
+    if (p >= 90) return { label: "ممتاز",    bg: "linear-gradient(135deg,#1E8449,#27AE60)" };
+    if (p >= 80) return { label: "جيد جداً", bg: "linear-gradient(135deg,#1A5276,#2E86C1)" };
+    if (p >= 70) return { label: "جيد",       bg: "linear-gradient(135deg,#B7950B,#F0B429)" };
+    if (p >= 60) return { label: "مقبول",     bg: "linear-gradient(135deg,#CA6F1E,#E67E22)" };
+    return             { label: "ضعيف",      bg: "linear-gradient(135deg,#C0392B,#E74C3C)" };
+  }
+
+  function calculate() {
+    const v1 = parseFloat(document.getElementById("y1").value);
+    const v2 = parseFloat(document.getElementById("y2").value);
+    const v3 = parseFloat(document.getElementById("y3").value);
+    const err = document.getElementById("err-msg");
+
+    // تحقق
+    if ([v1,v2,v3].some(v => isNaN(v) || v < 0 || v > 100)) {
+      err.classList.add("show");
+      document.getElementById("result-card").classList.remove("show");
+      return;
+    }
+    err.classList.remove("show");
+
+    // الحساب
+    const c1 = v1 * 0.20;
+    const c2 = v2 * 0.40;
+    const c3 = v3 * 0.40;
+    const gpa = c1 + c2 + c3;
+    const g   = getGrade(gpa);
+
+    // عرض التفاصيل
+    document.getElementById("rv-y1").textContent = v1.toFixed(2) + "%";
+    document.getElementById("rv-y2").textContent = v2.toFixed(2) + "%";
+    document.getElementById("rv-y3").textContent = v3.toFixed(2) + "%";
+    document.getElementById("contrib-y1").textContent = "المساهمة: " + c1.toFixed(2);
+    document.getElementById("contrib-y2").textContent = "المساهمة: " + c2.toFixed(2);
+    document.getElementById("contrib-y3").textContent = "المساهمة: " + c3.toFixed(2);
+
+    // عرض المعدل الكبير
+    document.getElementById("gpa-num").textContent   = gpa.toFixed(2) + "%";
+    document.getElementById("gpa-grade").textContent = g.label;
+    document.getElementById("gpa-big").style.background = g.bg;
+
+    // شريط التقدم
+    document.getElementById("bar-fill").style.width = Math.min(gpa,100) + "%";
+    document.getElementById("bar-label").textContent = gpa.toFixed(2) + "% من 100%";
+
+    // إظهار البطاقة والتمرير إليها
+    const card = document.getElementById("result-card");
+    card.classList.add("show");
+    setTimeout(() => card.scrollIntoView({ behavior:"smooth", block:"start" }), 100);
+  }
+
+  function resetAll() {
+    ["y1","y2","y3"].forEach(id => {
+      const el = document.getElementById(id);
+      el.value = "";
+      el.classList.remove("valid","invalid");
+    });
+    document.getElementById("result-card").classList.remove("show");
+    document.getElementById("err-msg").classList.remove("show");
+    document.getElementById("bar-fill").style.width = "0%";
+  }
+
+  // السماح بالضغط على Enter للحساب
+  document.addEventListener("keydown", e => {
+    if (e.key === "Enter") calculate();
+  });
+</script>
+</body>
+</html>
