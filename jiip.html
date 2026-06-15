@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>حالات الغش في الاختبارات</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background:#f0f4f8;
+  font-family:'Cairo',sans-serif;
+  color:#1a2a3a;
+  direction:rtl;
+  padding:0 0 40px;
+}
+
+/* ── HEADER ── */
+.hdr{
+  background:linear-gradient(150deg,#c0392b 0%,#e74c3c 50%,#c0392b 100%);
+  padding:34px 24px 26px;
+  text-align:center;
+  position:relative;overflow:hidden;
+}
+.hdr::before{content:'';position:absolute;top:-70px;right:-70px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.10);}
+.hdr::after{content:'';position:absolute;bottom:-60px;left:-60px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.07);}
+.hdr-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);
+  border-radius:30px;padding:5px 18px;margin-bottom:14px;
+  font-size:12px;color:#fff;font-weight:700;
+}
+.hdr h1{font-size:clamp(18px,4.5vw,34px);font-weight:900;color:#fff;line-height:1.3;}
+.hdr h1 span{color:#ffe580;}
+.hdr-sub{
+  margin:12px auto 0;max-width:700px;
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);
+  border-radius:10px;padding:10px 18px;
+  font-size:13px;line-height:1.7;color:rgba(255,255,255,.92);
+}
+
+.wrap{max-width:900px;margin:0 auto;padding:0 14px;}
+
+/* ── SECTION TITLE ── */
+.sec-title{
+  display:flex;align-items:center;gap:10px;
+  margin:22px 0 10px;
+  font-size:15px;font-weight:900;
+}
+.sec-bar{width:5px;height:26px;border-radius:3px;flex-shrink:0;}
+.sec-num{
+  width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:900;color:#fff;flex-shrink:0;
+}
+
+/* ── CARD ── */
+.card{
+  background:#fff;
+  border-radius:14px;
+  box-shadow:0 4px 16px rgba(0,0,0,.08);
+  overflow:hidden;
+  margin-bottom:10px;
+  animation:up .5s ease both;
+}
+@keyframes up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+.card-head{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 18px;
+}
+.card-head-icon{
+  font-size:22px;flex-shrink:0;
+}
+.card-head-title{font-size:14px;font-weight:900;color:#fff;line-height:1.35;}
+.card-head-sub{font-size:11px;color:rgba(255,255,255,.8);margin-top:2px;}
+
+.card-body{padding:4px 18px 14px;}
+.item{
+  display:flex;gap:10px;
+  padding:7px 0;
+  border-bottom:1px solid #eef2f6;
+  font-size:13px;line-height:1.7;color:#2a3a4a;
+}
+.item:last-child{border-bottom:none;}
+.item-dot{
+  width:22px;height:22px;min-width:22px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:900;margin-top:2px;color:#fff;
+}
+
+/* sub-section */
+.sub-sec{
+  background:#f8fafc;
+  border-radius:10px;
+  border-right:4px solid;
+  margin:8px 0;
+  overflow:hidden;
+}
+.sub-sec-head{
+  padding:9px 14px;
+  font-size:13px;font-weight:800;
+  display:flex;align-items:center;gap:8px;
+}
+.sub-sec-body{padding:4px 14px 10px;}
+.sub-sec-body .item{font-size:12.5px;}
+
+/* colors */
+.c1 .card-head{background:linear-gradient(135deg,#1565c0,#1e88e5);}
+.c1 .item-dot{background:#1e88e5;}
+.c1 .sub-sec{border-color:#1e88e5;}
+.c1 .sub-sec-head{color:#0d47a1;background:#e3f2fd;}
+
+.c2 .card-head{background:linear-gradient(135deg,#2e7d32,#43a047);}
+.c2 .item-dot{background:#43a047;}
+.c2 .sub-sec{border-color:#43a047;}
+.c2 .sub-sec-head{color:#1b5e20;background:#e8f5e9;}
+
+.c3 .card-head{background:linear-gradient(135deg,#e65100,#fb8c00);}
+.c3 .item-dot{background:#fb8c00;}
+.c3 .sub-sec{border-color:#fb8c00;}
+.c3 .sub-sec-head{color:#bf360c;background:#fff3e0;}
+
+.c4 .card-head{background:linear-gradient(135deg,#6a1b9a,#ab47bc);}
+.c4 .item-dot{background:#ab47bc;}
+.c4 .sub-sec{border-color:#ab47bc;}
+.c4 .sub-sec-head{color:#4a148c;background:#f3e5f5;}
+
+.c5 .card-head{background:linear-gradient(135deg,#00695c,#00897b);}
+.c5 .item-dot{background:#00897b;}
+.c5 .sub-sec{border-color:#00897b;}
+.c5 .sub-sec-head{color:#004d40;background:#e0f2f1;}
+
+.c6 .card-head{background:linear-gradient(135deg,#c62828,#ef5350);}
+.c6 .item-dot{background:#ef5350;}
+.c6 .sub-sec{border-color:#ef5350;}
+.c6 .sub-sec-head{color:#b71c1c;background:#ffebee;}
+
+.c7 .card-head{background:linear-gradient(135deg,#1565c0,#42a5f5);}
+.c7 .item-dot{background:#42a5f5;}
+
+/* ref box */
+.ref-box{
+  background:#e8f5e9;border:1px solid #a5d6a7;
+  border-radius:10px;padding:10px 16px;
+  margin:14px 0 0;font-size:12px;color:#2e7d32;
+  display:flex;align-items:center;gap:8px;
+}
+
+/* ── FOOTER ── */
+.footer{
+  text-align:center;padding:26px 20px 14px;
+  border-top:2px dashed #c8d8e8;
+  margin-top:20px;
+}
+.footer-cta{font-size:13px;color:#5a7a9a;margin-bottom:10px;font-weight:700;}
+.footer-link{
+  display:inline-block;
+  background:linear-gradient(135deg,#0070cc,#0099ee);
+  color:#fff;text-decoration:none;
+  padding:10px 30px;border-radius:30px;
+  font-size:14px;font-weight:700;
+  box-shadow:0 4px 14px rgba(0,120,200,.25);
+  margin-bottom:12px;
+}
+.footer-end{font-size:12px;color:#7a9ab8;margin-top:4px;}
+.footer-end span{color:#b88010;font-weight:700;}
+
+.arrow-down{text-align:center;font-size:24px;color:#aac4df;margin:4px 0;line-height:1;}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-badge">🎓 وزارة التعليم – المملكة العربية السعودية</div>
+  <h1>حالات <span>الغش في الاختبارات</span><br>والإخلال بنظام الاختبار</h1>
+  <div class="hdr-sub">المادة (١٩) – حالات الغش والمخالفات الواردة في الاختبارات والإجراءات المتبعة</div>
+</div>
+
+<div class="wrap">
+
+<!-- ══════════ 1. الالتفات والغش الشفهي ══════════ -->
+<div class="sec-title">
+  <div class="sec-bar" style="background:#1e88e5;"></div>
+  <div class="sec-num" style="background:#1e88e5;">١</div>
+  <span style="color:#1565c0;">١٩-١ الالتفات المتكرر والغش الشفهي</span>
+</div>
+
+<div class="card c1" style="animation-delay:.05s">
+  <div class="card-head">
+    <div class="card-head-icon">👀</div>
+    <div>
+      <div class="card-head-title">الالتفات المتكرر والغش الشفهي</div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="item"><div class="item-dot">١</div><div><strong>١٩-١-١</strong> يُنذر في المرة الأولى.</div></div>
+    <div class="item"><div class="item-dot">٢</div><div><strong>١٩-١-٢</strong> عند تكرار المحاولة يُنقل الطالب من مكانه إلى مكان آخر في قاعة الاختبار، وعند تكرار المحاولة تُسحب ورقة إجابته، ويُعد محضر بالحالة على أن يوقع من الملاحظ، ويُعتمد من رئيس اللجنة.</div></div>
+  </div>
+</div>
+
+<!-- ══════════ 2. ثبوت الغش التحريري ══════════ -->
+<div class="sec-title" style="margin-top:16px;">
+  <div class="sec-bar" style="background:#43a047;"></div>
+  <div class="sec-num" style="background:#43a047;">٢</div>
+  <span style="color:#2e7d32;">١٩-٢ ثبوت الغش في الاختبارات التحريرية</span>
+</div>
+
+<div class="card c2" style="animation-delay:.08s">
+  <div class="card-head">
+    <div class="card-head-icon">📝</div>
+    <div>
+      <div class="card-head-title">نهاية إحدى الفترات أو الدور الثاني أو التعثر</div>
+    </div>
+  </div>
+  <div class="card-body">
+
+    <!-- غش المرة الأولى -->
+    <div class="sub-sec" style="animation-delay:.1s">
+      <div class="sub-sec-head">🔴 ١٩-٢-١ غش الطالب المرة الأولى</div>
+      <div class="sub-sec-body">
+        <div class="item"><div class="item-dot" style="background:#1e88e5;">١</div><div><strong>١٩-٢-١-١</strong> سحب وسيلة الغش وإبقاؤه في صفه.</div></div>
+        <div class="item"><div class="item-dot" style="background:#1e88e5;">٢</div><div><strong>١٩-٢-١-٢</strong> تصوير ورقة الطالب، وتعرض مع وسيلة الغش على معلم المادة بصورة عاجلة.</div></div>
+        <div class="item"><div class="item-dot" style="background:#1e88e5;">٣</div><div><strong>١٩-٢-١-٣</strong> يُحرر محضر بالغش يحدد فيه معلم المادة (الفقرات/السؤال/الأسئلة) التي ثبت غش الطالب فيها مع إرفاق وسيلة الغش ما أمكن ذلك، ويوقع من الملاحظ ووكيل شؤون الطلاب.</div></div>
+        <div class="item"><div class="item-dot" style="background:#1e88e5;">٤</div><div><strong>١٩-٢-١-٤</strong> إذا احتوت وسيلة الغش على إجابة جميع أسئلة المادة فيُنظر في الأسئلة التي أجاب عنها الطالب حين ضبطه وهو يغش وتكتب في المحضر، وإذا تعذر ذلك يتم تأجيل البت فيها لحين عرضها على لجنة التحصيل الدراسي.</div></div>
+        <div class="item"><div class="item-dot" style="background:#1e88e5;">٥</div><div><strong>١٩-٢-١-٥</strong> يوقع الطالب على تعهد خطي بعدم تكرار الغش.</div></div>
+        <div class="item"><div class="item-dot" style="background:#1e88e5;">٦</div><div><strong>١٩-٢-١-٦</strong> يستكمل اختباره إذا كان الوقت يسمح بذلك.</div></div>
+        <div class="item"><div class="item-dot" style="background:#1e88e5;">٧</div><div><strong>١٩-٢-١-٧</strong> تُلغى درجة السؤال أو الأسئلة التي ثبت غشه فيها، ويُعطى صفرًا في درجتها عند تصحيح ورقة إجابته.</div></div>
+        <div class="item"><div class="item-dot" style="background:#1e88e5;">٨</div><div><strong>١٩-٢-١-٨</strong> يُراعى إتمام هذه الإجراءات بشكل سريع حتى لا يؤثر ذلك على وقت الطالب.</div></div>
+      </div>
+    </div>
+
+    <!-- غش المرة الثانية -->
+    <div class="sub-sec" style="animation-delay:.13s">
+      <div class="sub-sec-head">🟠 ١٩-٢-٢ تكرار غش الطالب للمرة الثانية</div>
+      <div class="sub-sec-body">
+        <div class="item"><div class="item-dot" style="background:#fb8c00;">١</div><div><strong>١٩-٢-٢-١</strong> يُحرر محضر بذلك يعتمده مدير المدرسة مع إرفاق وسيلة الغش ما أمكن ذلك.</div></div>
+        <div class="item"><div class="item-dot" style="background:#fb8c00;">٢</div><div><strong>١٩-٢-٢-٢</strong> تُسحب ورقة إجابته.</div></div>
+        <div class="item"><div class="item-dot" style="background:#fb8c00;">٣</div><div><strong>١٩-٢-٢-٣</strong> يُلغى اختباره في المادة التي غش فيها، ويُعد مكملاً مع الاحتفاظ له بدرجات أعمال الفترة أو السنة، وإذا كان الغش في الدور الثاني للمرحلتين الابتدائية والمتوسطة؛ فيلغى اختباره، وتتاح له إعادة اختبار المادة مع الغائبين بعذر، أما الطالب في المرحلة الثانوية فيُعد مكملاً ويُسمح له باختبار المادة في موعد اختبار الدور الثاني، أو موعد اختبار مواد التعثر.</div></div>
+        <div class="item"><div class="item-dot" style="background:#fb8c00;">٤</div><div><strong>١٩-٢-٢-٤</strong> يُدوَّن في كشوفات النتائج كلمة (غاش) في حقل درجة اختبار نهاية الفترة الذي وقع فيه الغش.</div></div>
+      </div>
+    </div>
+
+    <!-- غش المرة الثالثة -->
+    <div class="sub-sec" style="animation-delay:.16s">
+      <div class="sub-sec-head">🔴 ١٩-٢-٣ تكرار غش الطالب للمرة الثالثة</div>
+      <div class="sub-sec-body">
+        <div class="item"><div class="item-dot" style="background:#e53935;">١</div><div><strong>١٩-٢-٣-١</strong> يُحرر محضر بذلك يعتمده مدير المدرسة مع إرفاق وسيلة الغش ما أمكن ذلك.</div></div>
+        <div class="item"><div class="item-dot" style="background:#e53935;">٢</div><div><strong>١٩-٢-٣-٢</strong> يُحرم الطالب من دخول الاختبار في بقية المواد التالية في جدول الاختبار بعد موافقة إدارة تقويم الأداء المعرفي والمهاري.</div></div>
+        <div class="item"><div class="item-dot" style="background:#e53935;">٣</div><div><strong>١٩-٢-٣-٣</strong> تُدوَّن ملاحظة في خانة الملاحظات (حُرم من دخول اختبار بقية المواد لتكرار ارتكابه للغش).</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════ 3. الغش الجماعي ══════════ -->
+<div class="sec-title" style="margin-top:16px;">
+  <div class="sec-bar" style="background:#ab47bc;"></div>
+  <div class="sec-num" style="background:#ab47bc;">٣</div>
+  <span style="color:#6a1b9a;">١٩-٤ الغش الجماعي</span>
+</div>
+
+<div class="card c4" style="animation-delay:.19s">
+  <div class="card-head">
+    <div class="card-head-icon">👥</div>
+    <div><div class="card-head-title">إجراءات الغش الجماعي</div></div>
+  </div>
+  <div class="card-body">
+    <div class="item"><div class="item-dot">١</div><div><strong>١٩-٤-١</strong> حصر الأوراق التي يُشتبه فيها.</div></div>
+    <div class="item"><div class="item-dot">٢</div><div><strong>١٩-٤-٢</strong> يُحرر محضر من قِبل اللجنة الإدارية المختصة بشهود الحالة معتمدًا من قِبل مدير المدرسة مع التحفظ على النتيجة لحين البت فيها.</div></div>
+    <div class="item"><div class="item-dot">٣</div><div><strong>١٩-٤-٣</strong> رفع المحضر إلى إدارة تقويم الأداء المعرفي والمهاري؛ لإجراء تحقيق عاجل للبت في ذلك وإصدار العقوبة للمتسبب.</div></div>
+    <div class="item"><div class="item-dot">٤</div><div><strong>١٩-٤-٤</strong> بعد التأكد يُلغى اختبار الطلاب في تلك المواد، ويُعدون مكملين إذا حدثت في الدور الأول أو راسبين، وفي المرحلة الثانوية يُسمح لهم بأدائها في موعد الدور الثاني، أو موعد اختبار مواد التعثر.</div></div>
+  </div>
+</div>
+
+<!-- ══════════ 4. التعديل في ورقة الطالب ══════════ -->
+<div class="sec-title" style="margin-top:16px;">
+  <div class="sec-bar" style="background:#00897b;"></div>
+  <div class="sec-num" style="background:#00897b;">٤</div>
+  <span style="color:#00695c;">١٩-٥ التعديل في ورقة الطالب</span>
+</div>
+
+<div class="card c5" style="animation-delay:.22s">
+  <div class="card-head">
+    <div class="card-head-icon">✏️</div>
+    <div><div class="card-head-title">إجراءات التعديل في ورقة الطالب</div></div>
+  </div>
+  <div class="card-body">
+    <div class="item"><div class="item-dot">١</div><div><strong>١٩-٥-١</strong> يُعد محضر من قِبل اللجنة الإدارية، ويعتمد من مدير المدرسة ومشرف الاختبارات.</div></div>
+  </div>
+</div>
+
+<!-- ══════════ 5. الإساءة للدين والشخصيات ══════════ -->
+<div class="sec-title" style="margin-top:16px;">
+  <div class="sec-bar" style="background:#ef5350;"></div>
+  <div class="sec-num" style="background:#ef5350;">٥</div>
+  <span style="color:#c62828;">١٩-٢-٦ الإساءة إلى الدين الإسلامي أو الشخصيات العامة</span>
+</div>
+
+<div class="card c6" style="animation-delay:.25s">
+  <div class="card-head">
+    <div class="card-head-icon">☪️</div>
+    <div><div class="card-head-title">إساءة الطالب في ورقة الإجابة</div></div>
+  </div>
+  <div class="card-body">
+
+    <div class="sub-sec">
+      <div class="sub-sec-head">١٩-٢-٦-١ إجابة تضمنت إساءة إلى النبي ﷺ أو صحابته أو الكرام أو قدحًا في الدين الإسلامي</div>
+      <div class="sub-sec-body">
+        <div class="item"><div class="item-dot" style="background:#e53935;">١</div><div><strong>١٩-٢-٦-١-١</strong> التأكد من تضمن ورقة الإجابة تعريضًا، أو سبًّا، أو قذفًا، أو إهانة بعرضها على اللجنة الإدارية ولجنة التوجيه الطلابي.</div></div>
+        <div class="item"><div class="item-dot" style="background:#e53935;">٢</div><div><strong>١٩-٢-٦-١-٢</strong> بعد التأكد يُلغى اختباره في تلك المادة أو المواد التي تضمنتها، ويُعد راسبًا في ذلك العام.</div></div>
+        <div class="item"><div class="item-dot" style="background:#e53935;">٣</div><div><strong>١٩-٢-٦-١-٣</strong> يُحوَّل الطالب إلى لجنة التوجيه الطلابي؛ لدراسة حالته إذا احتاج الأمر لذلك وفقًا لقواعد السلوك.</div></div>
+      </div>
+    </div>
+
+    <div class="sub-sec" style="margin-top:8px;">
+      <div class="sub-sec-head">١٩-٢-٦-٢ إجابة تضمنت عبارات مسيئة غير ما ذُكر في الحالة السابقة</div>
+      <div class="sub-sec-body">
+        <div class="item"><div class="item-dot" style="background:#e53935;">١</div><div><strong>١٩-٢-٦-٢-١</strong> يُحرر محضر بذلك، ويُستدعى ولي أمره ويُبلَّغ بمضمونه.</div></div>
+        <div class="item"><div class="item-dot" style="background:#e53935;">٢</div><div><strong>١٩-٢-٦-٢-٢</strong> يُؤخذ عليه تعهد دون إلغاء اختباره.</div></div>
+        <div class="item"><div class="item-dot" style="background:#e53935;">٣</div><div><strong>١٩-٢-٦-٢-٣</strong> يُحوَّل الطالب إلى لجنة التوجيه الطلابي؛ لدراسة حالته إذا احتاج الأمر لذلك وفقًا لقواعد السلوك.</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════ 6. الإخلال بالنظام ══════════ -->
+<div class="sec-title" style="margin-top:16px;">
+  <div class="sec-bar" style="background:#1e88e5;"></div>
+  <div class="sec-num" style="background:#1e88e5;">٦</div>
+  <span style="color:#1565c0;">١٩-٧-٢ الإخلال بالنظام وإحداث الفوضى أو التطاول على المسؤولين</span>
+</div>
+
+<div class="card c7" style="animation-delay:.28s">
+  <div class="card-head">
+    <div class="card-head-icon">🚫</div>
+    <div><div class="card-head-title">الإخلال بالنظام أو التطاول بكلام غير لائق</div></div>
+  </div>
+  <div class="card-body">
+    <div class="item"><div class="item-dot">١</div><div><strong>١٩-٧-٢-١</strong> يُحرر محضر بذلك يعتمده مدير المدرسة مع تحديد نوع المخالفة.</div></div>
+    <div class="item"><div class="item-dot">٢</div><div><strong>١٩-٧-٢-٢</strong> تطبيق ما نصت عليه قواعد السلوك حسب نوع المخالفة من قِبل لجنة التوجيه الطلابي بالمدرسة.</div></div>
+    <div class="item"><div class="item-dot">٣</div><div><strong>١٩-٧-٢-٣</strong> إذا كان الطالب متجاوزًا سن الانتظام يتم إلغاء اختباره وإحالة أمره إلى الجهات المختصة، وفي حال كان موظفًا تُبلَّغ جهة عمله بتصرفه خطيًا.</div></div>
+  </div>
+</div>
+
+<!-- Reference -->
+<div class="ref-box">
+  📚 <strong>المرجع:</strong> دليل الاختبارات – صفحة ٥٦
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <div class="footer-cta">✨ تفضل للمزيد</div>
+  <a class="footer-link" href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">📢 قناة التيليغرام</a>
+  <div class="footer-end">نهاية المقالة — المرجع: دليل الاختبارات ص ٥٦</div>
+  <div class="footer-end" style="margin-top:4px;">تصميم <span>د/ فواز</span></div>
+</div>
+
+</div>
+</body>
+</html>
