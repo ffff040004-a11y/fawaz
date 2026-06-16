@@ -1,0 +1,2059 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الدليل الاسترشادي لأخصائي التقويم المدرسي</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap');
+
+  :root {
+    --primary: #1a3a5c;
+    --secondary: #2e86c1;
+    --accent: #f39c12;
+    --success: #27ae60;
+    --danger: #e74c3c;
+    --warning: #f1c40f;
+    --light: #ecf0f1;
+    --dark: #2c3e50;
+    --very-high: #1e8449;
+    --high: #2980b9;
+    --medium: #d68910;
+    --low: #c0392b;
+    --card-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    --radius: 14px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Cairo', 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #0f2137 0%, #1a3a5c 40%, #0d4f8c 100%);
+    min-height: 100vh;
+    color: #2c3e50;
+  }
+
+  /* HEADER */
+  .main-header {
+    background: linear-gradient(135deg, #0a1f35 0%, #1a3a5c 50%, #1565a8 100%);
+    padding: 30px 20px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 4px solid var(--accent);
+  }
+  .main-header::before {
+    content: '';
+    position: absolute;
+    top: -50px; left: -50px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(243,156,18,0.1);
+  }
+  .main-header::after {
+    content: '';
+    position: absolute;
+    bottom: -30px; right: -30px;
+    width: 150px; height: 150px;
+    border-radius: 50%;
+    background: rgba(46,134,193,0.15);
+  }
+  .header-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    padding: 5px 18px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+  .main-header h1 {
+    color: #fff;
+    font-size: 2rem;
+    font-weight: 900;
+    line-height: 1.4;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .main-header h2 {
+    color: #a8d4f5;
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin-top: 8px;
+  }
+  .header-stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .stat-chip {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+  }
+  .stat-chip span { color: var(--accent); font-weight: 900; font-size: 1rem; }
+
+  /* NAV TABS */
+  .nav-tabs-container {
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 2px solid rgba(255,255,255,0.1);
+  }
+  .nav-tab {
+    background: rgba(255,255,255,0.12);
+    border: 2px solid rgba(255,255,255,0.2);
+    color: #fff;
+    padding: 9px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-family: 'Cairo', Arial, sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+  .nav-tab:hover { background: rgba(255,255,255,0.22); transform: translateY(-2px); }
+  .nav-tab.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(243,156,18,0.4);
+    transform: translateY(-2px);
+  }
+
+  /* MAIN CONTENT */
+  .main-content { padding: 25px 15px 40px; max-width: 1200px; margin: 0 auto; }
+
+  .domain-section { display: none; }
+  .domain-section.active { display: block; }
+
+  /* DOMAIN HEADER */
+  .domain-header {
+    background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(240,248,255,0.95) 100%);
+    border-radius: var(--radius);
+    padding: 20px 25px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    box-shadow: var(--card-shadow);
+    border-right: 6px solid var(--secondary);
+  }
+  .domain-icon {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem;
+    flex-shrink: 0;
+  }
+  .domain-title { font-size: 1.5rem; font-weight: 900; color: var(--primary); }
+  .domain-sub { font-size: 0.9rem; color: #5a7fa0; margin-top: 4px; }
+
+  /* STANDARD GROUP */
+  .standard-group {
+    margin-bottom: 25px;
+  }
+  .standard-label {
+    background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: var(--radius) var(--radius) 0 0;
+    font-size: 1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .standard-count {
+    background: rgba(255,255,255,0.25);
+    padding: 2px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    margin-right: auto;
+  }
+
+  /* INDICATOR GROUP */
+  .indicator-group {
+    background: rgba(255,255,255,0.97);
+    border: 1px solid #dce6f0;
+    margin-bottom: 2px;
+  }
+  .indicator-group:last-child { border-radius: 0 0 var(--radius) var(--radius); }
+  .indicator-header {
+    background: linear-gradient(135deg, #e8f4fd 0%, #dbeaf8 100%);
+    padding: 13px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    border-bottom: 1px solid #c8dff0;
+    transition: background 0.2s;
+  }
+  .indicator-header:hover { background: linear-gradient(135deg, #d4ecfb 0%, #c3d9f5 100%); }
+  .indicator-num {
+    background: var(--secondary);
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .indicator-text { font-size: 0.95rem; font-weight: 700; color: var(--primary); flex: 1; line-height: 1.5; }
+  .indicator-toggle {
+    color: var(--secondary);
+    font-size: 1.2rem;
+    transition: transform 0.3s;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .indicator-group.open .indicator-toggle { transform: rotate(180deg); }
+
+  .paragraphs-container { display: none; padding: 0; }
+  .indicator-group.open .paragraphs-container { display: block; }
+
+  /* PARAGRAPH CARD */
+  .para-card {
+    padding: 20px 25px;
+    border-bottom: 1px solid #eef2f7;
+    background: #fff;
+    transition: background 0.2s;
+  }
+  .para-card:hover { background: #fafcff; }
+  .para-card:last-child { border-bottom: none; }
+
+  .para-num-title {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .para-badge {
+    background: linear-gradient(135deg, var(--primary) 0%, #2563a8 100%);
+    color: #fff;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .para-title { font-size: 0.95rem; font-weight: 700; color: #1a3a5c; line-height: 1.6; }
+
+  .meta-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .meta-box {
+    background: #f0f6ff;
+    border: 1px solid #cce0ff;
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .meta-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--secondary);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .meta-items { font-size: 0.85rem; color: #3a5a7a; line-height: 1.8; }
+  .meta-item { display: flex; align-items: flex-start; gap: 6px; margin-bottom: 2px; }
+  .meta-item::before { content: '•'; color: var(--secondary); flex-shrink: 0; }
+
+  /* EVAL SCALE */
+  .eval-scale {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .eval-level {
+    border-radius: 10px;
+    padding: 10px 8px;
+    text-align: center;
+  }
+  .eval-level.low { background: #fdecea; border: 2px solid #e74c3c; }
+  .eval-level.medium { background: #fef9e7; border: 2px solid #f39c12; }
+  .eval-level.high { background: #eaf4fb; border: 2px solid #2980b9; }
+  .eval-level.very-high { background: #eafaf1; border: 2px solid #27ae60; }
+  .eval-level-name { font-size: 0.82rem; font-weight: 700; margin-bottom: 4px; }
+  .eval-level.low .eval-level-name { color: #c0392b; }
+  .eval-level.medium .eval-level-name { color: #d68910; }
+  .eval-level.high .eval-level-name { color: #1a6fa8; }
+  .eval-level.very-high .eval-level-name { color: #1e8449; }
+  .eval-value { font-size: 0.78rem; color: #555; font-weight: 600; }
+
+  /* EVIDENCE */
+  .evidence-box {
+    background: linear-gradient(135deg, #f8fff9 0%, #edf9f0 100%);
+    border: 1px solid #c3e6cb;
+    border-right: 4px solid var(--success);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .evidence-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--success);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .evidence-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+  .evidence-chip {
+    background: #fff;
+    border: 1px solid #a8d9b8;
+    color: #1e5c35;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .evidence-chip:hover { background: #eafaf1; border-color: var(--success); }
+  .evidence-chip.checked {
+    background: var(--success);
+    color: #fff;
+    border-color: var(--success);
+  }
+  .evidence-chip.checked::before { content: '✓ '; }
+
+  /* SPECIAL PARAGRAPH TYPES */
+  .para-special {
+    background: linear-gradient(135deg, #fff8e1 0%, #fffde7 100%);
+    border: 1px solid #ffe082;
+    border-right: 4px solid var(--accent);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+  .para-special-title { font-size: 0.82rem; font-weight: 700; color: #b07d00; margin-bottom: 8px; }
+  .para-special-content { font-size: 0.88rem; color: #5a4000; line-height: 1.8; }
+
+  /* PERCENTAGE TABLE */
+  .pct-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.83rem;
+    margin-top: 6px;
+  }
+  .pct-table th {
+    padding: 7px 10px;
+    font-weight: 700;
+  }
+  .pct-table td { padding: 7px 10px; text-align: center; }
+  .pct-table tr:nth-child(even) td { background: rgba(0,0,0,0.03); }
+  .pct-row-low th { background: #fdecea; color: #c0392b; border: 1px solid #e74c3c; }
+  .pct-row-med th { background: #fef9e7; color: #d68910; border: 1px solid #f39c12; }
+  .pct-row-high th { background: #eaf4fb; color: #1a6fa8; border: 1px solid #2980b9; }
+  .pct-row-vhigh th { background: #eafaf1; color: #1e8449; border: 1px solid #27ae60; }
+  .pct-table td { border: 1px solid #ddd; }
+
+  /* SUMMARY SECTION */
+  .summary-section {
+    background: rgba(255,255,255,0.97);
+    border-radius: var(--radius);
+    padding: 25px;
+    box-shadow: var(--card-shadow);
+  }
+  .summary-title {
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: var(--primary);
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid var(--accent);
+  }
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+  }
+  .summary-card {
+    border-radius: 12px;
+    padding: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .summary-card::before {
+    content: '';
+    position: absolute;
+    top: -20px; left: -20px;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    opacity: 0.1;
+  }
+  .summary-card.admin { background: #e8f4fd; border: 2px solid #2980b9; }
+  .summary-card.admin::before { background: #2980b9; }
+  .summary-card.teach { background: #eafaf1; border: 2px solid #27ae60; }
+  .summary-card.teach::before { background: #27ae60; }
+  .summary-card.outcomes { background: #fef9e7; border: 2px solid #f39c12; }
+  .summary-card.outcomes::before { background: #f39c12; }
+  .summary-card.env { background: #fdedec; border: 2px solid #e74c3c; }
+  .summary-card.env::before { background: #e74c3c; }
+  .summary-card-title { font-size: 1rem; font-weight: 700; color: var(--primary); margin-bottom: 10px; }
+  .summary-item { font-size: 0.85rem; color: #444; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+  .summary-item-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .admin .summary-item-dot { background: #2980b9; }
+  .teach .summary-item-dot { background: #27ae60; }
+  .outcomes .summary-item-dot { background: #f39c12; }
+  .env .summary-item-dot { background: #e74c3c; }
+  .summary-total {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px dashed #aaa;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-align: center;
+  }
+
+  /* SCORE CALCULATOR */
+  .calculator-section {
+    background: rgba(255,255,255,0.97);
+    border-radius: var(--radius);
+    padding: 25px;
+    box-shadow: var(--card-shadow);
+    margin-top: 20px;
+  }
+  .calc-title { font-size: 1.1rem; font-weight: 700; color: var(--primary); margin-bottom: 15px; text-align: center; }
+  .calc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 15px; }
+  .calc-item label { font-size: 0.85rem; font-weight: 600; color: #444; display: block; margin-bottom: 5px; }
+  .calc-item input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 2px solid #dce6f0;
+    border-radius: 8px;
+    font-family: 'Cairo', Arial, sans-serif;
+    font-size: 0.9rem;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .calc-item input:focus { border-color: var(--secondary); }
+  .calc-btn {
+    display: block;
+    width: 100%;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-family: 'Cairo', Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .calc-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(26,58,92,0.3); }
+  .calc-result {
+    display: none;
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  /* SETTINGS FOOTER */
+  .settings-footer {
+    background: linear-gradient(135deg, #0a1f35 0%, #1a3a5c 100%);
+    padding: 25px 20px;
+    text-align: center;
+    border-top: 3px solid var(--accent);
+    margin-top: 20px;
+  }
+  .settings-title {
+    color: #a8d4f5;
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+  .designer-credit {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 30px;
+    padding: 10px 24px;
+    backdrop-filter: blur(5px);
+  }
+  .designer-name {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+  .designer-link {
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .designer-link:hover {
+    background: #e67e22;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(243,156,18,0.4);
+  }
+  .copyright {
+    color: #5a7fa0;
+    font-size: 0.78rem;
+    margin-top: 12px;
+  }
+
+  /* DOMAIN SUMMARY */
+  .domain-summary {
+    background: linear-gradient(135deg, rgba(255,255,255,0.97) 0%, rgba(240,248,255,0.97) 100%);
+    border-radius: var(--radius);
+    margin-top: 20px;
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    border: 2px solid #c8dff0;
+  }
+  .dsummary-header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: #fff;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  .dsummary-counter {
+    background: rgba(255,255,255,0.2);
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+  .dsummary-body { padding: 16px; }
+  .dsummary-empty {
+    text-align: center; color: #8aa8c0;
+    font-size: 0.88rem; padding: 24px 10px;
+  }
+  .dsummary-empty::before { content: '📋 '; }
+  .dsummary-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  .dsummary-table th {
+    background: #e8f4fd; color: var(--primary);
+    padding: 9px 10px; text-align: right;
+    font-weight: 700; border: 1px solid #c8dff0;
+  }
+  .dsummary-table td {
+    padding: 8px 10px; border: 1px solid #e0eaf4; vertical-align: middle;
+  }
+  .dsummary-table tr:nth-child(even) td { background: #f5f9ff; }
+  .dsummary-table tr.row-complete td { background: #eafaf1 !important; }
+  .dsummary-level-badge {
+    display: inline-block; padding: 3px 10px;
+    border-radius: 12px; font-size: 0.78rem; font-weight: 700;
+  }
+  .level-low  { background: #fdecea; color: #c0392b; border: 1px solid #e74c3c; }
+  .level-med  { background: #fef9e7; color: #d68910; border: 1px solid #f39c12; }
+  .level-high { background: #eaf4fb; color: #1a6fa8; border: 1px solid #2980b9; }
+  .level-vhigh{ background: #eafaf1; color: #1e8449; border: 1px solid #27ae60; }
+  .level-none { background: #f5f5f5; color: #aaa;    border: 1px solid #ddd; }
+  .dsummary-progress {
+    height: 8px; border-radius: 4px; background: #e0eaf4; overflow: hidden; margin-top: 4px;
+  }
+  .dsummary-progress-bar { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
+  .dsummary-overall {
+    margin-top: 14px; padding: 13px 16px; border-radius: 10px;
+    text-align: center; font-weight: 700; font-size: 0.95rem;
+    animation: fadeIn 0.4s ease;
+  }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+  /* PRINT */
+  @media print {
+    body { background: white; }
+    .main-header { background: #1a3a5c !important; -webkit-print-color-adjust: exact; }
+    .nav-tabs-container { display: none; }
+    .domain-section { display: block !important; }
+    .paragraphs-container { display: block !important; }
+    .settings-footer { background: #1a3a5c !important; -webkit-print-color-adjust: exact; }
+  }
+
+  @media (max-width: 600px) {
+    .main-header h1 { font-size: 1.3rem; }
+    .eval-scale { grid-template-columns: repeat(2, 1fr); }
+    .meta-row { grid-template-columns: 1fr; }
+    .header-stats { gap: 10px; }
+    .stat-chip { font-size: 0.75rem; padding: 6px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="main-header">
+  <div class="header-badge">🎓 دليل التقويم المدرسي</div>
+  <h1>الدليل الاسترشادي<br>لأخصائي التقويم المدرسي</h1>
+  <h2>أداة تحليل الوثائق · مؤشرات الفقرات · الشواهد · التقييم</h2>
+  <div class="header-stats">
+    <div class="stat-chip">📌 <span>4</span> مجالات</div>
+    <div class="stat-chip">📊 <span>9</span> معايير</div>
+    <div class="stat-chip">🔍 <span>24+</span> مؤشراً</div>
+    <div class="stat-chip">📋 <span>52+</span> فقرة</div>
+  </div>
+</div>
+
+<!-- NAV TABS -->
+<div class="nav-tabs-container">
+  <button class="nav-tab active" onclick="showDomain('d1')">🏫 الإدارة المدرسية</button>
+  <button class="nav-tab" onclick="showDomain('d2')">📚 التعليم والتعلم</button>
+  <button class="nav-tab" onclick="showDomain('d3')">🎯 نواتج التعلم</button>
+  <button class="nav-tab" onclick="showDomain('d4')">🛡️ البيئة المدرسية</button>
+</div>
+
+<div class="main-content">
+
+<!-- ===== DOMAIN 1: SCHOOL ADMINISTRATION ===== -->
+<div id="d1" class="domain-section active">
+  <div class="domain-header">
+    <div class="domain-icon" style="background:#e8f4fd;">🏫</div>
+    <div>
+      <div class="domain-title">مجال الإدارة المدرسية</div>
+      <div class="domain-sub">5 معايير · 42 فقرة</div>
+    </div>
+  </div>
+
+  <!-- STANDARD: PLANNING -->
+  <div class="standard-group">
+    <div class="standard-label">
+      📋 معيار التخطيط
+      <span class="standard-count">7 فقرات</span>
+    </div>
+
+    <!-- INDICATOR 1-1-1-1 -->
+    <div class="indicator-group open">
+      <div class="indicator-header" onclick="toggleIndicator(this)">
+        <div class="indicator-num">1-1-1-1</div>
+        <div class="indicator-text">تضع المدرسة خطة تشغيلية مكتملة العناصر، وفق أهداف تطويرية محددة</div>
+        <div class="indicator-toggle">▼</div>
+      </div>
+      <div class="paragraphs-container">
+
+        <!-- Para 1 -->
+        <div class="para-card">
+          <div class="para-num-title">
+            <div class="para-badge">الفقرة 1</div>
+            <div class="para-title">يوجد لدى المدرسة خطة تشغيلية مكتملة العناصر</div>
+          </div>
+          <div class="meta-row">
+            <div class="meta-box">
+              <div class="meta-label">📋 الوثائق المطلوبة</div>
+              <div class="meta-items"><div class="meta-item">سجل الخطة التشغيلية</div></div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">👤 المصدر / المسؤول</div>
+              <div class="meta-items"><div class="meta-item">مدير المدرسة</div></div>
+            </div>
+          </div>
+          <div class="eval-scale">
+            <div class="eval-level low"><div class="eval-level-name">منخفضة</div><div class="eval-value">2 فأقل</div></div>
+            <div class="eval-level medium"><div class="eval-level-name">متوسطة</div><div class="eval-value">3-4 شواهد</div></div>
+            <div class="eval-level high"><div class="eval-level-name">مرتفعة</div><div class="eval-value">5 شواهد</div></div>
+            <div class="eval-level very-high"><div class="eval-level-name">مرتفعة جداً</div><div class="eval-value">6 فأكثر</div></div>
+          </div>
+          <div class="evidence-box">
+            <div class="evidence-title">✅ الشواهد المتوقعة — انقر لتحديد ما هو متوفر</div>
+            <div class="evidence-list">
+              <div class="evidence-chip" onclick="toggleChip(this)">توجد خطة تشغيلية تتضمن: الأهداف</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">برامج وأنشطة متنوعة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">متطلبات وإجراءات التنفيذ</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">أدوار ومسؤوليات محددة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">مزمّنة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">مؤشرات أداء لكل الأهداف</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">يشارك فيها الكادر التعليمي</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">مبادرة إبداعية</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Para 2 -->
+        <div class="para-card">
+          <div class="para-num-title">
+            <div class="para-badge">الفقرة 2</div>
+            <div class="para-title">أهداف خطة المدرسة محددة وقابلة للقياس</div>
+          </div>
+          <div class="meta-row">
+            <div class="meta-box">
+              <div class="meta-label">📋 الوثائق المطلوبة</div>
+              <div class="meta-items"><div class="meta-item">سجل الخطة التشغيلية</div></div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">👤 المصدر / المسؤول</div>
+              <div class="meta-items"><div class="meta-item">مدير المدرسة</div></div>
+            </div>
+          </div>
+          <div class="eval-scale">
+            <div class="eval-level low"><div class="eval-level-name">منخفضة</div><div class="eval-value">2 فأقل</div></div>
+            <div class="eval-level medium"><div class="eval-level-name">متوسطة</div><div class="eval-value">3-4 شواهد</div></div>
+            <div class="eval-level high"><div class="eval-level-name">مرتفعة</div><div class="eval-value">5 شواهد</div></div>
+            <div class="eval-level very-high"><div class="eval-level-name">مرتفعة جداً</div><div class="eval-value">6 فأكثر</div></div>
+          </div>
+          <div class="evidence-box">
+            <div class="evidence-title">✅ الشواهد المتوقعة — انقر لتحديد ما هو متوفر</div>
+            <div class="evidence-list">
+              <div class="evidence-chip" onclick="toggleChip(this)">الأهداف محددة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">واضحة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">شاملة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">قابلة للقياس</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">قابلة للتطبيق</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تطويرية وطموحة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">جوانب الإبداع والابتكار</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Para 3 -->
+        <div class="para-card">
+          <div class="para-num-title">
+            <div class="para-badge">الفقرة 3</div>
+            <div class="para-title">البرامج والأنشطة تحقق الأهداف التطويرية للمدرسة</div>
+          </div>
+          <div class="meta-row">
+            <div class="meta-box">
+              <div class="meta-label">📋 الوثائق المطلوبة</div>
+              <div class="meta-items"><div class="meta-item">سجل برامج الخطة التشغيلية (توثيق برامج)</div></div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">👤 المصدر / المسؤول</div>
+              <div class="meta-items"><div class="meta-item">مدير المدرسة</div></div>
+            </div>
+          </div>
+          <div class="eval-scale">
+            <div class="eval-level low"><div class="eval-level-name">منخفضة</div><div class="eval-value">2 فأقل</div></div>
+            <div class="eval-level medium"><div class="eval-level-name">متوسطة</div><div class="eval-value">3-4 شواهد</div></div>
+            <div class="eval-level high"><div class="eval-level-name">مرتفعة</div><div class="eval-value">5 شواهد</div></div>
+            <div class="eval-level very-high"><div class="eval-level-name">مرتفعة جداً</div><div class="eval-value">6 فأكثر</div></div>
+          </div>
+          <div class="evidence-box">
+            <div class="evidence-title">✅ الشواهد المتوقعة — انقر لتحديد ما هو متوفر</div>
+            <div class="evidence-list">
+              <div class="evidence-chip" onclick="toggleChip(this)">البرامج والأنشطة مرتبطة بالأهداف</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">مزمّنة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">شاملة (تغطي جميع المجالات الهدف)</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">إجراءات تنفيذها واضحة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">البرامج والأنشطة متنوعة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تلبي احتياجات جميع المتعلمين ومنهم ذوو الإعاقة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تلبي احتياجات المتفوقين والموهوبين</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Para 4 -->
+        <div class="para-card">
+          <div class="para-num-title">
+            <div class="para-badge">الفقرة 4</div>
+            <div class="para-title">تتوزع الأدوار والمسؤوليات في تنفيذ خطة المدرسة وفق مستوياتها</div>
+          </div>
+          <div class="meta-row">
+            <div class="meta-box">
+              <div class="meta-label">📋 الوثائق المطلوبة</div>
+              <div class="meta-items">
+                <div class="meta-item">سجل الخطة التشغيلية</div>
+                <div class="meta-item">سجل اللجان المدرسية</div>
+                <div class="meta-item">سجل التكليفات</div>
+              </div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">👤 المصدر / المسؤول</div>
+              <div class="meta-items"><div class="meta-item">مدير المدرسة</div></div>
+            </div>
+          </div>
+          <div class="eval-scale">
+            <div class="eval-level low"><div class="eval-level-name">منخفضة</div><div class="eval-value">2 فأقل</div></div>
+            <div class="eval-level medium"><div class="eval-level-name">متوسطة</div><div class="eval-value">3-4 شواهد</div></div>
+            <div class="eval-level high"><div class="eval-level-name">مرتفعة</div><div class="eval-value">5 شواهد</div></div>
+            <div class="eval-level very-high"><div class="eval-level-name">مرتفعة جداً</div><div class="eval-value">6 فأكثر</div></div>
+          </div>
+          <div class="evidence-box">
+            <div class="evidence-title">✅ الشواهد المتوقعة — انقر لتحديد ما هو متوفر</div>
+            <div class="evidence-list">
+              <div class="evidence-chip" onclick="toggleChip(this)">الأدوار والمسؤوليات محددة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">ترتبط بالبرامج والأنشطة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">شاملة المهام والمسؤوليات</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">مزمّنة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تتسق الأدوار المسندة لمستوى المدرسة</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- INDICATOR 2-1-1-1 -->
+    <div class="indicator-group">
+      <div class="indicator-header" onclick="toggleIndicator(this)">
+        <div class="indicator-num">2-1-1-1</div>
+        <div class="indicator-text">تتابع المدرسة تنفيذ خططها وتطورها بما يضمن تحقيق أهدافها</div>
+        <div class="indicator-toggle">▼</div>
+      </div>
+      <div class="paragraphs-container">
+
+        <!-- Para 5 -->
+        <div class="para-card">
+          <div class="para-num-title">
+            <div class="para-badge">الفقرة 5</div>
+            <div class="para-title">تتابع المدرسة تنفيذ البرامج والأنشطة وفق الخطة الزمنية</div>
+          </div>
+          <div class="meta-row">
+            <div class="meta-box">
+              <div class="meta-label">📋 الوثائق المطلوبة</div>
+              <div class="meta-items">
+                <div class="meta-item">سجل الخطة التشغيلية (سجل المتابعة والتقويم)</div>
+                <div class="meta-item">سجل برامج النشاط</div>
+                <div class="meta-item">سجل برامج الإرشاد</div>
+              </div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">👤 المصدر / المسؤول</div>
+              <div class="meta-items"><div class="meta-item">مدير المدرسة</div></div>
+            </div>
+          </div>
+          <div class="eval-scale">
+            <div class="eval-level low"><div class="eval-level-name">منخفضة</div><div class="eval-value">2 فأقل</div></div>
+            <div class="eval-level medium"><div class="eval-level-name">متوسطة</div><div class="eval-value">3-4 شواهد</div></div>
+            <div class="eval-level high"><div class="eval-level-name">مرتفعة</div><div class="eval-value">5 شواهد</div></div>
+            <div class="eval-level very-high"><div class="eval-level-name">مرتفعة جداً</div><div class="eval-value">6 فأكثر</div></div>
+          </div>
+          <div class="evidence-box">
+            <div class="evidence-title">✅ الشواهد المتوقعة</div>
+            <div class="evidence-list">
+              <div class="evidence-chip" onclick="toggleChip(this)">توثيق متابعة دورية للبرامج</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تقارير متابعة منتظمة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">مقارنة التنفيذ بالخطة الزمنية</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">رصد الانجازات والعوائق</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">اتخاذ إجراءات تصحيحية</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تحديث الخطة بانتظام</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Para 6 -->
+        <div class="para-card">
+          <div class="para-num-title">
+            <div class="para-badge">الفقرة 6</div>
+            <div class="para-title">تُقيّم المدرسة مدى تحقق الأهداف التشغيلية بانتظام</div>
+          </div>
+          <div class="meta-row">
+            <div class="meta-box">
+              <div class="meta-label">📋 الوثائق المطلوبة</div>
+              <div class="meta-items">
+                <div class="meta-item">سجل الخطة التشغيلية</div>
+                <div class="meta-item">تقارير الأداء الدورية</div>
+              </div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">👤 المصدر / المسؤول</div>
+              <div class="meta-items"><div class="meta-item">مدير المدرسة</div></div>
+            </div>
+          </div>
+          <div class="eval-scale">
+            <div class="eval-level low"><div class="eval-level-name">منخفضة</div><div class="eval-value">2 فأقل</div></div>
+            <div class="eval-level medium"><div class="eval-level-name">متوسطة</div><div class="eval-value">3-4 شواهد</div></div>
+            <div class="eval-level high"><div class="eval-level-name">مرتفعة</div><div class="eval-value">5 شواهد</div></div>
+            <div class="eval-level very-high"><div class="eval-level-name">مرتفعة جداً</div><div class="eval-value">6 فأكثر</div></div>
+          </div>
+          <div class="evidence-box">
+            <div class="evidence-title">✅ الشواهد المتوقعة</div>
+            <div class="evidence-list">
+              <div class="evidence-chip" onclick="toggleChip(this)">تقييم دوري للأهداف</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">نسب إنجاز موثقة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">مؤشرات أداء محددة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">توثيق نتائج التقييم</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">مشاركة النتائج مع الكادر</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">التطوير المستند للنتائج</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Para 7 -->
+        <div class="para-card">
+          <div class="para-num-title">
+            <div class="para-badge">الفقرة 7</div>
+            <div class="para-title">تُطور المدرسة خطتها في ضوء نتائج المتابعة والتقييم</div>
+          </div>
+          <div class="meta-row">
+            <div class="meta-box">
+              <div class="meta-label">📋 الوثائق المطلوبة</div>
+              <div class="meta-items">
+                <div class="meta-item">سجل الخطة التشغيلية المحدّثة</div>
+              </div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">👤 المصدر / المسؤول</div>
+              <div class="meta-items"><div class="meta-item">مدير المدرسة</div></div>
+            </div>
+          </div>
+          <div class="eval-scale">
+            <div class="eval-level low"><div class="eval-level-name">منخفضة</div><div class="eval-value">2 فأقل</div></div>
+            <div class="eval-level medium"><div class="eval-level-name">متوسطة</div><div class="eval-value">3-4 شواهد</div></div>
+            <div class="eval-level high"><div class="eval-level-name">مرتفعة</div><div class="eval-value">5 شواهد</div></div>
+            <div class="eval-level very-high"><div class="eval-level-name">مرتفعة جداً</div><div class="eval-value">6 فأكثر</div></div>
+          </div>
+          <div class="evidence-box">
+            <div class="evidence-title">✅ الشواهد المتوقعة</div>
+            <div class="evidence-list">
+              <div class="evidence-chip" onclick="toggleChip(this)">تعديل الخطة بناءً على النتائج</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">إضافة برامج جديدة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">حذف أنشطة غير فعالة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">توثيق التعديلات</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">التحسين المستمر</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- STANDARD: INSTITUTIONAL DEVELOPMENT -->
+  <div class="standard-group">
+    <div class="standard-label">
+      🏆 معيار التطوير المؤسسي
+      <span class="standard-count">15 فقرة</span>
+    </div>
+
+    <!-- INDICATOR 5-1-4-1 -->
+    <div class="indicator-group open">
+      <div class="indicator-header" onclick="toggleIndicator(this)">
+        <div class="indicator-num">5-1-4-1</div>
+        <div class="indicator-text">تدعم المدرسة التطوير المهني لمنسوبيها وفقاً لنتائج تقويم الأداء الوظيفي</div>
+        <div class="indicator-toggle">▼</div>
+      </div>
+      <div class="paragraphs-container">
+
+        <!-- Para 34 -->
+        <div class="para-card">
+          <div class="para-num-title">
+            <div class="para-badge">الفقرة 34</div>
+            <div class="para-title">تبني المدرسة خطة التطوير المهني وفق نتائج تقويم الأداء الوظيفي واحتياجات منسوبيها</div>
+          </div>
+          <div class="meta-row">
+            <div class="meta-box">
+              <div class="meta-label">📋 الوثائق المطلوبة</div>
+              <div class="meta-items"><div class="meta-item">سجل النمو المهني</div></div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">👤 المصدر / المسؤول</div>
+              <div class="meta-items"><div class="meta-item">مدير المدرسة</div></div>
+            </div>
+          </div>
+          <div class="eval-scale">
+            <div class="eval-level low"><div class="eval-level-name">منخفضة</div><div class="eval-value">2 فأقل</div></div>
+            <div class="eval-level medium"><div class="eval-level-name">متوسطة</div><div class="eval-value">3-4 شواهد</div></div>
+            <div class="eval-level high"><div class="eval-level-name">مرتفعة</div><div class="eval-value">5 شواهد</div></div>
+            <div class="eval-level very-high"><div class="eval-level-name">مرتفعة جداً</div><div class="eval-value">6 فأكثر</div></div>
+          </div>
+          <div class="evidence-box">
+            <div class="evidence-title">✅ الشواهد المتوقعة — انقر لتحديد ما هو متوفر</div>
+            <div class="evidence-list">
+              <div class="evidence-chip" onclick="toggleChip(this)">توافر خطة للتطوير المهني</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">ترتبط الخطة بنتائج تحليل احتياجات منسوبي المدرسة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">ترتبط الخطة بنتائج تقويم الأداء الوظيفي</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">يشارك المجتمع المدرسي في تحديد أهداف التطوير المهني</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">أساليب التطوير المهني متنوعة (ورش، دورات، ندوات، زيارات)</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">الخطة شاملة لمنسوبي المدرسة (إدارياً وتعليمياً)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Para 35 -->
+        <div class="para-card">
+          <div class="para-num-title">
+            <div class="para-badge">الفقرة 35</div>
+            <div class="para-title">تنفذ المدرسة خطة التطوير المهني لمنسوبيها وتتابعها بانتظام</div>
+          </div>
+          <div class="meta-row">
+            <div class="meta-box">
+              <div class="meta-label">📋 الوثائق المطلوبة</div>
+              <div class="meta-items"><div class="meta-item">سجل التطوير المهني</div></div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">👤 المصدر / المسؤول</div>
+              <div class="meta-items"><div class="meta-item">مدير المدرسة</div></div>
+            </div>
+          </div>
+          <div class="eval-scale">
+            <div class="eval-level low"><div class="eval-level-name">منخفضة</div><div class="eval-value">2 فأقل</div></div>
+            <div class="eval-level medium"><div class="eval-level-name">متوسطة</div><div class="eval-value">3-4 شواهد</div></div>
+            <div class="eval-level high"><div class="eval-level-name">مرتفعة</div><div class="eval-value">5 شواهد</div></div>
+            <div class="eval-level very-high"><div class="eval-level-name">مرتفعة جداً</div><div class="eval-value">6 فأكثر</div></div>
+          </div>
+          <div class="evidence-box">
+            <div class="evidence-title">✅ الشواهد المتوقعة — انقر لتحديد ما هو متوفر</div>
+            <div class="evidence-list">
+              <div class="evidence-chip" onclick="toggleChip(this)">تطبق المدرسة برامج التطوير المهني</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">برامج التطوير المهني مستمرة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تستخدم المدرسة أساليب وطرقاً متنوعة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تدعم منسوبيها في المشاركة في برامج التطوير المهني</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تقدم حوافز لتشجيع منسوبيها على المشاركة في مجتمعات التعلم المهني</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">إجراء بحوث إجرائية</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تتابع تنفيذ الخطة بأساليب متنوعة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">بانتظام</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تطبق أساليب لقياس أثر التدريب بانتظام</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- INDICATOR 6-1-4-1 -->
+    <div class="indicator-group">
+      <div class="indicator-header" onclick="toggleIndicator(this)">
+        <div class="indicator-num">6-1-4-1</div>
+        <div class="indicator-text">تطبق المدرسة التقويم الذاتي المبني على المعايير المعتمدة من الهيئة</div>
+        <div class="indicator-toggle">▼</div>
+      </div>
+      <div class="paragraphs-container">
+
+        <!-- Para 36 -->
+        <div class="para-card">
+          <div class="para-num-title">
+            <div class="para-badge">الفقرة 36</div>
+            <div class="para-title">تطبق المدرسة التقويم الذاتي المبني وفق المعايير المعتمدة من الهيئة</div>
+          </div>
+          <div class="meta-row">
+            <div class="meta-box">
+              <div class="meta-label">📋 الوثائق المطلوبة</div>
+              <div class="meta-items">
+                <div class="meta-item">سجل لجنة التميز المدرسي</div>
+                <div class="meta-item">سجل التقويم الذاتي</div>
+              </div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">👤 المصدر / المسؤول</div>
+              <div class="meta-items"><div class="meta-item">مدير المدرسة</div></div>
+            </div>
+          </div>
+          <div class="eval-scale">
+            <div class="eval-level low"><div class="eval-level-name">منخفضة</div><div class="eval-value">2 فأقل</div></div>
+            <div class="eval-level medium"><div class="eval-level-name">متوسطة</div><div class="eval-value">3-4 شواهد</div></div>
+            <div class="eval-level high"><div class="eval-level-name">مرتفعة</div><div class="eval-value">5 شواهد</div></div>
+            <div class="eval-level very-high"><div class="eval-level-name">مرتفعة جداً</div><div class="eval-value">6 فأكثر</div></div>
+          </div>
+          <div class="evidence-box">
+            <div class="evidence-title">✅ الشواهد المتوقعة — انقر لتحديد ما هو متوفر</div>
+            <div class="evidence-list">
+              <div class="evidence-chip" onclick="toggleChip(this)">تضع خطة لتطبيق التقويم الذاتي</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تشكيل فريق التقويم وفق معايير واضحة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تعقد اجتماعات لتهيئة المجتمع المدرسي للتقويم الذاتي</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تطبيق جميع إجراءات التقويم الذاتي</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تطبق معايير التقويم واعتماد المدرسي في عملية التقويم</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تتابع تطبيق التقويم الذاتي</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تستخدم أساليب متنوعة</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Para 37 -->
+        <div class="para-card">
+          <div class="para-num-title">
+            <div class="para-badge">الفقرة 37</div>
+            <div class="para-title">تُشرك المدرسة منسوبيها فعلياً في عمليات التقويم الذاتي، ونتائجه</div>
+          </div>
+          <div class="meta-row">
+            <div class="meta-box">
+              <div class="meta-label">📋 الوثائق المطلوبة</div>
+              <div class="meta-items">
+                <div class="meta-item">سجل لجنة التميز المدرسي</div>
+                <div class="meta-item">سجل التقويم الذاتي</div>
+              </div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">👤 المصدر / المسؤول</div>
+              <div class="meta-items"><div class="meta-item">مدير المدرسة</div></div>
+            </div>
+          </div>
+          <div class="eval-scale">
+            <div class="eval-level low"><div class="eval-level-name">منخفضة</div><div class="eval-value">2 فأقل</div></div>
+            <div class="eval-level medium"><div class="eval-level-name">متوسطة</div><div class="eval-value">3-4 شواهد</div></div>
+            <div class="eval-level high"><div class="eval-level-name">مرتفعة</div><div class="eval-value">5 شواهد</div></div>
+            <div class="eval-level very-high"><div class="eval-level-name">مرتفعة جداً</div><div class="eval-value">6 فأكثر</div></div>
+          </div>
+          <div class="evidence-box">
+            <div class="evidence-title">✅ الشواهد المتوقعة — انقر لتحديد ما هو متوفر</div>
+            <div class="evidence-list">
+              <div class="evidence-chip" onclick="toggleChip(this)">تنشر ثقافة التقويم الذاتي في المجتمع المدرسي</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تستخدم طرقاً وأساليب متنوعة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">مستمرة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">شاملة جميع منسوبيها</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تُشرك منسوبيها وأصحاب المصلحة في التقويم الذاتي</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تُطلع المدرسة منسوبيها وأصحاب المصلحة على نتائج التقويم الذاتي</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- INDICATOR 7-1-4-1 -->
+    <div class="indicator-group">
+      <div class="indicator-header" onclick="toggleIndicator(this)">
+        <div class="indicator-num">7-1-4-1</div>
+        <div class="indicator-text">تنفذ المدرسة خطة للتحسين بناءً على نتائج التقويم المدرسي، وتتابعها</div>
+        <div class="indicator-toggle">▼</div>
+      </div>
+      <div class="paragraphs-container">
+
+        <!-- Para 38 -->
+        <div class="para-card">
+          <div class="para-num-title">
+            <div class="para-badge">الفقرة 38</div>
+            <div class="para-title">تبني المدرسة خطة التحسين في ضوء نتائج التقويم المدرسي</div>
+          </div>
+          <div class="meta-row">
+            <div class="meta-box">
+              <div class="meta-label">📋 الوثائق المطلوبة</div>
+              <div class="meta-items">
+                <div class="meta-item">سجل تطوير وتحسين الخطة التشغيلية</div>
+                <div class="meta-item">سجل اللجنة الإدارية</div>
+              </div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">👤 المصدر / المسؤول</div>
+              <div class="meta-items"><div class="meta-item">مدير المدرسة</div></div>
+            </div>
+          </div>
+          <div class="eval-scale">
+            <div class="eval-level low"><div class="eval-level-name">منخفضة</div><div class="eval-value">2 فأقل</div></div>
+            <div class="eval-level medium"><div class="eval-level-name">متوسطة</div><div class="eval-value">3-4 شواهد</div></div>
+            <div class="eval-level high"><div class="eval-level-name">مرتفعة</div><div class="eval-value">5 شواهد</div></div>
+            <div class="eval-level very-high"><div class="eval-level-name">مرتفعة جداً</div><div class="eval-value">6 فأكثر</div></div>
+          </div>
+          <div class="evidence-box">
+            <div class="evidence-title">✅ الشواهد المتوقعة — انقر لتحديد ما هو متوفر</div>
+            <div class="evidence-list">
+              <div class="evidence-chip" onclick="toggleChip(this)">توجد خطة للتحسين</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">خطة التحسين مبنية على نتائج التقويم المدرسي</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">توافر جدول زمني في الخطة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تحديد الأدوار والمسؤوليات في الخطة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تحدد المتطلبات والموارد اللازمة وإجراءات التنفيذ</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">توافر برامج وأنشطة لمعالجة جوانب التحسين</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">البرامج والأنشطة متنوعة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تتركز على الأولويات وفق نتائج التقويم المدرسي</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تُشرك منسوبي المدرسة في إعداد خطة التحسين</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تحديد مؤشرات الإنجاز في الخطة</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Para 39 -->
+        <div class="para-card">
+          <div class="para-num-title">
+            <div class="para-badge">الفقرة 39</div>
+            <div class="para-title">تنفذ المدرسة خطة التحسين وتتابعها</div>
+          </div>
+          <div class="meta-row">
+            <div class="meta-box">
+              <div class="meta-label">📋 الوثائق المطلوبة</div>
+              <div class="meta-items">
+                <div class="meta-item">سجل تطوير وتحسين الخطة التشغيلية</div>
+                <div class="meta-item">سجل اللجنة الإدارية</div>
+              </div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">👤 المصدر / المسؤول</div>
+              <div class="meta-items"><div class="meta-item">مدير المدرسة</div></div>
+            </div>
+          </div>
+          <div class="eval-scale">
+            <div class="eval-level low"><div class="eval-level-name">منخفضة</div><div class="eval-value">2 فأقل</div></div>
+            <div class="eval-level medium"><div class="eval-level-name">متوسطة</div><div class="eval-value">3-4 شواهد</div></div>
+            <div class="eval-level high"><div class="eval-level-name">مرتفعة</div><div class="eval-value">5 شواهد</div></div>
+            <div class="eval-level very-high"><div class="eval-level-name">مرتفعة جداً</div><div class="eval-value">6 فأكثر</div></div>
+          </div>
+          <div class="evidence-box">
+            <div class="evidence-title">✅ الشواهد المتوقعة — انقر لتحديد ما هو متوفر</div>
+            <div class="evidence-list">
+              <div class="evidence-chip" onclick="toggleChip(this)">تنفيذ برامج وأنشطة خطة التحسين</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تستخدم المدرسة طرقاً وأساليب متنوعة في التنفيذ</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تتابع تنفيذ الخطة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">بانتظام</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تُقيّم خطة التحسين بانتظام</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تُحدد المشكلات والتحديات</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تقدم الحلول والبدائل</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تطور خطة التحسين بانتظام</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- STANDARD: STUDENT RIGHTS -->
+  <div class="standard-group">
+    <div class="standard-label">
+      🛡️ معيار حقوق المتعلمين وحمايتهم
+      <span class="standard-count">3 فقرات</span>
+    </div>
+
+    <div class="indicator-group open">
+      <div class="indicator-header" onclick="toggleIndicator(this)">
+        <div class="indicator-num">(1-1-5-1) (2-1-5-1) (3-1-5-1)</div>
+        <div class="indicator-text">حقوق المتعلم وحمايته — ثلاثة مؤشرات رئيسية</div>
+        <div class="indicator-toggle">▼</div>
+      </div>
+      <div class="paragraphs-container">
+
+        <div class="para-card">
+          <div class="para-special">
+            <div class="para-special-title">🎯 المؤشر الأول: حقوق المتعلمين من ذوي الإعاقة</div>
+            <div class="para-special-content">تلتزم المدرسة بالمحافظة على حقوق المتعلمين من ذوي الإعاقة، وحمايتهم. المقصود به: ضمان حصول الطالب على كافة حقوقه التعليمية والتربوية دون تمييز، وحمايته من أي شكل من أشكال الإساءة (الجسدية، اللفظية، أو التنمر)</div>
+          </div>
+          <div class="para-special">
+            <div class="para-special-title">🎯 المؤشر الثاني: المناخ الآمن والداعم</div>
+            <div class="para-special-content">توفر المدرسة مناخاً آمناً للتعلم والنمو نفسياً واجتماعياً. خلق بيئة مدرسية جاذبة وداعمة، يشعر فيها الطالب بالانتماء والقبول من زملائه ومعلميه، مما يعزز ثقته بنفسه ويطور مهاراته الاجتماعية.</div>
+          </div>
+          <div class="para-special">
+            <div class="para-special-title">🎯 المؤشر الثالث: الصحة والتغذية</div>
+            <div class="para-special-content">تلتزم المدرسة بالمحافظة على صحة المتعلمين من ذوي الإعاقة ومتابعة تغذيتهم. العناية بالصحة الجسدية للطالب، ومتابعة حصوله على أدويته (إن وجدت) في وقتها والتأكد من حصوله على غذاء صحي يناسب حالته، وحمايته من أي أطعمة قد تضره.</div>
+          </div>
+          <div class="eval-scale">
+            <div class="eval-level low"><div class="eval-level-name">منخفضة</div><div class="eval-value">2 فأقل</div></div>
+            <div class="eval-level medium"><div class="eval-level-name">متوسطة</div><div class="eval-value">3-4 شواهد</div></div>
+            <div class="eval-level high"><div class="eval-level-name">مرتفعة</div><div class="eval-value">5 شواهد</div></div>
+            <div class="eval-level very-high"><div class="eval-level-name">مرتفعة جداً</div><div class="eval-value">6 فأكثر</div></div>
+          </div>
+          <div class="evidence-box">
+            <div class="evidence-title">✅ الشواهد المتوقعة</div>
+            <div class="evidence-list">
+              <div class="evidence-chip" onclick="toggleChip(this)">سياسة واضحة لحماية المتعلمين</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">برامج تعزيز السلوك الإيجابي</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">آلية للتبليغ عن حالات الإساءة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">توافر بيئة آمنة ونظيفة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">متابعة الصحة والتغذية</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">شمول جميع المتعلمين بلا تمييز</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Domain 1 Summary -->
+  <div class="domain-summary">
+    <div class="dsummary-header">
+      <span>📊 ملخص تقييم مجال الإدارة المدرسية</span>
+      <span class="dsummary-counter" id="dcounter-d1">لم يتم اختيار أي شاهد بعد</span>
+    </div>
+    <div class="dsummary-body" id="dbody-d1">
+      <div class="dsummary-empty">ابدأ باختيار الشواهد للاطلاع على ملخص التقييم التلقائي</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DOMAIN 2: TEACHING & LEARNING ===== -->
+<div id="d2" class="domain-section">
+  <div class="domain-header">
+    <div class="domain-icon" style="background:#eafaf1;">📚</div>
+    <div>
+      <div class="domain-title">مجال التعليم والتعلم</div>
+      <div class="domain-sub">معياران · 7 فقرات</div>
+    </div>
+  </div>
+
+  <!-- STANDARD: LEARNING EXPERIENCES -->
+  <div class="standard-group">
+    <div class="standard-label">
+      📖 معيار بناء خبرات التعلم
+      <span class="standard-count">4 فقرات</span>
+    </div>
+
+    <div class="indicator-group open">
+      <div class="indicator-header" onclick="toggleIndicator(this)">
+        <div class="indicator-num">2-1-1-2</div>
+        <div class="indicator-text">تدعم المدرسة تنفيذ المناهج؛ لتحقيق نواتج التعلم المستهدفة وفق الخطة الدراسية</div>
+        <div class="indicator-toggle">▼</div>
+      </div>
+      <div class="paragraphs-container">
+
+        <!-- Para 40 -->
+        <div class="para-card">
+          <div class="para-num-title">
+            <div class="para-badge">الفقرة 40</div>
+            <div class="para-title">توفر المدرسة أنشطة ومصادر لدعم تعلم محتوى المناهج (المعارف والمهارات والقيم)</div>
+          </div>
+          <div class="meta-row">
+            <div class="meta-box">
+              <div class="meta-label">📋 الوثائق المطلوبة</div>
+              <div class="meta-items">
+                <div class="meta-item">عينة من ملفات إنجاز المعلمين</div>
+                <div class="meta-item">عينة من الأنشطة الصفية</div>
+              </div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">👤 المصدر / المسؤول</div>
+              <div class="meta-items"><div class="meta-item">وكيل الشؤون التعليمية</div></div>
+            </div>
+          </div>
+          <div class="eval-scale">
+            <div class="eval-level low"><div class="eval-level-name">منخفضة</div><div class="eval-value">2 فأقل</div></div>
+            <div class="eval-level medium"><div class="eval-level-name">متوسطة</div><div class="eval-value">3-4 شواهد</div></div>
+            <div class="eval-level high"><div class="eval-level-name">مرتفعة</div><div class="eval-value">5 شواهد</div></div>
+            <div class="eval-level very-high"><div class="eval-level-name">مرتفعة جداً</div><div class="eval-value">6 فأكثر</div></div>
+          </div>
+          <div class="evidence-box">
+            <div class="evidence-title">✅ الشواهد المتوقعة — انقر لتحديد ما هو متوفر</div>
+            <div class="evidence-list">
+              <div class="evidence-chip" onclick="toggleChip(this)">توافر أنشطة ومصادر متنوعة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تدعم تعلم جميع موضوعات ومحتوى المنهج</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تشمل المعارف والمهارات والقيم</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تراعي الفروق الفردية بين المتعلمين</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">توظيف التقنية في التعلم</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">مرتبطة بنواتج التعلم المستهدفة</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Para 41 -->
+        <div class="para-card">
+          <div class="para-num-title">
+            <div class="para-badge">الفقرة 41</div>
+            <div class="para-title">يوظف المعلمون استراتيجيات تدريس فعّالة تراعي الفروق الفردية</div>
+          </div>
+          <div class="meta-row">
+            <div class="meta-box">
+              <div class="meta-label">📋 الوثائق المطلوبة</div>
+              <div class="meta-items">
+                <div class="meta-item">خطط الدروس</div>
+                <div class="meta-item">ملف الإنجاز</div>
+              </div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">👤 المصدر / المسؤول</div>
+              <div class="meta-items"><div class="meta-item">وكيل الشؤون التعليمية</div></div>
+            </div>
+          </div>
+          <div class="eval-scale">
+            <div class="eval-level low"><div class="eval-level-name">منخفضة</div><div class="eval-value">2 فأقل</div></div>
+            <div class="eval-level medium"><div class="eval-level-name">متوسطة</div><div class="eval-value">3-4 شواهد</div></div>
+            <div class="eval-level high"><div class="eval-level-name">مرتفعة</div><div class="eval-value">5 شواهد</div></div>
+            <div class="eval-level very-high"><div class="eval-level-name">مرتفعة جداً</div><div class="eval-value">6 فأكثر</div></div>
+          </div>
+          <div class="evidence-box">
+            <div class="evidence-title">✅ الشواهد المتوقعة</div>
+            <div class="evidence-list">
+              <div class="evidence-chip" onclick="toggleChip(this)">استراتيجيات تدريس متنوعة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تراعي الفروق الفردية</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">توظيف التعلم التعاوني</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">التعلم النشط</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">التغذية الراجعة المنتظمة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تحفيز المتعلمين</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Para 42 -->
+        <div class="para-card">
+          <div class="para-num-title">
+            <div class="para-badge">الفقرة 42</div>
+            <div class="para-title">تدعم المدرسة المتعلمين في تطوير مهارات التفكير العليا والإبداع</div>
+          </div>
+          <div class="meta-row">
+            <div class="meta-box">
+              <div class="meta-label">📋 الوثائق المطلوبة</div>
+              <div class="meta-items"><div class="meta-item">سجل المشاريع والمبادرات الإبداعية</div></div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">👤 المصدر / المسؤول</div>
+              <div class="meta-items"><div class="meta-item">وكيل الشؤون التعليمية</div></div>
+            </div>
+          </div>
+          <div class="eval-scale">
+            <div class="eval-level low"><div class="eval-level-name">منخفضة</div><div class="eval-value">2 فأقل</div></div>
+            <div class="eval-level medium"><div class="eval-level-name">متوسطة</div><div class="eval-value">3-4 شواهد</div></div>
+            <div class="eval-level high"><div class="eval-level-name">مرتفعة</div><div class="eval-value">5 شواهد</div></div>
+            <div class="eval-level very-high"><div class="eval-level-name">مرتفعة جداً</div><div class="eval-value">6 فأكثر</div></div>
+          </div>
+          <div class="evidence-box">
+            <div class="evidence-title">✅ الشواهد المتوقعة</div>
+            <div class="evidence-list">
+              <div class="evidence-chip" onclick="toggleChip(this)">برامج تعزيز التفكير الإبداعي</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">مسابقات ومشاريع إبداعية</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">نوادٍ علمية وتقنية</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تحديات التفكير النقدي</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">مشاركة في المسابقات الخارجية</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Para 43 -->
+        <div class="para-card">
+          <div class="para-num-title">
+            <div class="para-badge">الفقرة 43</div>
+            <div class="para-title">تدعم المدرسة استخدام التقنية في التعليم والتعلم بفاعلية</div>
+          </div>
+          <div class="meta-row">
+            <div class="meta-box">
+              <div class="meta-label">📋 الوثائق المطلوبة</div>
+              <div class="meta-items"><div class="meta-item">سجل توظيف التقنية في التعليم</div></div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">👤 المصدر / المسؤول</div>
+              <div class="meta-items"><div class="meta-item">وكيل الشؤون التعليمية</div></div>
+            </div>
+          </div>
+          <div class="eval-scale">
+            <div class="eval-level low"><div class="eval-level-name">منخفضة</div><div class="eval-value">2 فأقل</div></div>
+            <div class="eval-level medium"><div class="eval-level-name">متوسطة</div><div class="eval-value">3-4 شواهد</div></div>
+            <div class="eval-level high"><div class="eval-level-name">مرتفعة</div><div class="eval-value">5 شواهد</div></div>
+            <div class="eval-level very-high"><div class="eval-level-name">مرتفعة جداً</div><div class="eval-value">6 فأكثر</div></div>
+          </div>
+          <div class="evidence-box">
+            <div class="evidence-title">✅ الشواهد المتوقعة</div>
+            <div class="evidence-list">
+              <div class="evidence-chip" onclick="toggleChip(this)">توافر بنية تقنية مناسبة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">توظيف المنصات التعليمية الرقمية</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تدريب المعلمين على التقنية</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">دمج التقنية في خطط الدروس</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">مشاركة المتعلمين في التعلم الرقمي</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- STANDARD: ASSESSMENT OF LEARNING -->
+  <div class="standard-group">
+    <div class="standard-label">
+      📊 معيار تقويم التعلم
+      <span class="standard-count">3 فقرات</span>
+    </div>
+
+    <div class="indicator-group open">
+      <div class="indicator-header" onclick="toggleIndicator(this)">
+        <div class="indicator-num">تقويم التعلم</div>
+        <div class="indicator-text">تستخدم المدرسة أساليب تقويم متنوعة لرصد تقدم المتعلمين وتحسين التعلم</div>
+        <div class="indicator-toggle">▼</div>
+      </div>
+      <div class="paragraphs-container">
+
+        <!-- Para 44 -->
+        <div class="para-card">
+          <div class="para-num-title">
+            <div class="para-badge">الفقرة 44</div>
+            <div class="para-title">تتنوع أساليب التقويم المستخدمة في الفصل الدراسي</div>
+          </div>
+          <div class="meta-row">
+            <div class="meta-box">
+              <div class="meta-label">📋 الوثائق المطلوبة</div>
+              <div class="meta-items">
+                <div class="meta-item">خطط الدروس</div>
+                <div class="meta-item">أدوات التقويم المستخدمة</div>
+              </div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">👤 المصدر / المسؤول</div>
+              <div class="meta-items"><div class="meta-item">وكيل الشؤون التعليمية</div></div>
+            </div>
+          </div>
+          <div class="eval-scale">
+            <div class="eval-level low"><div class="eval-level-name">منخفضة</div><div class="eval-value">2 فأقل</div></div>
+            <div class="eval-level medium"><div class="eval-level-name">متوسطة</div><div class="eval-value">3-4 شواهد</div></div>
+            <div class="eval-level high"><div class="eval-level-name">مرتفعة</div><div class="eval-value">5 شواهد</div></div>
+            <div class="eval-level very-high"><div class="eval-level-name">مرتفعة جداً</div><div class="eval-value">6 فأكثر</div></div>
+          </div>
+          <div class="evidence-box">
+            <div class="evidence-title">✅ الشواهد المتوقعة</div>
+            <div class="evidence-list">
+              <div class="evidence-chip" onclick="toggleChip(this)">اختبارات تحريرية وشفهية</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تقويم أداء عملي</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">ملف إنجاز المتعلم</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">التقييم الذاتي وتقييم الأقران</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">مشاريع ومهام تقويمية</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تقويم التكويني المستمر</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Para 45 -->
+        <div class="para-card">
+          <div class="para-num-title">
+            <div class="para-badge">الفقرة 45</div>
+            <div class="para-title">تستخدم المدرسة نتائج التقويم لتحسين التعلم ورفع مستوى المتعلمين</div>
+          </div>
+          <div class="meta-row">
+            <div class="meta-box">
+              <div class="meta-label">📋 الوثائق المطلوبة</div>
+              <div class="meta-items">
+                <div class="meta-item">سجل رصد الدرجات</div>
+                <div class="meta-item">خطط العلاج والإثراء</div>
+              </div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">👤 المصدر / المسؤول</div>
+              <div class="meta-items"><div class="meta-item">وكيل الشؤون التعليمية</div></div>
+            </div>
+          </div>
+          <div class="eval-scale">
+            <div class="eval-level low"><div class="eval-level-name">منخفضة</div><div class="eval-value">2 فأقل</div></div>
+            <div class="eval-level medium"><div class="eval-level-name">متوسطة</div><div class="eval-value">3-4 شواهد</div></div>
+            <div class="eval-level high"><div class="eval-level-name">مرتفعة</div><div class="eval-value">5 شواهد</div></div>
+            <div class="eval-level very-high"><div class="eval-level-name">مرتفعة جداً</div><div class="eval-value">6 فأكثر</div></div>
+          </div>
+          <div class="evidence-box">
+            <div class="evidence-title">✅ الشواهد المتوقعة</div>
+            <div class="evidence-list">
+              <div class="evidence-chip" onclick="toggleChip(this)">تحليل نتائج التقويم</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">خطط علاجية للمتأخرين</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">برامج إثراء للمتفوقين</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تغذية راجعة للمتعلمين وأولياء الأمور</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">متابعة التحسن بعد العلاج</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Para 46 -->
+        <div class="para-card">
+          <div class="para-num-title">
+            <div class="para-badge">الفقرة 46</div>
+            <div class="para-title">تُشرك المدرسة أولياء الأمور في متابعة تقدم أبنائهم</div>
+          </div>
+          <div class="meta-row">
+            <div class="meta-box">
+              <div class="meta-label">📋 الوثائق المطلوبة</div>
+              <div class="meta-items">
+                <div class="meta-item">سجل التواصل مع أولياء الأمور</div>
+                <div class="meta-item">تقارير المتابعة</div>
+              </div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">👤 المصدر / المسؤول</div>
+              <div class="meta-items">
+                <div class="meta-item">وكيل الشؤون التعليمية</div>
+                <div class="meta-item">وكيل الشؤون الطلابية</div>
+              </div>
+            </div>
+          </div>
+          <div class="eval-scale">
+            <div class="eval-level low"><div class="eval-level-name">منخفضة</div><div class="eval-value">2 فأقل</div></div>
+            <div class="eval-level medium"><div class="eval-level-name">متوسطة</div><div class="eval-value">3-4 شواهد</div></div>
+            <div class="eval-level high"><div class="eval-level-name">مرتفعة</div><div class="eval-value">5 شواهد</div></div>
+            <div class="eval-level very-high"><div class="eval-level-name">مرتفعة جداً</div><div class="eval-value">6 فأكثر</div></div>
+          </div>
+          <div class="evidence-box">
+            <div class="evidence-title">✅ الشواهد المتوقعة</div>
+            <div class="evidence-list">
+              <div class="evidence-chip" onclick="toggleChip(this)">اجتماعات دورية مع أولياء الأمور</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تقارير تقدم منتظمة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">قنوات تواصل متنوعة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">مشاركة ولي الأمر في وضع الخطط العلاجية</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">تفعيل مجلس أولياء الأمور</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Domain 2 Summary -->
+  <div class="domain-summary">
+    <div class="dsummary-header">
+      <span>📊 ملخص تقييم مجال التعليم والتعلم</span>
+      <span class="dsummary-counter" id="dcounter-d2">لم يتم اختيار أي شاهد بعد</span>
+    </div>
+    <div class="dsummary-body" id="dbody-d2">
+      <div class="dsummary-empty">ابدأ باختيار الشواهد للاطلاع على ملخص التقييم التلقائي</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DOMAIN 3: LEARNING OUTCOMES ===== -->
+<div id="d3" class="domain-section">
+  <div class="domain-header">
+    <div class="domain-icon" style="background:#fef9e7;">🎯</div>
+    <div>
+      <div class="domain-title">مجال نواتج التعلم</div>
+      <div class="domain-sub">معياران · 3+ فقرات</div>
+    </div>
+  </div>
+
+  <!-- STANDARD: PERSONAL & SOCIAL DEVELOPMENT -->
+  <div class="standard-group">
+    <div class="standard-label">
+      🌟 معيار التطور الشخصي والصحي والاجتماعي
+      <span class="standard-count">3 فقرات</span>
+    </div>
+
+    <div class="indicator-group open">
+      <div class="indicator-header" onclick="toggleIndicator(this)">
+        <div class="indicator-num">4-1-2-3</div>
+        <div class="indicator-text">يشارك المتعلمون في الأنشطة المجتمعية والأعمال التطوعية</div>
+        <div class="indicator-toggle">▼</div>
+      </div>
+      <div class="paragraphs-container">
+
+        <!-- Para 47 -->
+        <div class="para-card">
+          <div class="para-num-title">
+            <div class="para-badge">الفقرة 47</div>
+            <div class="para-title">يشارك المتعلمون أعمالاً تطوعية تخدم المجتمع</div>
+          </div>
+          <div class="meta-row">
+            <div class="meta-box">
+              <div class="meta-label">📋 الوثائق المطلوبة</div>
+              <div class="meta-items">
+                <div class="meta-item">سجل العمل التطوعي</div>
+                <div class="meta-item">سجل التوجيه والإرشاد</div>
+              </div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">👤 المصدر / المسؤول</div>
+              <div class="meta-items">
+                <div class="meta-item">وكيل الشؤون الطلابية</div>
+                <div class="meta-item">الموجه الطلابي</div>
+              </div>
+            </div>
+          </div>
+          <div class="eval-scale">
+            <div class="eval-level low"><div class="eval-level-name">منخفضة</div><div class="eval-value">2 فأقل</div></div>
+            <div class="eval-level medium"><div class="eval-level-name">متوسطة</div><div class="eval-value">3-4 شواهد</div></div>
+            <div class="eval-level high"><div class="eval-level-name">مرتفعة</div><div class="eval-value">5 شواهد</div></div>
+            <div class="eval-level very-high"><div class="eval-level-name">مرتفعة جداً</div><div class="eval-value">6 فأكثر</div></div>
+          </div>
+          <div class="evidence-box">
+            <div class="evidence-title">✅ الشواهد المتوقعة — انقر لتحديد ما هو متوفر</div>
+            <div class="evidence-list">
+              <div class="evidence-chip" onclick="toggleChip(this)">توافر برامج وأنشطة تحفيزية للمشاركة في الأعمال التطوعية</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">البرامج والأنشطة متنوعة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">المشاركة في الأعمال التطوعية داخل المدرسة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">المشاركة في الأعمال التطوعية في المجتمع المحلي</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">الأعمال التطوعية متنوعة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">المشاركة في التوعية بالأعمال التطوعية التي تهدف إلى خدمة المجتمع</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="indicator-group">
+      <div class="indicator-header" onclick="toggleIndicator(this)">
+        <div class="indicator-num">5-1-2-3</div>
+        <div class="indicator-text">يلتزم المتعلمون بقواعد السلوك والانضباط المدرسي</div>
+        <div class="indicator-toggle">▼</div>
+      </div>
+      <div class="paragraphs-container">
+
+        <!-- Para 48 & 49 -->
+        <div class="para-card">
+          <div class="para-num-title">
+            <div class="para-badge">الفقرة 48 & 49</div>
+            <div class="para-title">نسبة الملتزمين بقواعد السلوك | نسبة المنتظمين في الحضور</div>
+          </div>
+          <div class="meta-row">
+            <div class="meta-box">
+              <div class="meta-label">📋 الوثائق المطلوبة</div>
+              <div class="meta-items">
+                <div class="meta-item">سجل المخالفات السلوكية</div>
+                <div class="meta-item">سجل التوجيه والإرشاد</div>
+                <div class="meta-item">سجل الانضباط المدرسي</div>
+                <div class="meta-item">سجل التوجيه والإرشاد (التكريم)</div>
+              </div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">👤 المصدر / المسؤول</div>
+              <div class="meta-items">
+                <div class="meta-item">وكيل الشؤون الطلابية</div>
+                <div class="meta-item">الموجه الطلابي</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-bottom:16px;">
+            <div style="font-size:0.85rem;font-weight:700;color:var(--primary);margin-bottom:10px;">📏 مقياس الفقرة 48 - نسبة التزام المتعلمين بقواعد السلوك:</div>
+            <table class="pct-table">
+              <tr class="pct-row-low"><th>منخفضة</th><td>أقل من 50%</td></tr>
+              <tr class="pct-row-med"><th>متوسطة</th><td>ما بين 50% - أقل من 75%</td></tr>
+              <tr class="pct-row-high"><th>مرتفعة</th><td>ما بين 75% - أقل من 90%</td></tr>
+              <tr class="pct-row-vhigh"><th>مرتفعة جداً</th><td>90% فأعلى</td></tr>
+            </table>
+          </div>
+
+          <div>
+            <div style="font-size:0.85rem;font-weight:700;color:var(--primary);margin-bottom:10px;">📏 مقياس الفقرة 49 - نسبة المتعلمين المنتظمين في الحضور:</div>
+            <table class="pct-table">
+              <tr class="pct-row-low"><th>منخفضة</th><td>أقل من 50%</td></tr>
+              <tr class="pct-row-med"><th>متوسطة</th><td>ما بين 50% - أقل من 75%</td></tr>
+              <tr class="pct-row-high"><th>مرتفعة</th><td>ما بين 75% - أقل من 90%</td></tr>
+              <tr class="pct-row-vhigh"><th>مرتفعة جداً</th><td>90% فأعلى</td></tr>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Domain 3 Summary -->
+  <div class="domain-summary">
+    <div class="dsummary-header">
+      <span>📊 ملخص تقييم مجال نواتج التعلم</span>
+      <span class="dsummary-counter" id="dcounter-d3">لم يتم اختيار أي شاهد بعد</span>
+    </div>
+    <div class="dsummary-body" id="dbody-d3">
+      <div class="dsummary-empty">ابدأ باختيار الشواهد للاطلاع على ملخص التقييم التلقائي</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DOMAIN 4: SCHOOL ENVIRONMENT ===== -->
+<div id="d4" class="domain-section">
+  <div class="domain-header">
+    <div class="domain-icon" style="background:#fdedec;">🛡️</div>
+    <div>
+      <div class="domain-title">مجال البيئة المدرسية</div>
+      <div class="domain-sub">معيار الأمن والسلامة · 3 فقرات</div>
+    </div>
+  </div>
+
+  <div class="standard-group">
+    <div class="standard-label">
+      🔒 معيار الأمن والسلامة
+      <span class="standard-count">3 فقرات</span>
+    </div>
+
+    <div class="indicator-group open">
+      <div class="indicator-header" onclick="toggleIndicator(this)">
+        <div class="indicator-num">1-1-2-4</div>
+        <div class="indicator-text">تتوافر في فصول المدرسة ومعاملها وجميع مرافقها متطلبات الأمن والسلامة</div>
+        <div class="indicator-toggle">▼</div>
+      </div>
+      <div class="paragraphs-container">
+
+        <!-- Para 50 -->
+        <div class="para-card">
+          <div class="para-num-title">
+            <div class="para-badge">الفقرة 50</div>
+            <div class="para-title">يوجد لدى المدرسة شهادة الأمن والسلامة من الدفاع المدني سارية العمل بها</div>
+          </div>
+          <div class="meta-row">
+            <div class="meta-box">
+              <div class="meta-label">📋 الوثائق المطلوبة</div>
+              <div class="meta-items">
+                <div class="meta-item">ملف لجنة الأمن والسلامة</div>
+                <div class="meta-item">شهادة الأمن والسلامة من الدفاع المدني (سارية)</div>
+              </div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">👤 المصدر / المسؤول</div>
+              <div class="meta-items"><div class="meta-item">وكيل الشؤون المدرسية</div></div>
+            </div>
+          </div>
+          <div class="eval-scale">
+            <div class="eval-level low"><div class="eval-level-name">منخفضة</div><div class="eval-value">2 فأقل</div></div>
+            <div class="eval-level medium"><div class="eval-level-name">متوسطة</div><div class="eval-value">3-4 شواهد</div></div>
+            <div class="eval-level high"><div class="eval-level-name">مرتفعة</div><div class="eval-value">5 شواهد</div></div>
+            <div class="eval-level very-high"><div class="eval-level-name">مرتفعة جداً</div><div class="eval-value">6 فأكثر</div></div>
+          </div>
+          <div class="evidence-box">
+            <div class="evidence-title">✅ الشواهد المتوقعة — انقر لتحديد ما هو متوفر</div>
+            <div class="evidence-list">
+              <div class="evidence-chip" onclick="toggleChip(this)">توافر شهادة الأمن والسلامة من الدفاع المدني</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">سارية العمل بها</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">توافر برامج تعزز ثقافة الأمن والسلامة والتوعية بالمخاطر</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">البرامج متنوعة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">توافر الخطط الوقائية وخطط الطوارئ</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">توافر معلومات حول الاختبارات والتدريبات التي يعقدها العاملون</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">توافر تقارير الزيارات الدورية من خبراء الأمن والسلامة</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Para 51 -->
+        <div class="para-card">
+          <div class="para-num-title">
+            <div class="para-badge">الفقرة 51</div>
+            <div class="para-title">الشهادات الصحية للعاملين سارية المفعول</div>
+          </div>
+          <div class="meta-row">
+            <div class="meta-box">
+              <div class="meta-label">📋 الوثائق المطلوبة</div>
+              <div class="meta-items"><div class="meta-item">سجل الموجه الصحي</div></div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">👤 المصدر / المسؤول</div>
+              <div class="meta-items"><div class="meta-item">وكيل الشؤون المدرسية</div></div>
+            </div>
+          </div>
+          <div class="eval-scale">
+            <div class="eval-level low"><div class="eval-level-name">منخفضة</div><div class="eval-value">2 فأقل</div></div>
+            <div class="eval-level medium"><div class="eval-level-name">متوسطة</div><div class="eval-value">3-4 شواهد</div></div>
+            <div class="eval-level high"><div class="eval-level-name">مرتفعة</div><div class="eval-value">5 شواهد</div></div>
+            <div class="eval-level very-high"><div class="eval-level-name">مرتفعة جداً</div><div class="eval-value">6 فأكثر</div></div>
+          </div>
+          <div class="evidence-box">
+            <div class="evidence-title">✅ الشواهد المتوقعة — انقر لتحديد ما هو متوفر</div>
+            <div class="evidence-list">
+              <div class="evidence-chip" onclick="toggleChip(this)">توفير الشهادات الصحية للعاملين في المقصف المدرسي</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">سارية العمل بها</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">توافر إجراءات التأكد من سلامة العاملين وحماية المتعلمين من الأمراض المعدية</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">توافر نتائج الفحوصات الصحية التي يُجرى إجراؤها للعاملين بانتظام</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">توافر سجل التطعيمات الصادرة من الجهات المختصة لكل عامل</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">توافر تقارير صادرة من الجهات الصحية الرسمية بشأن العاملين</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="indicator-group">
+      <div class="indicator-header" onclick="toggleIndicator(this)">
+        <div class="indicator-num">2-1-2-4</div>
+        <div class="indicator-text">تعمل المدرسة على صيانة جميع مرافق المبنى وتجهيزاته بانتظام</div>
+        <div class="indicator-toggle">▼</div>
+      </div>
+      <div class="paragraphs-container">
+
+        <!-- Para 52 -->
+        <div class="para-card">
+          <div class="para-num-title">
+            <div class="para-badge">الفقرة 52</div>
+            <div class="para-title">تتوافر خطط لأعمال الصيانة الوقائية والعلاجية بانتظام</div>
+          </div>
+          <div class="meta-row">
+            <div class="meta-box">
+              <div class="meta-label">📋 الوثائق المطلوبة</div>
+              <div class="meta-items"><div class="meta-item">سجل الصيانة</div></div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">👤 المصدر / المسؤول</div>
+              <div class="meta-items"><div class="meta-item">وكيل الشؤون المدرسية</div></div>
+            </div>
+          </div>
+          <div class="eval-scale">
+            <div class="eval-level low"><div class="eval-level-name">منخفضة</div><div class="eval-value">2 فأقل</div></div>
+            <div class="eval-level medium"><div class="eval-level-name">متوسطة</div><div class="eval-value">3-4 شواهد</div></div>
+            <div class="eval-level high"><div class="eval-level-name">مرتفعة</div><div class="eval-value">5 شواهد</div></div>
+            <div class="eval-level very-high"><div class="eval-level-name">مرتفعة جداً</div><div class="eval-value">6 فأكثر</div></div>
+          </div>
+          <div class="evidence-box">
+            <div class="evidence-title">✅ الشواهد المتوقعة — انقر لتحديد ما هو متوفر</div>
+            <div class="evidence-list">
+              <div class="evidence-chip" onclick="toggleChip(this)">يوجد خطة لأعمال الصيانة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">الخطة شاملة تغطي جميع المرافق والتجهيزات في المدرسة</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">توافر الإجراءات اللازمة للصيانة والعلاج الدوري للمرافق والمعدات</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">توافر معلومات حول الفحوصات الدورية التي تُجرى على المرافق والمعدات</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">توافر إجراءات الحفاظ على سلامة المرافق والمعدات وتحسين الظروف الصحية</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">توافر معلومات حول الصيانة والإصلاحات اللازمة للمرافق الوقائية</div>
+              <div class="evidence-chip" onclick="toggleChip(this)">يوجد تقييم شامل للصحة والسلامة داخل المدرسة وتحقيق الرفاه للمتعلمين</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Domain 4 Summary -->
+  <div class="domain-summary">
+    <div class="dsummary-header">
+      <span>📊 ملخص تقييم مجال البيئة المدرسية</span>
+      <span class="dsummary-counter" id="dcounter-d4">لم يتم اختيار أي شاهد بعد</span>
+    </div>
+    <div class="dsummary-body" id="dbody-d4">
+      <div class="dsummary-empty">ابدأ باختيار الشواهد للاطلاع على ملخص التقييم التلقائي</div>
+    </div>
+  </div>
+
+</div>
+
+</div><!-- end main-content -->
+
+<!-- SETTINGS FOOTER -->
+<div class="settings-footer">
+  <div class="settings-title">⚙️ إعدادات ومعلومات</div>
+  <div class="designer-credit">
+    <span style="font-size:1.2rem;">✨</span>
+    <span class="designer-name">تصميم د/ فواز</span>
+    <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" class="designer-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.018 9.509c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L6.32 14.848l-2.97-.924c-.645-.204-.657-.645.136-.953l11.57-4.461c.537-.194 1.006.131.506.738z"/></svg>
+      تفضل للمزيد هنا
+    </a>
+  </div>
+  <div class="copyright">الدليل الاسترشادي لأخصائي التقويم المدرسي · أداة تحليل الوثائق · جميع الحقوق محفوظة</div>
+</div>
+
+<script>
+function showDomain(id) {
+  document.querySelectorAll('.domain-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function toggleIndicator(header) {
+  const group = header.parentElement;
+  group.classList.toggle('open');
+}
+
+function getLevel(count) {
+  if (count <= 0) return { label: 'لم يُحدد بعد', cls: 'level-none', score: 0 };
+  if (count <= 2) return { label: 'منخفضة',       cls: 'level-low',  score: 1 };
+  if (count <= 4) return { label: 'متوسطة',        cls: 'level-med',  score: 2 };
+  if (count === 5) return { label: 'مرتفعة',       cls: 'level-high', score: 3 };
+  return              { label: 'مرتفعة جداً',     cls: 'level-vhigh',score: 4 };
+}
+
+function progressColor(score) {
+  return ['#ccc','#e74c3c','#f39c12','#2980b9','#27ae60'][score] || '#ccc';
+}
+
+function updateDomainSummary(domainId) {
+  const domain  = document.getElementById(domainId);
+  const bodyEl  = document.getElementById('dbody-' + domainId);
+  const ctrEl   = document.getElementById('dcounter-' + domainId);
+  if (!domain || !bodyEl) return;
+
+  const paraCards = domain.querySelectorAll('.para-card');
+  let rows = [], totalChecked = 0, totalChips = 0, totalScore = 0, scoredParas = 0;
+
+  paraCards.forEach(card => {
+    const evList = card.querySelector('.evidence-list');
+    if (!evList) return;
+    const badgeEl = card.querySelector('.para-badge');
+    const titleEl = card.querySelector('.para-title');
+    const paraName  = badgeEl ? badgeEl.textContent.trim() : '';
+    const paraTitle = titleEl ? titleEl.textContent.trim() : '';
+    const chips   = evList.querySelectorAll('.evidence-chip');
+    const checked = evList.querySelectorAll('.evidence-chip.checked').length;
+    const total   = chips.length;
+    totalChecked += checked; totalChips += total;
+    const level = getLevel(checked);
+    const pct   = total > 0 ? (checked / total) * 100 : 0;
+    if (checked > 0) { totalScore += level.score; scoredParas++; }
+    rows.push({ paraName, paraTitle, checked, total, level, pct, isComplete: checked === total && total > 0 });
+  });
+
+  if (ctrEl) {
+    ctrEl.textContent = totalChips === 0
+      ? 'لم يتم اختيار أي شاهد بعد'
+      : totalChecked + ' / ' + totalChips + ' شاهد محدد';
+  }
+
+  if (totalChecked === 0) {
+    bodyEl.innerHTML = '<div class="dsummary-empty">ابدأ باختيار الشواهد للاطلاع على ملخص التقييم التلقائي</div>';
+    return;
+  }
+
+  let html = '<table class="dsummary-table"><thead><tr><th>الفقرة</th><th style="text-align:center">المحددة</th><th style="text-align:center">مستوى الأداء</th><th>التقدم</th></tr></thead><tbody>';
+  rows.forEach(r => {
+    if (r.total === 0) return;
+    const trCls = r.isComplete ? ' class="row-complete"' : '';
+    const mark  = r.isComplete ? ' ✅' : '';
+    const short = r.paraTitle.length > 52 ? r.paraTitle.substring(0, 52) + '…' : r.paraTitle;
+    html += '<tr' + trCls + '>'
+      + '<td><strong>' + r.paraName + '</strong><br><small style="color:#5a7fa0;">' + short + '</small></td>'
+      + '<td style="text-align:center;font-weight:700;">' + r.checked + ' / ' + r.total + mark + '</td>'
+      + '<td style="text-align:center;"><span class="dsummary-level-badge ' + r.level.cls + '">' + r.level.label + '</span></td>'
+      + '<td style="min-width:80px;">'
+        + '<div class="dsummary-progress"><div class="dsummary-progress-bar" style="width:' + r.pct.toFixed(0) + '%;background:' + progressColor(r.level.score) + ';"></div></div>'
+        + '<div style="font-size:0.72rem;color:#777;text-align:center;margin-top:2px;">' + r.pct.toFixed(0) + '%</div>'
+      + '</td></tr>';
+  });
+  html += '</tbody></table>';
+
+  if (scoredParas > 0) {
+    const avg = totalScore / scoredParas;
+    let lbl, clr, bg, brd;
+    if (avg >= 3.5) { lbl='مرتفعة جداً 🏆'; clr='#1e8449'; bg='#eafaf1'; brd='#27ae60'; }
+    else if (avg >= 2.5) { lbl='مرتفعة ⭐';    clr='#1a6fa8'; bg='#eaf4fb'; brd='#2980b9'; }
+    else if (avg >= 1.5) { lbl='متوسطة 👍';   clr='#d68910'; bg='#fef9e7'; brd='#f39c12'; }
+    else                 { lbl='منخفضة 🔄';   clr='#c0392b'; bg='#fdecea'; brd='#e74c3c'; }
+    const allDone = rows.filter(r=>r.total>0).every(r=>r.isComplete);
+    html += '<div class="dsummary-overall" style="background:'+bg+';color:'+clr+';border:2px solid '+brd+';">'
+      + 'التقدير الإجمالي للمجال: <span style="font-size:1.1rem;">' + lbl + '</span>'
+      + (allDone ? '<br><span style="font-size:0.82rem;opacity:0.85;">✅ اكتملت جميع الشواهد في هذا المجال</span>' : '')
+      + '</div>';
+  }
+  bodyEl.innerHTML = html;
+}
+
+function toggleChip(chip) {
+  chip.classList.toggle('checked');
+  const domain = chip.closest('.domain-section');
+  if (domain) updateDomainSummary(domain.id);
+}
+
+function calcScore() {
+  const vhigh = parseInt(document.getElementById('vhigh').value) || 0;
+  const high = parseInt(document.getElementById('high').value) || 0;
+  const med = parseInt(document.getElementById('med').value) || 0;
+  const low = parseInt(document.getElementById('low').value) || 0;
+  const total = vhigh + high + med + low;
+  if (total === 0) {
+    alert('الرجاء إدخال البيانات أولاً');
+    return;
+  }
+  const score = ((vhigh * 4 + high * 3 + med * 2 + low * 1) / (total * 4)) * 100;
+  const result = document.getElementById('calcResult');
+  result.style.display = 'block';
+  let grade, color, bg;
+  if (score >= 85) { grade = 'ممتاز 🏆'; color = '#1e8449'; bg = '#eafaf1'; }
+  else if (score >= 70) { grade = 'جيد جداً ⭐'; color = '#1a6fa8'; bg = '#eaf4fb'; }
+  else if (score >= 55) { grade = 'جيد 👍'; color = '#d68910'; bg = '#fef9e7'; }
+  else { grade = 'يحتاج تحسين 🔄'; color = '#c0392b'; bg = '#fdecea'; }
+  result.style.background = bg;
+  result.style.color = color;
+  result.style.border = '2px solid ' + color;
+  result.innerHTML = `التقدير العام: <span style="font-size:1.3rem;">${grade}</span><br><span style="font-size:0.9rem;opacity:0.8;">النسبة: ${score.toFixed(1)}% · إجمالي الفقرات: ${total}</span>`;
+}
+</script>
+
+</body>
+</html>
