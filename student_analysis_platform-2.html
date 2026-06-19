@@ -623,9 +623,9 @@ body {
     <!-- الرسوم البيانية -->
     <div class="sec-label" style="margin-top:20px">📈 الرسوم البيانية</div>
     <div class="charts-grid">
-      <div class="chart-card"><h4>توزيع التقديرات (قطبي)</h4><canvas id="polarChart"></canvas></div>
-      <div class="chart-card"><h4>نسبة النجاح والرسوب</h4><canvas id="doughnutChart"></canvas></div>
-      <div class="chart-card"><h4>توزيع التقديرات (أعمدة)</h4><canvas id="barChart"></canvas></div>
+      <div class="chart-card"><h4>توزيع التقديرات (قطبي)</h4><div id="wrap-polar" style="position:relative;height:210px"><canvas id="polarChart"></canvas></div></div>
+      <div class="chart-card"><h4>نسبة النجاح والرسوب</h4><div id="wrap-doughnut" style="position:relative;height:210px"><canvas id="doughnutChart"></canvas></div></div>
+      <div class="chart-card"><h4>توزيع التقديرات (أعمدة)</h4><div id="wrap-bar" style="position:relative;height:210px"><canvas id="barChart"></canvas></div></div>
     </div>
 
     <!-- تحليل التضخم في الدرجات -->
@@ -642,8 +642,8 @@ body {
 
     <!-- منحنى التوزيع -->
     <div class="chart-card" style="margin-bottom:22px">
-      <h4>📉 منحنى توزيع الدرجات (مقارنة بالمتوسط)</h4>
-      <canvas id="distChart" style="max-height:220px"></canvas>
+      <h4>📉 منحنى توزيع الدرجات</h4>
+      <div id="wrap-dist" style="position:relative;height:220px"><canvas id="distChart"></canvas></div>
     </div>
 
     <!-- تفصيل التقديرات -->
@@ -1184,7 +1184,28 @@ function buildDetailTable(students,total,pass){
     </table>`;
 }
 
-function destroyCharts(){ for(let k in charts){if(charts[k]){charts[k].destroy();delete charts[k];}} }
+function destroyCharts(){
+  const canvases = {
+    'polarChart':   'wrap-polar',
+    'doughnutChart':'wrap-doughnut',
+    'barChart':     'wrap-bar',
+    'distChart':    'wrap-dist'
+  };
+  for(let k in charts){
+    if(charts[k]){ charts[k].destroy(); delete charts[k]; }
+  }
+  // إعادة إنشاء عناصر canvas نظيفة
+  for(let [id, wrapId] of Object.entries(canvases)){
+    const wrap = document.getElementById(wrapId);
+    if(wrap){
+      const old = document.getElementById(id);
+      if(old) old.remove();
+      const c = document.createElement('canvas');
+      c.id = id;
+      wrap.appendChild(c);
+    }
+  }
+}
 
 // ─── DOWNLOAD ───
 function downloadReport(type){
