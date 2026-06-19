@@ -241,16 +241,13 @@ body {
 }
 .student-row input:focus { outline: none; border-color: var(--primary); }
 
-.grade-badge {
-  display: inline-block; padding: 3px 9px; border-radius: 20px;
-  font-size: .78rem; font-weight: 700; text-align: center; width: 100%;
-}
-.grade-badge.ممتاز    { background: var(--emerald-lt); color: #065f46; }
-.grade-badge.جيد-جدا  { background: var(--primary-bg); color: var(--primary); }
-.grade-badge.جيد       { background: var(--violet-lt);  color: var(--violet); }
-.grade-badge.مقبول    { background: var(--amber-lt);   color: var(--amber); }
-.grade-badge.راسب     { background: var(--red-lt);     color: var(--red); }
-.grade-badge.\-\-      { background: var(--gray-100);   color: var(--gray-500); }
+.grade-badge { display: inline-block; padding: 3px 9px; border-radius: 20px; font-size: .78rem; font-weight: 700; text-align: center; width: 100%; }
+.grade-badge[data-g="ممتاز"]  { background: var(--emerald-lt); color: #065f46; }
+.grade-badge[data-g="جيد جداً"] { background: var(--primary-bg); color: var(--primary); }
+.grade-badge[data-g="جيد"]    { background: var(--violet-lt);  color: var(--violet); }
+.grade-badge[data-g="مقبول"]  { background: var(--amber-lt);   color: var(--amber); }
+.grade-badge[data-g="راسب"]   { background: var(--red-lt);     color: var(--red); }
+.grade-badge[data-g="--"]     { background: var(--gray-100);   color: var(--gray-500); }
 
 .btn-del {
   background: var(--red-lt); color: var(--red); border: none; border-radius: 6px;
@@ -413,8 +410,26 @@ body {
   .tbl-head, .student-row { grid-template-columns: 36px 1fr 110px 95px 40px; }
 }
 
+/* ── PRINT FOOTER ── */
+.print-footer {
+  display: none;
+  text-align: center;
+  margin-top: 28px;
+  padding: 14px;
+  border-top: 2px solid var(--border);
+  font-size: .9rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+.print-footer a { color: var(--primary); text-decoration: none; }
+
 @media print {
-  .bottom-nav, .btn-act, .btn-main, .tbl-actions, .dc-btns, .download-section { display: none !important; }
+  .bottom-nav, .btn-act, .btn-main, .tbl-actions, .dc-btns, .download-section,
+  .btn-sm, #navBtns { display: none !important; }
+  .credit { display: none !important; }
+  .print-footer { display: block !important; }
+  body { background: #fff !important; }
+  .screen { padding: 10px !important; }
 }
 </style>
 </head>
@@ -476,7 +491,7 @@ body {
       <p>أدخل الدرجات فقط — ملخص إحصائي فوري</p>
     </div>
   </div>
-  <div class="credit">تصميم د/فواز | https://t.me/TAqhjT3MFVE1Yzk0</div>
+  <div class="credit">تصميم د/فواز &nbsp;|&nbsp; تفضل للمزيد هنا &nbsp;<a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" style="color:var(--primary);font-weight:700;text-decoration:none">https://t.me/TAqhjT3MFVE1Yzk0</a></div>
 </div>
 
 <!-- ══════════════ SCREEN 2 : عدد الفصول ══════════════ -->
@@ -503,7 +518,7 @@ body {
     </div>
   </div>
   <div class="bottom-nav" onclick="goToScreen(1)">← العودة لاختيار نوع التقرير</div>
-  <div class="credit">تصميم د/فواز</div>
+  <div class="credit">تصميم د/فواز &nbsp;|&nbsp; تفضل للمزيد هنا &nbsp;<a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" style="color:var(--primary);font-weight:700;text-decoration:none">https://t.me/TAqhjT3MFVE1Yzk0</a></div>
 </div>
 
 <!-- ══════════════ SCREEN 3 : طريقة الإدخال ══════════════ -->
@@ -530,7 +545,7 @@ body {
     </div>
   </div>
   <div class="bottom-nav" onclick="goToScreen(2)">← العودة لاختيار عدد الفصول</div>
-  <div class="credit">تصميم د/فواز</div>
+  <div class="credit">تصميم د/فواز &nbsp;|&nbsp; تفضل للمزيد هنا &nbsp;<a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" style="color:var(--primary);font-weight:700;text-decoration:none">https://t.me/TAqhjT3MFVE1Yzk0</a></div>
 </div>
 
 <!-- ══════════════ SCREEN 4 : رفع الملفات ══════════════ -->
@@ -551,7 +566,7 @@ body {
     <button class="btn-main muted" id="btnExtract" onclick="extractFromFiles()">⬆ استخراج البيانات</button>
   </div>
   <div class="bottom-nav" onclick="goToScreen(3)">← العودة لاختيار طريقة الإدخال</div>
-  <div class="credit">تصميم د/فواز</div>
+  <div class="credit">تصميم د/فواز &nbsp;|&nbsp; تفضل للمزيد هنا &nbsp;<a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" style="color:var(--primary);font-weight:700;text-decoration:none">https://t.me/TAqhjT3MFVE1Yzk0</a></div>
 </div>
 
 <!-- ══════════════ SCREEN 5 : مراجعة البيانات ══════════════ -->
@@ -589,7 +604,7 @@ body {
       <button class="btn-main muted" onclick="goToScreen(3)">العودة</button>
     </div>
   </div>
-  <div class="credit">تصميم د/فواز</div>
+  <div class="credit">تصميم د/فواز &nbsp;|&nbsp; تفضل للمزيد هنا &nbsp;<a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" style="color:var(--primary);font-weight:700;text-decoration:none">https://t.me/TAqhjT3MFVE1Yzk0</a></div>
 </div>
 
 <!-- ══════════════ SCREEN 6 : التحليل ══════════════ -->
@@ -658,12 +673,19 @@ body {
     <div class="sec-label">👥 بيانات الطلاب التفصيلية</div>
     <div class="detail-table" id="detailTable"></div>
 
-    <div style="display:flex;gap:12px;margin-top:14px">
+    <div id="navBtns" style="display:flex;gap:12px;margin-top:14px">
       <button class="btn-sm gray"    onclick="goToScreen(5)" style="flex:1;padding:14px;font-size:.95rem">← العودة للبيانات</button>
       <button class="btn-sm primary" onclick="window.print()" style="flex:1;padding:14px;font-size:.95rem">🖨 طباعة</button>
     </div>
+
+    <!-- يظهر فقط عند الطباعة -->
+    <div class="print-footer">
+      تصميم د/فواز &nbsp;|&nbsp; تفضل للمزيد هنا &nbsp;
+      <a href="https://t.me/TAqhjT3MFVE1Yzk0">https://t.me/TAqhjT3MFVE1Yzk0</a>
+    </div>
+
   </div>
-  <div class="credit">تصميم د/فواز | https://t.me/TAqhjT3MFVE1Yzk0</div>
+  <div class="credit">تصميم د/فواز &nbsp;|&nbsp; تفضل للمزيد هنا &nbsp;<a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" style="color:var(--primary);font-weight:700;text-decoration:none">https://t.me/TAqhjT3MFVE1Yzk0</a></div>
 </div>
 
 <!-- ══════════════════ JAVASCRIPT ══════════════════ -->
@@ -830,7 +852,7 @@ function renderRow(ci,si,s,total,pass){
     <span style="color:var(--text-sub);font-size:.82rem">${si+1}</span>
     <input type="text"   value="${s.name||''}"   placeholder="اسم الطالب" oninput="updSt(${ci},${si},'name',this.value)">
     <input type="number" value="${s.score!==''?s.score:''}" placeholder="الدرجة" min="0" max="${total}" step="0.5" oninput="updSt(${ci},${si},'score',this.value)">
-    <span class="grade-badge ${g.replace(' ','-')}">${g}</span>
+    <span class="grade-badge" data-g="${g}">${g}</span>
     <button class="btn-del" onclick="delSt(${ci},${si})">🗑</button>
   </div>`;
 }
@@ -838,11 +860,11 @@ function renderRow(ci,si,s,total,pass){
 function updSt(ci,si,f,v){
   if(f==='score') v=v===''?'':parseFloat(v);
   state.classes[ci].students[si][f]=v;
-  const p=parseInt(document.getElementById('passScore')?.value||50);
-  const t=parseInt(document.getElementById('totalScore')?.value||100);
+  const p=parseFloat(document.getElementById('passScore')?.value||50);
+  const t=parseFloat(document.getElementById('totalScore')?.value||100);
   const g=getGrade(state.classes[ci].students[si].score,p,t);
   const b=document.querySelector(`#row_${ci}_${si} .grade-badge`);
-  if(b){b.textContent=g; b.className=`grade-badge ${g.replace(' ','-')}`;}
+  if(b){b.textContent=g; b.setAttribute('data-g',g);}
 }
 function updateClassName(ci,v){ state.classes[ci].label=v; }
 function addStudentToClass(ci){ const n=state.classes[ci].students.length+1; state.classes[ci].students.push({name:`طالب ${n}`,score:''}); renderDataScreen(); }
@@ -852,12 +874,13 @@ function recalculate(){ renderDataScreen(); }
 
 // ─── GRADE HELPERS ───
 function getGrade(score,pass,total){
-  if(score===''||score===null||isNaN(score)) return '--';
-  const p=(score/total)*100;
+  if(score===''||score===null||isNaN(parseFloat(score))) return '--';
+  const s=parseFloat(score);
+  const p=(s/total)*100;
   if(p>=90) return 'ممتاز';
-  if(p>=80) return 'جيد جدا';
+  if(p>=80) return 'جيد جداً';
   if(p>=70) return 'جيد';
-  if(score>=pass) return 'مقبول';
+  if(s>=pass) return 'مقبول';
   return 'راسب';
 }
 
@@ -934,6 +957,19 @@ function inflationDescription(level, skew, cv, passRate, avg, total){
 function goToAnalysis(){
   state.totalScore=parseFloat(document.getElementById('totalScore').value)||100;
   state.passScore=parseFloat(document.getElementById('passScore').value)||50;
+  // sync latest student scores from inputs before building
+  document.querySelectorAll('.student-row').forEach(row=>{
+    const id=row.id.replace('row_','').split('_');
+    if(id.length===2){
+      const ci=parseInt(id[0]), si=parseInt(id[1]);
+      const inp=row.querySelectorAll('input');
+      if(inp[0] && state.classes[ci] && state.classes[ci].students[si]){
+        state.classes[ci].students[si].name=inp[0].value;
+        const sv=inp[1]?parseFloat(inp[1].value):NaN;
+        state.classes[ci].students[si].score=isNaN(sv)?'':sv;
+      }
+    }
+  });
   buildAnalysis(); goToScreen(6);
 }
 
@@ -1141,7 +1177,7 @@ function buildDetailTable(students,total,pass){
           <td style="font-weight:700;text-align:right">${s.name}</td>
           <td style="font-weight:800;color:var(--primary)">${s.score}</td>
           <td>${pct}%</td>
-          <td><span class="grade-badge ${g.replace(' ','-')}" style="width:auto;display:inline-block">${g}</span></td>
+          <td><span class="grade-badge" data-g="${g}" style="width:auto;display:inline-block">${g}</span></td>
           <td style="color:${ok?'#059669':'#DC2626'};font-weight:700">${ok?'✅ ناجح':'❌ راسب'}</td>
         </tr>`;
       }).join('')}</tbody>
