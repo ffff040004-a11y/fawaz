@@ -1,0 +1,1854 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>التقويم الهجري التفاعلي 1448هـ</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  :root {
+    --green-dark: #1B4332;
+    --green-mid: #2D6A4F;
+    --green-light: #52B788;
+    --gold: #D4AF37;
+    --gold-light: #F0D060;
+    --cream: #F7FDF9;
+    --rose: #FFB3C6;
+    --rose-light: #FFF0F3;
+    --bg: #F0FDF4;
+
+    /* ألوان العطل */
+    --hol-school:   #3B82F6; /* بداية العام — أزرق */
+    --hol-national: #10B981; /* اليوم الوطني — أخضر زمردي */
+    --hol-sem1:     #8B5CF6; /* إجازة الفصل الأول — بنفسجي */
+    --hol-mid:      #F59E0B; /* منتصف العام — برتقالي */
+    --hol-found:    #EC4899; /* يوم التأسيس — وردي */
+    --hol-fitr:     #EF4444; /* عيد الفطر — أحمر */
+    --hol-adha:     #06B6D4; /* عيد الأضحى — سماوي */
+  }
+
+  body {
+    font-family: 'Noto Naskh Arabic', 'Noto Sans Arabic', Arial, sans-serif;
+    background: var(--bg);
+    color: #1a2e1a;
+    min-height: 100vh;
+    direction: rtl;
+  }
+
+  /* ===== شريط التمرير ===== */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #e8f5e9; }
+  ::-webkit-scrollbar-thumb { background: var(--green-mid); border-radius: 3px; }
+
+  /* ===== الرأس ===== */
+  header {
+    background: var(--green-dark);
+    color: white;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(27,67,50,0.3);
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cpath d='M20 0 L40 20 L20 40 L0 20 Z' fill='none' stroke='%23D4AF37' stroke-width='0.8' opacity='0.15'/%3E%3Cpath d='M20 8 L32 20 L20 32 L8 20 Z' fill='none' stroke='%23D4AF37' stroke-width='0.5' opacity='0.1'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header-logo {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, var(--gold), #b8941e);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 11px;
+    color: var(--green-dark);
+    box-shadow: 0 2px 8px rgba(212,175,55,0.4);
+    line-height: 1.2;
+    flex-shrink: 0;
+  }
+
+  .header-title h1 {
+    font-size: 18px;
+    font-weight: 900;
+    line-height: 1.2;
+  }
+
+  .header-title p {
+    font-size: 11px;
+    color: var(--gold);
+    margin-top: 2px;
+  }
+
+  .header-btns {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: white;
+    padding: 7px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: inherit;
+    transition: background 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .header-btn:hover { background: rgba(255,255,255,0.18); }
+  .header-btn.active { background: rgba(212,175,55,0.25); color: var(--gold); }
+
+  .apt-count-badge {
+    background: var(--gold);
+    color: var(--green-dark);
+    font-size: 11px;
+    font-weight: 900;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-left: 4px;
+  }
+
+  /* ===== لوحة الإعدادات والعطل ===== */
+  .panel-bar {
+    background: rgba(27,67,50,0.06);
+    border-bottom: 1px solid rgba(27,67,50,0.1);
+    padding: 12px 20px;
+    display: none;
+  }
+  .panel-bar.open { display: block; }
+
+  .panel-bar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .panel-bar-title {
+    font-weight: 700;
+    color: var(--green-dark);
+    font-size: 14px;
+  }
+  .close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: rgba(27,67,50,0.5);
+    font-size: 18px;
+    line-height: 1;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .close-btn:hover { color: var(--green-dark); background: rgba(27,67,50,0.08); }
+
+  .holidays-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+  }
+  .holiday-card {
+    background: white;
+    border: 1px solid #fde68a;
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .holiday-name { font-weight: 700; font-size: 12px; color: #92400e; margin-bottom: 3px; }
+  .holiday-hijri { font-size: 11px; color: #b45309; }
+  .holiday-greg { font-size: 11px; color: #6b7280; }
+
+  .settings-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+  .settings-label { font-size: 13px; color: rgba(27,67,50,0.7); }
+  .toggle-group {
+    display: flex;
+    border: 1px solid rgba(27,67,50,0.2);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .toggle-btn {
+    padding: 6px 14px;
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    background: white;
+    color: var(--green-dark);
+    transition: all 0.15s;
+  }
+  .toggle-btn.active { background: var(--green-dark); color: white; }
+  .toggle-btn:hover:not(.active) { background: rgba(27,67,50,0.05); }
+
+  .settings-footer {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(27,67,50,0.1);
+    text-align: center;
+    font-size: 12px;
+    color: rgba(27,67,50,0.55);
+  }
+  .settings-footer a {
+    color: var(--green-dark);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .settings-footer a:hover { color: var(--gold); }
+
+  /* ===== التخطيط الرئيسي ===== */
+  .main-layout {
+    display: flex;
+    height: calc(100vh - 68px);
+  }
+
+  /* ===== الشريط الجانبي للأشهر ===== */
+  .months-sidebar {
+    width: 150px;
+    flex-shrink: 0;
+    background: white;
+    border-left: 1px solid #e5e7eb;
+    overflow-y: auto;
+    padding: 10px 8px;
+  }
+
+  .sidebar-year {
+    text-align: center;
+    font-size: 9px;
+    font-weight: 700;
+    color: rgba(27,67,50,0.4);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .month-btn {
+    width: 100%;
+    text-align: right;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.15s;
+    margin-bottom: 2px;
+  }
+  .month-btn:hover { background: rgba(27,67,50,0.05); color: var(--green-dark); }
+  .month-btn.active { background: var(--green-dark); color: white; }
+  .month-btn .num {
+    font-size: 9px;
+    font-family: monospace;
+    color: #9ca3af;
+    margin-left: 4px;
+    min-width: 14px;
+  }
+  .month-btn.active .num { color: var(--gold); }
+  .month-apt-badge {
+    font-size: 9px;
+    padding: 1px 5px;
+    border-radius: 10px;
+    font-weight: 700;
+    background: rgba(27,67,50,0.1);
+    color: var(--green-dark);
+  }
+  .month-btn.active .month-apt-badge { background: var(--gold); color: var(--green-dark); }
+
+  .all-months-btn {
+    width: 100%;
+    text-align: right;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s;
+    margin-top: 8px;
+    border-top: 1px solid #f3f4f6;
+    padding-top: 10px;
+  }
+  .all-months-btn:hover { background: #fffbeb; color: #92400e; }
+  .all-months-btn.active { background: var(--gold); color: var(--green-dark); font-weight: 700; }
+
+  /* ===== منطقة التقويم ===== */
+  .calendar-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    min-width: 0;
+  }
+
+  /* ===== رأس الشهر ===== */
+  .month-header {
+    background: var(--green-dark);
+    color: white;
+    border-radius: 16px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(27,67,50,0.25);
+  }
+
+  .month-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cpath d='M20 0 L40 20 L20 40 L0 20 Z' fill='none' stroke='%23D4AF37' stroke-width='0.8' opacity='0.12'/%3E%3Cpath d='M20 8 L32 20 L20 32 L8 20 Z' fill='none' stroke='%23D4AF37' stroke-width='0.5' opacity='0.08'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  .month-nav-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: white;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+  }
+  .month-nav-btn:hover { background: rgba(255,255,255,0.18); transform: scale(1.05); }
+  .month-nav-btn:active { transform: scale(0.93); }
+  .month-nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .month-title-area {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    flex: 1;
+  }
+
+  .month-num-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: rgba(212,175,55,0.15);
+    border: 1px solid rgba(212,175,55,0.4);
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 900;
+    color: var(--gold);
+    margin-left: 10px;
+  }
+
+  .month-name-big {
+    font-size: 30px;
+    font-weight: 900;
+    font-family: 'Noto Naskh Arabic', serif;
+    display: inline;
+  }
+
+  .month-year-label {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    margin-right: 8px;
+  }
+
+  .month-ornament {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: center;
+    margin: 6px 0 4px;
+  }
+  .orn-line { flex: 1; height: 1px; background: rgba(212,175,55,0.3); max-width: 60px; }
+  .orn-diamond {
+    width: 6px; height: 6px;
+    background: rgba(212,175,55,0.7);
+    transform: rotate(45deg);
+    border-radius: 1px;
+  }
+
+  .month-greg-date {
+    font-size: 11px;
+    color: rgba(212,175,55,0.7);
+    letter-spacing: 0.5px;
+  }
+
+  /* ===== خلايا العطل الرسمية ===== */
+  .day-cell.holiday {
+    position: relative;
+  }
+  .day-cell.holiday::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; left: 0;
+    height: 3px;
+    border-radius: 10px 10px 0 0;
+  }
+  .day-cell.holiday .day-hijri { font-weight: 900; }
+  .day-cell.hol-school  { background: #EFF6FF !important; border-color: #BFDBFE !important; }
+  .day-cell.hol-school::before  { background: var(--hol-school); }
+  .day-cell.hol-school .day-hijri  { color: #1D4ED8 !important; }
+  .day-cell.hol-national { background: #ECFDF5 !important; border-color: #A7F3D0 !important; }
+  .day-cell.hol-national::before { background: var(--hol-national); }
+  .day-cell.hol-national .day-hijri { color: #065F46 !important; }
+  .day-cell.hol-sem1    { background: #F5F3FF !important; border-color: #DDD6FE !important; }
+  .day-cell.hol-sem1::before    { background: var(--hol-sem1); }
+  .day-cell.hol-sem1 .day-hijri    { color: #5B21B6 !important; }
+  .day-cell.hol-mid     { background: #FFFBEB !important; border-color: #FDE68A !important; }
+  .day-cell.hol-mid::before     { background: var(--hol-mid); }
+  .day-cell.hol-mid .day-hijri     { color: #92400E !important; }
+  .day-cell.hol-found   { background: #FDF2F8 !important; border-color: #FBCFE8 !important; }
+  .day-cell.hol-found::before   { background: var(--hol-found); }
+  .day-cell.hol-found .day-hijri   { color: #9D174D !important; }
+  .day-cell.hol-fitr    { background: #FEF2F2 !important; border-color: #FECACA !important; }
+  .day-cell.hol-fitr::before    { background: var(--hol-fitr); }
+  .day-cell.hol-fitr .day-hijri    { color: #991B1B !important; }
+  .day-cell.hol-adha    { background: #ECFEFF !important; border-color: #A5F3FC !important; }
+  .day-cell.hol-adha::before    { background: var(--hol-adha); }
+  .day-cell.hol-adha .day-hijri    { color: #155E75 !important; }
+
+  /* مفتاح ألوان العطل */
+  .holiday-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 16px 12px;
+    background: white;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: #374151;
+    font-weight: 600;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    padding: 3px 9px 3px 6px;
+  }
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ===== شبكة التقويم ===== */
+  .calendar-grid-wrap {
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+    border: 1px solid #e5e7eb;
+  }
+
+  .weekdays-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+    margin-bottom: 6px;
+  }
+
+  .weekday-cell {
+    text-align: center;
+    padding: 6px 2px;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 6px;
+  }
+  .weekday-cell.fri { color: #dc2626; background: #fff0f3; }
+  .weekday-cell.sat { color: #e11d48; background: #fff0f3; }
+  .weekday-cell:not(.fri):not(.sat) { color: var(--green-dark); background: rgba(27,67,50,0.04); }
+  .weekday-cell .eng { font-size: 9px; font-weight: 400; opacity: 0.55; display: block; }
+
+  .weeks-container { display: flex; flex-direction: column; gap: 3px; }
+  .week-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+
+  .day-cell {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+    border: 1px solid transparent;
+    background: white;
+    min-height: 48px;
+  }
+  .day-cell:hover {
+    transform: scale(1.06);
+    box-shadow: 0 4px 12px rgba(27,67,50,0.15);
+    z-index: 2;
+  }
+  .day-cell:active { transform: scale(0.95); }
+  .day-cell.empty { cursor: default; background: none; border: none; }
+  .day-cell.empty:hover { transform: none; box-shadow: none; }
+  .day-cell.fri-day { background: #fff0f3; border-color: #fecdd3; }
+  .day-cell.sat-day { background: #fff5f7; border-color: #fecdd3; }
+  .day-cell:not(.fri-day):not(.sat-day):not(.empty) { border-color: #f3f4f6; }
+  .day-cell.has-apt { box-shadow: 0 0 0 2px rgba(212,175,55,0.5); }
+
+  .day-hijri {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .day-cell.fri-day .day-hijri { color: #dc2626; }
+  .day-cell.sat-day .day-hijri { color: #e11d48; }
+  .day-cell:not(.fri-day):not(.sat-day) .day-hijri { color: var(--green-dark); }
+
+  .day-greg {
+    font-size: 10px;
+    line-height: 1;
+    margin-top: 2px;
+  }
+  .day-cell.fri-day .day-greg { color: #fca5a5; }
+  .day-cell.sat-day .day-greg { color: #fca5a5; }
+  .day-cell:not(.fri-day):not(.sat-day) .day-greg { color: #9ca3af; }
+
+  .apt-dots {
+    position: absolute;
+    bottom: 3px;
+    display: flex;
+    gap: 2px;
+  }
+  .apt-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+  }
+
+  .calendar-hint {
+    text-align: center;
+    font-size: 11px;
+    color: rgba(27,67,50,0.4);
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  /* ===== عرض كل الأشهر ===== */
+  .all-months-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+
+  .mini-month-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+    border: 1px solid #e5e7eb;
+    transition: box-shadow 0.2s;
+  }
+  .mini-month-card:hover { box-shadow: 0 4px 16px rgba(27,67,50,0.12); }
+
+  .mini-month-header {
+    background: var(--green-dark);
+    color: white;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+  .mini-month-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Cpath d='M10 0 L20 10 L10 20 L0 10 Z' fill='none' stroke='%23D4AF37' stroke-width='0.6' opacity='0.15'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+  .mini-month-name {
+    font-weight: 900;
+    font-size: 14px;
+    font-family: 'Noto Naskh Arabic', serif;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .mini-num { font-size: 10px; color: var(--gold); font-family: monospace; font-weight: 700; }
+  .mini-greg { font-size: 10px; color: rgba(212,175,55,0.7); position: relative; z-index: 1; }
+
+  .mini-month-body { padding: 10px; }
+
+  /* ===== لوحة المواعيد ===== */
+  .apts-panel {
+    width: 270px;
+    flex-shrink: 0;
+    background: white;
+    border-right: 1px solid #e5e7eb;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.25s ease;
+  }
+  .apts-panel.hidden { width: 0; overflow: hidden; }
+
+  .apts-panel-header {
+    background: var(--green-dark);
+    color: white;
+    padding: 12px 14px;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .apts-panel-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Cpath d='M10 0 L20 10 L10 20 L0 10 Z' fill='none' stroke='%23D4AF37' stroke-width='0.6' opacity='0.12'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+  .apts-panel-title {
+    font-weight: 900;
+    font-size: 13px;
+    font-family: 'Noto Naskh Arabic', serif;
+    position: relative;
+    z-index: 1;
+  }
+  .apts-panel-sub {
+    font-size: 10px;
+    color: rgba(212,175,55,0.8);
+    margin-top: 2px;
+    position: relative;
+    z-index: 1;
+  }
+  .apts-panel-print-btn {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    padding: 5px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 11px;
+    font-family: inherit;
+    transition: background 0.15s;
+  }
+  .apts-panel-print-btn:hover { background: rgba(255,255,255,0.22); }
+
+  .apts-list { padding: 10px; flex: 1; overflow-y: auto; }
+
+  .apts-empty {
+    text-align: center;
+    padding: 30px 16px;
+    color: #9ca3af;
+  }
+  .apts-empty-icon { font-size: 32px; margin-bottom: 8px; opacity: 0.5; }
+  .apts-empty-text { font-size: 12px; line-height: 1.6; }
+
+  .apt-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    transition: box-shadow 0.15s;
+  }
+  .apt-card:hover { box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
+  .apt-card-stripe { height: 3px; }
+  .apt-card-body { padding: 10px 12px; }
+  .apt-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; margin-bottom: 6px; }
+  .apt-card-title { font-weight: 700; color: var(--green-dark); font-size: 13px; flex: 1; line-height: 1.3; }
+  .apt-card-actions { display: flex; gap: 3px; flex-shrink: 0; }
+  .apt-action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 5px;
+    border-radius: 5px;
+    font-size: 13px;
+    transition: background 0.12s;
+    color: #9ca3af;
+  }
+  .apt-action-btn:hover { background: #f3f4f6; color: var(--green-dark); }
+  .apt-action-btn.del:hover { background: #fee2e2; color: #dc2626; }
+
+  .apt-card-meta { display: flex; gap: 10px; flex-wrap: wrap; font-size: 11px; color: #6b7280; }
+  .apt-meta-item { display: flex; align-items: center; gap: 3px; }
+  .apt-card-greg { font-size: 10px; color: #9ca3af; margin-top: 4px; }
+  .apt-card-desc { font-size: 11px; color: #4b5563; margin-top: 6px; padding-top: 6px; border-top: 1px solid #f9fafb; line-height: 1.5; }
+
+  /* ===== زر إظهار/إخفاء المواعيد ===== */
+  .toggle-panel-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 50;
+    background: var(--green-dark);
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    box-shadow: 0 4px 16px rgba(27,67,50,0.35);
+    transition: all 0.2s;
+  }
+  .toggle-panel-btn:hover { background: var(--green-mid); transform: translateY(-1px); }
+  .toggle-panel-btn:active { transform: scale(0.95); }
+  .toggle-panel-btn.off { background: white; color: var(--green-dark); border: 1px solid rgba(27,67,50,0.2); box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+
+  /* ===== نافذة الموعد ===== */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal-box {
+    background: white;
+    border-radius: 18px;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    overflow: hidden;
+    animation: modalIn 0.25s cubic-bezier(0.23,1,0.32,1);
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.95) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .modal-header {
+    background: var(--green-dark);
+    color: white;
+    padding: 16px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .modal-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30'%3E%3Cpath d='M15 0 L30 15 L15 30 L0 15 Z' fill='none' stroke='%23D4AF37' stroke-width='0.7' opacity='0.15'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+  .modal-title {
+    font-size: 16px;
+    font-weight: 900;
+    font-family: 'Noto Naskh Arabic', serif;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .modal-date {
+    font-size: 11px;
+    color: rgba(212,175,55,0.8);
+    margin-top: 4px;
+    position: relative;
+    z-index: 1;
+  }
+  .modal-close {
+    position: absolute;
+    left: 14px;
+    top: 14px;
+    z-index: 1;
+    background: rgba(255,255,255,0.12);
+    border: none;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+  }
+  .modal-close:hover { background: rgba(255,255,255,0.22); }
+
+  .modal-body { padding: 18px 20px; }
+
+  .form-group { margin-bottom: 14px; }
+  .form-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--green-dark);
+    margin-bottom: 5px;
+  }
+  .form-input, .form-textarea, .form-select {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1.5px solid #d1fae5;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 13px;
+    color: #1a1a1a;
+    background: white;
+    transition: border-color 0.15s;
+    outline: none;
+    direction: rtl;
+  }
+  .form-input:focus, .form-textarea:focus, .form-select:focus {
+    border-color: var(--green-dark);
+    box-shadow: 0 0 0 3px rgba(27,67,50,0.08);
+  }
+  .form-textarea { resize: none; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .color-picker { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+  .color-swatch {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 2px solid transparent;
+  }
+  .color-swatch:hover { transform: scale(1.15); }
+  .color-swatch.selected { transform: scale(1.2); border-color: #374151; box-shadow: 0 0 0 2px white inset; }
+
+  .modal-footer {
+    padding: 12px 20px 16px;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-start;
+    border-top: 1px solid #f3f4f6;
+  }
+  .btn {
+    padding: 9px 18px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.15s;
+  }
+  .btn:active { transform: scale(0.96); }
+  .btn-primary { background: var(--green-dark); color: white; }
+  .btn-primary:hover { background: var(--green-mid); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-outline { background: white; color: #374151; border: 1.5px solid #e5e7eb; }
+  .btn-outline:hover { background: #f9fafb; }
+  .btn-danger { background: #fee2e2; color: #dc2626; }
+  .btn-danger:hover { background: #fecaca; }
+
+  /* ===== Toast ===== */
+  .toast-container {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 300;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    pointer-events: none;
+    min-width: 280px;
+  }
+  .toast {
+    background: white;
+    border-radius: 10px;
+    padding: 12px 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: toastIn 0.3s cubic-bezier(0.23,1,0.32,1);
+    border-right: 4px solid;
+  }
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateY(-10px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .toast.success { border-color: var(--green-dark); color: var(--green-dark); }
+  .toast.error { border-color: #dc2626; color: #dc2626; }
+  .toast.info { border-color: #2563eb; color: #2563eb; }
+  .toast.warning { border-color: #d97706; color: #d97706; }
+
+  /* ===== طباعة ===== */
+  @media print {
+    .no-print { display: none !important; }
+  }
+
+  /* ===== استجابة الشاشات الصغيرة ===== */
+  @media (max-width: 768px) {
+    .months-sidebar { width: 120px; }
+    .apts-panel { width: 240px; }
+    .month-name-big { font-size: 22px; }
+  }
+  @media (max-width: 600px) {
+    .months-sidebar { display: none; }
+    .apts-panel { display: none; }
+    .toggle-panel-btn { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== شريط الرأس ===== -->
+<header class="no-print">
+  <div class="header-brand">
+    <div class="header-logo">١٤٤٨<br><span style="font-size:9px;opacity:0.8">هـ</span></div>
+    <div class="header-title">
+      <h1>التقويم الهجري التفاعلي</h1>
+      <p>1448هـ — 2026/2027م</p>
+    </div>
+  </div>
+  <div class="header-btns">
+    <span class="apt-count-badge" id="headerBadge" style="display:none"></span>
+    <button class="header-btn" onclick="toggleHolidays()" id="holidayBtn" title="العطل الرسمية">📅 العطل</button>
+    <button class="header-btn" onclick="printAllApts()" title="طباعة جميع المواعيد">🖨️ طباعة الكل</button>
+    <button class="header-btn" onclick="toggleSettings()" id="settingsBtn" title="الإعدادات">⚙️ الإعدادات</button>
+  </div>
+</header>
+
+<!-- ===== لوحة العطل ===== -->
+<div class="panel-bar no-print" id="holidaysPanel">
+  <div class="panel-bar-header">
+    <div class="panel-bar-title">🔔 العطل والإجازات الرسمية 1448هـ</div>
+    <button class="close-btn" onclick="toggleHolidays()">✕</button>
+  </div>
+  <!-- مفتاح الألوان -->
+  <div class="holiday-legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--hol-school)"></div>بداية العام الدراسي</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--hol-national)"></div>اليوم الوطني</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--hol-sem1)"></div>إجازة الفصل الأول</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--hol-mid)"></div>منتصف العام</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--hol-found)"></div>يوم التأسيس</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--hol-fitr)"></div>عيد الفطر</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--hol-adha)"></div>عيد الأضحى</div>
+  </div>
+  <div class="holidays-grid" style="padding:12px 0 4px">
+    <div class="holiday-card" style="border-color:#BFDBFE;border-right:4px solid var(--hol-school)">
+      <div class="holiday-name" style="color:#1D4ED8">🏫 بداية العام الدراسي (1448-1449)</div>
+      <div class="holiday-hijri">10 ربيع الأول</div><div class="holiday-greg">23 AUG 2026</div>
+    </div>
+    <div class="holiday-card" style="border-color:#A7F3D0;border-right:4px solid var(--hol-national)">
+      <div class="holiday-name" style="color:#065F46">🇸🇦 إجازة اليوم الوطني</div>
+      <div class="holiday-hijri">12-15 ربيع الآخر</div><div class="holiday-greg">23-26 SEP 2026</div>
+    </div>
+    <div class="holiday-card" style="border-color:#DDD6FE;border-right:4px solid var(--hol-sem1)">
+      <div class="holiday-name" style="color:#5B21B6">📚 إجازة الفصل الدراسي الأول</div>
+      <div class="holiday-hijri">10-18 جمادى الآخرة</div><div class="holiday-greg">20-28 NOV 2026</div>
+    </div>
+    <div class="holiday-card" style="border-color:#FDE68A;border-right:4px solid var(--hol-mid)">
+      <div class="holiday-name" style="color:#92400E">🌙 إجازة منتصف العام الدراسي</div>
+      <div class="holiday-hijri">30 رجب - 8 شعبان</div><div class="holiday-greg">8-16 JAN 2027</div>
+    </div>
+    <div class="holiday-card" style="border-color:#FBCFE8;border-right:4px solid var(--hol-found)">
+      <div class="holiday-name" style="color:#9D174D">🏰 إجازة يوم التأسيس</div>
+      <div class="holiday-hijri">12-15 رمضان</div><div class="holiday-greg">19-22 FEB 2027</div>
+    </div>
+    <div class="holiday-card" style="border-color:#FECACA;border-right:4px solid var(--hol-fitr)">
+      <div class="holiday-name" style="color:#991B1B">🌙 إجازة عيد الفطر</div>
+      <div class="holiday-hijri">19 رمضان - 5 شوال</div><div class="holiday-greg">26 FEB - 13 MAR 2027</div>
+    </div>
+    <div class="holiday-card" style="border-color:#A5F3FC;border-right:4px solid var(--hol-adha)">
+      <div class="holiday-name" style="color:#155E75">🐑 إجازة عيد الأضحى</div>
+      <div class="holiday-hijri">1-16 ذو الحجة</div><div class="holiday-greg">7-22 MAY 2027</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== لوحة الإعدادات ===== -->
+<div class="panel-bar no-print" id="settingsPanel">
+  <div class="panel-bar-header">
+    <div class="panel-bar-title">⚙️ الإعدادات</div>
+    <button class="close-btn" onclick="toggleSettings()">✕</button>
+  </div>
+  <div class="settings-row">
+    <span class="settings-label">طريقة العرض:</span>
+    <div class="toggle-group">
+      <button class="toggle-btn active" id="btnSingle" onclick="setView('single')">📅 شهر واحد</button>
+      <button class="toggle-btn" id="btnAll" onclick="setView('all')">🗓️ كل الأشهر</button>
+    </div>
+    <span class="settings-label">لوحة المواعيد:</span>
+    <button class="toggle-btn active" id="btnPanel" onclick="togglePanel()" style="border-radius:8px;border:1px solid rgba(27,67,50,0.2)">مُفعّلة</button>
+  </div>
+  <div class="settings-footer">
+    تصميم د/فواز &nbsp;—&nbsp;
+    <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">تفضل للمزيد هنا</a>
+  </div>
+</div>
+
+<!-- ===== التخطيط الرئيسي ===== -->
+<div class="main-layout" id="mainLayout">
+  
+  <!-- قائمة الأشهر -->
+  <div class="months-sidebar no-print" id="monthsSidebar">
+    <div class="sidebar-year">١٤٤٨هـ</div>
+    <div id="monthsList"></div>
+  </div>
+
+  <!-- منطقة التقويم -->
+  <div class="calendar-area" id="calendarArea">
+    <div id="calendarContent"></div>
+  </div>
+
+  <!-- لوحة المواعيد -->
+  <div class="apts-panel no-print" id="aptsPanel">
+    <div class="apts-panel-header">
+      <div class="apts-panel-title">المواعيد المسجلة</div>
+      <div class="apts-panel-sub" id="aptsPanelSub">لا توجد مواعيد بعد</div>
+      <button class="apts-panel-print-btn" onclick="printAllApts()">🖨️ طباعة</button>
+    </div>
+    <div class="apts-list" id="aptsList"></div>
+  </div>
+</div>
+
+<!-- زر إظهار/إخفاء المواعيد -->
+<button class="toggle-panel-btn no-print" id="togglePanelBtn" onclick="togglePanel()">
+  📋 إخفاء المواعيد
+</button>
+
+<!-- ===== نافذة الموعد ===== -->
+<div class="modal-overlay no-print" id="modalOverlay" onclick="closeModalOnOverlay(event)">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">📅 <span id="modalTitle">إضافة موعد جديد</span></div>
+      <div class="modal-date" id="modalDate"></div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">عنوان الموعد *</label>
+        <input type="text" class="form-input" id="aptTitle" placeholder="أدخل عنوان الموعد..." oninput="validateForm()">
+      </div>
+      <div class="form-group">
+        <label class="form-label">الوصف (اختياري)</label>
+        <textarea class="form-textarea" id="aptDesc" rows="2" placeholder="أضف تفاصيل إضافية..."></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">الوقت</label>
+          <input type="time" class="form-input" id="aptTime" value="09:00">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">🔔 التذكير</label>
+          <select class="form-select" id="aptReminder">
+            <option value="0">بدون تذكير</option>
+            <option value="5">5 دقائق قبل</option>
+            <option value="10">10 دقائق قبل</option>
+            <option value="15">15 دقيقة قبل</option>
+            <option value="30">30 دقيقة قبل</option>
+            <option value="60">ساعة قبل</option>
+            <option value="120">ساعتان قبل</option>
+            <option value="1440">يوم قبل</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:12px">
+        <label class="form-label">لون الموعد</label>
+        <div class="color-picker" id="colorPicker"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" id="saveBtn" onclick="saveAppointment()" disabled>💾 حفظ الموعد</button>
+      <button class="btn btn-outline" onclick="closeModal()">✕ إلغاء</button>
+      <button class="btn btn-danger" id="deleteBtn" onclick="deleteCurrentAppointment()" style="display:none">🗑️ حذف</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container no-print" id="toastContainer"></div>
+
+<script>
+// ===================================================
+// بيانات التقويم الهجري 1448هـ
+// ===================================================
+const MONTHS = [
+  { num:1, name:'محرم', start:'(6) JUN 26', end:'(7) JUL 26', year:2026,
+    weeks:[
+      [null,null,null,null,null,null,{h:1,g:16}],
+      [{h:2,g:17},{h:3,g:18},{h:4,g:19},{h:5,g:20},{h:6,g:21},{h:7,g:22},{h:8,g:23}],
+      [{h:9,g:24},{h:10,g:25},{h:11,g:26},{h:12,g:27},{h:13,g:28},{h:14,g:29},{h:15,g:30}],
+      [{h:16,g:1},{h:17,g:2},{h:18,g:3},{h:19,g:4},{h:20,g:5},{h:21,g:6},{h:22,g:7}],
+      [{h:23,g:8},{h:24,g:9},{h:25,g:10},{h:26,g:11},{h:27,g:12},{h:28,g:13},{h:29,g:14}],
+    ]},
+  { num:2, name:'صفر', start:'(7) JUL 26', end:'(8) AUG 26', year:2026,
+    weeks:[
+      [null,null,null,{h:1,g:15},{h:2,g:16},{h:3,g:17},null],
+      [{h:4,g:18},{h:5,g:19},{h:6,g:20},{h:7,g:21},{h:8,g:22},{h:9,g:23},{h:10,g:24}],
+      [{h:11,g:25},{h:12,g:26},{h:13,g:27},{h:14,g:28},{h:15,g:29},{h:16,g:30},{h:17,g:31}],
+      [{h:18,g:1},{h:19,g:2},{h:20,g:3},{h:21,g:4},{h:22,g:5},{h:23,g:6},{h:24,g:7}],
+      [{h:25,g:8},{h:26,g:9},{h:27,g:10},{h:28,g:11},{h:29,g:12},{h:30,g:13},null],
+    ]},
+  { num:3, name:'ربيع الأول', start:'(8) AUG 26', end:'(9) SEP 26', year:2026,
+    weeks:[
+      [null,null,null,null,null,null,{h:1,g:14}],
+      [{h:2,g:15},{h:3,g:16},{h:4,g:17},{h:5,g:18},{h:6,g:19},{h:7,g:20},{h:8,g:21}],
+      [{h:9,g:22},{h:10,g:23},{h:11,g:24},{h:12,g:25},{h:13,g:26},{h:14,g:27},{h:15,g:28}],
+      [{h:16,g:29},{h:17,g:30},{h:18,g:31},{h:19,g:1},{h:20,g:2},{h:21,g:3},{h:22,g:4}],
+      [{h:23,g:5},{h:24,g:6},{h:25,g:7},{h:26,g:8},{h:27,g:9},{h:28,g:10},{h:29,g:11}],
+    ]},
+  { num:4, name:'ربيع الآخر', start:'(9) SEP 26', end:'(10) OCT 26', year:2026,
+    weeks:[
+      [{h:1,g:12},{h:2,g:13},{h:3,g:14},{h:4,g:15},{h:5,g:16},{h:6,g:17},{h:7,g:18}],
+      [{h:8,g:19},{h:9,g:20},{h:10,g:21},{h:11,g:22},{h:12,g:23},{h:13,g:24},{h:14,g:25}],
+      [{h:15,g:26},{h:16,g:27},{h:17,g:28},{h:18,g:29},{h:19,g:30},{h:20,g:1},{h:21,g:2}],
+      [{h:22,g:3},{h:23,g:4},{h:24,g:5},{h:25,g:6},{h:26,g:7},{h:27,g:8},{h:28,g:9}],
+      [null,null,null,null,null,null,{h:29,g:10}],
+      [{h:30,g:11},null,null,null,null,null,null],
+    ]},
+  { num:5, name:'جمادى الأولى', start:'(10) OCT 26', end:'(11) NOV 26', year:2026,
+    weeks:[
+      [null,null,null,null,null,null,{h:1,g:12}],
+      [{h:2,g:13},{h:3,g:14},{h:4,g:15},{h:5,g:16},{h:6,g:17},{h:7,g:18},{h:8,g:19}],
+      [{h:9,g:20},{h:10,g:21},{h:11,g:22},{h:12,g:23},{h:13,g:24},{h:14,g:25},{h:15,g:26}],
+      [{h:16,g:27},{h:17,g:28},{h:18,g:29},{h:19,g:30},{h:20,g:31},{h:21,g:1},{h:22,g:2}],
+      [{h:23,g:3},{h:24,g:4},{h:25,g:5},{h:26,g:6},{h:27,g:7},{h:28,g:8},{h:29,g:9}],
+      [{h:30,g:10},null,null,null,null,null,null],
+    ]},
+  { num:6, name:'جمادى الآخرة', start:'(11) NOV 26', end:'(12) DEC 26', year:2026,
+    weeks:[
+      [null,null,{h:1,g:11},{h:2,g:12},{h:3,g:13},null,null],
+      [{h:4,g:14},{h:5,g:15},{h:6,g:16},{h:7,g:17},{h:8,g:18},{h:9,g:19},{h:10,g:20}],
+      [{h:11,g:21},{h:12,g:22},{h:13,g:23},{h:14,g:24},{h:15,g:25},{h:16,g:26},{h:17,g:27}],
+      [{h:18,g:28},{h:19,g:29},{h:20,g:30},{h:21,g:1},{h:22,g:2},{h:23,g:3},{h:24,g:4}],
+      [{h:25,g:5},{h:26,g:6},{h:27,g:7},{h:28,g:8},null,null,null],
+      [null,null,null,null,null,null,{h:29,g:9}],
+    ]},
+  { num:7, name:'رجب', start:'(12) DEC 26', end:'(1) JAN 27', year:2026,
+    weeks:[
+      [null,null,null,null,null,null,{h:1,g:10}],
+      [{h:2,g:11},{h:3,g:12},{h:4,g:13},{h:5,g:14},{h:6,g:15},{h:7,g:16},{h:8,g:17}],
+      [{h:9,g:18},{h:10,g:19},{h:11,g:20},{h:12,g:21},{h:13,g:22},{h:14,g:23},{h:15,g:24}],
+      [{h:16,g:25},{h:17,g:26},{h:18,g:27},{h:19,g:28},{h:20,g:29},{h:21,g:30},{h:22,g:31}],
+      [{h:23,g:1},{h:24,g:2},{h:25,g:3},{h:26,g:4},{h:27,g:5},{h:28,g:6},{h:29,g:7}],
+      [{h:30,g:8},null,null,null,null,null,null],
+    ]},
+  { num:8, name:'شعبان', start:'(1) JAN 27', end:'(2) FEB 27', year:2027,
+    weeks:[
+      [{h:1,g:9},{h:2,g:10},{h:3,g:11},{h:4,g:12},{h:5,g:13},{h:6,g:14},{h:7,g:15}],
+      [{h:8,g:16},{h:9,g:17},{h:10,g:18},{h:11,g:19},{h:12,g:20},{h:13,g:21},{h:14,g:22}],
+      [{h:15,g:23},{h:16,g:24},{h:17,g:25},{h:18,g:26},{h:19,g:27},{h:20,g:28},{h:21,g:29}],
+      [{h:22,g:30},{h:23,g:31},{h:24,g:1},{h:25,g:2},{h:26,g:3},{h:27,g:4},{h:28,g:5}],
+      [{h:29,g:6},{h:30,g:7},null,null,null,null,null],
+    ]},
+  { num:9, name:'رمضان', start:'(2) FEB 27', end:'(3) MAR 27', year:2027,
+    weeks:[
+      [{h:1,g:8},{h:2,g:9},{h:3,g:10},{h:4,g:11},{h:5,g:12},null,null],
+      [{h:6,g:13},{h:7,g:14},{h:8,g:15},{h:9,g:16},{h:10,g:17},{h:11,g:18},{h:12,g:19}],
+      [{h:13,g:20},{h:14,g:21},{h:15,g:22},{h:16,g:23},{h:17,g:24},{h:18,g:25},{h:19,g:26}],
+      [{h:20,g:27},{h:21,g:28},{h:22,g:1},{h:23,g:2},{h:24,g:3},{h:25,g:4},{h:26,g:5}],
+      [{h:27,g:6},{h:28,g:7},{h:29,g:8},null,null,null,null],
+    ]},
+  { num:10, name:'شوال', start:'(3) MAR 27', end:'(4) APR 27', year:2027,
+    weeks:[
+      [null,null,null,null,null,null,{h:1,g:9}],
+      [{h:2,g:10},{h:3,g:11},{h:4,g:12},{h:5,g:13},{h:6,g:14},{h:7,g:15},{h:8,g:16}],
+      [{h:9,g:17},{h:10,g:18},{h:11,g:19},{h:12,g:20},{h:13,g:21},{h:14,g:22},{h:15,g:23}],
+      [{h:16,g:24},{h:17,g:25},{h:18,g:26},{h:19,g:27},{h:20,g:28},{h:21,g:29},{h:22,g:30}],
+      [{h:23,g:31},{h:24,g:1},{h:25,g:2},{h:26,g:3},{h:27,g:4},{h:28,g:5},{h:29,g:6}],
+      [{h:30,g:7},null,null,null,null,null,null],
+    ]},
+  { num:11, name:'ذو القعدة', start:'(4) APR 27', end:'(5) MAY 27', year:2027,
+    weeks:[
+      [null,null,null,null,null,{h:1,g:8},{h:2,g:9}],
+      [{h:3,g:10},{h:4,g:11},{h:5,g:12},{h:6,g:13},{h:7,g:14},{h:8,g:15},{h:9,g:16}],
+      [{h:10,g:17},{h:11,g:18},{h:12,g:19},{h:13,g:20},{h:14,g:21},{h:15,g:22},{h:16,g:23}],
+      [{h:17,g:24},{h:18,g:25},{h:19,g:26},{h:20,g:27},{h:21,g:28},{h:22,g:29},{h:23,g:30}],
+      [{h:24,g:1},{h:25,g:2},{h:26,g:3},{h:27,g:4},{h:28,g:5},{h:29,g:6},null],
+    ]},
+  { num:12, name:'ذو الحجة', start:'(5) MAY 27', end:'(6) JUN 27', year:2027,
+    weeks:[
+      [null,null,null,null,null,null,{h:1,g:7}],
+      [{h:2,g:8},{h:3,g:9},{h:4,g:10},{h:5,g:11},{h:6,g:12},{h:7,g:13},{h:8,g:14}],
+      [{h:9,g:15},{h:10,g:16},{h:11,g:17},{h:12,g:18},{h:13,g:19},{h:14,g:20},{h:15,g:21}],
+      [{h:16,g:22},{h:17,g:23},{h:18,g:24},{h:19,g:25},{h:20,g:26},{h:21,g:27},{h:22,g:28}],
+      [{h:23,g:29},{h:24,g:30},{h:25,g:31},{h:26,g:1},{h:27,g:2},{h:28,g:3},{h:29,g:4}],
+      [{h:30,g:5},null,null,null,null,null,null],
+    ]},
+];
+
+const WEEKDAYS = ['السبت','الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة'];
+const WEEKDAYS_ENG = ['SAT','SUN','MON','TUE','WED','THU','FRI'];
+const GREG_MONTHS = ['','يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+const COLORS = ['#1B4332','#2D6A4F','#D4AF37','#1565C0','#C62828','#6A1B9A','#E65100','#00695C'];
+
+// ===================================================
+// بيانات العطل الرسمية — (الشهر الهجري، من اليوم، إلى اليوم، الصنف)
+// ===================================================
+const HOLIDAYS = [
+  // بداية العام الدراسي: 10 ربيع الأول
+  { month: 3,  from: 10, to: 10,  cls: 'hol-school',   label: 'بداية العام الدراسي' },
+  // اليوم الوطني: 12-15 ربيع الآخر
+  { month: 4,  from: 12, to: 15,  cls: 'hol-national', label: 'اليوم الوطني' },
+  // إجازة الفصل الأول: 10-18 جمادى الآخرة
+  { month: 6,  from: 10, to: 18,  cls: 'hol-sem1',     label: 'إجازة الفصل الأول' },
+  // منتصف العام: 30 رجب
+  { month: 7,  from: 30, to: 30,  cls: 'hol-mid',      label: 'منتصف العام الدراسي' },
+  // منتصف العام (تكملة): 1-8 شعبان
+  { month: 8,  from: 1,  to: 8,   cls: 'hol-mid',      label: 'منتصف العام الدراسي' },
+  // يوم التأسيس: 12-15 رمضان
+  { month: 9,  from: 12, to: 15,  cls: 'hol-found',    label: 'يوم التأسيس' },
+  // عيد الفطر: 19-29 رمضان
+  { month: 9,  from: 19, to: 29,  cls: 'hol-fitr',     label: 'عيد الفطر' },
+  // عيد الفطر (تكملة): 1-5 شوال
+  { month: 10, from: 1,  to: 5,   cls: 'hol-fitr',     label: 'عيد الفطر' },
+  // عيد الأضحى: 1-16 ذو الحجة
+  { month: 12, from: 1,  to: 16,  cls: 'hol-adha',     label: 'عيد الأضحى' },
+];
+
+function getHolidayClass(hMonth, hDay) {
+  const h = HOLIDAYS.find(hol => hol.month === hMonth && hDay >= hol.from && hDay <= hol.to);
+  return h ? { cls: h.cls, label: h.label } : null;
+}
+
+// ===================================================
+// حالة التطبيق
+// ===================================================
+let currentMonth = 1;
+let viewMode = 'single';
+let panelVisible = true;
+let editingId = null;
+let selectedDay = null;
+let selectedColor = COLORS[0];
+let appointments = JSON.parse(localStorage.getItem('hijri_1448_apts') || '[]');
+let reminderTimers = [];
+
+// ===================================================
+// الرسم الأولي
+// ===================================================
+function init() {
+  renderMonthsList();
+  renderCalendar();
+  renderAppointmentsPanel();
+  setupColorPicker();
+  startReminderCheck();
+}
+
+// ===================================================
+// قائمة الأشهر
+// ===================================================
+function renderMonthsList() {
+  const list = document.getElementById('monthsList');
+  let html = '';
+  MONTHS.forEach(m => {
+    const apts = appointments.filter(a => a.hMonth === m.num);
+    const isActive = currentMonth === m.num && viewMode === 'single';
+    html += `<button class="month-btn ${isActive ? 'active' : ''}" onclick="goToMonth(${m.num})">
+      <span style="display:flex;align-items:center;gap:5px">
+        <span class="num">${m.num}</span>
+        <span>${m.name}</span>
+      </span>
+      ${apts.length > 0 ? `<span class="month-apt-badge">${apts.length}</span>` : ''}
+    </button>`;
+  });
+  html += `<button class="all-months-btn ${viewMode === 'all' ? 'active' : ''}" onclick="setView('all')">
+    🗓️ كل الأشهر
+  </button>`;
+  list.innerHTML = html;
+}
+
+function goToMonth(num) {
+  currentMonth = num;
+  viewMode = 'single';
+  document.getElementById('btnSingle').classList.add('active');
+  document.getElementById('btnAll').classList.remove('active');
+  renderMonthsList();
+  renderCalendar();
+  renderAppointmentsPanel();
+}
+
+// ===================================================
+// رسم التقويم
+// ===================================================
+function renderCalendar() {
+  const area = document.getElementById('calendarContent');
+  if (viewMode === 'single') {
+    area.innerHTML = renderSingleMonth(MONTHS[currentMonth - 1], false);
+  } else {
+    let html = `<div style="background:var(--green-dark);color:white;border-radius:16px;padding:16px 20px;margin-bottom:16px;text-align:center;position:relative;overflow:hidden;box-shadow:0 4px 16px rgba(27,67,50,0.25)">
+      <div style="font-size:24px;font-weight:900;font-family:'Noto Naskh Arabic',serif;position:relative;z-index:1">جميع أشهر 1448هـ</div>
+      <div style="font-size:11px;color:rgba(212,175,55,0.7);margin-top:4px;position:relative;z-index:1">2026 — 2027م</div>
+    </div>
+    <div class="all-months-grid">`;
+    MONTHS.forEach(m => {
+      html += `<div class="mini-month-card">
+        <div class="mini-month-header">
+          <div class="mini-month-name"><span class="mini-num">${m.num}</span>${m.name}</div>
+          <div class="mini-greg">${m.start}</div>
+        </div>
+        <div class="mini-month-body">${renderGridOnly(m, true)}</div>
+      </div>`;
+    });
+    html += '</div>';
+    area.innerHTML = html;
+  }
+}
+
+function renderSingleMonth(m, compact) {
+  return `
+    <div class="month-header">
+      <button class="month-nav-btn" onclick="prevMonth()" ${currentMonth === 1 ? 'disabled' : ''}>›</button>
+      <div class="month-title-area">
+        <div style="display:flex;align-items:center;justify-content:center;gap:10px">
+          <span class="month-num-badge">${m.num}</span>
+          <span class="month-name-big">${m.name}</span>
+          <span class="month-year-label">1448هـ</span>
+        </div>
+        <div class="month-ornament">
+          <div class="orn-line"></div>
+          <div class="orn-diamond"></div>
+          <div class="orn-diamond" style="width:8px;height:8px;background:rgba(212,175,55,0.8)"></div>
+          <div class="orn-diamond"></div>
+          <div class="orn-line"></div>
+        </div>
+        <div class="month-greg-date">${m.start} — ${m.end}</div>
+      </div>
+      <button class="month-nav-btn" onclick="nextMonth()" ${currentMonth === 12 ? 'disabled' : ''}>‹</button>
+    </div>
+    <div class="calendar-grid-wrap">
+      ${renderGridOnly(m, false)}
+    </div>
+    <div class="calendar-hint">➕ انقر على أي يوم لإضافة موعد أو عرض المواعيد المسجلة</div>
+  `;
+}
+
+function renderGridOnly(m, compact) {
+  const cellSize = compact ? 'min-height:36px;font-size:12px' : 'min-height:48px';
+  const hijriSize = compact ? 'font-size:13px' : 'font-size:15px';
+  const gregSize = compact ? 'font-size:9px' : 'font-size:10px';
+
+  let html = `<div class="weekdays-row">`;
+  WEEKDAYS.forEach((d, i) => {
+    const cls = i === 6 ? 'fri' : i === 0 ? 'sat' : '';
+    html += `<div class="weekday-cell ${cls}">${d}<span class="eng">${WEEKDAYS_ENG[i]}</span></div>`;
+  });
+  html += '</div><div class="weeks-container">';
+
+  m.weeks.forEach(week => {
+    html += '<div class="week-row">';
+    week.forEach((day, di) => {
+      if (!day) {
+        html += `<div class="day-cell empty" style="${cellSize}"></div>`;
+        return;
+      }
+      const dayApts = appointments.filter(a => a.hDay === day.h && a.hMonth === m.num);
+      const isFri = di === 6;
+      const isSat = di === 0;
+      const cls = isFri ? 'fri-day' : isSat ? 'sat-day' : '';
+      const hasApt = dayApts.length > 0 ? 'has-apt' : '';
+      const dots = dayApts.slice(0,3).map(a => `<div class="apt-dot" style="background:${a.color}"></div>`).join('');
+      
+      // كشف العطل
+      const holInfo = getHolidayClass(m.num, day.h);
+      const holCls  = holInfo ? `holiday ${holInfo.cls}` : '';
+      const holTitle = holInfo ? ` title="${holInfo.label}"` : '';
+
+      html += `<div class="day-cell ${cls} ${hasApt} ${holCls}" style="${cellSize}"${holTitle} onclick="openModal(${day.h},${day.g},${m.num})">
+        <span class="day-hijri" style="${hijriSize}">${day.h}</span>
+        <span class="day-greg" style="${gregSize}">${day.g}</span>
+        ${dayApts.length > 0 ? `<div class="apt-dots">${dots}</div>` : ''}
+      </div>`;
+    });
+    html += '</div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+function prevMonth() {
+  if (currentMonth > 1) { currentMonth--; renderMonthsList(); renderCalendar(); renderAppointmentsPanel(); }
+}
+function nextMonth() {
+  if (currentMonth < 12) { currentMonth++; renderMonthsList(); renderCalendar(); renderAppointmentsPanel(); }
+}
+
+// ===================================================
+// لوحة المواعيد
+// ===================================================
+function renderAppointmentsPanel() {
+  const total = appointments.length;
+  const badge = document.getElementById('headerBadge');
+  badge.textContent = total + ' موعد';
+  badge.style.display = total > 0 ? 'inline' : 'none';
+
+  const sub = document.getElementById('aptsPanelSub');
+  const filtered = viewMode === 'single'
+    ? appointments.filter(a => a.hMonth === currentMonth)
+    : appointments;
+  const sorted = [...filtered].sort((a,b) => a.hMonth !== b.hMonth ? a.hMonth - b.hMonth : a.hDay - b.hDay);
+
+  sub.textContent = total > 0 ? `${total} موعد إجمالي` : 'لا توجد مواعيد بعد';
+
+  const list = document.getElementById('aptsList');
+  if (sorted.length === 0) {
+    list.innerHTML = `<div class="apts-empty">
+      <div class="apts-empty-icon">📅</div>
+      <div class="apts-empty-text">لا توجد مواعيد مسجلة<br>انقر على أي يوم لإضافة موعد</div>
+    </div>`;
+    return;
+  }
+
+  list.innerHTML = sorted.map(apt => {
+    const mName = MONTHS[apt.hMonth - 1]?.name || '';
+    const gmName = GREG_MONTHS[apt.gMonth] || '';
+    const remLabel = apt.reminder > 0
+      ? (apt.reminder >= 1440 ? 'يوم قبل' : apt.reminder >= 60 ? `${apt.reminder/60}س` : `${apt.reminder}د`)
+      : '';
+    return `<div class="apt-card">
+      <div class="apt-card-stripe" style="background:${apt.color}"></div>
+      <div class="apt-card-body">
+        <div class="apt-card-header">
+          <div class="apt-card-title">${apt.title}</div>
+          <div class="apt-card-actions">
+            <button class="apt-action-btn" onclick="printApt('${apt.id}')" title="طباعة">🖨️</button>
+            <button class="apt-action-btn" onclick="editApt('${apt.id}')" title="تعديل">✏️</button>
+            <button class="apt-action-btn del" onclick="deleteApt('${apt.id}')" title="حذف">🗑️</button>
+          </div>
+        </div>
+        <div class="apt-card-meta">
+          <span class="apt-meta-item">📆 ${apt.hDay} ${mName}</span>
+          <span class="apt-meta-item">🕐 ${apt.time}</span>
+          ${remLabel ? `<span class="apt-meta-item" style="color:#d97706">🔔 ${remLabel}</span>` : ''}
+        </div>
+        <div class="apt-card-greg">${apt.gDay} ${gmName} ${apt.gYear}م</div>
+        ${apt.desc ? `<div class="apt-card-desc">${apt.desc}</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ===================================================
+// نافذة الموعد
+// ===================================================
+function openModal(hDay, gDay, hMonth) {
+  selectedDay = { hDay, gDay, hMonth };
+  editingId = null;
+
+  const mName = MONTHS[hMonth - 1]?.name || '';
+  const m = MONTHS[hMonth - 1];
+  const gYear = m?.year || 2026;
+  // تحديد الشهر الميلادي
+  const gMonth = hDay <= 15 ? getStartGMonth(m) : getEndGMonth(m);
+
+  document.getElementById('modalTitle').textContent = 'إضافة موعد جديد';
+  document.getElementById('modalDate').textContent = `${hDay} ${mName} 1448هـ — ${gDay} ${GREG_MONTHS[gMonth]} ${gYear}م`;
+  document.getElementById('aptTitle').value = '';
+  document.getElementById('aptDesc').value = '';
+  document.getElementById('aptTime').value = '09:00';
+  document.getElementById('aptReminder').value = '0';
+  document.getElementById('deleteBtn').style.display = 'none';
+  selectedColor = COLORS[0];
+  updateColorPicker();
+  validateForm();
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.getElementById('aptTitle').focus();
+}
+
+function editApt(id) {
+  const apt = appointments.find(a => a.id === id);
+  if (!apt) return;
+  editingId = id;
+  selectedDay = { hDay: apt.hDay, gDay: apt.gDay, hMonth: apt.hMonth };
+
+  const mName = MONTHS[apt.hMonth - 1]?.name || '';
+  const gmName = GREG_MONTHS[apt.gMonth] || '';
+  document.getElementById('modalTitle').textContent = 'تعديل الموعد';
+  document.getElementById('modalDate').textContent = `${apt.hDay} ${mName} 1448هـ — ${apt.gDay} ${gmName} ${apt.gYear}م`;
+  document.getElementById('aptTitle').value = apt.title;
+  document.getElementById('aptDesc').value = apt.desc || '';
+  document.getElementById('aptTime').value = apt.time;
+  document.getElementById('aptReminder').value = String(apt.reminder);
+  document.getElementById('deleteBtn').style.display = 'flex';
+  selectedColor = apt.color;
+  updateColorPicker();
+  validateForm();
+
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  editingId = null;
+}
+
+function closeModalOnOverlay(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+function validateForm() {
+  const val = document.getElementById('aptTitle').value.trim();
+  document.getElementById('saveBtn').disabled = !val;
+}
+
+function saveAppointment() {
+  const title = document.getElementById('aptTitle').value.trim();
+  if (!title) return;
+
+  const m = MONTHS[selectedDay.hMonth - 1];
+  const gYear = m?.year || 2026;
+  const gMonth = selectedDay.hDay <= 15 ? getStartGMonth(m) : getEndGMonth(m);
+
+  const apt = {
+    id: editingId || Date.now().toString(36) + Math.random().toString(36).substr(2),
+    hDay: selectedDay.hDay,
+    hMonth: selectedDay.hMonth,
+    gDay: selectedDay.gDay,
+    gMonth,
+    gYear,
+    title,
+    desc: document.getElementById('aptDesc').value.trim(),
+    time: document.getElementById('aptTime').value,
+    reminder: parseInt(document.getElementById('aptReminder').value),
+    color: selectedColor,
+    createdAt: editingId ? (appointments.find(a=>a.id===editingId)?.createdAt || new Date().toISOString()) : new Date().toISOString(),
+  };
+
+  if (editingId) {
+    appointments = appointments.map(a => a.id === editingId ? apt : a);
+  } else {
+    appointments.push(apt);
+  }
+
+  saveToStorage();
+  closeModal();
+  renderMonthsList();
+  renderCalendar();
+  renderAppointmentsPanel();
+  showToast('success', `✅ تم حفظ الموعد: ${title}`);
+}
+
+function deleteApt(id) {
+  appointments = appointments.filter(a => a.id !== id);
+  saveToStorage();
+  renderMonthsList();
+  renderCalendar();
+  renderAppointmentsPanel();
+  showToast('error', '🗑️ تم حذف الموعد');
+}
+
+function deleteCurrentAppointment() {
+  if (editingId) {
+    deleteApt(editingId);
+    closeModal();
+  }
+}
+
+function saveToStorage() {
+  localStorage.setItem('hijri_1448_apts', JSON.stringify(appointments));
+}
+
+// ===================================================
+// اختيار اللون
+// ===================================================
+function setupColorPicker() {
+  const picker = document.getElementById('colorPicker');
+  picker.innerHTML = COLORS.map(c =>
+    `<div class="color-swatch ${c === selectedColor ? 'selected' : ''}"
+      style="background:${c}"
+      onclick="selectColor('${c}')"
+      title="${c}"></div>`
+  ).join('');
+}
+
+function selectColor(c) {
+  selectedColor = c;
+  updateColorPicker();
+}
+
+function updateColorPicker() {
+  const picker = document.getElementById('colorPicker');
+  picker.innerHTML = COLORS.map(c =>
+    `<div class="color-swatch ${c === selectedColor ? 'selected' : ''}"
+      style="background:${c}"
+      onclick="selectColor('${c}')"
+      title="${c}"></div>`
+  ).join('');
+}
+
+// ===================================================
+// التذكيرات
+// ===================================================
+function startReminderCheck() {
+  const notified = new Set();
+  setInterval(() => {
+    const now = new Date();
+    appointments.forEach(apt => {
+      if (apt.reminder <= 0) return;
+      const aptDate = new Date(apt.gYear, apt.gMonth - 1, apt.gDay,
+        parseInt(apt.time.split(':')[0]), parseInt(apt.time.split(':')[1]));
+      const remTime = new Date(aptDate.getTime() - apt.reminder * 60000);
+      const diff = remTime.getTime() - now.getTime();
+      const key = `${apt.id}_${apt.reminder}`;
+      if (diff >= 0 && diff <= 60000 && !notified.has(key)) {
+        notified.add(key);
+        const remLabel = apt.reminder >= 1440 ? 'يوم' : apt.reminder >= 60 ? `${apt.reminder/60} ساعة` : `${apt.reminder} دقيقة`;
+        showToast('warning', `🔔 تذكير: ${apt.title} — بعد ${remLabel}`);
+        playBell();
+        if ('Notification' in window && Notification.permission === 'granted') {
+          new Notification(`🔔 تذكير: ${apt.title}`, { body: `موعدك بعد ${remLabel} — الساعة ${apt.time}` });
+        }
+      }
+    });
+  }, 30000);
+
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+}
+
+function playBell() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.15);
+      gain.gain.linearRampToValueAtTime(0.3, ctx.currentTime + i * 0.15 + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.15 + 0.5);
+      osc.start(ctx.currentTime + i * 0.15);
+      osc.stop(ctx.currentTime + i * 0.15 + 0.5);
+    });
+  } catch(e) {}
+}
+
+// ===================================================
+// الطباعة
+// ===================================================
+function printApt(id) {
+  const apt = appointments.find(a => a.id === id);
+  if (!apt) return;
+  const mName = MONTHS[apt.hMonth - 1]?.name || '';
+  const gmName = GREG_MONTHS[apt.gMonth] || '';
+  const remLabel = apt.reminder >= 1440 ? 'يوم قبل' : apt.reminder >= 60 ? `${apt.reminder/60} ساعة قبل` : apt.reminder > 0 ? `${apt.reminder} دقيقة قبل` : '—';
+
+  const w = window.open('', '_blank', 'width=600,height=500');
+  w.document.write(`<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="UTF-8">
+  <title>طباعة موعد</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body{font-family:'Noto Naskh Arabic',Arial,sans-serif;direction:rtl;padding:30px;background:#fff}
+    .card{border:2px solid #1B4332;border-radius:12px;overflow:hidden;max-width:480px;margin:0 auto;box-shadow:0 4px 20px rgba(27,67,50,.15)}
+    .hdr{background:#1B4332;color:#fff;padding:18px 22px;text-align:center}
+    .hdr .logo{color:#D4AF37;font-size:14px;font-weight:700;margin-bottom:4px}
+    .hdr h1{font-size:20px;font-weight:700}
+    .body{padding:20px 22px}
+    .field{display:flex;gap:10px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #e5e7eb}
+    .field:last-child{border:none;margin:0;padding:0}
+    .ico{font-size:18px;min-width:24px;text-align:center}
+    .lbl{font-size:10px;color:#6b7280;font-weight:600;margin-bottom:2px}
+    .val{font-size:14px;font-weight:700;color:#111}
+    .ftr{background:#f9fafb;padding:10px 22px;text-align:center;font-size:11px;color:#9ca3af;border-top:1px solid #e5e7eb}
+    .ftr a{color:#1B4332;font-weight:700}
+    @media print{body{padding:0}.card{box-shadow:none}}
+  </style></head><body>
+  <div class="card">
+    <div class="hdr"><div class="logo">📅 التقويم الهجري 1448هـ</div><h1>${apt.title}</h1></div>
+    <div class="body">
+      <div class="field"><div class="ico">📆</div><div><div class="lbl">التاريخ الهجري</div><div class="val">${apt.hDay} ${mName} 1448هـ</div></div></div>
+      <div class="field"><div class="ico">🗓️</div><div><div class="lbl">التاريخ الميلادي</div><div class="val">${apt.gDay} ${gmName} ${apt.gYear}م</div></div></div>
+      <div class="field"><div class="ico">🕐</div><div><div class="lbl">الوقت</div><div class="val">${apt.time}</div></div></div>
+      ${apt.desc ? `<div class="field"><div class="ico">📝</div><div><div class="lbl">الوصف</div><div class="val">${apt.desc}</div></div></div>` : ''}
+      ${apt.reminder > 0 ? `<div class="field"><div class="ico">🔔</div><div><div class="lbl">التذكير</div><div class="val">${remLabel}</div></div></div>` : ''}
+    </div>
+  </div>
+  <script>window.onload=function(){window.print()}<\/script></body></html>`);
+  w.document.close();
+}
+
+function printAllApts() {
+  if (appointments.length === 0) { showToast('info', 'لا توجد مواعيد للطباعة'); return; }
+  const sorted = [...appointments].sort((a,b) => a.hMonth !== b.hMonth ? a.hMonth - b.hMonth : a.hDay - b.hDay);
+  const rows = sorted.map(apt => {
+    const mName = MONTHS[apt.hMonth-1]?.name || '';
+    const gmName = GREG_MONTHS[apt.gMonth] || '';
+    const remLabel = apt.reminder >= 1440 ? 'يوم' : apt.reminder >= 60 ? `${apt.reminder/60}س` : apt.reminder > 0 ? `${apt.reminder}د` : '—';
+    return `<tr>
+      <td>${apt.hDay} ${mName}</td>
+      <td>${apt.gDay} ${gmName} ${apt.gYear}</td>
+      <td>${apt.time}</td>
+      <td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${apt.color};margin-left:5px;vertical-align:middle"></span>${apt.title}</td>
+      <td>${apt.desc || '—'}</td>
+      <td>${remLabel}</td>
+    </tr>`;
+  }).join('');
+
+  const w = window.open('', '_blank', 'width=900,height=700');
+  w.document.write(`<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="UTF-8">
+  <title>جميع المواعيد</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body{font-family:'Noto Naskh Arabic',Arial,sans-serif;direction:rtl;padding:20px;background:#fff;font-size:13px}
+    .hdr{background:#1B4332;color:#fff;padding:16px 20px;border-radius:10px 10px 0 0;display:flex;align-items:center;justify-content:space-between}
+    .hdr h1{font-size:18px;font-weight:700}
+    .cnt{background:rgba(255,255,255,.2);padding:3px 12px;border-radius:20px;font-size:12px}
+    table{width:100%;border-collapse:collapse;border:1px solid #d1fae5;border-radius:0 0 10px 10px;overflow:hidden}
+    thead tr{background:#2D6A4F;color:#fff}
+    th{padding:9px 12px;text-align:right;font-size:11px;font-weight:700}
+    td{padding:9px 12px;border-bottom:1px solid #e5e7eb;vertical-align:middle}
+    tr:nth-child(even){background:#f0fdf4}
+    .ftr{margin-top:16px;text-align:center;font-size:11px;color:#9ca3af;padding:10px;border-top:1px solid #e5e7eb}
+    .ftr a{color:#1B4332;font-weight:700}
+    @media print{body{padding:5px}}
+  </style></head><body>
+  <div class="hdr"><h1>📅 جميع المواعيد المسجلة — التقويم الهجري 1448هـ</h1><span class="cnt">${appointments.length} موعد</span></div>
+  <table><thead><tr><th>التاريخ الهجري</th><th>التاريخ الميلادي</th><th>الوقت</th><th>الموعد</th><th>الوصف</th><th>التذكير</th></tr></thead>
+  <tbody>${rows}</tbody></table>
+  <script>window.onload=function(){window.print()}<\/script></body></html>`);
+  w.document.close();
+}
+
+// ===================================================
+// الإشعارات (Toast)
+// ===================================================
+function showToast(type, msg) {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.textContent = msg;
+  container.appendChild(toast);
+  setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateY(-5px)'; setTimeout(() => toast.remove(), 300); }, 3500);
+}
+
+// ===================================================
+// الإعدادات والتبديل
+// ===================================================
+function toggleHolidays() {
+  const p = document.getElementById('holidaysPanel');
+  const btn = document.getElementById('holidayBtn');
+  p.classList.toggle('open');
+  btn.classList.toggle('active');
+  if (document.getElementById('settingsPanel').classList.contains('open')) {
+    document.getElementById('settingsPanel').classList.remove('open');
+    document.getElementById('settingsBtn').classList.remove('active');
+  }
+}
+
+function toggleSettings() {
+  const p = document.getElementById('settingsPanel');
+  const btn = document.getElementById('settingsBtn');
+  p.classList.toggle('open');
+  btn.classList.toggle('active');
+  if (document.getElementById('holidaysPanel').classList.contains('open')) {
+    document.getElementById('holidaysPanel').classList.remove('open');
+    document.getElementById('holidayBtn').classList.remove('active');
+  }
+}
+
+function setView(mode) {
+  viewMode = mode;
+  document.getElementById('btnSingle').classList.toggle('active', mode === 'single');
+  document.getElementById('btnAll').classList.toggle('active', mode === 'all');
+  renderMonthsList();
+  renderCalendar();
+  renderAppointmentsPanel();
+}
+
+function togglePanel() {
+  panelVisible = !panelVisible;
+  const panel = document.getElementById('aptsPanel');
+  const btn = document.getElementById('togglePanelBtn');
+  const btnPanel = document.getElementById('btnPanel');
+  panel.classList.toggle('hidden', !panelVisible);
+  btn.classList.toggle('off', !panelVisible);
+  btn.textContent = panelVisible ? '📋 إخفاء المواعيد' : '📋 المواعيد';
+  btnPanel.textContent = panelVisible ? 'مُفعّلة' : 'مخفية';
+  btnPanel.classList.toggle('active', panelVisible);
+}
+
+// ===================================================
+// مساعدات
+// ===================================================
+function getStartGMonth(m) {
+  const map = {JUN:6,JUL:7,AUG:8,SEP:9,OCT:10,NOV:11,DEC:12,JAN:1,FEB:2,MAR:3,APR:4,MAY:5};
+  const code = m.start.replace(/.*\(.*\)\s+/,'').substring(0,3).toUpperCase();
+  return map[code] || 1;
+}
+function getEndGMonth(m) {
+  const map = {JUN:6,JUL:7,AUG:8,SEP:9,OCT:10,NOV:11,DEC:12,JAN:1,FEB:2,MAR:3,APR:4,MAY:5};
+  const code = m.end.replace(/.*\(.*\)\s+/,'').substring(0,3).toUpperCase();
+  return map[code] || 1;
+}
+
+// ===================================================
+// تشغيل التطبيق
+// ===================================================
+init();
+</script>
+</body>
+</html>
