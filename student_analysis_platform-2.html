@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نظام تحليل نتائج الطلاب</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap');
+
+  :root {
+    --navy: #1a2e44;
+    --navy-light: #243b55;
+    --green: #3cb97a;
+    --green-dark: #2ea368;
+    --green-light: #e8f7f0;
+    --blue: #3a7bd5;
+    --blue-light: #e8f0fb;
+    --red: #e05252;
+    --red-light: #fdeaea;
+    --orange: #f0a03a;
+    --orange-light: #fef3e2;
+    --gray: #6b7280;
+    --gray-light: #f3f4f6;
+    --gray-medium: #9ca3af;
+    --white: #ffffff;
+    --border: #e5e7eb;
+    --shadow: 0 4px 20px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: #f8f9fb;
+    color: var(--navy);
+    min-height: 100vh;
+    direction: rtl;
+  }
+
+  /* ===== SCREENS ===== */
+  .screen {
+    display: none;
+    min-height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px 100px;
+    animation: fadeIn 0.3s ease;
+  }
+  .screen.active { display: flex; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .screen-title {
+    font-size: 2.4rem;
+    font-weight: 900;
+    color: var(--navy);
+    text-align: center;
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+
+  .screen-subtitle {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--gray);
+    text-align: center;
+    margin-bottom: 50px;
+  }
+
+  /* ===== CARDS GRID ===== */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    width: 100%;
+    max-width: 760px;
+  }
+
+  .option-card {
+    background: var(--white);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 40px 30px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .option-card:hover {
+    border-color: var(--green);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-3px);
+  }
+
+  .option-card.selected {
+    border-color: var(--green);
+    background: var(--green-light);
+  }
+
+  .option-card .icon-wrap {
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .option-card svg {
+    width: 52px;
+    height: 52px;
+    stroke: var(--green);
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .option-card h3 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--navy);
+  }
+
+  .option-card p {
+    font-size: 0.9rem;
+    color: var(--gray);
+    font-weight: 400;
+  }
+
+  /* ===== BOTTOM STICKY NAV ===== */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--gray);
+    color: var(--white);
+    text-align: center;
+    padding: 18px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    z-index: 100;
+  }
+  .bottom-nav:hover { background: var(--navy); }
+  .bottom-nav.hidden { display: none; }
+
+  /* ===== REPORT TYPE CARDS WITH PREVIEW ===== */
+  .report-preview {
+    width: 140px;
+    height: 160px;
+    background: #f0f2f5;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid #dde0e5;
+  }
+
+  .report-preview svg { width: 100%; height: 100%; }
+
+  /* ===== UPLOAD AREA ===== */
+  .upload-section {
+    width: 100%;
+    max-width: 760px;
+  }
+
+  .upload-zone {
+    border: 2.5px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 60px 30px;
+    text-align: center;
+    cursor: pointer;
+    background: var(--white);
+    transition: all 0.2s;
+    margin-bottom: 20px;
+  }
+
+  .upload-zone:hover, .upload-zone.drag-over {
+    border-color: var(--green);
+    background: var(--green-light);
+  }
+
+  .upload-zone .upload-emoji { font-size: 3.5rem; margin-bottom: 16px; }
+  .upload-zone h3 { font-size: 1.2rem; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+  .upload-zone p { font-size: 0.88rem; color: var(--gray); }
+
+  #fileInput { display: none; }
+
+  .file-list {
+    background: var(--white);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  .file-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+  .file-item:last-child { border-bottom: none; }
+  .file-item .file-name { flex: 1; font-weight: 600; color: var(--navy); }
+  .file-item .file-size { color: var(--gray); font-size: 0.8rem; }
+  .file-item .file-remove {
+    background: none; border: none; color: var(--red); cursor: pointer; font-size: 1.1rem; padding: 2px 6px;
+  }
+
+  .btn-extract {
+    width: 100%;
+    background: var(--gray);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 18px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    font-family: 'Tajawal', sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background 0.2s;
+  }
+  .btn-extract:hover { background: var(--navy); }
+  .btn-extract.active { background: var(--green); }
+  .btn-extract.active:hover { background: var(--green-dark); }
+
+  /* ===== SUCCESS + METADATA ===== */
+  .success-banner {
+    background: var(--green-light);
+    border: 1.5px solid var(--green);
+    border-radius: var(--radius-sm);
+    padding: 16px 22px;
+    text-align: center;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--green-dark);
+    margin-bottom: 20px;
+    width: 100%;
+  }
+
+  .meta-box {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+
+  .meta-box h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+  }
+
+  .meta-field label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--gray);
+    margin-bottom: 6px;
+  }
+
+  .meta-field label span.req { color: var(--red); }
+
+  .meta-field input {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.92rem;
+    font-family: 'Tajawal', sans-serif;
+    direction: rtl;
+    color: var(--navy);
+    transition: border-color 0.2s;
+    background: var(--gray-light);
+  }
+  .meta-field input:focus { outline: none; border-color: var(--green); background: var(--white); }
+
+  /* ===== CLASS HEADER ===== */
+  .class-header {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    width: 100%;
+  }
+
+  .class-header h4 { font-size: 1rem; font-weight: 800; color: var(--navy); }
+
+  .class-header input {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    font-family: 'Tajawal', sans-serif;
+    color: var(--navy);
+    width: 180px;
+    text-align: center;
+  }
+
+  /* ===== STUDENT TABLE ===== */
+  .students-table-wrap {
+    width: 100%;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  .students-table-header {
+    display: grid;
+    grid-template-columns: 50px 1fr 140px 120px 60px;
+    background: var(--navy);
+    color: var(--white);
+    padding: 12px 16px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .student-row {
+    display: grid;
+    grid-template-columns: 50px 1fr 140px 120px 60px;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    gap: 10px;
+    align-items: center;
+    transition: background 0.15s;
+  }
+  .student-row:hover { background: var(--gray-light); }
+
+  .student-row input[type="text"],
+  .student-row input[type="number"] {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 0.88rem;
+    font-family: 'Tajawal', sans-serif;
+    direction: rtl;
+    color: var(--navy);
+  }
+  .student-row input:focus { outline: none; border-color: var(--green); }
+
+  .grade-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-align: center;
+    width: 100%;
+  }
+
+  .grade-badge.ممتاز { background: #d1fae5; color: #065f46; }
+  .grade-badge.جيد-جدا { background: #dbeafe; color: #1e40af; }
+  .grade-badge.جيد { background: #ede9fe; color: #5b21b6; }
+  .grade-badge.مقبول { background: #fef3c7; color: #92400e; }
+  .grade-badge.راسب { background: var(--red-light); color: var(--red); }
+  .grade-badge.-- { background: var(--gray-light); color: var(--gray); }
+
+  .btn-delete {
+    background: var(--red);
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    width: 34px;
+    height: 34px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+  .btn-delete:hover { background: #c0392b; }
+
+  .table-actions {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .btn-action {
+    background: var(--navy);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    font-family: 'Tajawal', sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s;
+  }
+  .btn-action:hover { background: var(--navy-light); }
+
+  /* ===== STATS SUMMARY BAR ===== */
+  .stats-mini {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 20px;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+    width: 100%;
+  }
+
+  .stat-mini-item { text-align: center; }
+  .stat-mini-item .val {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--navy);
+    display: block;
+    padding: 4px 8px;
+    border-radius: 6px;
+    margin-bottom: 4px;
+  }
+  .stat-mini-item .val.pass { background: #d1fae5; color: #065f46; }
+  .stat-mini-item .val.fail { background: var(--red-light); color: var(--red); }
+  .stat-mini-item .lbl { font-size: 0.75rem; color: var(--gray); font-weight: 500; }
+
+  /* ===== ANALYSIS SCREEN ===== */
+  #analysisScreen {
+    padding: 30px 20px 100px;
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: stretch;
+  }
+
+  .analysis-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .analysis-header h1 {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+
+  .analysis-header p { font-size: 0.9rem; color: var(--gray); }
+
+  .stats-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .stat-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+
+  .stat-card .num {
+    font-size: 2.2rem;
+    font-weight: 900;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .stat-card .lbl { font-size: 0.88rem; color: var(--gray); font-weight: 500; }
+
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+
+  .chart-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    box-shadow: var(--shadow);
+  }
+
+  .chart-card h4 {
+    font-size: 0.92rem;
+    font-weight: 800;
+    color: var(--navy);
+    text-align: center;
+    margin-bottom: 14px;
+  }
+
+  .chart-card canvas { max-height: 220px; }
+
+  /* Grades table in analysis */
+  .grades-breakdown {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+
+  .grades-breakdown h4 {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: 16px;
+  }
+
+  .grade-row-analysis {
+    display: grid;
+    grid-template-columns: 120px 1fr 80px 80px;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .grade-label { font-size: 0.88rem; font-weight: 700; color: var(--navy); }
+  .progress-bar-wrap { background: var(--gray-light); border-radius: 6px; height: 12px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; border-radius: 6px; transition: width 0.8s ease; }
+  .grade-count { font-size: 0.88rem; font-weight: 700; text-align: center; color: var(--navy); }
+  .grade-pct { font-size: 0.82rem; color: var(--gray); text-align: center; }
+
+  /* ===== DOWNLOAD SECTION ===== */
+  .download-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .download-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .download-card .dc-info { flex: 1; }
+  .download-card .dc-info h4 { font-size: 0.95rem; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+  .download-card .dc-info p { font-size: 0.8rem; color: var(--gray); }
+
+  .btn-download {
+    border: none;
+    border-radius: 8px;
+    padding: 11px 20px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    font-family: 'Tajawal', sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .btn-download.green { background: var(--green); color: var(--white); }
+  .btn-download.green:hover { background: var(--green-dark); }
+  .btn-download.blue { background: var(--blue); color: var(--white); }
+  .btn-download.blue:hover { background: #2c6bc7; }
+  .btn-download.gray { background: #6b7280; color: var(--white); }
+  .btn-download.gray:hover { background: var(--navy); }
+
+  /* ===== STUDENT DETAIL TABLE ===== */
+  .detail-table {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+
+  .detail-table table { width: 100%; border-collapse: collapse; }
+  .detail-table thead { background: var(--navy); color: var(--white); }
+  .detail-table thead th { padding: 12px 16px; font-size: 0.88rem; font-weight: 700; text-align: center; }
+  .detail-table tbody tr:nth-child(even) { background: var(--gray-light); }
+  .detail-table tbody td { padding: 10px 16px; font-size: 0.85rem; text-align: center; border-bottom: 1px solid var(--border); }
+
+  /* ===== LOADING ===== */
+  .loading-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(255,255,255,0.9);
+    z-index: 999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+  }
+  .loading-overlay.active { display: flex; }
+  .spinner {
+    width: 50px; height: 50px;
+    border: 4px solid var(--border);
+    border-top-color: var(--green);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-size: 1rem; font-weight: 700; color: var(--navy); }
+
+  /* ===== FOOTER CREDIT ===== */
+  .credit {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--gray-medium);
+    padding: 10px;
+    margin-top: 10px;
+  }
+
+  @media print {
+    .bottom-nav, .btn-action, .btn-extract, .table-actions, .btn-download, .download-section, #nav-analyse { display: none !important; }
+    .screen { padding: 10px; }
+  }
+
+  @media (max-width: 700px) {
+    .cards-grid { grid-template-columns: 1fr; }
+    .stats-cards { grid-template-columns: 1fr 1fr; }
+    .charts-grid { grid-template-columns: 1fr; }
+    .meta-grid { grid-template-columns: 1fr 1fr; }
+    .screen-title { font-size: 1.6rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Loading -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-text" id="loadingText">جارٍ المعالجة...</div>
+</div>
+
+<!-- ==================== SCREEN 1: Report Type ==================== -->
+<div class="screen active" id="screen1">
+  <div class="screen-title">نظام تحليل نتائج الطلاب</div>
+  <div class="screen-subtitle">اختر نوع التقرير</div>
+
+  <div class="cards-grid">
+    <div class="option-card" onclick="selectReportType('detailed')">
+      <div class="report-preview">
+        <svg viewBox="0 0 140 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="10" width="120" height="140" rx="8" fill="#f0f2f5" stroke="#dde0e5"/>
+          <rect x="20" y="20" width="100" height="20" rx="4" fill="#1a2e44"/>
+          <rect x="20" y="48" width="60" height="8" rx="2" fill="#e5e7eb"/>
+          <rect x="20" y="62" width="80" height="8" rx="2" fill="#e5e7eb"/>
+          <rect x="20" y="78" width="28" height="8" rx="2" fill="#3cb97a"/>
+          <rect x="52" y="78" width="28" height="8" rx="2" fill="#3a7bd5"/>
+          <rect x="84" y="78" width="28" height="8" rx="2" fill="#e05252"/>
+          <rect x="20" y="96" width="100" height="6" rx="2" fill="#f0f2f5"/>
+          <rect x="20" y="106" width="80" height="6" rx="2" fill="#f0f2f5"/>
+          <rect x="20" y="116" width="90" height="6" rx="2" fill="#f0f2f5"/>
+          <rect x="20" y="130" width="70" height="6" rx="2" fill="#f0f2f5"/>
+          <text x="70" y="156" text-anchor="middle" font-size="9" fill="#9ca3af">3+ صفحات</text>
+        </svg>
+      </div>
+      <h3>تقرير مفصل (متعدد الصفحات)</h3>
+      <p>أدخل أسماء الطلاب مع الدرجات</p>
+    </div>
+
+    <div class="option-card" onclick="selectReportType('quick')">
+      <div class="report-preview">
+        <svg viewBox="0 0 140 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="10" width="120" height="140" rx="8" fill="#f0f2f5" stroke="#dde0e5"/>
+          <circle cx="70" cy="35" r="18" fill="none" stroke="#3cb97a" stroke-width="3"/>
+          <rect x="30" y="60" width="80" height="12" rx="3" fill="#1a2e44"/>
+          <rect x="30" y="80" width="25" height="10" rx="2" fill="#3cb97a"/>
+          <rect x="58" y="80" width="25" height="10" rx="2" fill="#3a7bd5"/>
+          <rect x="86" y="80" width="25" height="10" rx="2" fill="#e05252"/>
+          <rect x="25" y="100" width="90" height="6" rx="2" fill="#e5e7eb"/>
+          <circle cx="35" cy="120" r="10" fill="none" stroke="#3cb97a" stroke-width="2"/>
+          <circle cx="60" cy="120" r="10" fill="none" stroke="#3a7bd5" stroke-width="2"/>
+          <circle cx="85" cy="120" r="10" fill="none" stroke="#f0a03a" stroke-width="2"/>
+          <circle cx="110" cy="120" r="10" fill="none" stroke="#e05252" stroke-width="2"/>
+          <rect x="25" y="138" width="90" height="8" rx="3" fill="#3cb97a"/>
+        </svg>
+      </div>
+      <h3>تقرير سريع (صفحة واحدة)</h3>
+      <p>فقط أدخل الدرجات بدون أسماء الطلاب</p>
+    </div>
+  </div>
+
+  <div class="credit">تصميم د/فواز</div>
+</div>
+
+<!-- ==================== SCREEN 2: Class Count ==================== -->
+<div class="screen" id="screen2">
+  <div class="screen-title">نظام تحليل نتائج الطلاب</div>
+  <div class="screen-subtitle">اختر عدد الفصول</div>
+
+  <div class="cards-grid">
+    <div class="option-card" onclick="selectClassCount('single')">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0 1 12 0v2"/></svg>
+      </div>
+      <h3>فصل واحد</h3>
+      <p>تحليل نتائج فصل دراسي واحد</p>
+    </div>
+
+    <div class="option-card" onclick="selectClassCount('multiple')">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3"/><path d="M3 20v-1a5 5 0 0 1 10 0v1"/><circle cx="17" cy="9" r="2"/><path d="M17 20v-1a4 4 0 0 1 4 4"/></svg>
+      </div>
+      <h3>عدة فصول</h3>
+      <p>مقارنة نتائج أكثر من فصل</p>
+    </div>
+  </div>
+
+  <div class="bottom-nav" onclick="goToScreen(1)">العودة لاختيار نوع التقرير</div>
+  <div class="credit">تصميم د/فواز</div>
+</div>
+
+<!-- ==================== SCREEN 3: Input Method ==================== -->
+<div class="screen" id="screen3">
+  <div class="screen-title">نظام تحليل نتائج الطلاب</div>
+  <div class="screen-subtitle">اختر طريقة إدخال البيانات</div>
+
+  <div class="cards-grid">
+    <div class="option-card" onclick="selectInputMethod('file')">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+      </div>
+      <h3>استخراج من ملف أو صورة أو excel</h3>
+      <p>رفع صور أو ملفات PDF أو تصوير الكشف مباشرة أو ملفات Excel</p>
+    </div>
+
+    <div class="option-card" onclick="selectInputMethod('manual')">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </div>
+      <h3>إدخال يدوي</h3>
+      <p>أدخل أسماء الطلاب والدرجات يدوياً</p>
+    </div>
+  </div>
+
+  <div class="bottom-nav" onclick="goToScreen(2)">العودة لاختيار عدد الفصول</div>
+  <div class="credit">تصميم د/فواز</div>
+</div>
+
+<!-- ==================== SCREEN 4: File Upload ==================== -->
+<div class="screen" id="screen4">
+  <div class="screen-title" style="font-size:1.8rem; margin-bottom:8px;">📄 استخراج البيانات من الملفات</div>
+  <div class="screen-subtitle">ارفع صور أو ملفات تحتوي على درجات الطلاب - سيتم استخراج الأسماء والدرجات</div>
+
+  <div class="upload-section">
+    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+      <div class="upload-emoji">📤</div>
+      <h3>اضغط أو اسحب الملفات هنا</h3>
+      <p>الملفات المدعومة: صور (JPG, PNG)، PDF، Excel، Word</p>
+    </div>
+    <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.pdf,.xlsx,.xls,.csv,.doc,.docx">
+
+    <div class="file-list" id="fileList" style="display:none"></div>
+
+    <button class="btn-extract" id="btnExtract" onclick="extractFromFiles()">
+      <span>⬆</span> استخراج البيانات
+    </button>
+  </div>
+
+  <div class="bottom-nav" onclick="goToScreen(3)">العودة لاختيار طريقة الإدخال</div>
+  <div class="credit">تصميم د/فواز</div>
+</div>
+
+<!-- ==================== SCREEN 5: Data Review (after extract or manual) ==================== -->
+<div class="screen" id="screen5">
+  <div style="width:100%; max-width:900px;">
+    <div class="screen-title" style="font-size:1.8rem; margin-bottom:6px;">📄 استخراج البيانات من الملفات</div>
+    <div class="screen-subtitle" style="margin-bottom:16px;">ارفع صور أو ملفات تحتوي على درجات الطلاب - سيتم استخراج الأسماء والدرجات</div>
+
+    <div class="success-banner" id="successBanner">✅ تم استخراج البيانات بنجاح!</div>
+
+    <!-- Metadata -->
+    <div class="meta-box">
+      <h4>📋 المعلومات (يمكنك تعديلها)</h4>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <label>اسم المدرسة</label>
+          <input type="text" id="schoolName" placeholder="اسم المدرسة">
+        </div>
+        <div class="meta-field">
+          <label>المادة <span class="req">*</span></label>
+          <input type="text" id="subjectName" placeholder="اسم المادة">
+        </div>
+        <div class="meta-field">
+          <label>الصف الدراسي</label>
+          <input type="text" id="gradeName" placeholder="مثال: الثالث المتوسط" value="الثالث المتوسط">
+        </div>
+        <div class="meta-field">
+          <label>اسم الاختبار</label>
+          <input type="text" id="examName" placeholder="مثال: اختبار الفترة الأولى">
+        </div>
+        <div class="meta-field">
+          <label>الدرجة الكلية <span class="req">*</span></label>
+          <input type="number" id="totalScore" placeholder="100" value="100">
+        </div>
+        <div class="meta-field">
+          <label>درجة النجاح</label>
+          <input type="number" id="passScore" placeholder="50" value="50">
+        </div>
+      </div>
+    </div>
+
+    <!-- Classes container -->
+    <div id="classesContainer"></div>
+
+    <!-- Actions -->
+    <div class="table-actions">
+      <button class="btn-action" onclick="addStudentToCurrentClass()">+ إضافة طالب</button>
+      <button class="btn-action" onclick="recalculate()" style="background:var(--green)">🔄 إعادة حساب</button>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:12px; margin-top:8px;">
+      <button class="btn-extract active" onclick="goToAnalysis()">المتابعة للتحليل ›</button>
+      <button class="btn-extract" onclick="addNewFile()" style="gap:10px">🔄 رفع ملفات جديدة</button>
+      <button class="btn-extract" onclick="goToScreen(3)">العودة</button>
+    </div>
+  </div>
+  <div class="credit">تصميم د/فواز</div>
+</div>
+
+<!-- ==================== SCREEN 6: Analysis ==================== -->
+<div class="screen" id="screen6" style="align-items:flex-start;">
+  <div style="width:100%; max-width:1100px; margin:0 auto;">
+
+    <div class="analysis-header">
+      <h1 id="analysisTitle">تقرير تحليل نتائج الطلاب</h1>
+      <p id="analysisMeta"></p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-cards" id="statsCards"></div>
+
+    <!-- Charts -->
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h4>توزيع التقديرات (قطبي)</h4>
+        <canvas id="polarChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h4>نسبة النجاح والرسوب</h4>
+        <canvas id="doughnutChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h4>توزيع التقديرات (أعمدة)</h4>
+        <canvas id="barChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Grades Breakdown -->
+    <div class="grades-breakdown" id="gradesBreakdown">
+      <h4>📊 تفصيل التقديرات</h4>
+    </div>
+
+    <!-- Download Section -->
+    <div class="download-section">
+      <div class="download-card">
+        <div class="dc-info">
+          <h4>تقرير مفصل (متعدد الصفحات)</h4>
+          <p>تقرير شامل بجميع التفاصيل والرسوم البيانية</p>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <button class="btn-download green" onclick="downloadReport('detailed')">⬇ تنزيل</button>
+          <button class="btn-download gray" onclick="shareReport()">⇗ مشاركة</button>
+        </div>
+      </div>
+      <div class="download-card">
+        <div class="dc-info">
+          <h4>تقرير سريع (صفحة واحدة)</h4>
+          <p>ملخص سريع للطباعة والمشاركة الفورية</p>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <button class="btn-download blue" onclick="downloadReport('quick')">⬇ تنزيل</button>
+          <button class="btn-download gray" onclick="shareReport()">⇗ مشاركة</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Student Detail Table -->
+    <div class="detail-table" id="detailTable"></div>
+
+    <div style="display:flex; gap:12px; margin-top:16px;">
+      <button class="btn-download gray" onclick="goToScreen(5)" style="flex:1; padding:14px; font-size:0.95rem;">← العودة للبيانات</button>
+      <button class="btn-download green" onclick="window.print()" style="flex:1; padding:14px; font-size:0.95rem;">🖨 طباعة</button>
+    </div>
+  </div>
+  <div class="credit">تصميم د/فواز</div>
+</div>
+
+<script>
+// ===================== STATE =====================
+let state = {
+  reportType: 'detailed',
+  classCount: 'single',
+  inputMethod: 'manual',
+  classes: [],
+  totalScore: 100,
+  passScore: 50
+};
+
+let uploadedFiles = [];
+let charts = {};
+
+// ===================== NAVIGATION =====================
+function goToScreen(n) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen' + n).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function selectReportType(type) {
+  state.reportType = type;
+  goToScreen(2);
+}
+
+function selectClassCount(count) {
+  state.classCount = count;
+  goToScreen(3);
+}
+
+function selectInputMethod(method) {
+  state.inputMethod = method;
+  if (method === 'file') {
+    goToScreen(4);
+  } else {
+    initManualInput();
+    goToScreen(5);
+  }
+}
+
+// ===================== FILE UPLOAD =====================
+const uploadZone = document.getElementById('uploadZone');
+const fileInput = document.getElementById('fileInput');
+const fileListEl = document.getElementById('fileList');
+
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadZone.classList.remove('drag-over');
+  handleFiles(e.dataTransfer.files);
+});
+
+fileInput.addEventListener('change', e => handleFiles(e.target.files));
+
+function handleFiles(files) {
+  for (let f of files) uploadedFiles.push(f);
+  renderFileList();
+}
+
+function renderFileList() {
+  if (uploadedFiles.length === 0) { fileListEl.style.display = 'none'; return; }
+  fileListEl.style.display = 'block';
+  fileListEl.innerHTML = uploadedFiles.map((f, i) => `
+    <div class="file-item">
+      <span>${getFileEmoji(f.name)}</span>
+      <span class="file-name">${f.name}</span>
+      <span class="file-size">${(f.size/1024).toFixed(1)} KB</span>
+      <button class="file-remove" onclick="removeFile(${i})">✕</button>
+    </div>
+  `).join('');
+
+  const btn = document.getElementById('btnExtract');
+  btn.className = 'btn-extract ' + (uploadedFiles.length > 0 ? 'active' : '');
+}
+
+function getFileEmoji(name) {
+  if (/\.(jpg|jpeg|png|gif)$/i.test(name)) return '🖼';
+  if (/\.pdf$/i.test(name)) return '📄';
+  if (/\.(xlsx|xls|csv)$/i.test(name)) return '📊';
+  if (/\.(doc|docx)$/i.test(name)) return '📝';
+  return '📁';
+}
+
+function removeFile(i) {
+  uploadedFiles.splice(i, 1);
+  renderFileList();
+}
+
+async function extractFromFiles() {
+  if (uploadedFiles.length === 0) { alert('الرجاء رفع ملف واحد على الأقل'); return; }
+
+  showLoading('جارٍ استخراج البيانات بالذكاء الاصطناعي...');
+
+  // Check for Excel files first (parse locally)
+  const excelFile = uploadedFiles.find(f => /\.(xlsx|xls|csv)$/i.test(f.name));
+  if (excelFile) {
+    await extractFromExcel(excelFile);
+    hideLoading();
+    return;
+  }
+
+  // Otherwise use AI API for images/PDF
+  try {
+    const filesData = await Promise.all(uploadedFiles.map(async f => {
+      const b64 = await fileToBase64(f);
+      const isImage = /\.(jpg|jpeg|png)$/i.test(f.name);
+      return { name: f.name, b64, isImage };
+    }));
+
+    const content = filesData.map(fd => {
+      if (fd.isImage) {
+        const mime = fd.name.endsWith('.png') ? 'image/png' : 'image/jpeg';
+        return { type: 'image', source: { type: 'base64', media_type: mime, data: fd.b64 } };
+      }
+      return { type: 'text', text: `ملف: ${fd.name}\n[محتوى مرفوع]` };
+    });
+
+    content.push({
+      type: 'text',
+      text: `استخرج من هذه الملفات/الصور جميع أسماء الطلاب ودرجاتهم.
+أجب فقط بـ JSON صالح بهذا الشكل بدون أي نص إضافي:
+{
+  "classLabel": "اسم الفصل إن وجد",
+  "totalScore": درجة_كلية_إذا_وجدت_أو_null,
+  "students": [{"name": "اسم الطالب", "score": درجة_رقمية}, ...]
+}
+إذا لم يكن هناك أسماء، استخدم "طالب 1", "طالب 2" ...
+إذا كانت هناك فصول متعددة، أعطِ أول فصل فقط.`
+    });
+
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content }]
+      })
+    });
+
+    const data = await resp.json();
+    const text = data.content.map(c => c.text || '').join('');
+    const cleaned = text.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(cleaned);
+
+    state.classes = [{
+      label: parsed.classLabel || 'الفصل 1',
+      students: parsed.students || []
+    }];
+    if (parsed.totalScore) document.getElementById('totalScore').value = parsed.totalScore;
+
+  } catch(e) {
+    // Fallback demo data
+    state.classes = [{ label: 'الفصل 1', students: generateDemoStudents(30) }];
+    document.getElementById('successBanner').textContent = '⚠️ تم تحميل بيانات تجريبية - تحقق من الملفات';
+  }
+
+  hideLoading();
+  renderDataScreen();
+  goToScreen(5);
+}
+
+async function extractFromExcel(file) {
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const wb = XLSX.read(e.target.result, { type: 'binary' });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, { header: 1 });
+
+      const students = [];
+      for (let row of rows) {
+        const name = row[0] ? String(row[0]).trim() : '';
+        const score = parseFloat(row[1] || row[2]);
+        if (name && !isNaN(score)) students.push({ name, score });
+      }
+
+      if (students.length === 0) {
+        state.classes = [{ label: 'الفصل 1', students: generateDemoStudents(20) }];
+      } else {
+        state.classes = [{ label: 'الفصل 1', students }];
+      }
+
+      renderDataScreen();
+      goToScreen(5);
+      resolve();
+    };
+    reader.readAsBinaryString(file);
+  });
+}
+
+function fileToBase64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result.split(',')[1]);
+    r.onerror = () => rej(new Error('فشل القراءة'));
+    r.readAsDataURL(file);
+  });
+}
+
+// ===================== MANUAL INPUT =====================
+function initManualInput() {
+  const count = state.classCount === 'single' ? 1 : 3;
+  state.classes = [];
+  for (let i = 0; i < count; i++) {
+    state.classes.push({
+      label: count === 1 ? 'الفصل 1' : `الفصل ${i + 1}`,
+      students: Array.from({length: 5}, (_, j) => ({ name: `طالب ${j+1}`, score: '' }))
+    });
+  }
+  document.getElementById('successBanner').textContent = '📝 أدخل بيانات الطلاب';
+  document.getElementById('successBanner').style.background = 'var(--blue-light)';
+  document.getElementById('successBanner').style.borderColor = 'var(--blue)';
+  document.getElementById('successBanner').style.color = 'var(--blue)';
+  renderDataScreen();
+}
+
+function addNewFile() {
+  uploadedFiles = [];
+  renderFileList();
+  goToScreen(4);
+}
+
+// ===================== DATA SCREEN =====================
+function renderDataScreen() {
+  const container = document.getElementById('classesContainer');
+  container.innerHTML = '';
+
+  state.classes.forEach((cls, ci) => {
+    const passScore = parseInt(document.getElementById('passScore')?.value || 50);
+    const totalScore = parseInt(document.getElementById('totalScore')?.value || 100);
+
+    const passCount = cls.students.filter(s => parseFloat(s.score) >= passScore).length;
+    const failCount = cls.students.filter(s => parseFloat(s.score) < passScore && s.score !== '').length;
+
+    container.innerHTML += `
+      <div class="class-header">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <h4>📚 ${cls.label} (${cls.students.length} طالب)</h4>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <label style="font-size:0.82rem; color:var(--gray); font-weight:600;">اسم الفصل:</label>
+          <input type="text" value="${cls.label}" onchange="updateClassName(${ci}, this.value)" style="border:1.5px solid var(--border); border-radius:8px; padding:7px 12px; font-size:0.88rem; font-family:'Tajawal',sans-serif; width:140px;">
+        </div>
+      </div>
+
+      <div class="stats-mini">
+        <div class="stat-mini-item"><span class="val">${cls.students.length}</span><span class="lbl">عدد الطلاب</span></div>
+        <div class="stat-mini-item"><span class="val">${avgScore(cls.students).toFixed(1)}</span><span class="lbl">المتوسط</span></div>
+        <div class="stat-mini-item"><span class="val">${maxScore(cls.students)}</span><span class="lbl">أعلى درجة</span></div>
+        <div class="stat-mini-item"><span class="val">${minScore(cls.students)}</span><span class="lbl">أقل درجة</span></div>
+        <div class="stat-mini-item"><span class="val pass">${passCount} (${cls.students.length ? ((passCount/cls.students.length)*100).toFixed(0) : 0}%)</span><span class="lbl">ناجح</span></div>
+        <div class="stat-mini-item"><span class="val fail">${failCount} (${cls.students.length ? ((failCount/cls.students.length)*100).toFixed(0) : 0}%)</span><span class="lbl">راسب</span></div>
+      </div>
+
+      <div class="students-table-wrap">
+        <div class="students-table-header">
+          <span>#</span>
+          <span>اسم الطالب</span>
+          <span>الدرجة</span>
+          <span>التقدير</span>
+          <span>حذف</span>
+        </div>
+        <div id="classRows_${ci}">
+          ${cls.students.map((s, si) => renderStudentRow(ci, si, s, totalScore, passScore)).join('')}
+        </div>
+      </div>
+      <button class="btn-action" onclick="addStudentToClass(${ci})" style="margin-bottom:20px; background:var(--navy)">+ إضافة طالب</button>
+    `;
+  });
+}
+
+function renderStudentRow(ci, si, s, totalScore, passScore) {
+  const grade = getGrade(s.score, passScore, totalScore);
+  return `
+    <div class="student-row" id="row_${ci}_${si}">
+      <span style="color:var(--gray); font-size:0.85rem;">${si+1}</span>
+      <input type="text" value="${s.name || ''}" placeholder="اسم الطالب" 
+             oninput="updateStudent(${ci},${si},'name',this.value)">
+      <input type="number" value="${s.score !== '' ? s.score : ''}" placeholder="الدرجة" min="0" max="${totalScore}" step="0.5"
+             oninput="updateStudent(${ci},${si},'score',this.value)">
+      <span class="grade-badge ${grade}">${grade}</span>
+      <button class="btn-delete" onclick="deleteStudent(${ci},${si})">🗑</button>
+    </div>
+  `;
+}
+
+function updateStudent(ci, si, field, val) {
+  if (field === 'score') val = val === '' ? '' : parseFloat(val);
+  state.classes[ci].students[si][field] = val;
+  const passScore = parseInt(document.getElementById('passScore')?.value || 50);
+  const totalScore = parseInt(document.getElementById('totalScore')?.value || 100);
+  const grade = getGrade(state.classes[ci].students[si].score, passScore, totalScore);
+  const badge = document.querySelector(`#row_${ci}_${si} .grade-badge`);
+  if (badge) { badge.textContent = grade; badge.className = `grade-badge ${grade}`; }
+}
+
+function updateClassName(ci, val) {
+  state.classes[ci].label = val;
+}
+
+function addStudentToClass(ci) {
+  const n = state.classes[ci].students.length + 1;
+  state.classes[ci].students.push({ name: `طالب ${n}`, score: '' });
+  renderDataScreen();
+}
+
+function addStudentToCurrentClass() { addStudentToClass(0); }
+
+function deleteStudent(ci, si) {
+  state.classes[ci].students.splice(si, 1);
+  renderDataScreen();
+}
+
+function recalculate() { renderDataScreen(); }
+
+// ===================== GRADE HELPERS =====================
+function getGrade(score, passScore, totalScore) {
+  if (score === '' || score === null || isNaN(score)) return '--';
+  const pct = (score / totalScore) * 100;
+  if (pct >= 90) return 'ممتاز';
+  if (pct >= 80) return 'جيد-جدا';
+  if (pct >= 70) return 'جيد';
+  if (pct >= (passScore / totalScore * 100)) return 'مقبول';
+  return 'راسب';
+}
+
+function avgScore(students) {
+  const valid = students.filter(s => s.score !== '' && !isNaN(s.score));
+  if (!valid.length) return 0;
+  return valid.reduce((a, s) => a + parseFloat(s.score), 0) / valid.length;
+}
+
+function maxScore(students) {
+  const valid = students.filter(s => s.score !== '' && !isNaN(s.score));
+  if (!valid.length) return '-';
+  return Math.max(...valid.map(s => parseFloat(s.score)));
+}
+
+function minScore(students) {
+  const valid = students.filter(s => s.score !== '' && !isNaN(s.score));
+  if (!valid.length) return '-';
+  return Math.min(...valid.map(s => parseFloat(s.score)));
+}
+
+function generateDemoStudents(count) {
+  return Array.from({length: count}, (_, i) => ({
+    name: `طالب ${i+1}`,
+    score: parseFloat((Math.random() * 60 + 10).toFixed(1))
+  }));
+}
+
+// ===================== ANALYSIS =====================
+function goToAnalysis() {
+  const total = parseFloat(document.getElementById('totalScore').value) || 100;
+  const pass = parseFloat(document.getElementById('passScore').value) || 50;
+  state.totalScore = total;
+  state.passScore = pass;
+
+  buildAnalysis();
+  goToScreen(6);
+}
+
+function buildAnalysis() {
+  const total = state.totalScore;
+  const pass = state.passScore;
+  const cls = state.classes[0]; // primary class
+
+  const allStudents = cls.students.filter(s => s.score !== '' && !isNaN(parseFloat(s.score)));
+  const scores = allStudents.map(s => parseFloat(s.score));
+
+  const passStudents = scores.filter(s => s >= pass);
+  const failStudents = scores.filter(s => s < pass);
+
+  const avg = scores.length ? (scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(2) : 0;
+  const max = scores.length ? Math.max(...scores) : 0;
+  const min = scores.length ? Math.min(...scores) : 0;
+
+  // Title
+  const subj = document.getElementById('subjectName').value || 'النتائج';
+  const exam = document.getElementById('examName').value || '';
+  const grade = document.getElementById('gradeName').value || '';
+  document.getElementById('analysisTitle').textContent = `تقرير تحليل نتائج ${subj}`;
+  document.getElementById('analysisMeta').textContent = [grade, exam].filter(Boolean).join(' | ');
+
+  // Stats cards
+  document.getElementById('statsCards').innerHTML = `
+    <div class="stat-card"><span class="num" style="color:var(--navy)">${allStudents.length}</span><span class="lbl">إجمالي الطلاب</span></div>
+    <div class="stat-card"><span class="num" style="color:var(--blue)">${avg}</span><span class="lbl">المتوسط العام</span></div>
+    <div class="stat-card"><span class="num" style="color:var(--red)">${min}</span><span class="lbl">أقل درجة</span></div>
+    <div class="stat-card"><span class="num" style="color:var(--green)">${max}</span><span class="lbl">أعلى درجة</span></div>
+  `;
+
+  // Grade counts
+  const gradeGroups = {
+    'ممتاز': { color: '#10b981', scores: [] },
+    'جيد جداً': { color: '#3b82f6', scores: [] },
+    'جيد': { color: '#8b5cf6', scores: [] },
+    'مقبول': { color: '#f59e0b', scores: [] },
+    'راسب': { color: '#ef4444', scores: [] }
+  };
+
+  for (let s of scores) {
+    const pct = (s / total) * 100;
+    if (pct >= 90) gradeGroups['ممتاز'].scores.push(s);
+    else if (pct >= 80) gradeGroups['جيد جداً'].scores.push(s);
+    else if (pct >= 70) gradeGroups['جيد'].scores.push(s);
+    else if (s >= pass) gradeGroups['مقبول'].scores.push(s);
+    else gradeGroups['راسب'].scores.push(s);
+  }
+
+  // Charts
+  destroyCharts();
+
+  // Polar
+  const polarCtx = document.getElementById('polarChart').getContext('2d');
+  charts.polar = new Chart(polarCtx, {
+    type: 'polarArea',
+    data: {
+      labels: Object.keys(gradeGroups),
+      datasets: [{
+        data: Object.values(gradeGroups).map(g => g.scores.length),
+        backgroundColor: Object.values(gradeGroups).map(g => g.color + 'aa')
+      }]
+    },
+    options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { font: { family: 'Tajawal' } } } } }
+  });
+
+  // Doughnut
+  const dCtx = document.getElementById('doughnutChart').getContext('2d');
+  charts.doughnut = new Chart(dCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['ناجح', 'راسب'],
+      datasets: [{
+        data: [passStudents.length, failStudents.length],
+        backgroundColor: ['#10b981', '#ef4444'],
+        borderWidth: 2
+      }]
+    },
+    options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { font: { family: 'Tajawal' } } } } }
+  });
+
+  // Bar
+  const bCtx = document.getElementById('barChart').getContext('2d');
+  charts.bar = new Chart(bCtx, {
+    type: 'bar',
+    data: {
+      labels: Object.keys(gradeGroups),
+      datasets: [{
+        label: 'عدد الطلاب',
+        data: Object.values(gradeGroups).map(g => g.scores.length),
+        backgroundColor: Object.values(gradeGroups).map(g => g.color + 'cc')
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { labels: { font: { family: 'Tajawal' } } } },
+      scales: { y: { beginAtZero: true, ticks: { font: { family: 'Tajawal' } } }, x: { ticks: { font: { family: 'Tajawal' } } } }
+    }
+  });
+
+  // Grades Breakdown
+  const total_s = scores.length || 1;
+  const gb = document.getElementById('gradesBreakdown');
+  gb.innerHTML = '<h4>📊 تفصيل التقديرات</h4>' +
+    Object.entries(gradeGroups).map(([name, g]) => `
+      <div class="grade-row-analysis">
+        <div class="grade-label">${name}</div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" style="width:${(g.scores.length/total_s*100).toFixed(0)}%; background:${g.color}"></div>
+        </div>
+        <div class="grade-count">${g.scores.length} طالب</div>
+        <div class="grade-pct">${(g.scores.length/total_s*100).toFixed(1)}%</div>
+      </div>
+    `).join('');
+
+  // Detail table
+  buildDetailTable(allStudents, total, pass);
+}
+
+function buildDetailTable(students, total, pass) {
+  const sorted = [...students].sort((a, b) => parseFloat(b.score) - parseFloat(a.score));
+  document.getElementById('detailTable').innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>اسم الطالب</th>
+          <th>الدرجة</th>
+          <th>النسبة %</th>
+          <th>التقدير</th>
+          <th>الحالة</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${sorted.map((s, i) => {
+          const pct = ((parseFloat(s.score)/total)*100).toFixed(1);
+          const grade = getGrade(s.score, pass, total);
+          const status = parseFloat(s.score) >= pass ? '✅ ناجح' : '❌ راسب';
+          return `<tr>
+            <td>${i+1}</td>
+            <td style="font-weight:600; text-align:right">${s.name}</td>
+            <td>${s.score}</td>
+            <td>${pct}%</td>
+            <td><span class="grade-badge ${grade}" style="width:auto; display:inline-block">${grade}</span></td>
+            <td>${status}</td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+function destroyCharts() {
+  for (let key in charts) { if (charts[key]) { charts[key].destroy(); delete charts[key]; } }
+}
+
+// ===================== DOWNLOAD =====================
+function downloadReport(type) {
+  const schoolName = document.getElementById('schoolName').value || 'نظام تحليل النتائج';
+  const subject = document.getElementById('subjectName').value || 'المادة';
+  const examName = document.getElementById('examName').value || 'الاختبار';
+  const cls = state.classes[0];
+  const total = state.totalScore;
+  const pass = state.passScore;
+  const students = cls.students.filter(s => s.score !== '' && !isNaN(parseFloat(s.score)));
+  const scores = students.map(s => parseFloat(s.score));
+  const avg = scores.length ? (scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(2) : 0;
+  const maxS = scores.length ? Math.max(...scores) : 0;
+  const minS = scores.length ? Math.min(...scores) : 0;
+  const passC = scores.filter(s => s >= pass).length;
+  const failC = scores.filter(s => s < pass).length;
+
+  const sorted = [...students].sort((a,b) => parseFloat(b.score)-parseFloat(a.score));
+  const rows = sorted.map((s,i) => {
+    const pct = ((parseFloat(s.score)/total)*100).toFixed(1);
+    const grade = getGrade(s.score, pass, total);
+    const status = parseFloat(s.score) >= pass ? 'ناجح' : 'راسب';
+    return `<tr><td>${i+1}</td><td>${s.name}</td><td>${s.score}</td><td>${pct}%</td><td>${grade}</td><td>${status}</td></tr>`;
+  }).join('');
+
+  const html = `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head><meta charset="UTF-8"><title>تقرير ${subject}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
+  body { font-family: 'Tajawal', sans-serif; margin: 0; padding: 20px; direction: rtl; background: white; }
+  h1 { color: #1a2e44; text-align: center; font-size: 1.6rem; margin-bottom: 4px; }
+  .meta { text-align: center; color: #6b7280; font-size: 0.9rem; margin-bottom: 20px; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+  .stat { background: #f8f9fb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; text-align: center; }
+  .stat .n { font-size: 2rem; font-weight: 900; margin-bottom: 4px; }
+  .stat .l { font-size: 0.8rem; color: #6b7280; }
+  table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+  th { background: #1a2e44; color: white; padding: 10px; font-size: 0.85rem; }
+  td { padding: 9px; font-size: 0.83rem; text-align: center; border-bottom: 1px solid #e5e7eb; }
+  .footer { text-align: center; margin-top: 20px; font-size: 0.75rem; color: #9ca3af; }
+  @media print { body { padding: 8px; } }
+</style></head>
+<body>
+  <h1>تقرير تحليل نتائج ${subject}</h1>
+  <div class="meta">${schoolName} | ${examName}</div>
+  <div class="stats">
+    <div class="stat"><div class="n" style="color:#1a2e44">${students.length}</div><div class="l">إجمالي الطلاب</div></div>
+    <div class="stat"><div class="n" style="color:#3a7bd5">${avg}</div><div class="l">المتوسط العام</div></div>
+    <div class="stat"><div class="n" style="color:#3cb97a">${passC}</div><div class="l">ناجح</div></div>
+    <div class="stat"><div class="n" style="color:#e05252">${failC}</div><div class="l">راسب</div></div>
+  </div>
+  <table>
+    <thead><tr><th>#</th><th>اسم الطالب</th><th>الدرجة</th><th>النسبة</th><th>التقدير</th><th>الحالة</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table>
+  <div class="footer">تصميم د/فواز | قناة تيليجرام</div>
+</body></html>`;
+
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `تقرير_${subject}_${type}.html`;
+  a.click();
+}
+
+function shareReport() {
+  if (navigator.share) {
+    navigator.share({ title: 'تقرير تحليل النتائج', text: 'تقرير تحليل نتائج الطلاب - تصميم د/فواز' });
+  } else {
+    navigator.clipboard.writeText(window.location.href).then(() => alert('تم نسخ الرابط'));
+  }
+}
+
+// ===================== LOADING =====================
+function showLoading(msg) {
+  document.getElementById('loadingText').textContent = msg || 'جارٍ المعالجة...';
+  document.getElementById('loadingOverlay').classList.add('active');
+}
+function hideLoading() { document.getElementById('loadingOverlay').classList.remove('active'); }
+</script>
+</body>
+</html>
