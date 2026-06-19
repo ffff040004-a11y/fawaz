@@ -299,7 +299,8 @@ body {
   border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow);
 }
 .chart-card h4 { font-size: .88rem; font-weight: 800; color: var(--text); text-align: center; margin-bottom: 12px; }
-.chart-card canvas { max-height: 210px; }
+.chart-wrap { position: relative; width: 100%; height: 220px; }
+.chart-wrap canvas { position: absolute; top: 0; left: 0; width: 100% !important; height: 100% !important; }
 
 /* ── INFLATION ANALYSIS ── */
 .inflation-box {
@@ -410,24 +411,9 @@ body {
   .tbl-head, .student-row { grid-template-columns: 36px 1fr 110px 95px 40px; }
 }
 
-/* ── PRINT FOOTER ── */
-.print-footer {
-  display: none;
-  text-align: center;
-  margin-top: 28px;
-  padding: 14px;
-  border-top: 2px solid var(--border);
-  font-size: .9rem;
-  font-weight: 700;
-  color: var(--primary);
-}
-.print-footer a { color: var(--primary); text-decoration: none; }
-
 @media print {
   .bottom-nav, .btn-act, .btn-main, .tbl-actions, .dc-btns, .download-section,
-  .btn-sm, #navBtns { display: none !important; }
-  .credit { display: none !important; }
-  .print-footer { display: block !important; }
+  .btn-sm, #navBtns, .credit { display: none !important; }
   body { background: #fff !important; }
   .screen { padding: 10px !important; }
 }
@@ -623,9 +609,18 @@ body {
     <!-- الرسوم البيانية -->
     <div class="sec-label" style="margin-top:20px">📈 الرسوم البيانية</div>
     <div class="charts-grid">
-      <div class="chart-card"><h4>توزيع التقديرات (قطبي)</h4><div id="wrap-polar" style="position:relative;height:210px"><canvas id="polarChart"></canvas></div></div>
-      <div class="chart-card"><h4>نسبة النجاح والرسوب</h4><div id="wrap-doughnut" style="position:relative;height:210px"><canvas id="doughnutChart"></canvas></div></div>
-      <div class="chart-card"><h4>توزيع التقديرات (أعمدة)</h4><div id="wrap-bar" style="position:relative;height:210px"><canvas id="barChart"></canvas></div></div>
+      <div class="chart-card">
+        <h4>توزيع التقديرات (قطبي)</h4>
+        <div class="chart-wrap" id="wrap-polar"><canvas id="polarChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h4>نسبة النجاح والرسوب</h4>
+        <div class="chart-wrap" id="wrap-doughnut"><canvas id="doughnutChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h4>توزيع التقديرات (أعمدة)</h4>
+        <div class="chart-wrap" id="wrap-bar"><canvas id="barChart"></canvas></div>
+      </div>
     </div>
 
     <!-- تحليل التضخم في الدرجات -->
@@ -643,7 +638,7 @@ body {
     <!-- منحنى التوزيع -->
     <div class="chart-card" style="margin-bottom:22px">
       <h4>📉 منحنى توزيع الدرجات</h4>
-      <div id="wrap-dist" style="position:relative;height:220px"><canvas id="distChart"></canvas></div>
+      <div class="chart-wrap" id="wrap-dist" style="height:200px"><canvas id="distChart"></canvas></div>
     </div>
 
     <!-- تفصيل التقديرات -->
@@ -676,12 +671,6 @@ body {
     <div id="navBtns" style="display:flex;gap:12px;margin-top:14px">
       <button class="btn-sm gray"    onclick="goToScreen(5)" style="flex:1;padding:14px;font-size:.95rem">← العودة للبيانات</button>
       <button class="btn-sm primary" onclick="window.print()" style="flex:1;padding:14px;font-size:.95rem">🖨 طباعة</button>
-    </div>
-
-    <!-- يظهر فقط عند الطباعة -->
-    <div class="print-footer">
-      تصميم د/فواز &nbsp;|&nbsp; تفضل للمزيد هنا &nbsp;
-      <a href="https://t.me/TAqhjT3MFVE1Yzk0">https://t.me/TAqhjT3MFVE1Yzk0</a>
     </div>
 
   </div>
@@ -970,7 +959,9 @@ function goToAnalysis(){
       }
     }
   });
-  buildAnalysis(); goToScreen(6);
+  // انتقل للشاشة أولاً ثم ارسم الشارتات بعد ظهور الـ canvas في DOM
+  goToScreen(6);
+  requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ buildAnalysis(); }); });
 }
 
 function buildAnalysis(){
@@ -1034,43 +1025,38 @@ function buildAnalysis(){
   // ── CHARTS ──
   destroyCharts();
 
-  charts.polar = new Chart(document.getElementById('polarChart').getContext('2d'),{
+  charts.polar = new Chart(document.getElementById('polarChart'),{
     type:'polarArea',
-    data:{labels:Object.keys(gradeGroups),datasets:[{data:Object.values(gradeGroups).map(g=>g.scores.length),backgroundColor:Object.values(gradeGroups).map(g=>g.color+'bb')}]},
-    options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{family:'Tajawal',size:11}}}}}
+    data:{
+      labels:Object.keys(gradeGroups),
+      datasets:[{data:Object.values(gradeGroups).map(g=>g.scores.length),backgroundColor:Object.values(gradeGroups).map(g=>g.color+'bb')}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{family:'Tajawal',size:11}}}}}
   });
 
-  charts.doughnut = new Chart(document.getElementById('doughnutChart').getContext('2d'),{
+  charts.doughnut = new Chart(document.getElementById('doughnutChart'),{
     type:'doughnut',
     data:{labels:['ناجح','راسب'],datasets:[{data:[passC,failC],backgroundColor:['#1565C0','#DC2626'],borderWidth:3,borderColor:'#fff'}]},
-    options:{responsive:true,cutout:'62%',plugins:{legend:{position:'bottom',labels:{font:{family:'Tajawal',size:11}}}}}
+    options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{font:{family:'Tajawal',size:11}}}}}
   });
 
-  charts.bar = new Chart(document.getElementById('barChart').getContext('2d'),{
+  charts.bar = new Chart(document.getElementById('barChart'),{
     type:'bar',
     data:{labels:Object.keys(gradeGroups),datasets:[{label:'عدد الطلاب',data:Object.values(gradeGroups).map(g=>g.scores.length),backgroundColor:Object.values(gradeGroups).map(g=>g.color+'cc'),borderRadius:6}]},
-    options:{responsive:true,plugins:{legend:{labels:{font:{family:'Tajawal',size:11}}}},scales:{y:{beginAtZero:true,ticks:{font:{family:'Tajawal'}}},x:{ticks:{font:{family:'Tajawal'}}}}}
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{family:'Tajawal',size:11}}}},scales:{y:{beginAtZero:true,ticks:{font:{family:'Tajawal'}}},x:{ticks:{font:{family:'Tajawal'}}}}}
   });
 
   // ── DISTRIBUTION CHART ──
   const bucketSize=5; const buckets={};
   for(let i=0;i<=total;i+=bucketSize) buckets[i]=0;
   scores.forEach(s=>{ const b=Math.floor(s/bucketSize)*bucketSize; buckets[b]=(buckets[b]||0)+1; });
-  const bLabels=Object.keys(buckets).map(k=>`${k}-${parseInt(k)+bucketSize}`);
+  const bLabels=Object.keys(buckets).filter(k=>buckets[k]>0||true).map(k=>`${k}`);
   const bData=Object.values(buckets);
 
-  charts.dist = new Chart(document.getElementById('distChart').getContext('2d'),{
+  charts.dist = new Chart(document.getElementById('distChart'),{
     type:'bar',
-    data:{labels:bLabels,datasets:[
-      {label:'عدد الطلاب',data:bData,backgroundColor:'rgba(21,101,192,0.55)',borderColor:'#1565C0',borderWidth:1.5,borderRadius:4},
-    ]},
-    options:{responsive:true,plugins:{
-      legend:{labels:{font:{family:'Tajawal'}}},
-      annotation:{annotations:{avg:{type:'line',scaleID:'x',value:avg.toFixed(1),borderColor:'#DC2626',borderWidth:2,label:{content:'المتوسط',enabled:true}}}}
-    },scales:{
-      y:{beginAtZero:true,ticks:{font:{family:'Tajawal'}}},
-      x:{ticks:{font:{family:'Tajawal'},maxRotation:45}}
-    }}
+    data:{labels:bLabels,datasets:[{label:'عدد الطلاب',data:bData,backgroundColor:'rgba(21,101,192,0.6)',borderColor:'#1565C0',borderWidth:1.5,borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{family:'Tajawal'}}}},scales:{y:{beginAtZero:true,ticks:{font:{family:'Tajawal'}}},x:{ticks:{font:{family:'Tajawal'},maxRotation:45}}}}
   });
 
   // ── INFLATION ANALYSIS ──
@@ -1185,26 +1171,15 @@ function buildDetailTable(students,total,pass){
 }
 
 function destroyCharts(){
-  const canvases = {
-    'polarChart':   'wrap-polar',
-    'doughnutChart':'wrap-doughnut',
-    'barChart':     'wrap-bar',
-    'distChart':    'wrap-dist'
-  };
-  for(let k in charts){
+  ['polar','doughnut','bar','dist'].forEach(k=>{
     if(charts[k]){ charts[k].destroy(); delete charts[k]; }
-  }
-  // إعادة إنشاء عناصر canvas نظيفة
-  for(let [id, wrapId] of Object.entries(canvases)){
-    const wrap = document.getElementById(wrapId);
-    if(wrap){
-      const old = document.getElementById(id);
-      if(old) old.remove();
-      const c = document.createElement('canvas');
-      c.id = id;
-      wrap.appendChild(c);
-    }
-  }
+  });
+  // أعد إنشاء canvas نظيف لتجنب مشاكل Chart.js مع الـ instance القديم
+  [['polarChart','wrap-polar'],['doughnutChart','wrap-doughnut'],['barChart','wrap-bar'],['distChart','wrap-dist']].forEach(([id,wrap])=>{
+    const w=document.getElementById(wrap);
+    if(w){ const old=document.getElementById(id); if(old) old.remove();
+      const c=document.createElement('canvas'); c.id=id; w.appendChild(c); }
+  });
 }
 
 // ─── DOWNLOAD ───
@@ -1274,7 +1249,6 @@ tr:nth-child(even){background:#EFF6FF}
   <thead><tr><th>#</th><th>اسم الطالب</th><th>الدرجة</th><th>النسبة</th><th>التقدير</th><th>الحالة</th></tr></thead>
   <tbody>${rows}</tbody>
 </table>
-<div class="footer">تصميم د/فواز | https://t.me/TAqhjT3MFVE1Yzk0</div>
 </body></html>`;
 
   const blob=new Blob([html],{type:'text/html;charset=utf-8'});
