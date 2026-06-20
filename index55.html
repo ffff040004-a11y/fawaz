@@ -1,0 +1,2665 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>التقويم الدراسي 1448/1449هـ | جميع المناطق ماعدا إدارات التعليم المستثناة</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #1a3a5c;
+      --primary-light: #2d5f8a;
+      --primary-dark: #0f2540;
+      --secondary: #c8a951;
+      --secondary-light: #e2c97e;
+      --accent: #3a7bd5;
+      --success: #27ae60;
+      --danger: #e74c3c;
+      --warning: #f39c12;
+      --info: #2980b9;
+      --bg: #f0f4f8;
+      --card: #ffffff;
+      --text: #1a2535;
+      --text-light: #6b7c93;
+      --border: #dde3ec;
+      --holiday: #fff3cd;
+      --holiday-border: #f0c040;
+      --exam: #fde8e8;
+      --exam-border: #e74c3c;
+      --start: #e8f5e9;
+      --start-border: #27ae60;
+      --admin: #e8eaf6;
+      --admin-border: #5c6bc0;
+      --week-header: #2d5f8a;
+      --week-bg: #f7f9fc;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      direction: rtl;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
+      color: white;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 28px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-icon {
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      box-shadow: 0 4px 15px rgba(200,169,81,0.4);
+    }
+
+    .header-title h1 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+    }
+
+    .header-title p {
+      font-size: 0.78rem;
+      opacity: 0.8;
+      margin-top: 2px;
+    }
+
+    .header-badge {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 12px;
+      padding: 8px 18px;
+      text-align: center;
+    }
+
+    .badge-year {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--secondary-light);
+    }
+
+    .badge-label {
+      font-size: 0.7rem;
+      opacity: 0.75;
+      display: block;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 9px 20px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: all 0.25s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+      color: var(--primary-dark);
+    }
+
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(200,169,81,0.4); }
+
+    .btn-outline {
+      background: rgba(255,255,255,0.12);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .btn-outline:hover { background: rgba(255,255,255,0.22); transform: translateY(-2px); }
+
+    .nav-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 10px 28px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .nav-tabs::-webkit-scrollbar { display: none; }
+
+    .nav-tab {
+      padding: 8px 18px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      background: transparent;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-tab:hover { color: white; background: rgba(255,255,255,0.1); }
+
+    .nav-tab.active {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    /* ===== DESIGNER BAR ===== */
+    .designer-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 8px 32px;
+      background: rgba(0,0,0,0.25);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      flex-wrap: wrap;
+    }
+
+    .designer-text {
+      color: rgba(255,255,255,0.85);
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .designer-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--secondary);
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-decoration: none;
+      padding: 4px 14px;
+      border-radius: 20px;
+      background: rgba(200,169,81,0.15);
+      border: 1px solid rgba(200,169,81,0.35);
+      transition: all 0.25s ease;
+    }
+
+    .designer-link:hover {
+      background: rgba(200,169,81,0.3);
+      color: #f0d070;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(200,169,81,0.25);
+    }
+
+    .designer-link i { font-size: 1rem; color: #29b6f6; }
+
+    /* ===== MAIN CONTENT ===== */
+    main { max-width: 1300px; margin: 0 auto; padding: 28px 20px; }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* ===== OVERVIEW ===== */
+    .overview-hero {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+      color: white;
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .overview-hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(200,169,81,0.1) 0%, transparent 60%);
+      animation: pulse 4s ease-in-out infinite;
+    }
+
+    @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+
+    .hero-emoji { font-size: 3.5rem; margin-bottom: 12px; display: block; }
+
+    .hero-title {
+      font-size: 2rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .hero-subtitle {
+      font-size: 0.95rem;
+      opacity: 0.8;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 22px 16px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+      border: 1px solid var(--border);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .stat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+
+    .stat-icon { font-size: 2rem; margin-bottom: 10px; }
+    .stat-value { font-size: 2rem; font-weight: 900; color: var(--primary); }
+    .stat-label { font-size: 0.82rem; color: var(--text-light); margin-top: 4px; font-weight: 500; }
+
+    .progress-section {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 28px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+      border: 1px solid var(--border);
+    }
+
+    .section-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title i { color: var(--secondary); }
+
+    .progress-item { margin-bottom: 16px; }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .progress-bar {
+      height: 10px;
+      background: var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 10px;
+      transition: width 1s ease;
+    }
+
+    .progress-fill.sem1 { background: linear-gradient(90deg, var(--primary), var(--accent)); }
+    .progress-fill.mid { background: linear-gradient(90deg, var(--warning), #f1c40f); }
+    .progress-fill.sem2 { background: linear-gradient(90deg, var(--success), #2ecc71); }
+
+    .highlights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    .highlight-card {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+      border: 1px solid var(--border);
+      transition: transform 0.2s ease;
+    }
+
+    .highlight-card:hover { transform: translateX(-4px); }
+
+    .highlight-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    .highlight-icon.start { background: var(--start); }
+    .highlight-icon.holiday { background: var(--holiday); }
+    .highlight-icon.exam { background: var(--exam); }
+    .highlight-icon.admin { background: var(--admin); }
+
+    .highlight-info h4 { font-size: 0.9rem; font-weight: 700; color: var(--text); }
+    .highlight-info p { font-size: 0.8rem; color: var(--text-light); margin-top: 3px; }
+
+    /* ===== CALENDAR TABLE ===== */
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 7px 16px;
+      border-radius: 20px;
+      border: 2px solid var(--border);
+      background: var(--card);
+      cursor: pointer;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-light);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .filter-btn.active, .filter-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: rgba(26,58,92,0.06);
+    }
+
+    .calendar-section-block {
+      background: var(--card);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+      border: 1px solid var(--border);
+    }
+
+    .calendar-section-header {
+      padding: 14px 22px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: white;
+      font-weight: 800;
+      font-size: 1rem;
+    }
+
+    .calendar-section-header.pre { background: linear-gradient(135deg, #546e7a, #78909c); }
+    .calendar-section-header.sem1 { background: linear-gradient(135deg, var(--primary), var(--primary-light)); }
+    .calendar-section-header.sem2 { background: linear-gradient(135deg, #1b5e20, #388e3c); }
+    .calendar-section-header.new { background: linear-gradient(135deg, #4a148c, #7b1fa2); }
+
+    .sem-badge {
+      background: rgba(255,255,255,0.25);
+      border-radius: 8px;
+      padding: 3px 12px;
+      font-size: 0.85rem;
+    }
+
+    table.cal-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    table.cal-table thead th {
+      background: #f5f7fa;
+      padding: 11px 16px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-light);
+      text-align: right;
+      border-bottom: 2px solid var(--border);
+    }
+
+    table.cal-table tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s ease;
+    }
+
+    table.cal-table tbody tr:hover { background: #f8fafc; }
+    table.cal-table tbody tr:last-child { border-bottom: none; }
+
+    table.cal-table td {
+      padding: 12px 16px;
+      font-size: 0.88rem;
+      vertical-align: middle;
+    }
+
+    .event-type-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .badge-start { background: var(--start); color: #1b5e20; border: 1px solid var(--start-border); }
+    .badge-holiday { background: var(--holiday); color: #7d5a00; border: 1px solid var(--holiday-border); }
+    .badge-exam { background: var(--exam); color: #b71c1c; border: 1px solid var(--exam-border); }
+    .badge-admin { background: var(--admin); color: #283593; border: 1px solid var(--admin-border); }
+
+    .day-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .date-hijri { font-size: 0.82rem; color: var(--text-light); }
+    .date-miladi { font-weight: 700; color: var(--primary); }
+
+    .save-btn {
+      padding: 5px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--primary);
+      background: transparent;
+      color: var(--primary);
+      cursor: pointer;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .save-btn:hover { background: var(--primary); color: white; }
+    .save-btn.saved { background: var(--success); border-color: var(--success); color: white; }
+
+    /* ===== WEEKS SECTION ===== */
+    .weeks-intro {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      border-radius: 16px;
+      padding: 22px 28px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .weeks-intro h2 { font-size: 1.3rem; font-weight: 800; }
+    .weeks-intro p { font-size: 0.88rem; opacity: 0.85; margin-top: 4px; }
+
+    .weeks-stats {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .week-stat {
+      text-align: center;
+      background: rgba(255,255,255,0.15);
+      border-radius: 12px;
+      padding: 10px 18px;
+    }
+
+    .week-stat-val { font-size: 1.4rem; font-weight: 900; color: var(--secondary-light); }
+    .week-stat-lbl { font-size: 0.72rem; opacity: 0.8; }
+
+    .semester-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .sem-tab {
+      padding: 10px 24px;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      background: var(--card);
+      cursor: pointer;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-light);
+      transition: all 0.2s ease;
+    }
+
+    .sem-tab.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .weeks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .week-card {
+      background: var(--card);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+      border: 1px solid var(--border);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .week-card:hover { transform: translateY(-3px); box-shadow: 0 8px 22px rgba(0,0,0,0.1); }
+
+    .week-card.holiday-card {
+      border: 2px solid var(--holiday-border);
+    }
+
+    .week-header {
+      background: var(--week-header);
+      color: white;
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .week-header.holiday-header {
+      background: linear-gradient(135deg, #e65100, #f57c00);
+    }
+
+    .week-num {
+      font-size: 0.78rem;
+      font-weight: 700;
+      background: rgba(255,255,255,0.2);
+      padding: 2px 10px;
+      border-radius: 6px;
+    }
+
+    .week-title { font-size: 0.92rem; font-weight: 800; }
+    .week-month { font-size: 0.75rem; opacity: 0.8; }
+
+    .week-hijri {
+      font-size: 0.72rem;
+      opacity: 0.75;
+      background: rgba(255,255,255,0.15);
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .week-days { padding: 8px 0; }
+
+    .week-day-row {
+      display: grid;
+      grid-template-columns: 60px 1fr 1fr;
+      padding: 6px 16px;
+      font-size: 0.83rem;
+      border-bottom: 1px solid #f0f0f0;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .week-day-row:last-child { border-bottom: none; }
+
+    .week-day-row.national-day { background: rgba(0, 128, 0, 0.07); }
+    .week-day-row.foundation-day { background: rgba(0, 100, 200, 0.07); }
+
+    .day-name {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 0.82rem;
+    }
+
+    .day-miladi { color: var(--text); font-weight: 600; }
+    .day-hijri { color: var(--text-light); font-size: 0.78rem; }
+
+    .special-tag {
+      display: inline-block;
+      font-size: 0.65rem;
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: #e8f5e9;
+      color: #1b5e20;
+      font-weight: 700;
+      margin-right: 4px;
+    }
+
+    .special-tag.national { background: #e8f5e9; color: #1b5e20; }
+    .special-tag.foundation { background: #e3f2fd; color: #0d47a1; }
+    .special-tag.exam { background: var(--exam); color: #b71c1c; }
+
+    .holiday-info {
+      padding: 14px 16px;
+      background: #fff8e1;
+    }
+
+    .holiday-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+      font-size: 0.82rem;
+      border-bottom: 1px dashed #f0d060;
+    }
+
+    .holiday-row:last-child { border-bottom: none; }
+    .holiday-row .lbl { color: var(--text-light); font-weight: 600; }
+    .holiday-row .val { font-weight: 700; color: var(--primary); }
+    .holiday-row .val.return { color: var(--success); }
+
+    /* ===== HOLIDAYS SECTION ===== */
+    .holidays-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .holiday-card-main {
+      background: var(--card);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+      border: 1px solid var(--border);
+      transition: transform 0.2s ease;
+    }
+
+    .holiday-card-main:hover { transform: translateY(-4px); }
+
+    .holiday-card-header {
+      padding: 20px;
+      color: white;
+      text-align: center;
+    }
+
+    .holiday-card-header h3 { font-size: 1.15rem; font-weight: 800; }
+    .holiday-card-header .h-emoji { font-size: 2.5rem; margin-bottom: 8px; display: block; }
+
+    .holiday-card-body { padding: 18px; }
+
+    .holiday-detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.88rem;
+    }
+
+    .holiday-detail-row:last-child { border-bottom: none; }
+    .holiday-detail-row .lbl { color: var(--text-light); font-weight: 600; }
+    .holiday-detail-row .val { font-weight: 700; color: var(--primary); }
+
+    .days-count-badge {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      margin-top: 12px;
+    }
+
+    /* ===== APPOINTMENTS ===== */
+    .appt-layout {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) { .appt-layout { grid-template-columns: 1fr; } }
+
+    .appt-form-card {
+      background: var(--card);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+      border: 1px solid var(--border);
+      position: sticky;
+      top: 120px;
+    }
+
+    .form-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-title i { color: var(--secondary); }
+
+    .form-group { margin-bottom: 14px; }
+
+    .form-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .form-label span { color: var(--danger); }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 14px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text);
+      background: var(--bg);
+      transition: border-color 0.2s ease;
+      direction: rtl;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: white;
+    }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .form-actions { display: flex; gap: 10px; margin-top: 18px; }
+
+    .btn-save {
+      flex: 1;
+      padding: 11px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      transition: all 0.2s ease;
+    }
+
+    .btn-save:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(26,58,92,0.3); }
+
+    .btn-clear {
+      padding: 11px 18px;
+      background: var(--bg);
+      color: var(--text-light);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .btn-clear:hover { border-color: var(--danger); color: var(--danger); }
+
+    .appt-list-card {
+      background: var(--card);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+      border: 1px solid var(--border);
+    }
+
+    .appt-list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .appt-search-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .appt-search-input {
+      flex: 1;
+      min-width: 200px;
+      padding: 9px 14px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 0.88rem;
+      direction: rtl;
+    }
+
+    .appt-search-input:focus { outline: none; border-color: var(--primary); }
+
+    .appt-filter-select {
+      padding: 9px 14px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 0.85rem;
+      direction: rtl;
+      cursor: pointer;
+    }
+
+    .appt-item {
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      transition: all 0.2s ease;
+    }
+
+    .appt-item:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.08); transform: translateX(-3px); }
+
+    .appt-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .appt-content { flex: 1; }
+
+    .appt-title-text { font-size: 0.95rem; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+
+    .appt-meta {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    .appt-meta span { display: flex; align-items: center; gap: 4px; }
+
+    .appt-actions { display: flex; gap: 6px; }
+
+    .appt-action-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+    }
+
+    .appt-action-btn.print { background: #e3f2fd; color: #1565c0; }
+    .appt-action-btn.edit { background: #fff8e1; color: #f57f17; }
+    .appt-action-btn.delete { background: #fce4ec; color: #c62828; }
+    .appt-action-btn:hover { transform: scale(1.1); }
+
+    .priority-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-left: 4px;
+    }
+
+    .priority-high { background: var(--danger); }
+    .priority-med { background: var(--warning); }
+    .priority-low { background: var(--success); }
+
+    .empty-state {
+      text-align: center;
+      padding: 50px 20px;
+      color: var(--text-light);
+    }
+
+    .empty-state i { font-size: 3rem; margin-bottom: 14px; opacity: 0.4; }
+    .empty-state h3 { font-size: 1.1rem; margin-bottom: 6px; }
+    .empty-state p { font-size: 0.88rem; }
+
+    .btn-danger-sm {
+      padding: 7px 14px;
+      background: #fce4ec;
+      color: var(--danger);
+      border: 1px solid #f48fb1;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .btn-danger-sm:hover { background: var(--danger); color: white; }
+
+    /* ===== PRINT SECTION ===== */
+    .print-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .print-option-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+      border: 2px solid var(--border);
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .print-option-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 30px rgba(26,58,92,0.15);
+    }
+
+    .print-option-icon { font-size: 2.8rem; margin-bottom: 12px; }
+    .print-option-title { font-size: 1rem; font-weight: 800; color: var(--primary); margin-bottom: 6px; }
+    .print-option-desc { font-size: 0.82rem; color: var(--text-light); line-height: 1.5; }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal-box {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 28px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      animation: modalIn 0.3s ease;
+    }
+
+    @keyframes modalIn { from{transform:scale(0.9);opacity:0} to{transform:scale(1);opacity:1} }
+
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modal-close {
+      margin-right: auto;
+      background: none;
+      border: none;
+      font-size: 1.3rem;
+      cursor: pointer;
+      color: var(--text-light);
+      padding: 4px;
+    }
+
+    /* ===== TOAST ===== */
+    .toast-container {
+      position: fixed;
+      bottom: 28px;
+      left: 28px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .toast {
+      background: var(--primary-dark);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      animation: toastIn 0.3s ease;
+      min-width: 250px;
+    }
+
+    @keyframes toastIn { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+    .toast.success { background: var(--success); }
+    .toast.error { background: var(--danger); }
+    .toast.info { background: var(--info); }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f0f4f8; }
+    ::-webkit-scrollbar-thumb { background: #c0cdd8; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--primary-light); }
+
+    /* ===== PRINT STYLES ===== */
+    @media print {
+      header, .nav-tabs, .designer-bar, .filter-bar, .no-print { display: none !important; }
+      body { background: white; }
+      main { padding: 0; max-width: 100%; }
+      .section { display: block !important; }
+      .calendar-section-block { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
+      .week-card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .header-top { padding: 12px 16px; }
+      .header-title h1 { font-size: 1.05rem; }
+      .hero-title { font-size: 1.4rem; }
+      main { padding: 16px 12px; }
+      .weeks-grid { grid-template-columns: 1fr 1fr; }
+      table.cal-table td, table.cal-table thead th { padding: 8px 10px; font-size: 0.8rem; }
+    }
+
+    @media (max-width: 480px) {
+      .weeks-grid { grid-template-columns: 1fr; }
+      .header-badge { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="header-logo">
+      <div class="logo-icon">📅</div>
+      <div class="header-title">
+        <h1>التقويم الدراسي 1448/1449هـ</h1>
+        <p>جميع المناطق ماعدا إدارات التعليم المستثناة</p>
+      </div>
+    </div>
+    <div class="header-badge">
+      <div class="badge-year">1448 / 1449</div>
+      <span class="badge-label">العام الهجري</span>
+    </div>
+    <div class="header-actions no-print">
+      <button class="btn btn-outline" onclick="openAddModal()">
+        <i class="fas fa-plus"></i> إضافة موعد
+      </button>
+      <button class="btn btn-primary" onclick="printPage()">
+        <i class="fas fa-print"></i> طباعة
+      </button>
+    </div>
+  </div>
+  <nav class="nav-tabs no-print">
+    <button class="nav-tab active" onclick="showSection('overview')" id="tab-overview">
+      <i class="fas fa-home"></i> نظرة عامة
+    </button>
+    <button class="nav-tab" onclick="showSection('calendar')" id="tab-calendar">
+      <i class="fas fa-calendar-alt"></i> التقويم الكامل
+    </button>
+    <button class="nav-tab" onclick="showSection('weeks')" id="tab-weeks">
+      <i class="fas fa-table"></i> الأسابيع الدراسية
+    </button>
+    <button class="nav-tab" onclick="showSection('holidays')" id="tab-holidays">
+      <i class="fas fa-umbrella-beach"></i> الإجازات
+    </button>
+    <button class="nav-tab" onclick="showSection('appointments')" id="tab-appointments">
+      <i class="fas fa-bookmark"></i> مواعيدي <span id="appt-count-badge">0</span>
+    </button>
+    <button class="nav-tab" onclick="showSection('print')" id="tab-print">
+      <i class="fas fa-print"></i> الطباعة
+    </button>
+  </nav>
+  <div class="designer-bar">
+    <span class="designer-text">تصميم د/ فواز &nbsp;|&nbsp; تفضل للمزيد هنا</span>
+    <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" class="designer-link">
+      <i class="fab fa-telegram"></i> https://t.me/TAqhjT3MFVE1Yzk0
+    </a>
+  </div>
+</header>
+
+<main>
+
+  <!-- ===== OVERVIEW ===== -->
+  <section id="section-overview" class="section active">
+    <div class="overview-hero">
+      <span class="hero-emoji">🎓</span>
+      <h2 class="hero-title">التقويم الدراسي للعام 1448 / 1449هـ</h2>
+      <p class="hero-subtitle">
+        التقويم الدراسي لمواعيد بداية ونهاية الفصول الدراسية والإجازات الرسمية<br>
+        لجميع المناطق ماعدا إدارات التعليم المستثناة · إعداد وتصميم: الأستاذ / أحمد الغامدي
+      </p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">📚</div>
+        <div class="stat-value">2</div>
+        <div class="stat-label">فصل دراسي</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📅</div>
+        <div class="stat-value">19</div>
+        <div class="stat-label">أسبوع في الفصل الثاني</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🏫</div>
+        <div class="stat-value">93</div>
+        <div class="stat-label">يوم دراسي (الفصل الثاني)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🌴</div>
+        <div class="stat-value">3</div>
+        <div class="stat-label">إجازة في الفصل الثاني</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🎉</div>
+        <div class="stat-value">33</div>
+        <div class="stat-label">يوم إجازة (الفصل الثاني)</div>
+      </div>
+    </div>
+
+    <div class="progress-section">
+      <h3 class="section-title"><i class="fas fa-chart-line"></i> نسب التقدم في العام الدراسي</h3>
+      <div class="progress-item">
+        <div class="progress-label">
+          <span>الفصل الدراسي الأول &nbsp; 23 أغسطس 2026 — 7 يناير 2027</span>
+          <span id="sem1-pct">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill sem1" id="sem1-bar" style="width:0%"></div></div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-label">
+          <span>إجازة منتصف العام &nbsp; 8 — 16 يناير 2027</span>
+          <span id="mid-pct">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill mid" id="mid-bar" style="width:0%"></div></div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-label">
+          <span>الفصل الدراسي الثاني &nbsp; 17 يناير — 24 يونيو 2027</span>
+          <span id="sem2-pct">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill sem2" id="sem2-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <div class="progress-section">
+      <h3 class="section-title"><i class="fas fa-bell"></i> أبرز المواعيد</h3>
+      <div class="highlights-grid">
+        <div class="highlight-card">
+          <div class="highlight-icon start">🏫</div>
+          <div class="highlight-info"><h4>بداية الفصل الأول</h4><p>23/8/2026 — 3/10/1448هـ</p></div>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-icon holiday">🎉</div>
+          <div class="highlight-info"><h4>إجازة اليوم الوطني</h4><p>23-26/9/2026 — 4/12-15/1448هـ</p></div>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-icon holiday">🍂</div>
+          <div class="highlight-info"><h4>إجازة الخريف</h4><p>20-28/11/2026 — 6/10-18/1448هـ</p></div>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-icon exam">📝</div>
+          <div class="highlight-info"><h4>اختبارات الفصل الأول</h4><p>3/1/2027 — 7/25/1448هـ</p></div>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-icon holiday">❄️</div>
+          <div class="highlight-info"><h4>إجازة منتصف العام</h4><p>8-16/1/2027 — 7/30-8/8/1448هـ</p></div>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-icon start">📚</div>
+          <div class="highlight-info"><h4>بداية الفصل الثاني</h4><p>17/1/2027 — 8/9/1448هـ</p></div>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-icon holiday">🌙</div>
+          <div class="highlight-info"><h4>إجازة عيد الفطر</h4><p>26/2-13/3/2027 — 9/19-10/5/1448هـ</p></div>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-icon holiday">🐑</div>
+          <div class="highlight-info"><h4>إجازة عيد الأضحى</h4><p>7/5-22/5/2027 — 12/1-12/16/1448هـ</p></div>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-icon exam">📝</div>
+          <div class="highlight-info"><h4>اختبارات الفصل الثاني</h4><p>20/6/2027 — 1/15/1449هـ</p></div>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-icon holiday">🎊</div>
+          <div class="highlight-info"><h4>إجازة نهاية العام</h4><p>24/6/2027 — 1/19/1449هـ</p></div>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-icon admin">🔄</div>
+          <div class="highlight-info"><h4>عودة للعام الجديد</h4><p>10/8/2027 — 3/8/1449هـ</p></div>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-icon start">🆕</div>
+          <div class="highlight-info"><h4>بداية العام 1449/1450هـ</h4><p>22/8/2027 — 3/20/1449هـ</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CALENDAR ===== -->
+  <section id="section-calendar" class="section">
+    <div style="margin-bottom:20px">
+      <h2 class="section-title"><i class="fas fa-calendar-alt"></i> التقويم الدراسي الكامل</h2>
+      <p style="color:var(--text-light);font-size:0.88rem">جميع مواعيد العام الدراسي 1448/1449هـ</p>
+    </div>
+
+    <div class="filter-bar no-print">
+      <div class="filter-btn active" onclick="filterCalendar('all',this)"><i class="fas fa-list"></i> الكل</div>
+      <div class="filter-btn" onclick="filterCalendar('start',this)"><i class="fas fa-play-circle" style="color:var(--success)"></i> بداية الدراسة</div>
+      <div class="filter-btn" onclick="filterCalendar('holiday',this)"><i class="fas fa-umbrella-beach" style="color:var(--warning)"></i> إجازة</div>
+      <div class="filter-btn" onclick="filterCalendar('exam',this)"><i class="fas fa-pencil-alt" style="color:var(--danger)"></i> اختبارات</div>
+      <div class="filter-btn" onclick="filterCalendar('admin',this)"><i class="fas fa-user-tie" style="color:var(--accent)"></i> إداري</div>
+    </div>
+
+    <!-- Pre-year -->
+    <div class="calendar-section-block" data-section="pre">
+      <div class="calendar-section-header pre">
+        <i class="fas fa-door-open"></i>
+        <span>ما قبل العام الدراسي — العودة للمدارس</span>
+      </div>
+      <table class="cal-table">
+        <thead><tr><th>البيان</th><th>اليوم</th><th>التاريخ الهجري</th><th>التاريخ الميلادي</th><th class="no-print">إجراء</th></tr></thead>
+        <tbody>
+          <tr data-type="admin">
+            <td><span class="event-type-badge badge-admin"><i class="fas fa-user-tie"></i> إداري</span> عودة الهيئة الإدارية والمشرفين التربويين في جميع المراحل الدراسية</td>
+            <td><span class="day-badge">الثلاثاء</span></td>
+            <td><span class="date-hijri">2/28/1448هـ</span></td>
+            <td><span class="date-miladi">11/8/2026</span></td>
+            <td class="no-print"><button class="save-btn" onclick="saveToAppt(this,'عودة الهيئة الإدارية والمشرفين','2026-08-11')">حفظ</button></td>
+          </tr>
+          <tr data-type="admin">
+            <td><span class="event-type-badge badge-admin"><i class="fas fa-user-tie"></i> إداري</span> عودة المعلمين الممارسين للتدريس في جميع المراحل</td>
+            <td><span class="day-badge">الأحد</span></td>
+            <td><span class="date-hijri">3/3/1448هـ</span></td>
+            <td><span class="date-miladi">16/8/2026</span></td>
+            <td class="no-print"><button class="save-btn" onclick="saveToAppt(this,'عودة المعلمين الممارسين للتدريس','2026-08-16')">حفظ</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Semester 1 -->
+    <div class="calendar-section-block" data-section="sem1">
+      <div class="calendar-section-header sem1">
+        <i class="fas fa-book-open"></i>
+        <span>الفصل الدراسي الأول</span>
+        <span class="sem-badge">١</span>
+      </div>
+      <table class="cal-table">
+        <thead><tr><th>البيان</th><th>اليوم</th><th>التاريخ الهجري</th><th>التاريخ الميلادي</th><th class="no-print">إجراء</th></tr></thead>
+        <tbody>
+          <tr data-type="start">
+            <td><span class="event-type-badge badge-start"><i class="fas fa-play-circle"></i> بداية</span> بداية الفصل الدراسي الأول</td>
+            <td><span class="day-badge">الأحد</span></td>
+            <td><span class="date-hijri">3/10/1448هـ</span></td>
+            <td><span class="date-miladi">23/8/2026</span></td>
+            <td class="no-print"><button class="save-btn" onclick="saveToAppt(this,'بداية الفصل الدراسي الأول','2026-08-23')">حفظ</button></td>
+          </tr>
+          <tr data-type="holiday">
+            <td><span class="event-type-badge badge-holiday"><i class="fas fa-umbrella-beach"></i> إجازة</span> إجازة اليوم الوطني — البداية</td>
+            <td><span class="day-badge">من الأربعاء</span></td>
+            <td><span class="date-hijri">4/12/1448هـ</span></td>
+            <td><span class="date-miladi">23/9/2026</span></td>
+            <td class="no-print"><button class="save-btn" onclick="saveToAppt(this,'إجازة اليوم الوطني - البداية','2026-09-23')">حفظ</button></td>
+          </tr>
+          <tr data-type="holiday">
+            <td><span class="event-type-badge badge-holiday"><i class="fas fa-umbrella-beach"></i> إجازة</span> إجازة اليوم الوطني — النهاية</td>
+            <td><span class="day-badge">إلى السبت</span></td>
+            <td><span class="date-hijri">4/15/1448هـ</span></td>
+            <td><span class="date-miladi">26/9/2026</span></td>
+            <td class="no-print"><button class="save-btn" onclick="saveToAppt(this,'إجازة اليوم الوطني - النهاية','2026-09-26')">حفظ</button></td>
+          </tr>
+          <tr data-type="holiday">
+            <td><span class="event-type-badge badge-holiday"><i class="fas fa-umbrella-beach"></i> إجازة</span> بداية إجازة الخريف</td>
+            <td><span class="day-badge">من الجمعة</span></td>
+            <td><span class="date-hijri">6/10/1448هـ</span></td>
+            <td><span class="date-miladi">20/11/2026</span></td>
+            <td class="no-print"><button class="save-btn" onclick="saveToAppt(this,'بداية إجازة الخريف','2026-11-20')">حفظ</button></td>
+          </tr>
+          <tr data-type="holiday">
+            <td><span class="event-type-badge badge-holiday"><i class="fas fa-umbrella-beach"></i> إجازة</span> نهاية إجازة الخريف</td>
+            <td><span class="day-badge">إلى السبت</span></td>
+            <td><span class="date-hijri">6/18/1448هـ</span></td>
+            <td><span class="date-miladi">28/11/2026</span></td>
+            <td class="no-print"><button class="save-btn" onclick="saveToAppt(this,'نهاية إجازة الخريف','2026-11-28')">حفظ</button></td>
+          </tr>
+          <tr data-type="exam">
+            <td><span class="event-type-badge badge-exam"><i class="fas fa-pencil-alt"></i> اختبار</span> بداية اختبار الفصل الدراسي الأول</td>
+            <td><span class="day-badge">الأحد</span></td>
+            <td><span class="date-hijri">7/25/1448هـ</span></td>
+            <td><span class="date-miladi">3/1/2027</span></td>
+            <td class="no-print"><button class="save-btn" onclick="saveToAppt(this,'بداية اختبار الفصل الأول','2027-01-03')">حفظ</button></td>
+          </tr>
+          <tr data-type="holiday">
+            <td><span class="event-type-badge badge-holiday"><i class="fas fa-umbrella-beach"></i> إجازة</span> بداية إجازة منتصف العام الدراسي</td>
+            <td><span class="day-badge">من الجمعة</span></td>
+            <td><span class="date-hijri">7/30/1448هـ</span></td>
+            <td><span class="date-miladi">8/1/2027</span></td>
+            <td class="no-print"><button class="save-btn" onclick="saveToAppt(this,'بداية إجازة منتصف العام','2027-01-08')">حفظ</button></td>
+          </tr>
+          <tr data-type="holiday">
+            <td><span class="event-type-badge badge-holiday"><i class="fas fa-umbrella-beach"></i> إجازة</span> نهاية إجازة منتصف العام الدراسي</td>
+            <td><span class="day-badge">إلى السبت</span></td>
+            <td><span class="date-hijri">8/8/1448هـ</span></td>
+            <td><span class="date-miladi">16/1/2027</span></td>
+            <td class="no-print"><button class="save-btn" onclick="saveToAppt(this,'نهاية إجازة منتصف العام','2027-01-16')">حفظ</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Semester 2 -->
+    <div class="calendar-section-block" data-section="sem2">
+      <div class="calendar-section-header sem2">
+        <i class="fas fa-book-open"></i>
+        <span>الفصل الدراسي الثاني</span>
+        <span class="sem-badge">٢</span>
+      </div>
+      <table class="cal-table">
+        <thead><tr><th>البيان</th><th>اليوم</th><th>التاريخ الهجري</th><th>التاريخ الميلادي</th><th class="no-print">إجراء</th></tr></thead>
+        <tbody>
+          <tr data-type="start">
+            <td><span class="event-type-badge badge-start"><i class="fas fa-play-circle"></i> بداية</span> بداية الفصل الدراسي الثاني</td>
+            <td><span class="day-badge">الأحد</span></td>
+            <td><span class="date-hijri">8/9/1448هـ</span></td>
+            <td><span class="date-miladi">17/1/2027</span></td>
+            <td class="no-print"><button class="save-btn" onclick="saveToAppt(this,'بداية الفصل الدراسي الثاني','2027-01-17')">حفظ</button></td>
+          </tr>
+          <tr data-type="holiday">
+            <td><span class="event-type-badge badge-holiday"><i class="fas fa-umbrella-beach"></i> إجازة</span> إجازة يوم التأسيس — البداية</td>
+            <td><span class="day-badge">من الجمعة</span></td>
+            <td><span class="date-hijri">9/12/1448هـ</span></td>
+            <td><span class="date-miladi">19/2/2027</span></td>
+            <td class="no-print"><button class="save-btn" onclick="saveToAppt(this,'إجازة يوم التأسيس - البداية','2027-02-19')">حفظ</button></td>
+          </tr>
+          <tr data-type="holiday">
+            <td><span class="event-type-badge badge-holiday"><i class="fas fa-umbrella-beach"></i> إجازة</span> إجازة يوم التأسيس — النهاية</td>
+            <td><span class="day-badge">إلى الاثنين</span></td>
+            <td><span class="date-hijri">9/15/1448هـ</span></td>
+            <td><span class="date-miladi">22/2/2027</span></td>
+            <td class="no-print"><button class="save-btn" onclick="saveToAppt(this,'إجازة يوم التأسيس - النهاية','2027-02-22')">حفظ</button></td>
+          </tr>
+          <tr data-type="holiday">
+            <td><span class="event-type-badge badge-holiday"><i class="fas fa-umbrella-beach"></i> إجازة</span> إجازة عيد الفطر — البداية</td>
+            <td><span class="day-badge">من الجمعة</span></td>
+            <td><span class="date-hijri">9/19/1448هـ</span></td>
+            <td><span class="date-miladi">26/2/2027</span></td>
+            <td class="no-print"><button class="save-btn" onclick="saveToAppt(this,'إجازة عيد الفطر - البداية','2027-02-26')">حفظ</button></td>
+          </tr>
+          <tr data-type="holiday">
+            <td><span class="event-type-badge badge-holiday"><i class="fas fa-umbrella-beach"></i> إجازة</span> إجازة عيد الفطر — النهاية</td>
+            <td><span class="day-badge">إلى السبت</span></td>
+            <td><span class="date-hijri">10/5/1448هـ</span></td>
+            <td><span class="date-miladi">13/3/2027</span></td>
+            <td class="no-print"><button class="save-btn" onclick="saveToAppt(this,'إجازة عيد الفطر - النهاية','2027-03-13')">حفظ</button></td>
+          </tr>
+          <tr data-type="start">
+            <td><span class="event-type-badge badge-start"><i class="fas fa-play-circle"></i> بداية</span> بداية الدراسة بعد إجازة عيد الفطر</td>
+            <td><span class="day-badge">الأحد</span></td>
+            <td><span class="date-hijri">10/6/1448هـ</span></td>
+            <td><span class="date-miladi">14/3/2027</span></td>
+            <td class="no-print"><button class="save-btn" onclick="saveToAppt(this,'بداية الدراسة بعد عيد الفطر','2027-03-14')">حفظ</button></td>
+          </tr>
+          <tr data-type="holiday">
+            <td><span class="event-type-badge badge-holiday"><i class="fas fa-umbrella-beach"></i> إجازة</span> إجازة عيد الأضحى — البداية</td>
+            <td><span class="day-badge">من الجمعة</span></td>
+            <td><span class="date-hijri">12/1/1448هـ</span></td>
+            <td><span class="date-miladi">7/5/2027</span></td>
+            <td class="no-print"><button class="save-btn" onclick="saveToAppt(this,'إجازة عيد الأضحى - البداية','2027-05-07')">حفظ</button></td>
+          </tr>
+          <tr data-type="holiday">
+            <td><span class="event-type-badge badge-holiday"><i class="fas fa-umbrella-beach"></i> إجازة</span> إجازة عيد الأضحى — النهاية</td>
+            <td><span class="day-badge">إلى السبت</span></td>
+            <td><span class="date-hijri">12/16/1448هـ</span></td>
+            <td><span class="date-miladi">22/5/2027</span></td>
+            <td class="no-print"><button class="save-btn" onclick="saveToAppt(this,'إجازة عيد الأضحى - النهاية','2027-05-22')">حفظ</button></td>
+          </tr>
+          <tr data-type="start">
+            <td><span class="event-type-badge badge-start"><i class="fas fa-play-circle"></i> بداية</span> بداية الدراسة بعد إجازة عيد الأضحى</td>
+            <td><span class="day-badge">الأحد</span></td>
+            <td><span class="date-hijri">12/17/1448هـ</span></td>
+            <td><span class="date-miladi">23/5/2027</span></td>
+            <td class="no-print"><button class="save-btn" onclick="saveToAppt(this,'بداية الدراسة بعد عيد الأضحى','2027-05-23')">حفظ</button></td>
+          </tr>
+          <tr data-type="exam">
+            <td><span class="event-type-badge badge-exam"><i class="fas fa-pencil-alt"></i> اختبار</span> بداية اختبار الفصل الدراسي الثاني</td>
+            <td><span class="day-badge">الأحد</span></td>
+            <td><span class="date-hijri">1/15/1449هـ</span></td>
+            <td><span class="date-miladi">20/6/2027</span></td>
+            <td class="no-print"><button class="save-btn" onclick="saveToAppt(this,'بداية اختبار الفصل الثاني','2027-06-20')">حفظ</button></td>
+          </tr>
+          <tr data-type="holiday">
+            <td><span class="event-type-badge badge-holiday"><i class="fas fa-umbrella-beach"></i> إجازة</span> بداية إجازة نهاية العام الدراسي</td>
+            <td><span class="day-badge">الخميس</span></td>
+            <td><span class="date-hijri">1/19/1449هـ</span></td>
+            <td><span class="date-miladi">24/6/2027</span></td>
+            <td class="no-print"><button class="save-btn" onclick="saveToAppt(this,'بداية إجازة نهاية العام','2027-06-24')">حفظ</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- New Year -->
+    <div class="calendar-section-block" data-section="new">
+      <div class="calendar-section-header new">
+        <i class="fas fa-star"></i>
+        <span>العودة للعام الجديد 1449/1450هـ</span>
+      </div>
+      <table class="cal-table">
+        <thead><tr><th>البيان</th><th>اليوم</th><th>التاريخ الهجري</th><th>التاريخ الميلادي</th><th class="no-print">إجراء</th></tr></thead>
+        <tbody>
+          <tr data-type="admin">
+            <td><span class="event-type-badge badge-admin"><i class="fas fa-user-tie"></i> إداري</span> عودة الهيئة الإدارية والمشرفين التربويين (العام الجديد 1449/1450هـ)</td>
+            <td><span class="day-badge">الثلاثاء</span></td>
+            <td><span class="date-hijri">3/8/1449هـ</span></td>
+            <td><span class="date-miladi">10/8/2027</span></td>
+            <td class="no-print"><button class="save-btn" onclick="saveToAppt(this,'عودة الهيئة الإدارية - العام الجديد','2027-08-10')">حفظ</button></td>
+          </tr>
+          <tr data-type="admin">
+            <td><span class="event-type-badge badge-admin"><i class="fas fa-user-tie"></i> إداري</span> عودة المعلمين الممارسين للتدريس (العام الجديد)</td>
+            <td><span class="day-badge">الأحد</span></td>
+            <td><span class="date-hijri">3/13/1449هـ</span></td>
+            <td><span class="date-miladi">15/8/2027</span></td>
+            <td class="no-print"><button class="save-btn" onclick="saveToAppt(this,'عودة المعلمين - العام الجديد','2027-08-15')">حفظ</button></td>
+          </tr>
+          <tr data-type="start">
+            <td><span class="event-type-badge badge-start"><i class="fas fa-play-circle"></i> بداية</span> بداية الدراسة للعام 1449/1450هـ</td>
+            <td><span class="day-badge">الأحد</span></td>
+            <td><span class="date-hijri">3/20/1449هـ</span></td>
+            <td><span class="date-miladi">22/8/2027</span></td>
+            <td class="no-print"><button class="save-btn" onclick="saveToAppt(this,'بداية الدراسة للعام 1449/1450هـ','2027-08-22')">حفظ</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ===== WEEKS ===== -->
+  <section id="section-weeks" class="section">
+    <div class="weeks-intro">
+      <div>
+        <h2>توزيع الأسابيع الدراسية</h2>
+        <p>جميع المناطق ماعدا إدارات التعليم المستثناة — العام 1448/1449هـ</p>
+      </div>
+      <div class="weeks-stats">
+        <div class="week-stat"><div class="week-stat-val">19</div><div class="week-stat-lbl">أسبوع / فصل</div></div>
+        <div class="week-stat"><div class="week-stat-val">93</div><div class="week-stat-lbl">يوم دراسي</div></div>
+        <div class="week-stat"><div class="week-stat-val">3</div><div class="week-stat-lbl">إجازات</div></div>
+      </div>
+    </div>
+
+    <div class="semester-tabs no-print">
+      <button class="sem-tab active" onclick="showWeeks('sem1',this)">الفصل الدراسي الأول</button>
+      <button class="sem-tab" onclick="showWeeks('sem2',this)">الفصل الدراسي الثاني</button>
+    </div>
+
+    <!-- Semester 1 Weeks -->
+    <div id="weeks-sem1">
+      <!-- Pre-weeks: عودة المعلمين -->
+      <div style="margin-bottom:16px">
+        <h3 class="section-title" style="font-size:1rem"><i class="fas fa-chalkboard-teacher"></i> عودة المعلمين والمعلمات (قبل بداية الفصل)</h3>
+      </div>
+      <div class="weeks-grid" style="margin-bottom:24px">
+        <div class="week-card">
+          <div class="week-header" style="background:linear-gradient(135deg,#546e7a,#78909c)">
+            <div><div class="week-title">عودة المعلمين والمعلمات</div><div class="week-month">August 2026</div></div>
+            <div class="week-hijri">ربيع الأول</div>
+          </div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">16/8</span><span class="day-hijri">3/1</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">17/8</span><span class="day-hijri">3/4</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">18/8</span><span class="day-hijri">3/5</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">19/8</span><span class="day-hijri">3/6</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">20/8</span><span class="day-hijri">3/7</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:16px">
+        <h3 class="section-title" style="font-size:1rem"><i class="fas fa-calendar-week"></i> أسابيع الفصل الدراسي الأول</h3>
+      </div>
+      <div class="weeks-grid">
+        <!-- Week 1 -->
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ١</div><div class="week-title">August 2026</div><div class="week-month">ربيع الأول</div></div><div class="week-hijri">3/10 — 3/14</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">23/8</span><span class="day-hijri">3/10</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">24/8</span><span class="day-hijri">3/11</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">25/8</span><span class="day-hijri">3/12</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">26/8</span><span class="day-hijri">3/13</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">27/8</span><span class="day-hijri">3/14</span></div>
+          </div>
+        </div>
+        <!-- Week 2 -->
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ٢</div><div class="week-title">Aug/Sep 2026</div><div class="week-month">ربيع الأول</div></div><div class="week-hijri">3/17 — 3/21</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">30/8</span><span class="day-hijri">3/17</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">31/8</span><span class="day-hijri">3/18</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">1/9</span><span class="day-hijri">3/19</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">2/9</span><span class="day-hijri">3/20</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">3/9</span><span class="day-hijri">3/21</span></div>
+          </div>
+        </div>
+        <!-- Week 3 -->
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ٣</div><div class="week-title">Sep 2026</div><div class="week-month">ربيع الأول</div></div><div class="week-hijri">3/24 — 3/28</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">6/9</span><span class="day-hijri">3/24</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">7/9</span><span class="day-hijri">3/25</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">8/9</span><span class="day-hijri">3/26</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">9/9</span><span class="day-hijri">3/27</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">10/9</span><span class="day-hijri">3/28</span></div>
+          </div>
+        </div>
+        <!-- Week 4 -->
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ٤</div><div class="week-title">Sep 2026</div><div class="week-month">ربيع الثاني</div></div><div class="week-hijri">4/2 — 4/6</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">13/9</span><span class="day-hijri">4/2</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">14/9</span><span class="day-hijri">4/3</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">15/9</span><span class="day-hijri">4/4</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">16/9</span><span class="day-hijri">4/5</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">17/9</span><span class="day-hijri">4/6</span></div>
+          </div>
+        </div>
+        <!-- Week 5 - National Day -->
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ٥</div><div class="week-title">Sep 2026</div><div class="week-month">ربيع الثاني</div></div><div class="week-hijri">4/9 — 4/13</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">20/9</span><span class="day-hijri">4/9</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">21/9</span><span class="day-hijri">4/10</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">22/9</span><span class="day-hijri">4/11</span></div>
+            <div class="week-day-row national-day"><span class="day-name">الأربعاء</span><span class="day-miladi">23/9 <span class="special-tag national">اليوم الوطني</span></span><span class="day-hijri">4/12</span></div>
+            <div class="week-day-row national-day"><span class="day-name">الخميس</span><span class="day-miladi">24/9 <span class="special-tag national">اليوم الوطني</span></span><span class="day-hijri">4/13</span></div>
+          </div>
+        </div>
+        <!-- Week 6 -->
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ٦</div><div class="week-title">Sep/Oct 2026</div><div class="week-month">ربيع الثاني</div></div><div class="week-hijri">4/16 — 4/20</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">27/9</span><span class="day-hijri">4/16</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">28/9</span><span class="day-hijri">4/17</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">29/9</span><span class="day-hijri">4/18</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">30/9</span><span class="day-hijri">4/19</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">1/10</span><span class="day-hijri">4/20</span></div>
+          </div>
+        </div>
+        <!-- Week 7 -->
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ٧</div><div class="week-title">October 2026</div><div class="week-month">ربيع الثاني</div></div><div class="week-hijri">4/23 — 4/27</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">4/10</span><span class="day-hijri">4/23</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">5/10</span><span class="day-hijri">4/24</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">6/10</span><span class="day-hijri">4/25</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">7/10</span><span class="day-hijri">4/26</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">8/10</span><span class="day-hijri">4/27</span></div>
+          </div>
+        </div>
+        <!-- Week 8 -->
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ٨</div><div class="week-title">October 2026</div><div class="week-month">ربيع 2 / جمادى 1</div></div><div class="week-hijri">4/30 — 5/4</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">11/10</span><span class="day-hijri">4/30</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">12/10</span><span class="day-hijri">5/1</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">13/10</span><span class="day-hijri">5/2</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">14/10</span><span class="day-hijri">5/3</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">15/10</span><span class="day-hijri">5/4</span></div>
+          </div>
+        </div>
+        <!-- Week 9 -->
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ٩</div><div class="week-title">October 2026</div><div class="week-month">جمادى الأول</div></div><div class="week-hijri">5/7 — 5/11</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">18/10</span><span class="day-hijri">5/7</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">19/10</span><span class="day-hijri">5/8</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">20/10</span><span class="day-hijri">5/9</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">21/10</span><span class="day-hijri">5/10</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">22/10</span><span class="day-hijri">5/11</span></div>
+          </div>
+        </div>
+        <!-- Week 10 -->
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ١٠</div><div class="week-title">October 2026</div><div class="week-month">جمادى الأول</div></div><div class="week-hijri">5/14 — 5/18</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">25/10</span><span class="day-hijri">5/14</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">26/10</span><span class="day-hijri">5/15</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">27/10</span><span class="day-hijri">5/16</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">28/10</span><span class="day-hijri">5/17</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">29/10</span><span class="day-hijri">5/18</span></div>
+          </div>
+        </div>
+        <!-- Week 11 -->
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ١١</div><div class="week-title">November 2026</div><div class="week-month">جمادى الأول</div></div><div class="week-hijri">5/21 — 5/25</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">1/11</span><span class="day-hijri">5/21</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">2/11</span><span class="day-hijri">5/22</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">3/11</span><span class="day-hijri">5/23</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">4/11</span><span class="day-hijri">5/24</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">5/11</span><span class="day-hijri">5/25</span></div>
+          </div>
+        </div>
+        <!-- Autumn Holiday -->
+        <div class="week-card holiday-card">
+          <div class="week-header holiday-header"><div><div class="week-title">🍂 إجازة الخريف</div></div></div>
+          <div class="holiday-info">
+            <div class="holiday-row"><span class="lbl">تبدأ الإجازة</span><span class="val">الجمعة 20/11 الموافق 6/10</span></div>
+            <div class="holiday-row"><span class="lbl">تنتهي الإجازة</span><span class="val">السبت 28/11 الموافق 6/18</span></div>
+            <div class="holiday-row"><span class="lbl">العودة للدراسة</span><span class="val return">الأحد 29/11 الموافق 6/19</span></div>
+          </div>
+        </div>
+        <!-- Week 12 -->
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ١٢</div><div class="week-title">November 2026</div><div class="week-month">جمادى الثاني</div></div><div class="week-hijri">5/28 — 6/3</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">8/11</span><span class="day-hijri">5/28</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">9/11</span><span class="day-hijri">5/29</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">10/11</span><span class="day-hijri">6/1</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">11/11</span><span class="day-hijri">6/2</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">12/11</span><span class="day-hijri">6/3</span></div>
+          </div>
+        </div>
+        <!-- Week 13 -->
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ١٣</div><div class="week-title">November 2026</div><div class="week-month">جمادى الثاني</div></div><div class="week-hijri">6/5 — 6/9</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">15/11</span><span class="day-hijri">6/5</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">16/11</span><span class="day-hijri">6/6</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">17/11</span><span class="day-hijri">6/7</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">18/11</span><span class="day-hijri">6/8</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">19/11</span><span class="day-hijri">6/9</span></div>
+          </div>
+        </div>
+        <!-- Week 14 -->
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ١٤</div><div class="week-title">Nov/Dec 2026</div><div class="week-month">جمادى الثاني</div></div><div class="week-hijri">6/19 — 6/23</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">29/11</span><span class="day-hijri">6/19</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">30/11</span><span class="day-hijri">6/20</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">1/12</span><span class="day-hijri">6/21</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">2/12</span><span class="day-hijri">6/22</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">3/12</span><span class="day-hijri">6/23</span></div>
+          </div>
+        </div>
+        <!-- Week 15 -->
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ١٥</div><div class="week-title">December 2026</div><div class="week-month">رجب</div></div><div class="week-hijri">6/26 — 7/1</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">6/12</span><span class="day-hijri">6/26</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">7/12</span><span class="day-hijri">6/27</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">8/12</span><span class="day-hijri">6/28</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">9/12</span><span class="day-hijri">6/29</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">10/12</span><span class="day-hijri">7/1</span></div>
+          </div>
+        </div>
+        <!-- Week 16 -->
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ١٦</div><div class="week-title">December 2026</div><div class="week-month">رجب</div></div><div class="week-hijri">7/4 — 7/8</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">13/12</span><span class="day-hijri">7/4</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">14/12</span><span class="day-hijri">7/5</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">15/12</span><span class="day-hijri">7/6</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">16/12</span><span class="day-hijri">7/7</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">17/12</span><span class="day-hijri">7/8</span></div>
+          </div>
+        </div>
+        <!-- Week 17 -->
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ١٧</div><div class="week-title">December 2026</div><div class="week-month">رجب</div></div><div class="week-hijri">7/11 — 7/15</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">20/12</span><span class="day-hijri">7/11</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">21/12</span><span class="day-hijri">7/12</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">22/12</span><span class="day-hijri">7/13</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">23/12</span><span class="day-hijri">7/14</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">24/12</span><span class="day-hijri">7/15</span></div>
+          </div>
+        </div>
+        <!-- Week 18 -->
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ١٨</div><div class="week-title">December 2026</div><div class="week-month">رجب</div></div><div class="week-hijri">7/18 — 7/22</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">27/12</span><span class="day-hijri">7/18</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">28/12</span><span class="day-hijri">7/19</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">29/12</span><span class="day-hijri">7/20</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">30/12</span><span class="day-hijri">7/21</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">31/12</span><span class="day-hijri">7/22</span></div>
+          </div>
+        </div>
+        <!-- Week 19 - Exams -->
+        <div class="week-card">
+          <div class="week-header" style="background:linear-gradient(135deg,#b71c1c,#e53935)"><div><div class="week-num">الأسبوع ١٩</div><div class="week-title">January 2027</div><div class="week-month">رجب</div></div><div class="week-hijri">7/25 — 7/29</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">3/1 <span class="special-tag exam">اختبارات</span></span><span class="day-hijri">7/25</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">4/1 <span class="special-tag exam">نهاية</span></span><span class="day-hijri">7/26</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">5/1 <span class="special-tag exam">الفصل</span></span><span class="day-hijri">7/27</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">6/1 <span class="special-tag exam">الدراسي</span></span><span class="day-hijri">7/28</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">7/1 <span class="special-tag exam">الأول</span></span><span class="day-hijri">7/29</span></div>
+          </div>
+        </div>
+        <!-- Mid-year holiday -->
+        <div class="week-card holiday-card">
+          <div class="week-header holiday-header"><div><div class="week-title">❄️ إجازة منتصف العام الدراسي</div></div></div>
+          <div class="holiday-info">
+            <div class="holiday-row"><span class="lbl">تبدأ الإجازة</span><span class="val">الجمعة 8/1 الموافق 7/30</span></div>
+            <div class="holiday-row"><span class="lbl">تنتهي الإجازة</span><span class="val">السبت 16/1 الموافق 8/8</span></div>
+            <div class="holiday-row"><span class="lbl">العودة للدراسة</span><span class="val return">الأحد 17/1 الموافق 8/9</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Semester 2 Weeks -->
+    <div id="weeks-sem2" style="display:none">
+      <div class="weeks-grid">
+        <!-- Weeks 1-4 -->
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ١</div><div class="week-title">January 2027</div><div class="week-month">شعبان</div></div><div class="week-hijri">8/9 — 8/13</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">17/1</span><span class="day-hijri">8/9</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">18/1</span><span class="day-hijri">8/10</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">19/1</span><span class="day-hijri">8/11</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">20/1</span><span class="day-hijri">8/12</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">21/1</span><span class="day-hijri">8/13</span></div>
+          </div>
+        </div>
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ٢</div><div class="week-title">January 2027</div><div class="week-month">شعبان</div></div><div class="week-hijri">8/16 — 8/20</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">24/1</span><span class="day-hijri">8/16</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">25/1</span><span class="day-hijri">8/17</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">26/1</span><span class="day-hijri">8/18</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">27/1</span><span class="day-hijri">8/19</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">28/1</span><span class="day-hijri">8/20</span></div>
+          </div>
+        </div>
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ٣</div><div class="week-title">Jan/Feb 2027</div><div class="week-month">شعبان</div></div><div class="week-hijri">8/23 — 8/27</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">31/1</span><span class="day-hijri">8/23</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">1/2</span><span class="day-hijri">8/24</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">2/2</span><span class="day-hijri">8/25</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">3/2</span><span class="day-hijri">8/26</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">4/2</span><span class="day-hijri">8/27</span></div>
+          </div>
+        </div>
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ٤</div><div class="week-title">February 2027</div><div class="week-month">شعبان/رمضان</div></div><div class="week-hijri">8/30 — 9/4</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">7/2</span><span class="day-hijri">8/30</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">8/2</span><span class="day-hijri">9/1</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">9/2</span><span class="day-hijri">9/2</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">10/2</span><span class="day-hijri">9/3</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">11/2</span><span class="day-hijri">9/4</span></div>
+          </div>
+        </div>
+        <!-- Week 5 -->
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ٥</div><div class="week-title">February 2027</div><div class="week-month">رمضان</div></div><div class="week-hijri">9/7 — 9/11</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">14/2</span><span class="day-hijri">9/7</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">15/2</span><span class="day-hijri">9/8</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">16/2</span><span class="day-hijri">9/9</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">17/2</span><span class="day-hijri">9/10</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">18/2</span><span class="day-hijri">9/11</span></div>
+          </div>
+        </div>
+        <!-- Week 6 - Foundation Day -->
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ٦</div><div class="week-title">February 2027</div><div class="week-month">رمضان</div></div><div class="week-hijri">9/14 — 9/18</div></div>
+          <div class="week-days">
+            <div class="week-day-row foundation-day"><span class="day-name">الأحد</span><span class="day-miladi">21/2 <span class="special-tag foundation">يوم التأسيس</span></span><span class="day-hijri">9/14</span></div>
+            <div class="week-day-row foundation-day"><span class="day-name">الاثنين</span><span class="day-miladi">22/2 <span class="special-tag foundation">يوم التأسيس</span></span><span class="day-hijri">9/15</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">23/2</span><span class="day-hijri">9/16</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">24/2</span><span class="day-hijri">9/17</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">25/2</span><span class="day-hijri">9/18</span></div>
+          </div>
+        </div>
+        <!-- Eid Al-Fitr Holiday -->
+        <div class="week-card holiday-card">
+          <div class="week-header holiday-header"><div><div class="week-title">🌙 إجازة عيد الفطر</div></div></div>
+          <div class="holiday-info">
+            <div class="holiday-row"><span class="lbl">تبدأ الإجازة</span><span class="val">الجمعة 26/2 الموافق 9/19</span></div>
+            <div class="holiday-row"><span class="lbl">تنتهي الإجازة</span><span class="val">السبت 13/3 الموافق 10/5</span></div>
+            <div class="holiday-row"><span class="lbl">العودة للدراسة</span><span class="val return">الأحد 14/3 الموافق 10/6</span></div>
+          </div>
+        </div>
+        <!-- Weeks 7-11 -->
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ٧</div><div class="week-title">March 2027</div><div class="week-month">شوال</div></div><div class="week-hijri">10/6 — 10/10</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">14/3</span><span class="day-hijri">10/6</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">15/3</span><span class="day-hijri">10/7</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">16/3</span><span class="day-hijri">10/8</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">17/3</span><span class="day-hijri">10/9</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span>
+<span class="day-miladi">18/3</span><span class="day-hijri">10/10</span></div>
+          </div>
+        </div>
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ٨</div><div class="week-title">March 2027</div><div class="week-month">شوال</div></div><div class="week-hijri">10/13 — 10/17</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">21/3</span><span class="day-hijri">10/13</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">22/3</span><span class="day-hijri">10/14</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">23/3</span><span class="day-hijri">10/15</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">24/3</span><span class="day-hijri">10/16</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">25/3</span><span class="day-hijri">10/17</span></div>
+          </div>
+        </div>
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ٩</div><div class="week-title">Mar/April 2027</div><div class="week-month">شوال</div></div><div class="week-hijri">10/20 — 10/24</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">28/3</span><span class="day-hijri">10/20</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">29/3</span><span class="day-hijri">10/21</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">30/3</span><span class="day-hijri">10/22</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">31/3</span><span class="day-hijri">10/23</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">1/4</span><span class="day-hijri">10/24</span></div>
+          </div>
+        </div>
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ١٠</div><div class="week-title">April 2027</div><div class="week-month">شوال/ذو القعدة</div></div><div class="week-hijri">10/27 — 11/1</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">4/4</span><span class="day-hijri">10/27</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">5/4</span><span class="day-hijri">10/28</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">6/4</span><span class="day-hijri">10/29</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">7/4</span><span class="day-hijri">10/30</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">8/4</span><span class="day-hijri">11/1</span></div>
+          </div>
+        </div>
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ١١</div><div class="week-title">April 2027</div><div class="week-month">ذو القعدة</div></div><div class="week-hijri">11/4 — 11/8</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">11/4</span><span class="day-hijri">11/4</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">12/4</span><span class="day-hijri">11/5</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">13/4</span><span class="day-hijri">11/6</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">14/4</span><span class="day-hijri">11/7</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">15/4</span><span class="day-hijri">11/8</span></div>
+          </div>
+        </div>
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ١٢</div><div class="week-title">April 2027</div><div class="week-month">ذو القعدة</div></div><div class="week-hijri">11/11 — 11/15</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">18/4</span><span class="day-hijri">11/11</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">19/4</span><span class="day-hijri">11/12</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">20/4</span><span class="day-hijri">11/13</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">21/4</span><span class="day-hijri">11/14</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">22/4</span><span class="day-hijri">11/15</span></div>
+          </div>
+        </div>
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ١٣</div><div class="week-title">April 2027</div><div class="week-month">ذو القعدة</div></div><div class="week-hijri">11/18 — 11/22</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">25/4</span><span class="day-hijri">11/18</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">26/4</span><span class="day-hijri">11/19</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">27/4</span><span class="day-hijri">11/20</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">28/4</span><span class="day-hijri">11/21</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">29/4</span><span class="day-hijri">11/22</span></div>
+          </div>
+        </div>
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ١٤</div><div class="week-title">May 2027</div><div class="week-month">ذو القعدة</div></div><div class="week-hijri">11/25 — 11/29</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">2/5</span><span class="day-hijri">11/25</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">3/5</span><span class="day-hijri">11/26</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">4/5</span><span class="day-hijri">11/27</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">5/5</span><span class="day-hijri">11/28</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">6/5</span><span class="day-hijri">11/29</span></div>
+          </div>
+        </div>
+        <!-- Eid Al-Adha Holiday -->
+        <div class="week-card holiday-card">
+          <div class="week-header holiday-header"><div><div class="week-title">🐑 إجازة عيد الأضحى</div></div></div>
+          <div class="holiday-info">
+            <div class="holiday-row"><span class="lbl">تبدأ الإجازة</span><span class="val">الجمعة 7/5 الموافق 12/1</span></div>
+            <div class="holiday-row"><span class="lbl">تنتهي الإجازة</span><span class="val">السبت 22/5 الموافق 12/16</span></div>
+            <div class="holiday-row"><span class="lbl">العودة للدراسة</span><span class="val return">الأحد 23/5 الموافق 12/17</span></div>
+          </div>
+        </div>
+        <!-- Weeks 15-19 -->
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ١٥</div><div class="week-title">May 2027</div><div class="week-month">ذو الحجة</div></div><div class="week-hijri">12/17 — 12/21</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">23/5</span><span class="day-hijri">12/17</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">24/5</span><span class="day-hijri">12/18</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">25/5</span><span class="day-hijri">12/19</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">26/5</span><span class="day-hijri">12/20</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">27/5</span><span class="day-hijri">12/21</span></div>
+          </div>
+        </div>
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ١٦</div><div class="week-title">May/June 2027</div><div class="week-month">ذو الحجة</div></div><div class="week-hijri">12/24 — 12/28</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">30/5</span><span class="day-hijri">12/24</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">31/5</span><span class="day-hijri">12/25</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">1/6</span><span class="day-hijri">12/26</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">2/6</span><span class="day-hijri">12/27</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">3/6</span><span class="day-hijri">12/28</span></div>
+          </div>
+        </div>
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ١٧</div><div class="week-title">June 2027</div><div class="week-month">محرم 1449هـ</div></div><div class="week-hijri">1/1 — 1/5</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">6/6</span><span class="day-hijri">1/1 1449هـ</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">7/6</span><span class="day-hijri">1/2</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">8/6</span><span class="day-hijri">1/3</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">9/6</span><span class="day-hijri">1/4</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">10/6</span><span class="day-hijri">1/5</span></div>
+          </div>
+        </div>
+        <div class="week-card">
+          <div class="week-header"><div><div class="week-num">الأسبوع ١٨</div><div class="week-title">June 2027</div><div class="week-month">محرم</div></div><div class="week-hijri">1/8 — 1/12</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">13/6</span><span class="day-hijri">1/8</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">14/6</span><span class="day-hijri">1/9</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">15/6</span><span class="day-hijri">1/10</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">16/6</span><span class="day-hijri">1/11</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">17/6</span><span class="day-hijri">1/12</span></div>
+          </div>
+        </div>
+        <!-- Week 19 - Exams -->
+        <div class="week-card">
+          <div class="week-header" style="background:linear-gradient(135deg,#b71c1c,#e53935)"><div><div class="week-num">الأسبوع ١٩</div><div class="week-title">June 2027</div><div class="week-month">محرم</div></div><div class="week-hijri">1/15 — 1/19</div></div>
+          <div class="week-days">
+            <div class="week-day-row"><span class="day-name">الأحد</span><span class="day-miladi">20/6 <span class="special-tag exam">اختبارات</span></span><span class="day-hijri">1/15</span></div>
+            <div class="week-day-row"><span class="day-name">الاثنين</span><span class="day-miladi">21/6 <span class="special-tag exam">نهاية</span></span><span class="day-hijri">1/16</span></div>
+            <div class="week-day-row"><span class="day-name">الثلاثاء</span><span class="day-miladi">22/6 <span class="special-tag exam">الفصل</span></span><span class="day-hijri">1/17</span></div>
+            <div class="week-day-row"><span class="day-name">الأربعاء</span><span class="day-miladi">23/6 <span class="special-tag exam">الدراسي</span></span><span class="day-hijri">1/18</span></div>
+            <div class="week-day-row"><span class="day-name">الخميس</span><span class="day-miladi">24/6 <span class="special-tag exam">الثاني</span></span><span class="day-hijri">1/19</span></div>
+          </div>
+        </div>
+        <!-- End of year holiday -->
+        <div class="week-card holiday-card">
+          <div class="week-header holiday-header"><div><div class="week-title">🎊 إجازة نهاية العام الدراسي</div></div></div>
+          <div class="holiday-info">
+            <div class="holiday-row"><span class="lbl">تبدأ الإجازة</span><span class="val">الخميس 24/6 الموافق 1/19</span></div>
+            <div class="holiday-row"><span class="lbl">عودة الإداريين والإدارات</span><span class="val return">الثلاثاء 10/8 الموافق 3/8</span></div>
+            <div class="holiday-row"><span class="lbl">عودة المعلمين والمعلمات</span><span class="val return">الأحد 15/8 الموافق 3/13</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HOLIDAYS ===== -->
+  <section id="section-holidays" class="section">
+    <div style="margin-bottom:24px">
+      <h2 class="section-title"><i class="fas fa-umbrella-beach"></i> الإجازات الرسمية</h2>
+      <p style="color:var(--text-light);font-size:0.88rem">جميع الإجازات الرسمية للعام الدراسي 1448/1449هـ</p>
+    </div>
+    <div class="holidays-grid">
+      <div class="holiday-card-main">
+        <div class="holiday-card-header" style="background:linear-gradient(135deg,#1b5e20,#388e3c)">
+          <span class="h-emoji">🎉</span>
+          <h3>إجازة اليوم الوطني</h3>
+        </div>
+        <div class="holiday-card-body">
+          <div class="holiday-detail-row"><span class="lbl">بداية الإجازة</span><span class="val">الأربعاء 23/9/2026</span></div>
+          <div class="holiday-detail-row"><span class="lbl">نهاية الإجازة</span><span class="val">السبت 26/9/2026</span></div>
+          <div class="holiday-detail-row"><span class="lbl">التاريخ الهجري</span><span class="val">4/12 — 4/15/1448هـ</span></div>
+          <div class="holiday-detail-row"><span class="lbl">عدد الأيام</span><span class="val">4 أيام</span></div>
+          <span class="days-count-badge" style="background:#e8f5e9;color:#1b5e20">4 أيام إجازة</span>
+        </div>
+      </div>
+      <div class="holiday-card-main">
+        <div class="holiday-card-header" style="background:linear-gradient(135deg,#e65100,#f57c00)">
+          <span class="h-emoji">🍂</span>
+          <h3>إجازة الخريف</h3>
+        </div>
+        <div class="holiday-card-body">
+          <div class="holiday-detail-row"><span class="lbl">بداية الإجازة</span><span class="val">الجمعة 20/11/2026</span></div>
+          <div class="holiday-detail-row"><span class="lbl">نهاية الإجازة</span><span class="val">السبت 28/11/2026</span></div>
+          <div class="holiday-detail-row"><span class="lbl">التاريخ الهجري</span><span class="val">6/10 — 6/18/1448هـ</span></div>
+          <div class="holiday-detail-row"><span class="lbl">العودة للدراسة</span><span class="val" style="color:var(--success)">الأحد 29/11/2026</span></div>
+          <span class="days-count-badge" style="background:#fff3e0;color:#e65100">9 أيام إجازة</span>
+        </div>
+      </div>
+      <div class="holiday-card-main">
+        <div class="holiday-card-header" style="background:linear-gradient(135deg,#0d47a1,#1976d2)">
+          <span class="h-emoji">🏛️</span>
+          <h3>إجازة يوم التأسيس</h3>
+        </div>
+        <div class="holiday-card-body">
+          <div class="holiday-detail-row"><span class="lbl">بداية الإجازة</span><span class="val">الجمعة 19/2/2027</span></div>
+          <div class="holiday-detail-row"><span class="lbl">نهاية الإجازة</span><span class="val">الاثنين 22/2/2027</span></div>
+          <div class="holiday-detail-row"><span class="lbl">التاريخ الهجري</span><span class="val">9/12 — 9/15/1448هـ</span></div>
+          <div class="holiday-detail-row"><span class="lbl">عدد الأيام</span><span class="val">4 أيام</span></div>
+          <span class="days-count-badge" style="background:#e3f2fd;color:#0d47a1">4 أيام إجازة</span>
+        </div>
+      </div>
+      <div class="holiday-card-main">
+        <div class="holiday-card-header" style="background:linear-gradient(135deg,#4a148c,#7b1fa2)">
+          <span class="h-emoji">🌙</span>
+          <h3>إجازة عيد الفطر</h3>
+        </div>
+        <div class="holiday-card-body">
+          <div class="holiday-detail-row"><span class="lbl">بداية الإجازة</span><span class="val">الجمعة 26/2/2027</span></div>
+          <div class="holiday-detail-row"><span class="lbl">نهاية الإجازة</span><span class="val">السبت 13/3/2027</span></div>
+          <div class="holiday-detail-row"><span class="lbl">التاريخ الهجري</span><span class="val">9/19 — 10/5/1448هـ</span></div>
+          <div class="holiday-detail-row"><span class="lbl">العودة للدراسة</span><span class="val" style="color:var(--success)">الأحد 14/3/2027</span></div>
+          <span class="days-count-badge" style="background:#f3e5f5;color:#4a148c">16 يوم إجازة</span>
+        </div>
+      </div>
+      <div class="holiday-card-main">
+        <div class="holiday-card-header" style="background:linear-gradient(135deg,#bf360c,#e64a19)">
+          <span class="h-emoji">🐑</span>
+          <h3>إجازة عيد الأضحى</h3>
+        </div>
+        <div class="holiday-card-body">
+          <div class="holiday-detail-row"><span class="lbl">بداية الإجازة</span><span class="val">الجمعة 7/5/2027</span></div>
+          <div class="holiday-detail-row"><span class="lbl">نهاية الإجازة</span><span class="val">السبت 22/5/2027</span></div>
+          <div class="holiday-detail-row"><span class="lbl">التاريخ الهجري</span><span class="val">12/1 — 12/16/1448هـ</span></div>
+          <div class="holiday-detail-row"><span class="lbl">العودة للدراسة</span><span class="val" style="color:var(--success)">الأحد 23/5/2027</span></div>
+          <span class="days-count-badge" style="background:#fbe9e7;color:#bf360c">16 يوم إجازة</span>
+        </div>
+      </div>
+      <div class="holiday-card-main">
+        <div class="holiday-card-header" style="background:linear-gradient(135deg,#006064,#00838f)">
+          <span class="h-emoji">🎊</span>
+          <h3>إجازة نهاية العام</h3>
+        </div>
+        <div class="holiday-card-body">
+          <div class="holiday-detail-row"><span class="lbl">بداية الإجازة</span><span class="val">الخميس 24/6/2027</span></div>
+          <div class="holiday-detail-row"><span class="lbl">التاريخ الهجري</span><span class="val">1/19/1449هـ</span></div>
+          <div class="holiday-detail-row"><span class="lbl">عودة الإداريين</span><span class="val" style="color:var(--success)">الثلاثاء 10/8/2027</span></div>
+          <div class="holiday-detail-row"><span class="lbl">عودة المعلمين</span><span class="val" style="color:var(--success)">الأحد 15/8/2027</span></div>
+          <span class="days-count-badge" style="background:#e0f7fa;color:#006064">إجازة صيفية</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== APPOINTMENTS ===== -->
+  <section id="section-appointments" class="section">
+    <div style="margin-bottom:20px">
+      <h2 class="section-title"><i class="fas fa-bookmark"></i> مواعيدي الشخصية</h2>
+      <p style="color:var(--text-light);font-size:0.88rem">سجّل وتابع مواعيدك الدراسية والشخصية</p>
+    </div>
+    <div class="appt-layout">
+      <div class="appt-form-card">
+        <div class="form-title"><i class="fas fa-plus-circle"></i> إضافة موعد جديد</div>
+        <div class="form-group">
+          <label class="form-label">عنوان الموعد <span>*</span></label>
+          <input type="text" id="appt-title" class="form-control" placeholder="مثال: اجتماع أولياء الأمور" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">التاريخ <span>*</span></label>
+            <input type="date" id="appt-date" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">الوقت</label>
+            <input type="time" id="appt-time" class="form-control" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">النوع</label>
+            <select id="appt-type" class="form-control">
+              <option value="meeting">اجتماع</option>
+              <option value="exam">اختبار</option>
+              <option value="event">فعالية</option>
+              <option value="reminder">تذكير</option>
+              <option value="other">أخرى</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">الأولوية</label>
+            <select id="appt-priority" class="form-control">
+              <option value="high">عالية 🔴</option>
+              <option value="med" selected>متوسطة 🟡</option>
+              <option value="low">منخفضة 🟢</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">المكان</label>
+          <input type="text" id="appt-location" class="form-control" placeholder="مثال: قاعة الاجتماعات" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">ملاحظات</label>
+          <textarea id="appt-notes" class="form-control" rows="3" placeholder="أضف أي تفاصيل إضافية..."></textarea>
+        </div>
+        <div class="form-actions">
+          <button class="btn-save" onclick="saveAppointment()"><i class="fas fa-save"></i> حفظ الموعد</button>
+          <button class="btn-clear" onclick="clearForm()">مسح</button>
+        </div>
+      </div>
+      <div class="appt-list-card">
+        <div class="appt-list-header">
+          <div class="section-title" style="margin-bottom:0"><i class="fas fa-list"></i> قائمة المواعيد</div>
+          <button class="btn-danger-sm" onclick="deleteAllAppts()"><i class="fas fa-trash"></i> حذف الكل</button>
+        </div>
+        <div class="appt-search-bar">
+          <input type="text" id="appt-search" class="appt-search-input" placeholder="🔍 بحث في المواعيد..." oninput="renderAppointments()" />
+          <select id="appt-filter-type" class="appt-filter-select" onchange="renderAppointments()">
+            <option value="">كل الأنواع</option>
+            <option value="meeting">اجتماع</option>
+            <option value="exam">اختبار</option>
+            <option value="event">فعالية</option>
+            <option value="reminder">تذكير</option>
+          </select>
+          <select id="appt-filter-priority" class="appt-filter-select" onchange="renderAppointments()">
+            <option value="">كل الأولويات</option>
+            <option value="high">عالية</option>
+            <option value="med">متوسطة</option>
+            <option value="low">منخفضة</option>
+          </select>
+        </div>
+        <div id="appt-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PRINT ===== -->
+  <section id="section-print" class="section">
+    <div style="margin-bottom:24px">
+      <h2 class="section-title"><i class="fas fa-print"></i> خيارات الطباعة</h2>
+      <p style="color:var(--text-light);font-size:0.88rem">اختر ما تريد طباعته</p>
+    </div>
+    <div class="print-options">
+      <div class="print-option-card" onclick="printSection('calendar')">
+        <div class="print-option-icon">📅</div>
+        <div class="print-option-title">طباعة التقويم الكامل</div>
+        <div class="print-option-desc">طباعة جميع مواعيد العام الدراسي بالتواريخ الهجرية والميلادية</div>
+      </div>
+      <div class="print-option-card" onclick="printSection('weeks')">
+        <div class="print-option-icon">📊</div>
+        <div class="print-option-title">طباعة الأسابيع الدراسية</div>
+        <div class="print-option-desc">طباعة توزيع الأسابيع الدراسية للفصلين الأول والثاني</div>
+      </div>
+      <div class="print-option-card" onclick="printSection('holidays')">
+        <div class="print-option-icon">🌴</div>
+        <div class="print-option-title">طباعة الإجازات</div>
+        <div class="print-option-desc">طباعة قائمة الإجازات الرسمية مع تفاصيلها</div>
+      </div>
+      <div class="print-option-card" onclick="printSection('appointments')">
+        <div class="print-option-icon">📌</div>
+        <div class="print-option-title">طباعة مواعيدي</div>
+        <div class="print-option-desc">طباعة قائمة المواعيد الشخصية المسجلة</div>
+      </div>
+      <div class="print-option-card" onclick="window.print()">
+        <div class="print-option-icon">🖨️</div>
+        <div class="print-option-title">طباعة الصفحة الحالية</div>
+        <div class="print-option-desc">طباعة محتوى الصفحة الحالية المعروضة</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===== ADD MODAL ===== -->
+<div class="modal-overlay" id="add-modal">
+  <div class="modal-box">
+    <div class="modal-title">
+      <i class="fas fa-plus-circle" style="color:var(--secondary)"></i>
+      إضافة موعد جديد
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">عنوان الموعد <span style="color:var(--danger)">*</span></label>
+      <input type="text" id="modal-title" class="form-control" placeholder="عنوان الموعد" />
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">التاريخ <span style="color:var(--danger)">*</span></label>
+        <input type="date" id="modal-date" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">الوقت</label>
+        <input type="time" id="modal-time" class="form-control" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">النوع</label>
+        <select id="modal-type" class="form-control">
+          <option value="meeting">اجتماع</option>
+          <option value="exam">اختبار</option>
+          <option value="event">فعالية</option>
+          <option value="reminder">تذكير</option>
+          <option value="other">أخرى</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">الأولوية</label>
+        <select id="modal-priority" class="form-control">
+          <option value="high">عالية 🔴</option>
+          <option value="med" selected>متوسطة 🟡</option>
+          <option value="low">منخفضة 🟢</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">المكان</label>
+      <input type="text" id="modal-location" class="form-control" placeholder="المكان" />
+    </div>
+    <div class="form-actions">
+      <button class="btn-save" onclick="saveFromModal()"><i class="fas fa-save"></i> حفظ</button>
+      <button class="btn-clear" onclick="closeModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== EDIT MODAL ===== -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal-box">
+    <div class="modal-title">
+      <i class="fas fa-edit" style="color:var(--warning)"></i>
+      تعديل الموعد
+      <button class="modal-close" onclick="closeEditModal()">✕</button>
+    </div>
+    <input type="hidden" id="edit-id" />
+    <div class="form-group">
+      <label class="form-label">عنوان الموعد</label>
+      <input type="text" id="edit-title" class="form-control" />
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">التاريخ</label>
+        <input type="date" id="edit-date" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">الوقت</label>
+        <input type="time" id="edit-time" class="form-control" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">النوع</label>
+        <select id="edit-type" class="form-control">
+          <option value="meeting">اجتماع</option>
+          <option value="exam">اختبار</option>
+          <option value="event">فعالية</option>
+          <option value="reminder">تذكير</option>
+          <option value="other">أخرى</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">الأولوية</label>
+        <select id="edit-priority" class="form-control">
+          <option value="high">عالية 🔴</option>
+          <option value="med">متوسطة 🟡</option>
+          <option value="low">منخفضة 🟢</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">المكان</label>
+      <input type="text" id="edit-location" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">ملاحظات</label>
+      <textarea id="edit-notes" class="form-control" rows="3"></textarea>
+    </div>
+    <div class="form-actions">
+      <button class="btn-save" onclick="updateAppointment()"><i class="fas fa-save"></i> حفظ التعديل</button>
+      <button class="btn-clear" onclick="closeEditModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+  // ===== NAVIGATION =====
+  function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('section-' + id).classList.add('active');
+    document.getElementById('tab-' + id).classList.add('active');
+  }
+
+  // ===== PROGRESS BARS =====
+  function updateProgress() {
+    const now = new Date();
+    const sem1Start = new Date('2026-08-23');
+    const sem1End = new Date('2027-01-07');
+    const midStart = new Date('2027-01-08');
+    const midEnd = new Date('2027-01-16');
+    const sem2Start = new Date('2027-01-17');
+    const sem2End = new Date('2027-06-24');
+
+    function pct(start, end) {
+      if (now < start) return 0;
+      if (now > end) return 100;
+      return Math.round(((now - start) / (end - start)) * 100);
+    }
+
+    const p1 = pct(sem1Start, sem1End);
+    const pm = pct(midStart, midEnd);
+    const p2 = pct(sem2Start, sem2End);
+
+    document.getElementById('sem1-bar').style.width = p1 + '%';
+    document.getElementById('sem1-pct').textContent = p1 + '%';
+    document.getElementById('mid-bar').style.width = pm + '%';
+    document.getElementById('mid-pct').textContent = pm + '%';
+    document.getElementById('sem2-bar').style.width = p2 + '%';
+    document.getElementById('sem2-pct').textContent = p2 + '%';
+  }
+
+  // ===== FILTER CALENDAR =====
+  function filterCalendar(type, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('table.cal-table tbody tr').forEach(row => {
+      if (type === 'all') { row.style.display = ''; return; }
+      row.style.display = row.dataset.type === type ? '' : 'none';
+    });
+  }
+
+  // ===== WEEKS TABS =====
+  function showWeeks(sem, btn) {
+    document.querySelectorAll('.sem-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('weeks-sem1').style.display = sem === 'sem1' ? '' : 'none';
+    document.getElementById('weeks-sem2').style.display = sem === 'sem2' ? '' : 'none';
+  }
+
+  // ===== APPOINTMENTS =====
+  const STORAGE_KEY = 'academic_cal2_appts';
+
+  function getAppts() {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  }
+
+  function saveAppts(arr) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+    updateApptBadge();
+  }
+
+  function updateApptBadge() {
+    const count = getAppts().length;
+    document.getElementById('appt-count-badge').textContent = count;
+  }
+
+  const typeLabels = { meeting: 'اجتماع', exam: 'اختبار', event: 'فعالية', reminder: 'تذكير', other: 'أخرى' };
+  const typeIcons = { meeting: 'fas fa-users', exam: 'fas fa-pencil-alt', event: 'fas fa-star', reminder: 'fas fa-bell', other: 'fas fa-bookmark' };
+  const typeColors = { meeting: '#1565c0', exam: '#b71c1c', event: '#6a1b9a', reminder: '#e65100', other: '#37474f' };
+  const typeBgs = { meeting: '#e3f2fd', exam: '#fce4ec', event: '#f3e5f5', reminder: '#fbe9e7', other: '#eceff1' };
+  const priorityLabels = { high: 'عالية', med: 'متوسطة', low: 'منخفضة' };
+
+  function saveAppointment() {
+    const title = document.getElementById('appt-title').value.trim();
+    const date = document.getElementById('appt-date').value;
+    if (!title || !date) { showToast('يرجى إدخال العنوان والتاريخ', 'error'); return; }
+    const appt = {
+      id: Date.now(),
+      title,
+      date,
+      time: document.getElementById('appt-time').value,
+      type: document.getElementById('appt-type').value,
+      priority: document.getElementById('appt-priority').value,
+      location: document.getElementById('appt-location').value,
+      notes: document.getElementById('appt-notes').value
+    };
+    const appts = getAppts();
+    appts.push(appt);
+    appts.sort((a, b) => new Date(a.date) - new Date(b.date));
+    saveAppts(appts);
+    clearForm();
+    renderAppointments();
+    showToast('تم حفظ الموعد بنجاح ✓', 'success');
+  }
+
+  function saveFromModal() {
+    const title = document.getElementById('modal-title').value.trim();
+    const date = document.getElementById('modal-date').value;
+    if (!title || !date) { showToast('يرجى إدخال العنوان والتاريخ', 'error'); return; }
+    const appt = {
+      id: Date.now(),
+      title,
+      date,
+      time: document.getElementById('modal-time').value,
+      type: document.getElementById('modal-type').value,
+      priority: document.getElementById('modal-priority').value,
+      location: document.getElementById('modal-location').value,
+      notes: ''
+    };
+    const appts = getAppts();
+    appts.push(appt);
+    appts.sort((a, b) => new Date(a.date) - new Date(b.date));
+    saveAppts(appts);
+    renderAppointments();
+    closeModal();
+    showToast('تم حفظ الموعد بنجاح ✓', 'success');
+  }
+
+  function saveToAppt(btn, title, date) {
+    const appts = getAppts();
+    appts.push({ id: Date.now(), title, date, time: '', type: 'reminder', priority: 'med', location: '', notes: 'محفوظ من التقويم الرسمي' });
+    appts.sort((a, b) => new Date(a.date) - new Date(b.date));
+    saveAppts(appts);
+    renderAppointments();
+    btn.textContent = '✓ محفوظ';
+    btn.classList.add('saved');
+    showToast('تم حفظ الموعد في قائمتك ✓', 'success');
+  }
+
+  function clearForm() {
+    ['appt-title','appt-date','appt-time','appt-location','appt-notes'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('appt-type').value = 'meeting';
+    document.getElementById('appt-priority').value = 'med';
+  }
+
+  function renderAppointments() {
+    const appts = getAppts();
+    const search = document.getElementById('appt-search').value.toLowerCase();
+    const filterType = document.getElementById('appt-filter-type').value;
+    const filterPriority = document.getElementById('appt-filter-priority').value;
+    const container = document.getElementById('appt-list');
+
+    let filtered = appts.filter(a => {
+      const matchSearch = !search || a.title.toLowerCase().includes(search) || (a.location||'').toLowerCase().includes(search);
+      const matchType = !filterType || a.type === filterType;
+      const matchPriority = !filterPriority || a.priority === filterPriority;
+      return matchSearch && matchType && matchPriority;
+    });
+
+    if (!filtered.length) {
+      container.innerHTML = `<div class="empty-state"><i class="fas fa-calendar-times"></i><h3>لا توجد مواعيد مسجلة</h3><p>أضف موعدك الأول باستخدام النموذج أعلاه</p></div>`;
+      return;
+    }
+
+    container.innerHTML = filtered.map(a => {
+      const d = new Date(a.date);
+      const dateStr = d.toLocaleDateString('ar-SA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      const priorityClass = { high: 'priority-high', med: 'priority-med', low: 'priority-low' }[a.priority];
+      return `
+        <div class="appt-item">
+          <div class="appt-icon" style="background:${typeBgs[a.type]||'#eceff1'};color:${typeColors[a.type]||'#37474f'}">
+            <i class="${typeIcons[a.type]||'fas fa-bookmark'}"></i>
+          </div>
+          <div class="appt-content">
+            <div class="appt-title-text">${a.title}</div>
+            <div class="appt-meta">
+              <span><i class="fas fa-calendar"></i> ${dateStr}</span>
+              ${a.time ? `<span><i class="fas fa-clock"></i> ${a.time}</span>` : ''}
+              ${a.location ? `<span><i class="fas fa-map-marker-alt"></i> ${a.location}</span>` : ''}
+              <span><span class="priority-dot ${priorityClass}"></span> ${priorityLabels[a.priority]||''}</span>
+              <span><i class="fas fa-tag"></i> ${typeLabels[a.type]||a.type}</span>
+            </div>
+          </div>
+          <div class="appt-actions">
+            <button class="appt-action-btn print" title="طباعة" onclick="printAppt(${a.id})"><i class="fas fa-print"></i></button>
+            <button class="appt-action-btn edit" title="تعديل" onclick="openEditModal(${a.id})"><i class="fas fa-edit"></i></button>
+            <button class="appt-action-btn delete" title="حذف" onclick="deleteAppt(${a.id})"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function deleteAppt(id) {
+    const appts = getAppts().filter(a => a.id !== id);
+    saveAppts(appts);
+    renderAppointments();
+    showToast('تم حذف الموعد', 'info');
+  }
+
+  function deleteAllAppts() {
+    if (!confirm('هل تريد حذف جميع المواعيد؟')) return;
+    saveAppts([]);
+    renderAppointments();
+    showToast('تم حذف جميع المواعيد', 'info');
+  }
+
+  function openEditModal(id) {
+    const a = getAppts().find(x => x.id === id);
+    if (!a) return;
+    document.getElementById('edit-id').value = id;
+    document.getElementById('edit-title').value = a.title;
+    document.getElementById('edit-date').value = a.date;
+    document.getElementById('edit-time').value = a.time || '';
+    document.getElementById('edit-type').value = a.type;
+    document.getElementById('edit-priority').value = a.priority;
+    document.getElementById('edit-location').value = a.location || '';
+    document.getElementById('edit-notes').value = a.notes || '';
+    document.getElementById('edit-modal').classList.add('open');
+  }
+
+  function updateAppointment() {
+    const id = parseInt(document.getElementById('edit-id').value);
+    const appts = getAppts();
+    const idx = appts.findIndex(a => a.id === id);
+    if (idx === -1) return;
+    appts[idx] = {
+      ...appts[idx],
+      title: document.getElementById('edit-title').value,
+      date: document.getElementById('edit-date').value,
+      time: document.getElementById('edit-time').value,
+      type: document.getElementById('edit-type').value,
+      priority: document.getElementById('edit-priority').value,
+      location: document.getElementById('edit-location').value,
+      notes: document.getElementById('edit-notes').value
+    };
+    appts.sort((a, b) => new Date(a.date) - new Date(b.date));
+    saveAppts(appts);
+    renderAppointments();
+    closeEditModal();
+    showToast('تم تحديث الموعد بنجاح ✓', 'success');
+  }
+
+  function printAppt(id) {
+    const a = getAppts().find(x => x.id === id);
+    if (!a) return;
+    const d = new Date(a.date);
+    const dateStr = d.toLocaleDateString('ar-SA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    const w = window.open('', '_blank');
+    w.document.write(`<!DOCTYPE html><html dir="rtl"><head><meta charset="UTF-8"><title>موعد: ${a.title}</title>
+    <style>body{font-family:Arial,sans-serif;padding:30px;direction:rtl;max-width:600px;margin:0 auto}
+    h1{color:#1a3a5c;border-bottom:3px solid #c8a951;padding-bottom:10px}
+    .row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee}
+    .lbl{color:#666;font-weight:bold}.val{color:#1a3a5c;font-weight:bold}
+    .footer{margin-top:30px;text-align:center;color:#999;font-size:12px}</style></head>
+    <body><h1>📌 ${a.title}</h1>
+    <div class="row"><span class="lbl">التاريخ:</span><span class="val">${dateStr}</span></div>
+    ${a.time ? `<div class="row"><span class="lbl">الوقت:</span><span class="val">${a.time}</span></div>` : ''}
+    ${a.location ? `<div class="row"><span class="lbl">المكان:</span><span class="val">${a.location}</span></div>` : ''}
+    <div class="row"><span class="lbl">النوع:</span><span class="val">${typeLabels[a.type]||a.type}</span></div>
+    <div class="row"><span class="lbl">الأولوية:</span><span class="val">${priorityLabels[a.priority]||a.priority}</span></div>
+    ${a.notes ? `<div class="row"><span class="lbl">ملاحظات:</span><span class="val">${a.notes}</span></div>` : ''}
+    <div class="footer">التقويم الدراسي 1448/1449هـ — جميع المناطق ماعدا إدارات التعليم المستثناة</div>
+    <script>window.print();<\/script></body></html>`);
+    w.document.close();
+  }
+
+  // ===== MODALS =====
+  function openAddModal() {
+    document.getElementById('add-modal').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('add-modal').classList.remove('open');
+    ['modal-title','modal-date','modal-time','modal-location'].forEach(id => document.getElementById(id).value = '');
+  }
+
+  function closeEditModal() {
+    document.getElementById('edit-modal').classList.remove('open');
+  }
+
+  document.getElementById('add-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  document.getElementById('edit-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeEditModal();
+  });
+
+  // ===== PRINT =====
+  function printPage() { window.print(); }
+
+  function printSection(id) {
+    showSection(id);
+    setTimeout(() => window.print(), 300);
+  }
+
+  // ===== TOAST =====
+  function showToast(msg, type = 'success') {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    const icons = { success: '✓', error: '✕', info: 'ℹ' };
+    toast.innerHTML = `<span>${icons[type]||'✓'}</span> ${msg}`;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 3500);
+  }
+
+  // ===== INIT =====
+  updateProgress();
+  renderAppointments();
+  updateApptBadge();
+</script>
+</body>
+</html>
