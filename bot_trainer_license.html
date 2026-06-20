@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بوت إرسال أسئلة رخصة المدربين | تصميم د/فواز</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap');
+:root{--navy:#1a2744;--gold:#c9a227;--teal:#0d7377;--green:#1e7e34;--red:#c0392b;--light:#f4f6fb;--white:#fff;--border:#dde3f0;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Tajawal',sans-serif;background:var(--light);min-height:100vh;direction:rtl;}
+.header{background:linear-gradient(135deg,var(--navy) 0%,#2c3e7a 100%);color:white;padding:26px 20px 18px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.3);}
+.header h1{font-size:1.4rem;font-weight:900;}
+.header p{font-size:.82rem;opacity:.75;margin-top:4px;}
+.hbadge{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:4px 14px;font-size:.76rem;margin-top:8px;color:var(--gold);font-weight:700;}
+.live-badge{display:inline-flex;align-items:center;gap:6px;background:#1e7e34;color:white;border-radius:20px;padding:4px 12px;font-size:.76rem;font-weight:700;margin-top:8px;margin-right:8px;}
+.live-dot{width:8px;height:8px;border-radius:50%;background:#7fff7f;animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.container{max-width:820px;margin:0 auto;padding:20px 14px 60px;}
+.card{background:var(--white);border-radius:14px;padding:22px;margin-bottom:16px;box-shadow:0 2px 10px rgba(0,0,0,.07);border-top:4px solid var(--navy);}
+.card.gold-top{border-top-color:var(--gold);}
+.card.teal-top{border-top-color:var(--teal);}
+.card.green-top{border-top-color:var(--green);}
+.card-title{font-size:1rem;font-weight:900;color:var(--navy);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.field{margin-bottom:12px;}
+.field label{display:block;font-size:.86rem;font-weight:700;color:#444;margin-bottom:5px;}
+.field input,.field select{width:100%;padding:10px 13px;border:2px solid var(--border);border-radius:9px;font-family:'Tajawal',sans-serif;font-size:.9rem;color:#222;background:#fafbff;transition:border-color .2s;direction:ltr;text-align:left;}
+.field input:focus,.field select:focus{outline:none;border-color:var(--navy);background:white;}
+.field .hint{font-size:.74rem;color:#888;margin-top:4px;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:500px){.grid-2{grid-template-columns:1fr;}}
+.btn{padding:10px 20px;border:none;border-radius:10px;font-family:'Tajawal',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px;}
+.btn:disabled{opacity:.45;cursor:not-allowed;}
+.btn-navy{background:var(--navy);color:white;} .btn-navy:hover:not(:disabled){background:#253570;transform:translateY(-1px);}
+.btn-gold{background:var(--gold);color:var(--navy);} .btn-gold:hover:not(:disabled){opacity:.9;transform:translateY(-1px);}
+.btn-teal{background:var(--teal);color:white;} .btn-teal:hover:not(:disabled){opacity:.9;}
+.btn-green{background:var(--green);color:white;} .btn-green:hover:not(:disabled){opacity:.9;}
+.btn-red{background:var(--red);color:white;} .btn-red:hover:not(:disabled){opacity:.9;}
+.btn-outline{background:transparent;color:var(--navy);border:2px solid var(--navy);} .btn-outline:hover:not(:disabled){background:var(--navy);color:white;}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
+.tabs{display:flex;border-bottom:3px solid var(--border);margin-bottom:18px;overflow-x:auto;}
+.tab{padding:11px 18px;cursor:pointer;font-weight:700;font-size:.85rem;color:#777;border-bottom:3px solid transparent;margin-bottom:-3px;white-space:nowrap;transition:all .2s;}
+.tab.active{color:var(--navy);border-bottom-color:var(--gold);}
+.status-bar{background:var(--navy);color:white;border-radius:12px;padding:14px 16px;margin-bottom:16px;}
+.status-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.status-label{font-weight:700;color:var(--gold);font-size:.78rem;}
+.progress-wrap{background:rgba(255,255,255,.15);border-radius:20px;height:10px;margin-top:10px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));border-radius:20px;transition:width .6s ease;}
+.cd-badge{background:var(--gold);color:var(--navy);border-radius:8px;padding:6px 14px;font-weight:900;font-size:1rem;display:inline-block;}
+.log-box{background:#0d1117;border-radius:10px;padding:14px;max-height:240px;overflow-y:auto;font-size:.78rem;line-height:1.8;}
+.log-line{padding:1px 0;border-bottom:1px solid #1e2a3a;}
+.log-ok{color:#4caf50;}.log-err{color:#f44336;}.log-info{color:#64b5f6;}.log-warn{color:#ffb300;}
+.alert{padding:11px 14px;border-radius:9px;font-size:.86rem;font-weight:600;margin-top:10px;display:none;}
+.alert.show{display:flex;align-items:center;gap:8px;}
+.alert-success{background:#d4edda;color:#155724;border:1px solid #c3e6cb;}
+.alert-error{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb;}
+/* LEADERBOARD */
+.lb-panel{background:var(--white);border-radius:14px;padding:22px;margin-top:16px;box-shadow:0 4px 18px rgba(0,0,0,.1);border-top:4px solid var(--gold);}
+.lb-head{text-align:center;margin-bottom:18px;}
+.lb-head h2{font-size:1.25rem;font-weight:900;color:var(--navy);}
+.lb-head p{font-size:.82rem;color:#777;margin-top:4px;}
+.lb-stats{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:18px;}
+.lb-stat{text-align:center;background:var(--light);border-radius:10px;padding:10px 18px;min-width:90px;}
+.lb-stat-n{font-size:1.5rem;font-weight:900;color:var(--navy);}
+.lb-stat-l{font-size:.72rem;color:#777;margin-top:2px;}
+table.lb{width:100%;border-collapse:collapse;}
+table.lb th{background:var(--navy);color:white;padding:9px 12px;font-size:.82rem;font-weight:700;text-align:right;}
+table.lb td{padding:9px 12px;font-size:.85rem;border-bottom:1px solid #eef;vertical-align:middle;}
+table.lb tr:hover td{background:#f8f9ff;}
+.rank-badge{width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:900;font-size:.85rem;}
+.r1{background:#FFD700;color:#5a4000;}.r2{background:#C0C0C0;color:#333;}.r3{background:#CD7F32;color:#fff;}.rx{background:var(--light);color:var(--navy);}
+.bar-w{background:#e8ecf5;border-radius:20px;height:7px;min-width:70px;overflow:hidden;}
+.bar-f{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--teal),var(--gold));}
+.lvl{display:inline-block;padding:2px 9px;border-radius:10px;font-size:.72rem;font-weight:700;}
+.lv-ex{background:#d4edda;color:#155724;}.lv-vg{background:#cce5ff;color:#004085;}.lv-g{background:#fff3cd;color:#856404;}.lv-p{background:#f8d7da;color:#721c24;}
+.live-count{display:inline-flex;align-items:center;gap:6px;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:20px;padding:4px 12px;font-size:.8rem;font-weight:700;color:#1b5e20;margin-bottom:10px;}
+/* STEP */
+.step{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;padding:12px;background:#f8f9fc;border-radius:10px;border-right:4px solid var(--gold);}
+.step-n{background:var(--gold);color:var(--navy);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.85rem;flex-shrink:0;}
+.step-b{font-size:.86rem;line-height:1.7;color:#333;}
+.step-b strong{color:var(--navy);}
+.step-b code{background:#e8f0fe;color:var(--navy);padding:2px 6px;border-radius:4px;font-size:.8rem;direction:ltr;display:inline-block;}
+/* Q PREVIEW */
+.qprev{background:#f8f9fc;border:1px solid var(--border);border-radius:9px;padding:12px;margin-bottom:9px;position:relative;}
+.qprev .qnum{position:absolute;top:9px;left:9px;background:var(--navy);color:white;border-radius:6px;padding:2px 7px;font-size:.7rem;font-weight:700;}
+.qprev .qt{font-size:.86rem;font-weight:700;color:#1a1a2e;margin-left:46px;margin-bottom:7px;}
+.qprev .qo{font-size:.8rem;color:#555;line-height:1.7;}
+.qprev .qa{font-size:.78rem;color:var(--green);font-weight:700;margin-top:5px;}
+/* CUSTOM INTERVAL */
+.custom-row{display:none;gap:8px;align-items:center;margin-top:8px;background:#f0f4ff;border-radius:8px;padding:9px 12px;border:1px dashed var(--navy);}
+.custom-row input{width:80px;padding:7px 8px;border:2px solid var(--border);border-radius:7px;font-family:'Tajawal',sans-serif;font-size:.88rem;text-align:center;direction:ltr;}
+.custom-row label{font-size:.83rem;font-weight:700;color:var(--navy);}
+.footer-credit{text-align:center;padding:14px;font-size:.75rem;color:#aaa;margin-top:12px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🤖 بوت إرسال أسئلة رخصة المدربين</h1>
+  <p>إرسال تلقائي مجدوَل مع لوحة نتائج المشاركين الحية</p>
+  <span class="hbadge">294 سؤالاً — رخصة المدربين — إرسال تلقائي</span>
+  <span class="live-badge" id="liveBadge" style="display:none"><span class="live-dot"></span> مراقبة النتائج نشطة</span>
+</div>
+
+<div class="container">
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('setup')">⚙️ الإعداد</div>
+  <div class="tab" onclick="showTab('send')">📤 الإرسال</div>
+  <div class="tab" onclick="showTab('results')">🏆 النتائج</div>
+  <div class="tab" onclick="showTab('preview')">👁️ الأسئلة</div>
+  <div class="tab" onclick="showTab('guide')">📖 الدليل</div>
+</div>
+
+<!-- ══ SETUP ══ -->
+<div id="tab-setup">
+  <div class="card">
+    <div class="card-title">🔑 بيانات البوت</div>
+    <div class="field">
+      <label>🔐 Bot Token</label>
+      <input type="password" id="botToken" placeholder="123456789:AABBccDDee..." oninput="saveS()">
+      <div class="hint">من @BotFather بعد إنشاء البوت</div>
+    </div>
+    <div class="field">
+      <label>💬 Chat ID المجموعة / القناة</label>
+      <input type="text" id="chatId" placeholder="-1002014003515" oninput="saveS()">
+      <div class="hint">للمجموعة: رقم سالب يبدأ بـ -100</div>
+    </div>
+    <br>
+    <div class="btn-row">
+      <button class="btn btn-navy" onclick="testConn()">🔍 اختبار الاتصال</button>
+    </div>
+    <div class="alert alert-success" id="connOk">✅ الاتصال ناجح!</div>
+    <div class="alert alert-error"   id="connErr"></div>
+  </div>
+
+  <div class="card gold-top">
+    <div class="card-title">⏱️ إعدادات الجدولة</div>
+    <div class="grid-2">
+      <div class="field">
+        <label>المدة بين كل سؤال</label>
+        <select id="interval" onchange="onIvChange()">
+          <option value="10">كل 10 ثوانٍ</option>
+          <option value="20">كل 20 ثانية</option>
+          <option value="30">كل 30 ثانية</option>
+          <option value="50">كل 50 ثانية</option>
+          <option value="60">كل دقيقة</option>
+          <option value="120">كل دقيقتين</option>
+          <option value="300">كل 5 دقائق</option>
+          <option value="600">كل 10 دقائق</option>
+          <option value="1800">كل 30 دقيقة</option>
+          <option value="3600" selected>كل ساعة</option>
+          <option value="7200">كل ساعتين</option>
+          <option value="10800">كل 3 ساعات</option>
+          <option value="21600">كل 6 ساعات</option>
+          <option value="43200">كل 12 ساعة</option>
+          <option value="86400">كل يوم</option>
+          <option value="custom">⚙️ مخصص...</option>
+        </select>
+        <div class="custom-row" id="customRow">
+          <label>المدة:</label>
+          <input type="number" id="customSec" min="5" value="45" oninput="saveS()">
+          <span style="font-size:.82rem;color:#555">ثانية</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>البدء من السؤال</label>
+        <select id="startFrom" onchange="saveS()"></select>
+      </div>
+    </div>
+    <div class="field">
+      <label>نوع الأسئلة</label>
+      <select id="sendType" onchange="saveS()">
+        <option value="poll_public">👥 تفاعلي — تظهر قائمة من أجابوا</option>
+        <option value="poll_anon">🔒 سري — لا تظهر قائمة من أجابوا</option>
+        <option value="text">💬 رسالة نصية</option>
+      </select>
+      <div class="hint">
+        👥 <strong>تفاعلي:</strong> تظهر قائمة من أجابوا + يعمل رصد النتائج ولوحة الشرف ✅<br>
+        🔒 <strong>سري:</strong> لا تظهر قائمة من أجابوا — لوحة الشرف لن تعمل (قيد من تيليجرام)
+      </div>
+    </div>
+    <div class="field">
+      <label>⏱️ مؤقت الإجابة للسؤال (بالثواني)</label>
+      <select id="pollOpenPeriod" onchange="saveS()">
+        <option value="0">بدون مؤقت (مفتوح)</option>
+        <option value="15">15 ثانية</option>
+        <option value="20">20 ثانية</option>
+        <option value="30">30 ثانية</option>
+        <option value="45">45 ثانية</option>
+        <option value="60">دقيقة واحدة</option>
+        <option value="90">90 ثانية</option>
+        <option value="120">دقيقتان</option>
+        <option value="180">3 دقائق</option>
+        <option value="300">5 دقائق</option>
+        <option value="600">10 دقائق</option>
+      </select>
+      <div class="hint">⏰ يظهر مؤقت عدّ تنازلي جانب السؤال في تيليجرام — يغلق تلقائياً بعد انتهاء الوقت</div>
+    </div>
+    <input type="hidden" id="pollAnonymous" value="false">
+    <div class="field">
+      <label>⏱️ مؤقت الإجابة للسؤال (بالثواني)</label>
+      <select id="pollOpenPeriod" onchange="saveS()">
+        <option value="0">بدون مؤقت (مفتوح)</option>
+        <option value="15">15 ثانية</option>
+        <option value="20">20 ثانية</option>
+        <option value="30">30 ثانية</option>
+        <option value="45">45 ثانية</option>
+        <option value="60">دقيقة واحدة</option>
+        <option value="90">90 ثانية</option>
+        <option value="120">دقيقتان</option>
+        <option value="180">3 دقائق</option>
+        <option value="300">5 دقائق</option>
+        <option value="600">10 دقائق</option>
+      </select>
+      <div class="hint">⏰ يظهر مؤقت عدّ تنازلي جانب السؤال في تيليجرام — يغلق تلقائياً بعد انتهاء الوقت</div>
+    </div>
+  </div>
+
+  <div class="card" style="border-top-color:#e65100">
+    <div class="card-title">🔔 رسالة التنبيه قبل الاختبار</div>
+    <div style="background:#fff3e0;border-radius:9px;padding:11px 13px;font-size:.83rem;color:#e65100;font-weight:600;margin-bottom:14px;">
+      💡 تُرسل هذه الرسالة تلقائيًا قبل أول سؤال لتنبيه المجموعة بأن الاختبار على وشك البدء
+    </div>
+    <div class="field">
+      <label>🏷️ اسم الاختبار / المجموعة</label>
+      <input type="text" id="alertTitle" placeholder="مثال: قروب التميز التربوي" oninput="saveS()" style="direction:rtl;text-align:right">
+    </div>
+    <div class="grid-2">
+      <div class="field">
+        <label>📝 عدد الأسئلة (للعرض في التنبيه)</label>
+        <input type="number" id="alertQCount" value="30" min="1" oninput="saveS()">
+      </div>
+      <div class="field">
+        <label>⏱️ وقت كل سؤال (للعرض)</label>
+        <input type="number" id="alertSeconds" value="30" min="5" oninput="saveS()">
+      </div>
+    </div>
+    <div class="field">
+      <label>🕐 مهلة الانتظار قبل أول سؤال (ثانية)</label>
+      <select id="alertDelay" onchange="saveS()">
+        <option value="0">بدون انتظار — يبدأ فوراً</option>
+        <option value="5">5 ثوانٍ</option>
+        <option value="10">10 ثوانٍ</option>
+        <option value="15" selected>15 ثانية</option>
+        <option value="20">20 ثانية</option>
+        <option value="30">30 ثانية</option>
+        <option value="60">دقيقة</option>
+      </select>
+    </div>
+    <div style="background:#1a2744;border-radius:10px;padding:14px;color:white;font-size:.85rem;line-height:1.9;margin-top:6px;direction:rtl">
+      <div style="color:#c9a227;font-weight:700;margin-bottom:6px">👁️ معاينة رسالة التنبيه:</div>
+      <div id="alertPreview">🎲 استعد جيدًا لاختبار <strong style="color:#c9a227">'قروب التميز التربوي'</strong><br><br>🖊 30 سؤالاً<br>⏱ 30 ثانيةً لكل سؤال<br>📰 ستكون الإجابات ظاهرة لمالك الاختبار وأعضاء المجموعة<br><br>🏁 سيبدأ الاختبار خلال 15 ثانية...</div>
+    </div>
+    <br>
+    <div class="btn-row">
+      <button class="btn btn-navy" onclick="previewAlert()">👁️ تحديث المعاينة</button>
+      <button class="btn btn-teal" onclick="sendAlertNow()">📤 إرسال التنبيه الآن</button>
+    </div>
+  </div>
+    <div class="card-title">✏️ تخصيص عنوان الأسئلة</div>
+    <div style="background:#f3e5f5;border-radius:9px;padding:11px 13px;font-size:.83rem;color:#6a1b9a;font-weight:600;margin-bottom:14px;">
+      💡 يظهر هذا العنوان في بداية كل سؤال يُرسل للمجموعة — يمكنك تغييره في أي وقت
+    </div>
+    <div class="field">
+      <label>📌 نمط ترقيم السؤال</label>
+      <select id="labelStyle" onchange="onLabelStyleChange()">
+        <option value="default">تلقائي: [3/30] نص السؤال</option>
+        <option value="custom">✏️ مخصص بالكامل...</option>
+      </select>
+    </div>
+    <div id="customLabelWrap" style="display:none">
+      <div class="field">
+        <label>📝 نص العنوان المخصص (استخدم {n} للرقم و {total} للإجمالي)</label>
+        <input type="text" id="customLabel" placeholder="مثال: السؤال {n} من {total} — رخصة مهنية 🎯"
+               oninput="saveS(); previewLabel()" style="direction:rtl;text-align:right">
+        <div class="hint">المتغيرات المتاحة: {n} = رقم السؤال | {total} = إجمالي الأسئلة | {cat} = المحور</div>
+      </div>
+      <div id="labelPreview" style="background:#e8f5e9;border-radius:8px;padding:10px 13px;font-size:.85rem;color:#1b5e20;font-weight:600;margin-top:4px;display:none">
+        👁️ معاينة: <span id="labelPreviewText"></span>
+      </div>
+    </div>
+    <div class="field" style="margin-top:10px">
+      <label>🏷️ نص ثابت يظهر في نهاية كل سؤال (اختياري)</label>
+      <input type="text" id="questionSuffix" placeholder="مثال: 📚 أسئلة رخصة المدربين | د/فواز"
+             oninput="saveS()" style="direction:rtl;text-align:right">
+    </div>
+    <div style="font-size:.8rem;color:#888;margin-top:6px">
+      💬 مثال على شكل السؤال النهائي بعد التخصيص:<br>
+      <strong style="color:var(--navy)">السؤال 3 من 30 — رخصة مهنية 🎯</strong><br>
+      نص السؤال هنا؟<br>
+      أ) ... ب) ... ج) ... د) ...<br>
+      <strong style="color:#888">📚 أسئلة الرخصة المهنية | د/فواز</strong>
+    </div>
+  </div>
+
+  <div class="card teal-top">
+    <div class="card-title">💾 الإعدادات</div>
+    <div style="font-size:.84rem;color:#555;line-height:1.9;">
+      تُحفظ إعداداتك تلقائيًا. يجب أن تبقى الصفحة مفتوحة لاستمرار الإرسال ومراقبة النتائج.
+    </div>
+    <br>
+    <button class="btn btn-outline" style="font-size:.8rem;padding:6px 12px" onclick="clearS()">🗑️ حذف الإعدادات</button>
+  </div>
+</div>
+
+<!-- ══ SEND ══ -->
+<div id="tab-send" style="display:none">
+  <div class="status-bar">
+    <div class="status-row">
+      <div><div class="status-label">الحالة</div><div id="statusText" style="font-weight:700;font-size:.95rem">⏸️ متوقف</div></div>
+      <div style="text-align:center"><div class="status-label">السؤال</div><div id="currentQ" style="font-weight:900;font-size:1.1rem;color:var(--gold)">—</div></div>
+      <div><div class="status-label">التالي بعد</div><div class="cd-badge" id="cdBadge">—</div></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+    <div style="font-size:.75rem;margin-top:5px;opacity:.7" id="progLabel">0 / 294 تم إرساله</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🎛️ التحكم</div>
+    <div class="btn-row">
+      <button class="btn btn-green"   id="btnStart" onclick="startSending()">▶️ بدء التلقائي</button>
+      <button class="btn btn-red"     id="btnStop"  onclick="stopSending()" disabled>⏹️ إيقاف</button>
+      <button class="btn btn-teal"    onclick="sendNext()">📤 سؤال واحد الآن</button>
+      <button class="btn btn-outline" onclick="resetProg()">🔄 إعادة البداية</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="justify-content:space-between">
+      <span>📋 السجل</span>
+      <button class="btn btn-outline" style="font-size:.72rem;padding:4px 10px" onclick="clearLog()">مسح</button>
+    </div>
+    <div class="log-box" id="logBox"><div class="log-line log-info">⏳ جاهز للإرسال...</div></div>
+  </div>
+</div>
+
+<!-- ══ RESULTS ══ -->
+<div id="tab-results" style="display:none">
+  <div class="card green-top">
+    <div class="card-title">🏆 لوحة نتائج المشاركين</div>
+
+    <div style="background:#e8f5e9;border:1px solid #a5d6a7;border-radius:10px;padding:13px;font-size:.85rem;color:#1b5e20;font-weight:600;margin-bottom:14px;line-height:1.8;">
+      ✅ <strong>كيف يعمل النظام:</strong><br>
+      • البوت يراقب ردود المشاركين كل <strong>8 ثوانٍ</strong> تلقائيًا<br>
+      • يرصد من أجاب صح ومن أجاب خطأ على كل سؤال<br>
+      • النتائج تتحدث فورًا بمجرد إجابة أي عضو
+    </div>
+
+    <div id="liveCountWrap" style="display:none">
+      <div class="live-count"><span class="live-dot" style="background:#4caf50"></span> <span id="liveCount">0</span> مشارك سُجِّلت إجاباتهم</div>
+    </div>
+
+    <div class="btn-row" style="margin-bottom:14px">
+      <button class="btn btn-green" onclick="fetchNow()">🔄 تحديث النتائج الآن</button>
+      <button class="btn btn-gold"  onclick="sendLbToChat()">📤 إرسال النتائج للمجموعة</button>
+      <button class="btn btn-outline" onclick="clearLb()">🗑️ مسح النتائج</button>
+    </div>
+  </div>
+
+  <div class="lb-panel" id="lbPanel">
+    <div class="lb-head">
+      <h2>🏆 لوحة الشرف</h2>
+      <p id="lbSub">في انتظار إجابات المشاركين...</p>
+    </div>
+    <div class="lb-stats" id="lbStats"></div>
+    <div id="lbTable"></div>
+    <p style="font-size:.74rem;color:#aaa;text-align:center;margin-top:10px" id="lbNote"></p>
+  </div>
+
+  <div class="card" style="margin-top:14px;border-top-color:#ff9800">
+    <div class="card-title" style="color:#e65100">⚠️ ملاحظة مهمة</div>
+    <div style="font-size:.83rem;color:#555;line-height:1.9">
+      📌 تيليجرام يشترط أن يكون الاستطلاع <strong>غير مجهول</strong> لرصد أسماء المصوّتين — وهو كذلك في بوتنا.<br>
+      📌 في وضع <strong>👥 تفاعلي</strong> فقط يعمل رصد النتائج — لأن تيليجرام يشترط <code>is_anonymous:false</code> لإرسال الإجابات للبوت.<br>
+      📌 <strong>يجب أن تبقى الصفحة مفتوحة</strong> لاستقبال التحديثات وتسجيل النتائج.<br>
+      📌 البوت يجلب التحديثات كل 8 ثوانٍ تلقائيًا أثناء الإرسال.
+    </div>
+  </div>
+</div>
+
+<!-- ══ PREVIEW ══ -->
+<div id="tab-preview" style="display:none">
+  <div class="card">
+    <div class="card-title">👁️ معاينة الأسئلة (294 سؤال)</div>
+    <div id="previewList"></div>
+  </div>
+</div>
+
+<!-- ══ GUIDE ══ -->
+<div id="tab-guide" style="display:none">
+  <div class="card">
+    <div class="card-title">📖 دليل الإعداد</div>
+    <div class="step"><div class="step-n">1</div><div class="step-b">افتح تيليجرام وابحث عن <strong>@BotFather</strong> ثم أرسل <code>/newbot</code></div></div>
+    <div class="step"><div class="step-n">2</div><div class="step-b">اختر اسمًا للبوت ثم اسم مستخدم ينتهي بـ <strong>bot</strong> — سيعطيك <strong>Token</strong></div></div>
+    <div class="step"><div class="step-n">3</div><div class="step-b">أضف البوت للمجموعة كـ <strong>مشرف</strong> بصلاحية نشر الرسائل</div></div>
+    <div class="step"><div class="step-n">4</div><div class="step-b">للحصول على Chat ID افتح في المتصفح:<br><code>https://api.telegram.org/botTOKEN/getUpdates</code><br>ابحث عن <strong>"id"</strong> داخل <strong>"chat"</strong> — مثال: <strong>-1002014003515</strong></div></div>
+    <div class="step"><div class="step-n">5</div><div class="step-b">ضع التوكن والـ Chat ID في الإعداد، اختبر الاتصال، ثم اضغط <strong>▶️ بدء التلقائي</strong> 🎉</div></div>
+    <div style="background:#fff3cd;border:1px solid #ffc107;border-radius:9px;padding:12px;font-size:.83rem;color:#856404;font-weight:600;margin-top:10px">
+      ⚠️ ابقِ الصفحة مفتوحة لاستمرار الإرسال ورصد النتائج
+    </div>
+  </div>
+</div>
+
+<div class="footer-credit">تصميم د/فواز | https://t.me/TAqhjT3MFVE1Yzk0</div>
+</div>
+
+<script>
+// ══ QUESTIONS ══
+const Q = [
+  {id:1,cat:"رخصة المدربين - صفحة 2",q:"ما هو التسلسل الصحيح لمراحل نموذج ADDIE؟",o:["التصميم، التحليل، التطوير، التنفيذ، التقويم.", "التنفيذ، التحليل، التصميم، التطوير، التقويم.", "التحليل، التطوير، التصميم، التنفيذ، التقويم.", "التحليل، التصميم، التطوير، التنفيذ، التقويم."],a:3},
+  {id:2,cat:"رخصة المدربين - صفحة 2",q:"ما الهدف الرئيسي من مرحلة \"التحليل\" في نموذج ADDIE؟",o:["تحديد احتياجات المتعلمين والأهداف التعليمية والقيود.", "كتابة المحتوى التعليمي النهائي.", "اختيار الوسائط التفاعلية.", "تقييم رضا المتدربين."],a:0},
+  {id:3,cat:"رخصة المدربين - صفحة 2",q:"في مرحلة \"التصميم\"، ما الذي يجب تطويره قبل إنشاء المحتوى؟",o:["الإطار العام والاستراتيجيات التعليمية ومواصفات التقييم.", "النسخة النهائية من الفيديوهات.", "قائمة المدربين المعتمدين.", "جدول الموازنة النهائي."],a:0},
+  {id:4,cat:"رخصة المدربين - صفحة 2",q:"تحليل (SWOT)، أي من العناصر التالية يُصنف ضمن العوامل الخارجية؟",o:["نقاط القوة.", "نقاط الضعف.", "كفاءة المدربين.", "التهديدات."],a:3},
+  {id:5,cat:"رخصة المدربين - صفحة 2",q:"ما الفرق الرئيسي بين التقويم التكويني والتجميعي في سياق ADDIE؟",o:["التكويني بعد التنفيذ، والتجميعي قبله.", "كليهما يستخدمان نفس الأدوات.", "التجميعي مستمر خلال جميع المراحل.", "التكويني يهدف للتحسين أثناء التطوير، والتجميعي يحكم على الفعالية النهائية."],a:3},
+  {id:6,cat:"رخصة المدربين - صفحة 2",q:"ما هو النقد الشائع الموجه لنموذج ADDIE؟",o:["بساطته وسهولة تطبيقه.", "مرونته العالية.", "هيكله المنطقي الواضح.", "كونه خطيًا وبطيئًا وقد لا يتناسب مع المشاريع السريعة."],a:3},
+  {id:7,cat:"رخصة المدربين - صفحة 2",q:"ما القيمة الأساسية التي يضيفها نموذج ADDIE لعملية التصميم؟",o:["الإبداع والعشوائية.", "النظامية والاكتمال والتركيز على المتعلم.", "تقليل الوقت اللازم للتصميم.", "ضمان النجاح التجاري."],a:1},
+  {id:8,cat:"رخصة المدربين - صفحة 3",q:"أول خطوة من خطوات التدريب الفعال وفقًا لنماذج التصميم هي:",o:["التصميم.", "التطوير.", "التحليل.", "التنفيذ."],a:2},
+  {id:9,cat:"رخصة المدربين - صفحة 3",q:"أي من التالي يُعد من خطوات عملية التدريب؟",o:["التوظيف.", "تحديد الاحتياجات التدريبية.", "الترقية.", "إنهاء الخدمة."],a:1},
+  {id:10,cat:"رخصة المدربين - صفحة 3",q:"المقصود بتقييم التدريب هو:",o:["تحديد رواتب الموظفين.", "قياس مدى تحقيق التدريب لأهدافه.", "وضع الخطط المالية.", "زيادة ساعات العمل."],a:1},
+  {id:11,cat:"رخصة المدربين - صفحة 3",q:"ما هو التركيز الأساسي لنموذج كولب للتعلم التجريبي؟",o:["حفظ المعلومات النظرية.", "نقل المعرفة من الخبير للمبتدئ.", "الاختبارات والمعايير.", "دورة التعلم من خلال التجربة والتأمل."],a:3},
+  {id:12,cat:"رخصة المدربين - صفحة 3",q:"كم عدد مراحل دورة التعلم عند كولب؟",o:["3 مراحل.", "4 مراحل.", "5 مراحل.", "6 مراحل."],a:1},
+  {id:13,cat:"رخصة المدربين - صفحة 3",q:"ما هي المراحل الأربع لدورة كولب بالترتيب؟",o:["التأمل، التجريد، التطبيق، التجربة.", "التجربة، التخطيط، التنفيذ، المراجعة.", "التجربة الملموسة، الملاحظة التأملية، المفهومية المجردة، التجريب النشط.", "التحفيز، المعالجة، التطبيق، التقويم."],a:2},
+  {id:14,cat:"رخصة المدربين - صفحة 3",q:"في أي مرحلة من دورة كولب يقوم المتعلم بمشاهدة الآخرين والاستماع والتفكير؟",o:["التجربة الملموسة.", "الملاحظة التأملية.", "المفهومية المجردة.", "التجريب النشط."],a:1},
+  {id:15,cat:"رخصة المدربين - صفحة 4",q:"أسلوب التعلم الذي يفضل فيه المتعلم التجارب العملية والتطبيق المباشر هو:",o:["المتقارب.", "المتباعد.", "المستوعب.", "المتكيف."],a:3},
+  {id:16,cat:"رخصة المدربين - صفحة 4",q:"عندما يبدأ المدرب جلسته بحوار لاستكشاف خبرات المتدربين، فإن هذا المدخل يسمى:",o:["سلوكي.", "بنائي.", "اجتماعي.", "تقليدي."],a:1},
+  {id:17,cat:"رخصة المدربين - صفحة 4",q:"تطبيق نموذج كولب في الفصل يعني:",o:["تقسيم الطلاب حسب أنماطهم وإعطاء كل مجموعة نشاطًا واحدًا.", "تصميم درس يمر عبر جميع مراحل الدورة لاستيعاب جميع الأنماط.", "التركيز فقط على مرحلة التجريد النظري.", "إلغاء الواجبات المنزلية."],a:1},
+  {id:18,cat:"رخصة المدربين - صفحة 4",q:"نموذج كيركباتريك لتقييم التدريب يتكون من:",o:["مرحلتين.", "3 مراحل.", "4 مستويات.", "5 مستويات."],a:2},
+  {id:19,cat:"رخصة المدربين - صفحة 4",q:"المستوى الأول في نموذج كيركباتريك يقيس:",o:["رد الفعل (الرضا).", "التعلم.", "السلوك.", "النتائج."],a:0},
+  {id:20,cat:"رخصة المدربين - صفحة 4",q:"التعلم الحقيقي عند كولب يحدث من خلال:",o:["دورة مستمرة تبدأ بالتجربة.", "التلقين.", "الحفظ.", ""],a:0},
+  {id:21,cat:"رخصة المدربين - صفحة 4",q:"ما المقصود بالصورة الذاتية؟",o:["نظرة الآخرين للفرد.", "فكرة الفرد عن نفسه.", "رأي المجتمع.", "التقييم الوظيفي."],a:1},
+  {id:22,cat:"رخصة المدربين - صفحة 5",q:"قوة المعتقد تعني:",o:["قوة الجسد.", "قوة التفكير.", "قوة المال.", "قوة المنصب."],a:1},
+  {id:23,cat:"رخصة المدربين - صفحة 5",q:"القيم تعمل غالبًا في مستوى:",o:["الوعي.", "الإدراك.", "اللاوعي.", "التفكير المنطقي."],a:2},
+  {id:24,cat:"رخصة المدربين - صفحة 5",q:"قيمة \"الوسيلة\" تعني:",o:["القيمة النهائية.", "القيمة الجاذبة.", "القيمة التي توصل لغيرها.", "القيمة السلوكية."],a:2},
+  {id:25,cat:"رخصة المدربين - صفحة 5",q:"الاعتقاد بأن الشخص لا يستحق الهدف يسمى:",o:["عجز.", "جدارة.", "عدم كفاءة.", "استحالة."],a:2},
+  {id:26,cat:"رخصة المدربين - صفحة 5",q:"المتدرب الناجح هو:",o:["الرافض للتغيير.", "المتقبل للتطوير.", "المتردد.", "المنعزل."],a:1},
+  {id:27,cat:"رخصة المدربين - صفحة 5",q:"من نتائج التطوير الذاتي:",o:["ضعف الثقة.", "زيادة الثقة بالنفس.", "التراجع.", "الجمود."],a:1},
+  {id:28,cat:"رخصة المدربين - صفحة 5",q:"التنمية الذاتية مستمرة مدى:",o:["مرحلة واحدة.", "فترة قصيرة.", "الحياة.", "البرنامج فقط."],a:2},
+  {id:29,cat:"رخصة المدربين - صفحة 6",q:"أي عبارة تعبر عن الصورة الذاتية؟",o:["أنت كما يراك الناس.", "أنت كما تفكر.", "أنت كما يقيمك المدير.", "أنت كما يحكم عليك المجتمع."],a:1},
+  {id:30,cat:"رخصة المدربين - صفحة 6",q:"من أمثلة المعتقدات السلبية:",o:["القدرة.", "الاستحقاق.", "الاستحالة.", "الجدارة."],a:2},
+  {id:31,cat:"رخصة المدربين - صفحة 6",q:"الدور الأساسي للمدرب أثناء التدريب هو:",o:["إلقاء الأوامر.", "إدارة العملية التدريبية.", "كتابة التقارير.", "تسجيل الحضور."],a:1},
+  {id:32,cat:"رخصة المدربين - صفحة 6",q:"المدرب الناجح يتعامل مع المتدربين على أساس:",o:["الاستعلاء.", "الشراكة في التعلم.", "التسلط.", "التمييز."],a:1},
+  {id:33,cat:"رخصة المدربين - صفحة 6",q:"إذا لاحظ المدرب أن المتدربين لا يطبقون المهام بشكل صحيح، فما الإجراء الأنسب؟",o:["توبيخهم أمام الجميع.", "إعادة شرح المهمة وتقديم مثال عملي.", "تركهم ليكتشفوا الخطأ.", "إيقاف التدريب."],a:1},
+  {id:34,cat:"رخصة المدربين - صفحة 6",q:"أثناء مناقشة جماعية، قام أحد المتدربين بالهيمنة على الحوار، ماذا يفعل المدرب؟",o:["شكره ثم توجيه الأسئلة للآخرين لضمان توزيع المشاركة.", "تجاهله.", "السماح له بالاستمرار.", "طلبه مغادرة القاعة."],a:0},
+  {id:35,cat:"رخصة المدربين - صفحة 6",q:"من واجبات المدرب احترام:",o:["المنهج فقط.", "خبرات المتدربين.", "الوقت فقط.", "القاعة فقط."],a:1},
+  {id:36,cat:"رخصة المدربين - صفحة 7",q:"التخطيط الفعال يؤدي إلى:",o:["فشل التدريب.", "نجاح التدريب.", "إلغاء الأهداف.", "تعطيل البرنامج."],a:1},
+  {id:37,cat:"رخصة المدربين - صفحة 7",q:"من أدوار المدرب:",o:["إلغاء آراء المشاركين.", "حماية مشاعر المتدربين.", "فرض الرأي.", "التقليل من المشاركات."],a:1},
+  {id:38,cat:"رخصة المدربين - صفحة 7",q:"إذا بدا المتدربون غير متحمسين في بداية الجلسة:",o:["البدء مباشرة.", "استخدام تمرين كسر جليد لزيادة الحيوية.", "توزيع عقوبات.", "تجاهل الحضور."],a:1},
+  {id:39,cat:"رخصة المدربين - صفحة 7",q:"بعض المتدربين يخجلون من طرح الأسئلة، الحل هو:",o:["تجاهل الموقف.", "سؤالهم أمام الجميع.", "تشجيع الأسئلة وفتح المجال لطرحها بشكل مجهول.", "إنهاء الموضوع."],a:2},
+  {id:40,cat:"رخصة المدربين - صفحة 7",q:"دور المدرب \"الميسر\" يعني:",o:["قيادة التعلم وتسهيله.", "فرض الرأي.", "احتكار الحديث.", "تجاهل المتدربين."],a:0},
+  {id:41,cat:"رخصة المدربين - صفحة 7",q:"اطلعت أثناء التدريب على معلومات سرية خاصة بالجهة المستفيدة، الواجب هو:",o:["استخدامها في دورات أخرى كأمثلة.", "المحافظة التامة على سريتها وعدم إفشائها.", "نشرها للإفادة العامة.", "إخبار الأصدقاء."],a:1},
+  {id:42,cat:"رخصة المدربين - صفحة 7",q:"إذا تقدم أخوك لعرض أمام لجنة تقييم أنت عضو فيها، يجب عليك:",o:["دعمه سرًا.", "تقييمه بصرامة.", "الإفصاح عن العلاقة والتنحي عن تقييمه.", "تقييمه مثل البقية."],a:2},
+  {id:43,cat:"رخصة المدربين - صفحة 8",q:"من مهارات التواصل الرقمي للمدرب:",o:["كتابة الرسائل المهنية.", "السخرية.", "العشوائية.", "الإساءة."],a:0},
+  {id:44,cat:"رخصة المدربين - صفحة 8",q:"من تطبيقات التقنية في التدريب:",o:["منصات التعلم.", "الورق فقط.", "الملفات الورقية.", "السبورة فقط."],a:0},
+  {id:45,cat:"رخصة المدربين - صفحة 8",q:"من وسائل التطوير الذاتي:",o:["تجاهل الأخطاء.", "التعلم من الأخطاء.", "تبرير الأخطاء.", "إخفاء الأخطاء."],a:1},
+  {id:46,cat:"رخصة المدربين - صفحة 8",q:"من مهارات المستقبل للمدرب:",o:["الإبداع.", "التكرار.", "التقليد.", "الجمود."],a:0},
+  {id:47,cat:"رخصة المدربين - صفحة 8",q:"من أخطاء التقييم:",o:["الاعتماد على أداة واحدة فقط.", "تنويع الأدوات.", "العدالة.", "الموضوعية."],a:0},
+  {id:48,cat:"رخصة المدربين - صفحة 8",q:"من خصائص التقييم الجيد:",o:["العدالة.", "الظلم.", "التمييز.", "التحيز."],a:0},
+  {id:49,cat:"رخصة المدربين - صفحة 8",q:"من شروط إصدار الشهادة للمتدرب:",o:["الحضور والالتزام.", "الغياب المتكرر.", "عدم المشاركة.", "التأخير الدائم."],a:0},
+  {id:50,cat:"رخصة المدربين - صفحة 9",q:"قوانين التدريب دورها:",o:["أوامر ونواهٍ.", "تنظيم وضبط.", "قوة وعقوبة.", "قوة ومخالفة."],a:1},
+  {id:51,cat:"رخصة المدربين - صفحة 9",q:"الفرق بين ورش العمل والتدريب:",o:["موضوع محدد.", "نقاشات.", "المدة الزمنية.", "القاعات."],a:2},
+  {id:52,cat:"رخصة المدربين - صفحة 9",q:"غالبًا في التدريب الناجح:",o:["العملي ثم النظري.", "التطبيق ثم الاحتياج.", "النظري ثم العملي.", "التدريب ثم التسويق."],a:2},
+  {id:53,cat:"رخصة المدربين - صفحة 9",q:"الانتحال في التدريب معناه:",o:["التدريب المهني.", "مدرب غير متخصص.", "التدريب التخصصي.", "المدرب المتعاون."],a:1},
+  {id:54,cat:"رخصة المدربين - صفحة 9",q:"المتدرب المدعي هو:",o:["متمكن في المادة.", "يتظاهر بالمعرفة.", "يحضر للموضوع.", "خبرة في المجال."],a:1},
+  {id:55,cat:"رخصة المدربين - صفحة 9",q:"يقصد بتوطين التدريب",o:["مدربون مواطنون.", "التدريب داخل المنظمة.", "دورات خارج الوطن.", "وقف التدريب."],a:1},
+  {id:56,cat:"رخصة المدربين - صفحة 9",q:"لا يحدث التعلم إلا بعد:",o:["تغيير الفكر يليه المشاعر ثم السلوك.", "تغيير المشاعر ثم السلوك ثم الفكر.", "تغيير السلوك ثم المشاعر ثم الفكر.", "تغيير الفكر ثم السلوك ثم المشاعر."],a:0},
+  {id:57,cat:"رخصة المدربين - صفحة 10",q:"توثيق الدورات يعني:",o:["حفظ الذكريات فقط.", "تسجيل وحفظ جميع بيانات وأنشطة الدورة.", "التقاط الصور فقط.", "حفظ أسماء المتدربين."],a:1},
+  {id:58,cat:"رخصة المدربين - صفحة 10",q:"من مهارات المدرب في إدارة الضغوط:",o:["التحلي بالصبر والهدوء.", "الانفعال السريع.", "الصراخ.", "الانسحاب."],a:0},
+  {id:59,cat:"رخصة المدربين - صفحة 10",q:"من آثار البيئة التدريبية الجيدة:",o:["رفع مستوى الاستيعاب.", "ضعف الفهم.", "الملل.", "التشتت."],a:0},
+  {id:60,cat:"رخصة المدربين - صفحة 10",q:"الخالصة في إدارة القاعات أنها:",o:["أمور ثانوية.", "عنصر أساسي لنجاح العملية التدريبية.", "شكلية فقط.", "تخص القاعة دون التدريب."],a:1},
+  {id:61,cat:"رخصة المدربين - صفحة 10",q:"من مهارات التفكير العليا:",o:["التحليل.", "الحفظ.", "التكرار.", "التقليد."],a:0},
+  {id:62,cat:"رخصة المدربين - صفحة 10",q:"أي مما يلي يُعد من مهارات المستقبل؟",o:["إدارة الذات.", "الاعتماد.", "الخمول.", "السلبية."],a:0},
+  {id:63,cat:"رخصة المدربين - صفحة 10",q:"من مهارات التفاوض للمدرب:",o:["الإقناع.", "التهديد.", "الصراخ.", "القهر."],a:0},
+  {id:64,cat:"رخصة المدربين - صفحة 11",q:"صفات المدرب المرن تشمل:",o:["تقبل التغيير.", "رفض التغيير.", "الخوف.", "الانسحاب."],a:0},
+  {id:65,cat:"رخصة المدربين - صفحة 11",q:"من بيانات التسجيل الضرورية للمتدرب:",o:["جهة العمل.", "نوع السيارة.", "الهواية.", "عدد الإخوة."],a:0},
+  {id:66,cat:"رخصة المدربين - صفحة 11",q:"الشهادات التدريبية تُعد:",o:["وثيقة شكلية.", "إثبات حضور وإنجاز.", "ورقة عادية.", "مستند إداري فقط."],a:1},
+  {id:67,cat:"رخصة المدربين - صفحة 11",q:"من وسائل التوثيق في التدريب:",o:["التقارير.", "الكراسي.", "الطاوالت.", "السبورة."],a:0},
+  {id:68,cat:"رخصة المدربين - صفحة 11",q:"العلاقة بين المدرب والمتدرب يجب أن تقوم على:",o:["الخوف.", "الاحترام.", "التسلط.", "الإهمال."],a:1},
+  {id:69,cat:"رخصة المدربين - صفحة 11",q:"من مهارات المدرب الأساسية:",o:["مهارة التخطيط.", "مهارة المحاسبة.", "مهارة الصيانة.", "مهارة التسويق."],a:0},
+  {id:70,cat:"رخصة المدربين - صفحة 11",q:"الهدف الأساسي من التدريب في المؤسسات هو",o:["زيادة وقت العمل", "تحسين الأداء وتطوير المهارات", "تقليل الموظفين", "زيادة التكاليف"],a:1},
+  {id:71,cat:"رخصة المدربين - صفحة 12",q:"أول مرحلة في نموذجADDIE:هي",o:["التصميم", "التطوير", "التحليل", "التنفيذ"],a:2},
+  {id:72,cat:"رخصة المدربين - صفحة 12",q:"أي أسلوب يُعد أكثر فاعلية في تنشيط المتدربين؟",o:["المحاضرة المطوّلة", "النشاط التفاعلي", "الشرح النظري", "القراءة الصامتة"],a:1},
+  {id:73,cat:"رخصة المدربين - صفحة 12",q:"التقويم الذي يتم أثناء تنفيذ البرنامج يسمى",o:["تشخيصي", "ختامي", "تكويني", "نهائي"],a:2},
+  {id:74,cat:"رخصة المدربين - صفحة 12",q:"أفضل أداة لقياس المهارات العملية",o:["اختبار تحريري", "استبانة", "بطاقة ملاحظة", "مقابلة"],a:2},
+  {id:75,cat:"رخصة المدربين - صفحة 12",q:"من خصائص المتدربين البالغين",o:["الاعتماد على الحفظ", "التعلم المرتبط بالخبرة", "رفض التقويم", "التركيز النظري"],a:1},
+  {id:76,cat:"رخصة المدربين - صفحة 12",q:"استخدام العصف الذهني يهدف إلى:",o:["التقويم", "تنمية الإبداع.", "إدارة الوقت", "الشرح"],a:1},
+  {id:77,cat:"رخصة المدربين - صفحة 12",q:"قواعد إدارة قاعة التعلم السريع لدى ديف ماير هي:",o:["أخطئ، أسأل، أتعاون، أمرح.", "أكتب، أقرأ، أسمع، أحفظ.", "أتعاون، أكتب، أجمع، أحفظ.", "أبحث، أحلل، أطبق، أقيم."],a:0},
+  {id:78,cat:"رخصة المدربين - صفحة 13",q:"من أخلاقيات مهنة التدريب:",o:["إفشاء المعلومات", "الحياد", "التسلط", "التجاهل"],a:1},
+  {id:79,cat:"رخصة المدربين - صفحة 13",q:"أي نمط جلوس يناسب الأعداد الكبيرة جدًا؟",o:["U", "دائرة", "مدرج", "مجموعات"],a:2},
+  {id:80,cat:"رخصة المدربين - صفحة 13",q:"نموذج كيركباتريك يقيس",o:["المحتوى فقط", "المدرب", "مستويات أثر التدريب", "الوقت"],a:2},
+  {id:81,cat:"رخصة المدربين - صفحة 13",q:"عند ضعف تفاعل المتدربين، الإجراء الأنسب هو:",o:["تجاهل الموقف", "زيادة سرعة الشرح", "استخدام نشاط تفاعلي", "إنهاء الجلسة"],a:2},
+  {id:82,cat:"رخصة المدربين - صفحة 13",q:"أي العبارات التالية تُعد الأدق في مجال مفهوم التدريب؟",o:["التركيز على الجوانب النظرية فقط", "؟ تحقيق أهداف التعلم المرتبطة بالأداء", "إهمال الفروق الفردية", "الاعتماد على التلقين المباشر"],a:1},
+  {id:83,cat:"رخصة المدربين - صفحة 13",q:"أي العبارات التالية تُعد الأدق في مجال أخلاقيات التدريب؟",o:["استغالل المتدربين", "؟ العدالة بين المتدربين", "عدم الصبر على المشاغب", "الاعتماد على الإرشادات"],a:1},
+  {id:84,cat:"رخصة المدربين - صفحة 13",q:"أي العبارات التالية تُعد الأدق في مجال تحليل الاحتياجات؟",o:["تحديد موضوعات التدريب بناءً على الانطباعات العامة.", "تحديد الفجوة بين الأداء الحالي والمستهدف بدقة.", "حصر رغبات المتدربين فقط.", "إجراء إداري لاحق لتنفيذ التدريب."],a:1},
+  {id:85,cat:"رخصة المدربين - صفحة 14",q:"الهدف الرئيس من التدريب المهني هو:",o:["زيادة المعلومات النظرية", "تحسين السلوك والأداء الوظيفي", "رفع الرضا الوظيفي فقط", "زيادة عدد الشهادات"],a:1},
+  {id:86,cat:"رخصة المدربين - صفحة 14",q:"أول خطوة صحيحة عند بناء برنامج تدريبي:",o:["اختيار الأنشطة", "إعداد أدوات التقويم", "تحليل الفجوة التدريبية", "تحديد زمن التنفيذ"],a:2},
+  {id:87,cat:"رخصة المدربين - صفحة 14",q:"أي مما يلي يُعد مثالًا على تقويم تكويني؟",o:["اختبار نهاية البرنامج", "ملاحظة الأداء أثناء النشاط", "استبانة رضا المتدربين", "تقرير ما بعد التدريب"],a:1},
+  {id:88,cat:"رخصة المدربين - صفحة 14",q:"الأداة الأنسب لقياس مهارة عملية:",o:["اختبار تحصيلي", "مقابلة مفتوحة", "بطاقة ملاحظة مقننة", "استبانة اتجاهات"],a:2},
+  {id:89,cat:"رخصة المدربين - صفحة 14",q:"من خصائص تعلم الكبار:",o:["الاعتماد على التلقين", "التعلم المرتبط بالمشكلة", "الحفظ السريع", "تفضيل التقييمات النظرية"],a:1},
+  {id:90,cat:"رخصة المدربين - صفحة 14",q:"عند ضعف التفاعل داخل القاعة، الإجراء الاكثر مهنية هو:",o:["الاستمرار حسب الخطة", "إنهاء النشاط", "إدخال نشاط مرتبط بالهدف", "زيادة سرعة الشرح"],a:2},
+  {id:91,cat:"رخصة المدربين - صفحة 14",q:"أي مما يلي يحقق الصدق في أداة التقويم؟",o:["سهولة التطبيق", "سرعة التصحيح", "قياس المهارة المستهدفة بدقة", "انخفاض التكلفة"],a:2},
+  {id:92,cat:"رخصة المدربين - صفحة 15",q:"من أخالقيات مهنة التدريب",o:["فرض الرأي", "احترام خصوصية المتدربين", "تجاهل الفروق الفردية", "التركيز على المحتوى فقط"],a:1},
+  {id:93,cat:"رخصة المدربين - صفحة 15",q:"أي المستويات التالية يُعد الأعلى في هرم بلوم للأهداف المعرفية؟",o:["التذكر", "التقويم", "الفهم", "التحليل"],a:1},
+  {id:94,cat:"رخصة المدربين - صفحة 15",q:"متى يُستخدم التقويم الختامي؟",o:["قبل التدريب", "أثناء التنفيذ", "بعد انتهاء البرنامج", "أثناء تحليل الاحتياج"],a:2},
+  {id:95,cat:"رخصة المدربين - صفحة 15",q:"من أخلاقيات المدرب:",o:["حبه لتخصصه", "العدالة والأمانة", "متفرغ", "حماسي"],a:1},
+  {id:96,cat:"رخصة المدربين - صفحة 15",q:"الهدف من التغذية الراجعة هو:",o:["تصحيح الأخطاء وتعزيز التعلم", "محاسبة المتدربين", "توثيق الحضور", "تقييم المدرب فقط"],a:0},
+  {id:97,cat:"رخصة المدربين - صفحة 15",q:"أي مما يلي مؤشر على نقل أثر التدريب؟",o:["رضا المتدربين", "نتائج الاختبار", "تطبيق المهارة في العمل", "الالتزام بالحضور"],a:2},
+  {id:98,cat:"رخصة المدربين - صفحة 15",q:"السؤال الجيد في القياس يتميز بـ:",o:["الطول", "الغموض", "وضوح الصياغة", "كثرة التفاصيل"],a:2},
+  {id:99,cat:"رخصة المدربين - صفحة 16",q:"عند وجود متدرب مهيمن، الإجراء الأنسب هو:",o:["تجاهله", "توبيخه", "تنظيم المشاركة وتوجيه الحوار", "إنهاء النقاش"],a:2},
+  {id:100,cat:"رخصة المدربين - صفحة 16",q:"أي مما يلي مثال على نشاط تعلم نشط؟",o:["قراءة عرض", "مشاهدة فيديو", "حل مشكلة جماعي", "شرح المدرب"],a:2},
+  {id:101,cat:"رخصة المدربين - صفحة 16",q:"الهدف من تحليل الاحتياج التدريبي",o:["اختيار القاعة", "تحديد الفجوة الأدائية", "تحديد عدد المتدربين", "تحديد زمن التدريب"],a:1},
+  {id:102,cat:"رخصة المدربين - صفحة 16",q:"أفضل نمط جلوس لدورة تضم200:متدرب",o:["مجموعات دائرية", "حرفU", "صفوف مسرحية", "طاوالت تعاونية"],a:2},
+  {id:103,cat:"رخصة المدربين - صفحة 16",q:"أي مما يلي يقلل من دافعية المتدربين؟",o:["التنوع", "ربط التدريب بالواقع", "تجاهل مشاركاتهم", "وضوح الأهداف"],a:2},
+  {id:104,cat:"رخصة المدربين - صفحة 16",q:"أداة تقيس الاتجاهات",o:["اختبار تحصيلي", "بطاقة ملاحظة", "استبانة", "محاكاة"],a:2},
+  {id:105,cat:"رخصة المدربين - صفحة 16",q:"من مهارات المدرب الفعّال:",o:["الإلقاء المستمر", "إدارة التفاعل", "الالتزام بالنص", "تقليل النقاش"],a:1},
+  {id:106,cat:"رخصة المدربين - صفحة 17",q:"الهدف من كسر الجليد",o:["تقييم المعرفة", "خلق بيئة إيجابية", "إدارة الوقت", "شرح المحتوى"],a:1},
+  {id:107,cat:"رخصة المدربين - صفحة 17",q:"أي مما يلي يندرج تحت التعلم التعاوني؟",o:["عمل فردي", "مناقشة ثنائية", "عمل جماعي لهدف مشترك", "محاضرة"],a:2},
+  {id:108,cat:"رخصة المدربين - صفحة 17",q:"متى يكون التعلم الالكتروني أكثر فاعلية؟",o:["غياب التفاعل", "وجود أنشطة وتغذية راجعة", "الاعتماد النصي", "طول المقاطع"],a:1},
+  {id:109,cat:"رخصة المدربين - صفحة 17",q:"من معوقات جودة التدريب",o:["وضوح الأهداف", "ضعف التخطيط", "تنوع الأنشطة", "تهيئة البيئة"],a:1},
+  {id:110,cat:"رخصة المدربين - صفحة 17",q:"أي مما يلي يعزز ثبات الأداة؟",o:["توحيد شروط التطبيق", "تنويع المصححين", "تغيير الصياغة", "تقليل الأسئلة"],a:0},
+  {id:111,cat:"رخصة المدربين - صفحة 17",q:"التقويم القبلي يُستخدم لـ",o:["تحديد مستوى المتدربين", "قياس الأثر", "تحسين الأداء", "توثيق النتائج"],a:0},
+  {id:112,cat:"رخصة المدربين - صفحة 17",q:"السؤال الموقفي يقيس",o:["الحفظ", "الفهم السطحي", "التطبيق واتخاذ القرار", "التذكر"],a:2},
+  {id:113,cat:"رخصة المدربين - صفحة 18",q:"أي مما يلي مؤشر جودة للحقيبة التدريبية؟",o:["كثرة الصفحات", "توافق الأهداف والأنشطة", "طول الزمن", "عدد الصور"],a:1},
+  {id:114,cat:"رخصة المدربين - صفحة 18",q:"أفضل وقت لتعديل الخطة التدريبية",o:["بعد البرنامج", "أثناء التنفيذ", "قبل التدريب فقط", "بعد التقويم"],a:1},
+  {id:115,cat:"رخصة المدربين - صفحة 18",q:"من خصائص الهدف التدريبي الجيد",o:["عام", "قابل للقياس", "نظري", "طويل المدى فقط"],a:1},
+  {id:116,cat:"رخصة المدربين - صفحة 18",q:"أي عامل يؤثر مباشرة في إدارة وقت الجلسة التدريبية؟",o:["مرونة المدرب", "عدد الأنشطة", "حجم القاعة", "نوع الشهادة"],a:1},
+  {id:117,cat:"رخصة المدربين - صفحة 18",q:"أفضل مؤشر على فاعلية الأسلوب التدريبي هو",o:["سرعة الشرح", "تفاعل المتدربين", "الالتزام بالوقت", "عدد الشرائح"],a:1},
+  {id:118,cat:"رخصة المدربين - صفحة 18",q:"أي مما يلي يُعد تقويمًا تشخيصيًا؟",o:["اختبار قبلي", "ملاحظة أثناء التدريب", "اختبار نهائي", "استبانة رضا"],a:0},
+  {id:119,cat:"رخصة المدربين - صفحة 18",q:"في بناء بنك أسئلة، الغرض من المشتتات هو:",o:["تسهيل الإجابة", "قياس التخمين", "تمييز مستوى المتدرب", "زيادة طول السؤال"],a:2},
+  {id:120,cat:"رخصة المدربين - صفحة 19",q:"من خصائص بيئة التدريب الفعالة",o:["إضاءة ضعيفة", "تهوية مناسبة", "ازدحام", "ضوضاء"],a:1},
+  {id:121,cat:"رخصة المدربين - صفحة 19",q:"التعلم القائم على المشكلات يركز على:",o:["الحفظ", "حل مواقف واقعية", "التلقين", "التقويم فقط"],a:1},
+  {id:122,cat:"رخصة المدربين - صفحة 19",q:"أي مما يلي يعزز دافعية المتدربين؟",o:["تجاهل آرائهم", "ربط التدريب باحتياجاتهم", "الإطالة", "التقييم المفاجئ"],a:1},
+  {id:123,cat:"رخصة المدربين - صفحة 19",q:"الصدق الظاهري يشير إلى",o:["دقة النتائج", "شكل الأداة وقبولها", "ثبات القياس", "موضوعية المصحح"],a:1},
+  {id:124,cat:"رخصة المدربين - صفحة 19",q:"أي أداة تقويم تناسب المهارات القيادية؟",o:["اختبار تحصيلي", "محاكاة موقف", "استبانة", "واجب منزلي"],a:1},
+  {id:125,cat:"رخصة المدربين - صفحة 19",q:"متى يُفضل استخدام العصف الذهني؟",o:["بداية الجلسة", "تنمية الأفكار", "التقويم النهائي", "تلخيص المحتوى"],a:1},
+  {id:126,cat:"رخصة المدربين - صفحة 19",q:"من معايير السؤال الجيد في قياس",o:["الغموض", "الطول", "وضوح الفكرة", "تعدد الإجابات"],a:2},
+  {id:127,cat:"رخصة المدربين - صفحة 20",q:"أهم دور للمدرب أثناء النشاط الجماعي",o:["الشرح المستمر", "التوجيه والتيسير", "الرقابة", "التقييم النهائي"],a:1},
+  {id:128,cat:"رخصة المدربين - صفحة 20",q:"أي مما يلي يقلل من مقاومة المتدربين للتغيير؟",o:["فرض الآراء", "المشاركة في النقاش", "التجاهل", "التلقين"],a:1},
+  {id:129,cat:"رخصة المدربين - صفحة 20",q:"نقل أثر التدريب يتحقق عند",o:["حفظ المحتوى", "تطبيق المهارة في العمل", "إنهاء الدورة", "الحصول على شهادة"],a:1},
+  {id:130,cat:"رخصة المدربين - صفحة 20",q:"أفضل طريقة لمعالجة تفاوت المستويات",o:["محتوى موحد", "تنويع الأنشطة", "تجاهل الفروق", "تسريع الشرح"],a:1},
+  {id:131,cat:"رخصة المدربين - صفحة 20",q:"من أسس بناء الحقيبة التدريبية:",o:["التفصيل", "الاختصار", "الاجتهاد", "التحكيم"],a:1},
+  {id:132,cat:"رخصة المدربين - صفحة 20",q:"من أهداف التقويم التكويني",o:["الحكم النهائي", "التحسين المستمر", "التصنيف", "التوثيق"],a:1},
+  {id:133,cat:"رخصة المدربين - صفحة 20",q:"أي مما يلي مثال على تعلم نشط؟",o:["محاضرة", "نقاش موجه", "قراءة فردية", "عرض شرائح"],a:1},
+  {id:134,cat:"رخصة المدربين - صفحة 21",q:"أي منطقة في نموذج جوهاري تمثل المعلومات المعروفة للفرد وللآخرين؟",o:["المنطقة المفتوحة", "المنطقة العمياء", "المنطقة المخفية", "المنطقة المجهولة"],a:0},
+  {id:135,cat:"رخصة المدربين - صفحة 21",q:"من عوامل نجاح التدريب الالكتروني:",o:["غياب التفاعل", "أنشطة تفاعلية", "اعتماد نصي", "طول المحتوى"],a:1},
+  {id:136,cat:"رخصة المدربين - صفحة 21",q:"أي مما يلي يعكس ثبات أداة القياس؟",o:["تكرار النتائج", "تنوع الأسئلة", "سهولة التطبيق", "سرعة التصحيح"],a:0},
+  {id:137,cat:"رخصة المدربين - صفحة 21",q:"التغذية الراجعة الفعالة يجب أن تكون",o:["عامة", "فورية وبنّاءة", "متأخرة", "نقدية فقط"],a:1},
+  {id:138,cat:"رخصة المدربين - صفحة 21",q:"أي مما يلي مؤشر على جودة المدرب؟",o:["الالتزام بالنص", "إدارة الحوار", "السرعة", "كثرة المعلومات"],a:1},
+  {id:139,cat:"رخصة المدربين - صفحة 21",q:"في حال فقد المتدرب التركيز، الأنسب هو",o:["الاستمرار", "نشاط قصير", "التوبيخ", "إنهاء الجلسة"],a:1},
+  {id:140,cat:"رخصة المدربين - صفحة 21",q:"من أسس التخطيط التدريبي الجيد",o:["العشوائية", "وضوح الأهداف", "التجربة", "التكرار"],a:1},
+  {id:141,cat:"رخصة المدربين - صفحة 22",q:"أي مما يلي يحقق التعلم الذاتي؟",o:["الشرح المستمر", "تكليفات موجهة", "التلقين", "الإمالء"],a:1},
+  {id:142,cat:"رخصة المدربين - صفحة 22",q:"أداة مناسبة لتقويم الاتجاهات",o:["اختبار", "استبانة", "محاكاة", "ملاحظة"],a:1},
+  {id:143,cat:"رخصة المدربين - صفحة 22",q:"من أخطاء تصميم الأنشطة",o:["ربطها بالأهداف", "عدم وضوح التعليمات", "التدرج", "التنوع"],a:1},
+  {id:144,cat:"رخصة المدربين - صفحة 22",q:"أفضل مؤشر لنجاح البرنامج التدريبي",o:["عدد الحضور", "تحسن الأداء", "طول المحتوى", "كثرة الأنشطة"],a:1},
+  {id:145,cat:"رخصة المدربين - صفحة 22",q:"التقويم الختامي يهدف إلى",o:["التحسين أثناء التدريب", "الحكم على النتائج", "تحديد الاحتياج", "التشخيص"],a:1},
+  {id:146,cat:"رخصة المدربين - صفحة 22",q:"في التدريب الاحترافي، نسبة تفاعل المدرب والمتدرب هي:",o:["المدرب 50% والمتدرب 50%.", "المدرب 30% والمتدرب 70%.", "المدرب 70% والمتدرب 30%.", "المدرب 90% والمتدرب 10%."],a:1},
+  {id:147,cat:"رخصة المدربين - صفحة 22",q:"الاختبار المهني الجيد يتميز بـ",o:["سهولة التخمين", "العدالة والموضوعية", "التكرار", "الطول"],a:1},
+  {id:148,cat:"رخصة المدربين - صفحة 23",q:"تشجيع التفكير الإبداعي وحل المشكلات لدى المتدربين يتم من خلال:",o:["تقديم إجابات جاهزة لكل سؤال", "طرح تحديات عملية وسيناريوهات تتطلب تفكيرًا خارج الصندوق", "منع النقاشات الجانبية", "الالتزام الحرفي بنص الحقيبة"],a:1},
+  {id:149,cat:"رخصة المدربين - صفحة 23",q:"الخطوة التي تلي تحديد الاحتياج في نموذج ADDIE هي:",o:["التنفيذ", "التصميم", "التقويم", "الإلغاء"],a:0},
+  {id:150,cat:"رخصة المدربين - صفحة 23",q:"وفق النظرية البنائية، دور المدرب هو",o:["ملقن", "ميسر", "مسيطر", "مصحح"],a:1},
+  {id:151,cat:"رخصة المدربين - صفحة 23",q:"التدريب غير المتزامن يعني:",o:["فوضى في الوقت", "المدرب والمتدرب في نفس الوقت", "المتدرب يتعلم في الوقت الذي يناسبه (مواد مسجلة).", "بدون تقنية"],a:2},
+  {id:152,cat:"رخصة المدربين - صفحة 23",q:"مبدأ الكبار موجهون بالنتائج يعني",o:["يهتمون بالشهادة فقط", "يريدون فائدة عملية مباشرة لحل مشكالتهم", "يحبون الاختبارات", "لا يهتمون بالمحتوى"],a:1},
+  {id:153,cat:"رخصة المدربين - صفحة 23",q:"تحليل المهمة يهدف إلى:",o:["معرفة الأسماء", "تفكيك الوظيفة لمهام وخطوات لتحديد المهارات المطلوبة", "تحديد الميزانية", "تقييم القاعة"],a:1},
+  {id:154,cat:"رخصة المدربين - صفحة 23",q:"يحتوي دليل المدرب على:",o:["المحتوى فقط", "خطة الجلسات، التوقيت، وإرشادات التنفيذ", "استمارة التسجيل", "صور فقط"],a:1},
+  {id:155,cat:"رخصة المدربين - صفحة 24",q:"للتعامل مع المتدرب المشاغب يفضل:",o:["الجدال معه", "الهدوء وتذكيره بقواعد العمل المتفق عليها", "طرده", "السخرية منه"],a:1},
+  {id:156,cat:"رخصة المدربين - صفحة 24",q:"ما الذي يتعارض مع مبدأ التدريب عملية واقعية؟",o:["دراسات حالة واقعية", "محتوى نظري بحت لا يرتبط بواقع المتدربين", "محاكاة المواقف", "ربط المعرفة بالتطبيق"],a:1},
+  {id:157,cat:"رخصة المدربين - صفحة 24",q:"المتعلم يبني معرفته بنفسه… تمثل نظرية:",o:["السلوكية", "البنائية", "التقليدية", "التحليلية"],a:1},
+  {id:158,cat:"رخصة المدربين - صفحة 24",q:"التعامل الأمثل مع المتدرب الخجول:",o:["إجباره على التحدث", "تركه تمامًا", "تشجيعه بلطف وتوجيه أسئلة سهلة", "لفت الانتباه له دائمًا"],a:2},
+  {id:159,cat:"رخصة المدربين - صفحة 24",q:"السلوك المصنف تضليل وخداع:",o:["توضيح الأهداف", "تقديم وعود غير واقعية بنتائج التدريب", "ذكر المراجع", "الاعتذار عن عدم المعرفة"],a:1},
+  {id:160,cat:"رخصة المدربين - صفحة 24",q:"التقييم أثناء إعداد البرنامج يسمى:",o:["الختامي", "البنائي (أثناء المراحل).", "قياس الأثر", "تقييم المدرب"],a:1},
+  {id:161,cat:"رخصة المدربين - صفحة 24",q:"أداة تقويم موضوعية",o:["المقال", "الاختيار من متعدد", "المقابلة", "الملاحظة"],a:1},
+  {id:162,cat:"رخصة المدربين - صفحة 25",q:"سبب ميل الكبار للحلول المجربة",o:["الكسل", "الخوف على احترامهم الذاتي عند الخطأ", "قلة الذكاء", "عدم الاهتمام"],a:1},
+  {id:163,cat:"رخصة المدربين - صفحة 25",q:"تحويل القدرات يكون إلى",o:["رواتب", "إجازات", "قرارات", "معارف ومهارات مباشرة ومساندة"],a:3},
+  {id:164,cat:"رخصة المدربين - صفحة 25",q:"استخدام القصص وتجارب النجاح يطبق مبدأ",o:["إدارة الوقت", "التحفيز والإلهام", "التكرار", "النظريات المجردة"],a:1},
+  {id:165,cat:"رخصة المدربين - صفحة 25",q:"المدرب الناجح يوازن بين",o:["المعارف والمهارات والاتجاهات", "الضحك", "الوقت", "المال"],a:0},
+  {id:166,cat:"رخصة المدربين - صفحة 25",q:"تدريب عملية دقيقة دون مخاطرة:",o:["العصف الذهني", "المحاكاةSimulation (", "المناقشة", "دراسة حالة"],a:1},
+  {id:167,cat:"رخصة المدربين - صفحة 25",q:"تحفيز متدربين بثقافات مختلفة",o:["محتوى تفاعلي يحترم التنوع الثقافي", "تجاهل الاختلاف", "فرض أسلوب واحد", "تقليل العدد"],a:0},
+  {id:168,cat:"رخصة المدربين - صفحة 25",q:"المتدرب الحسي (Kinesthetic) يفضل:",o:["القراءة.", "الرسوم.", "الصوت.", "المجسمات والتطبيق العملي."],a:3},
+  {id:169,cat:"رخصة المدربين - صفحة 26",q:"استبيان نهاية الدورة يقيس",o:["التعلم العميق", "الرضا", "العائد الاستثماري", "السلوك"],a:1},
+  {id:170,cat:"رخصة المدربين - صفحة 26",q:"نظرية الجشطلت ترى أن التعلم يحدث عبر",o:["المحاولة والخطأ", "الحفظ", "الاستبصار وإدراك العلاقات الكلية", "العقاب"],a:2},
+  {id:171,cat:"رخصة المدربين - صفحة 26",q:"لتعليم الإنعاش القلبي",o:["محاضرة", "محاكاة وممارسة عملية", "قصة", "عصف ذهني"],a:1},
+  {id:172,cat:"رخصة المدربين - صفحة 26",q:"المحاضرة المعدّلة تختلف بأنها:",o:["مسجلة", "تتوقف كل 15–20 دقيقة لنشاط أو سؤال.", "بال مدرب", "قراءة كتاب"],a:1},
+  {id:173,cat:"رخصة المدربين - صفحة 26",q:"توزيع القاعة للنقاش",o:["صفوف", "فردي", "دائرة أو حرفU", "مسرح"],a:2},
+  {id:174,cat:"رخصة المدربين - صفحة 26",q:"لتعزيز التفاعل",o:["تلقين", "عصف ذهني ونقاش ولعب أدوار", "منع الحوار", "خلف المكتب"],a:1},
+  {id:175,cat:"رخصة المدربين - صفحة 26",q:"البيئة الآمنة نفسيًا",o:["منع الأسئلة", "تشجيع المحاولة والخطأ للتعلم", "التركيز على المتفوقين", "الجدية الصارمة"],a:1},
+  {id:176,cat:"رخصة المدربين - صفحة 27",q:"الأسلوب الذي يجمع محاضرة + نقاش + تجريب:",o:["العصف الذهني", "المشغل التدريبي (Workshop)", "الندوة", "المقابلة"],a:1},
+  {id:177,cat:"رخصة المدربين - صفحة 27",q:"أقسام الحقيبة التدريبية تشمل:",o:["المقدمة، العرض، الخاتمة.", "دليل المدرب ودليل المتدرب.", "مفتاح الحقيبة.", "الغلاف."],a:0},
+  {id:178,cat:"رخصة المدربين - صفحة 27",q:"صياغة الهدف الصحيحة هي:",o:["أن يفهم", "سأشرح", "أن يطبق المتدرب مهارة محددة (فعل + فاعل + معيار).", "أن يستوعب"],a:2},
+  {id:179,cat:"رخصة المدربين - صفحة 27",q:"دور المدرب في دراسة الحالة",o:["إعطاء الحل", "القراءة", "توجيه النقاش والتحليل الستنتاج الحل", "الصمت"],a:2},
+  {id:180,cat:"رخصة المدربين - صفحة 27",q:"قابلية التوظف تعني",o:["وظيفة فورية", "إكساب الجدارات المؤهلة للعمل", "كتابةCV", "توظيفه مدربًا"],a:1},
+  {id:181,cat:"رخصة المدربين - صفحة 27",q:"إذا هيمن متدرب على النقاش",o:["تجاهله", "شكره وتمرير الحديث لغيره بالاسم", "توبيخه", "إلغاء النقاش"],a:1},
+  {id:182,cat:"رخصة المدربين - صفحة 27",q:"قانون الأثر لثورندايك:",o:["التكرار", "الشعور بالرضا والارتياح بعد التعلم", "الصعوبة", "العقاب"],a:1},
+  {id:183,cat:"رخصة المدربين - صفحة 28",q:"التدريب الذي يتطلب وجود الجميع في نفس الوقت:",o:["غير متزامن", "الالكتروني التزامني", "الذاتي", "الميداني"],a:1},
+  {id:184,cat:"رخصة المدربين - صفحة 28",q:"من خصائص تعليم الكبار",o:["التوجيه الإجباري", "الاعتماد على المدرب", "معرفة السبب والفائدة قبل التعلم", "محاضرات طويلة"],a:2},
+  {id:185,cat:"رخصة المدربين - صفحة 28",q:"المسؤولية المجتمعية للمدرب",o:["تجارة", "شهرة", "رسالة إيجابية", "وظيفة مؤقتة"],a:2},
+  {id:186,cat:"رخصة المدربين - صفحة 28",q:"أداة تفاعلية عن بعد:",o:["PDF", "السبورة التشاركية", "بريد", "فاكس"],a:1},
+  {id:187,cat:"رخصة المدربين - صفحة 28",q:"لكسر الجمود",o:["اختبار", "نشاط تعارفي مرح وقصير", "قراءةCV", "صمت"],a:1},
+  {id:188,cat:"رخصة المدربين - صفحة 28",q:"نبدأ تحليل الاحتياج بـ",o:["حجز القاعة", "الضيافة", "تحديد الفجوة بين الأداء الحالي والمأمول", "الشهادات"],a:2},
+  {id:189,cat:"رخصة المدربين - صفحة 28",q:"تطوير مهارات المستقبل في التدريب الالكتروني",o:["دمج أنشطة تفاعلية للتفكير النقدي", "محاضرات فقط", "تجاهلها", "تقليل المحتوى"],a:0},
+  {id:190,cat:"رخصة المدربين - صفحة 29",q:"نموذج التدريب هو:",o:["منهجية لتخطيط وتصميم وتنفيذ التدريب.", "استمارة", "شكل القاعة", "زي المدرب"],a:0},
+  {id:191,cat:"رخصة المدربين - صفحة 29",q:"من المعينات التدريبية",o:["العصف الذهني", "جهاز العرض", "دراسة الحالة", "تمثيل الأدوار"],a:1},
+  {id:192,cat:"رخصة المدربين - صفحة 29",q:"تدريب برنامج حاسوبي",o:["محاضرة", "بيان عملي وتطبيق", "عصف ذهني", "حوار"],a:1},
+  {id:193,cat:"رخصة المدربين - صفحة 29",q:"أدق تعريف للتدريب الإكتروني:",o:["قراءةPDF", "استخدام التقنية للتفاعل تزامنيًا أو غير تزامنيًا", "قاعات عرض", "IT فقط"],a:1},
+  {id:194,cat:"رخصة المدربين - صفحة 29",q:"المدرب المحترف يمتلك:",o:["الكتب– العرض- الحوار", "العلم، الصبر، الشغف.", "القوة– العدل- التسويق", "الرغبة، المعرفة، المهارة."],a:3},
+  {id:195,cat:"رخصة المدربين - صفحة 29",q:"الفرق بين التدريب والتعليم",o:["التدريب للصغار", "التعليم معرفة طويلة المدى، التدريب لسد فجوة مهارية", "لا فرق", "التدريب نظري"],a:1},
+  {id:196,cat:"رخصة المدربين - صفحة 29",q:"تقنية Open Space تستخدم عندما:",o:["الموضوع واضح", "العدد صغير", "يكون الموضوع معقدًا ومتعدد الآفاق بلا أجندة مسبقة.", "للسيطرة"],a:2},
+  {id:197,cat:"رخصة المدربين - صفحة 30",q:"الخطة البديلة (Plan B) تعني:",o:["الاستعداد للمواقف الطارئة والتحديات المفاجئة.", "المتدربين الأذكياء", "نهاية مبكرة", "الضيافة"],a:0},
+  {id:198,cat:"رخصة المدربين - صفحة 30",q:"في دليل البرنامج التدريبي يُكتب دائمًا:",o:["الخطة الزمنية", "الأهداف العامة والتفصيلية.", "الإجراءات التدريبية", "الخاتمة"],a:1},
+  {id:199,cat:"رخصة المدربين - صفحة 30",q:"متى يصبح ما تقدمه محاضرة؟ عندما تكون:",o:["أعداد المتدربين قليلة.", "تفاعل المتدربين 60%.", "مادة علمية ونظريات وأبحاث.", "ورش عمل."],a:2},
+  {id:200,cat:"رخصة المدربين - صفحة 30",q:"كُلِّفت بتحديد الاحتياج التدريبي لمصنع دهانات ABC، واستخدمت أداة الملاحظة، واكتشفت أن الخلل في عملية إقناع المستهلك بالمنتج، فما الدورة التي ستقررها لهم؟",o:["تنظيم العمل - توحيد الإجراءات", "السكرتارية المبدعة - ضغوط العمل", "التسويق الاحترافي - فن الإقناع والحوار", "القيادة - ترتيب الأولويات"],a:2},
+  {id:201,cat:"رخصة المدربين - صفحة 30",q:"الوسيلة الأفضل في تنظيم برنامجك التدريبي وإعداد المادة العلمية المناسبة:",o:["جمع المراجع العلمية", "الرجوع للمستشارين", "عمل خريطة ذهنية", "جميع ما سبق"],a:3},
+  {id:202,cat:"رخصة المدربين - صفحة 30",q:"لتطبيق التدريب الاحترافي المنشود، يجب أن يكون أداء المتدربين في البرنامج التدريبي بنسبة:",o:["29%", "49%", "69%", "98%"],a:3},
+  {id:203,cat:"رخصة المدربين - صفحة 30",q:"اختر الأسلوب التدريبي لدورة: أقلع عن التدخين فورًا.",o:["ختر الأسلوب التدريبي لدورة (اقلع عن التدخين فورًا العصف الكتابي", "درا سة حالة", "نقاش المجموعات", "عروض المشاركين"],a:1},
+  {id:204,cat:"رخصة المدربين - صفحة 31",q:"التقييم القبلي والبعدي عامل رئيسي في:",o:["التحقق من اكتساب المعرفة", "توصيل المعرفة", "التسويق للدورة", "اثراء معرفي"],a:0},
+  {id:205,cat:"رخصة المدربين - صفحة 31",q:"ما الأسلوب الأمثل في التعامل مع المتدرب الثرثار؟",o:["اهتم به في التدريب", "قاطع ه بلباق ة", "اجب على جميع استفساراته", "افسح له المجال"],a:1},
+  {id:206,cat:"رخصة المدربين - صفحة 31",q:"ما الأسلوب الأمثل في التعامل مع المتدرب المغرور؟",o:["لا تلقي له بالا", "احله لعقد الدورة", "استفد من خبراته", "لا تتحدث معه"],a:2},
+  {id:207,cat:"رخصة المدربين - صفحة 31",q:"من يمتلك مهارة عالية في التدريب ورغبة ضعيفة، فهو بحاجة إلى:",o:["تفويض", "إرشاد", "توجيه", "إثارة"],a:3},
+  {id:208,cat:"رخصة المدربين - صفحة 31",q:"المدرب الذي يزرع في المتدربين الخوف وصعوبة النجاح هو:",o:["مدرب جليدي.", "مدرب مبهر.", "مدرب محترف.", "مدرب محبط."],a:3},
+  {id:209,cat:"رخصة المدربين - صفحة 31",q:"النموذج الذي نعتمد عليه في العرض والتقديم هو:",o:["التذكر الأساسي", "بوبايك", "4 MAT", "مقياس هيرمان"],a:2},
+  {id:210,cat:"رخصة المدربين - صفحة 31",q:"مقياس هيرمان يقيس:",o:["الجدارة", "الفاعلية", "النمط الشخصي.", "نمط التفكير."],a:3},
+  {id:211,cat:"رخصة المدربين - صفحة 32",q:"عند تقديم دورة تدريبية لزملائك في العمل، فإن البداية تكون بـ:",o:["إذابة الجليد", "تقديم المادة العلمية", "التعارف", "الاستماع لأسئلتهم"],a:0},
+  {id:212,cat:"رخصة المدربين - صفحة 32",q:"تقاس جدارة المدرب من خلال:",o:["سيرته الذاتية", "قوة تسويق الدورة", "وجوده في مدينتي", "موضوع الدورة"],a:0},
+  {id:213,cat:"رخصة المدربين - صفحة 32",q:"الاتصال الفعال هو:",o:["توصيل الرسالة للمستقبل.", "إرسال واستقبال الرسالة.", "نيل ما تريده من المستمع.", "رفع الصوت بالرسالة."],a:2},
+  {id:214,cat:"رخصة المدربين - صفحة 32",q:"عند العرض والإقاء اهتم بـ:",o:["بلغة الجسد", "بعروض المشاركين", "بإنهاء المادة العلمية", "بأسئلة الحضور"],a:0},
+  {id:215,cat:"رخصة المدربين - صفحة 32",q:"أعد السيرة الذاتية باحترافية ثم:",o:["انتظر من يطلبك للتدريب", "قدمها للجهات التدريبية", "أ عد حق يبة تدريبية وسوقها", "احضر دورة أخرى"],a:2},
+  {id:216,cat:"رخصة المدربين - صفحة 32",q:"في عجلة التعلم، ربع التحفيز يكون من خلال:",o:["عروض ومشاركة المتدربين", "عرض المادة العلمية", "إثارة الدافعية للدورة.", "الاختبارات الدورية"],a:2},
+  {id:217,cat:"رخصة المدربين - صفحة 32",q:"عندما تطلب من المتدربين ذكر أكبر عدد من الحلول، فأنت تمارس:",o:["استراتيجية النقاش", "استراتيجية العصف الذهني", "استراتيجية الألعاب", "استراتيجية القصص"],a:1},
+  {id:218,cat:"رخصة المدربين - صفحة 33",q:"قياس أثر التدريب للموظف بعد البرنامج التدريبي معناه:",o:["التأكد من ممارسته لما تدرب عليه", "لترشيحه مر ة أخرى", "حساب تكاليف الدورة", "تطوير الحقيبة التدريبية"],a:0},
+  {id:219,cat:"رخصة المدربين - صفحة 33",q:"في إعداد الحقيبة التدريبية نكتب الفهرس دائمًا:",o:["قبل البدء في بنائها", "عند البدء في بنائها", "أثناء بنائها", "بعد الانتهاء من بنائها"],a:3},
+  {id:220,cat:"رخصة المدربين - صفحة 33",q:"هناك ارتباط بين:",o:["دليل البرنامج والاستبيان", "التقييم القبلي والإرشادات", "الهدف السلوكي والموضوع", "النشاط والخاتمة"],a:2},
+  {id:221,cat:"رخصة المدربين - صفحة 33",q:"يقصد بالمستلزمات التدريبية:",o:["أساليب التدريب كالخرائط الذهنية.", "الوسائل المعينة كالحاسب الآلي.", "القاعة التدريبية.", "الحقيبة التدريبية."],a:1},
+  {id:222,cat:"رخصة المدربين - صفحة 33",q:"من عيوب الكلام التشدق، ويُقصد به:",o:["تفخيم الكلمات.", "أكل بعض الحروف.", "استخدام مصطلحات إنجليزية.", "الغريب من اللغة."],a:3},
+  {id:223,cat:"رخصة المدربين - صفحة 33",q:"عندما تفقد زمام الامور وتتجه الدورة إلى مواجهات حادة في النقاش، استخدم مباشرة:",o:["قانون ميرفي", "قانون بوبايك", "قانون ديبونو", "قانون الانسحاب"],a:0},
+  {id:224,cat:"رخصة المدربين - صفحة 33",q:"المدرب الناضج هو من:",o:["يهيئ القاعة بشكل مبالغ فيه.", "لا يطور برنامجه.", "يصمم برنامجه بشكل واقعي ومزمن.", "لا يخرج عن الموضوع."],a:2},
+  {id:225,cat:"رخصة المدربين - صفحة 34",q:"يُستخدم نموذج الفجوة (Gap) في مجال التدريب بهدف:",o:["قياس مستوى رضا المتدربين عن البرنامج التدريبي", "تحديد الفرق بين الوضع الحالي والوضع المستقبلي المنشود", "تصنيف المتدربين وفق أنماط التعلم", "اختيار أساليب التدريب المناسبة لكل متدرب"],a:1},
+  {id:226,cat:"رخصة المدربين - صفحة 34",q:"ما الهدف الرئيس من استخدام نموذج SCORM في برامج التعلم الالكتروني؟",o:["توحيد أساليب تصميم المحتوى التدريبي دون الحاجة إلى أنظمة إدارة تعلم", "ضمان توافق المحتوى التدريبي مع منصات إدارة التعلم المختلفة وإتاحة تتبع بيانات المتعلمين", "تحويل المحتوى التدريبي إلى مواد مطبوعة قابلة للتوزيع", "حماية المحتوى التدريبي من النسخ أو التعديل"],a:1},
+  {id:227,cat:"رخصة المدربين - صفحة 34",q:"أي العبارات التالية تُعد الأدق في وصف نموذج كوفمان في التخطيط والتقييم التدريبي؟",o:["نموذج يركز على قياس رضا المتدربين فقط بعد انتهاء البرنامج التدريبي", "إطار عمل شامل للتخطيط الاستراتيجي والتقييم يبدأ بتحديد الاحتياجات، ثم تصميم الحلول.وتنفيذها وتقييمها لتحقيق الأهداف التنظيمية", "نموذج يقتصر على تحليل محتوى البرامج التدريبية دون ربطها بالأهداف التنظيمية", ".أسلوب تدريبي يركز على طرق العرض والتقديم داخل القاعة التدريبية فقط"],a:1},
+  {id:228,cat:"رخصة المدربين - صفحة 34",q:"أي من العبارات التالية تُعبّر بدقة عن مفهوم مجتمعات التعلم المهنية الرقمية؟",o:["مجموعات تدريبية حضورية تُعقد داخل المؤسسات التعليمية في أوقات محددة", "برامج تعليم فردي إلكترونية دون تفاعل مهني منظم", "منصات إلكترونية مخصصة لعرض المحتوى التعليمي فقط", "مجتمعات مهنية رقمية تفاعلية لا تتقيد بحدود المكان أو الزمان"],a:3},
+  {id:229,cat:"رخصة المدربين - صفحة 34",q:"الاستدلال الاستقرائي هو:",o:["الانتقال من القواعد العامة إلى نتائج مؤكدة", "الانتقال من ملاحظات جزئية إلى تعميمات عامة محتملة", "الاعتماد على التخمين دون ملاحظات", "إثبات النتائج بشكل قطعي من مقدمات ثابتة"],a:1},
+  {id:230,cat:"رخصة المدربين - صفحة 34",q:"مدرب بعد برنامج تدريبي سجل ملاحظاته على أدائه، وحدد نقاط القوة والضعف، ثم وضع خطة للتطوير؛ هذا العمل يعني:",o:["جمع بيانات", "تقييم ذاتي", "ملاحظات", "جمع معلومات"],a:1},
+  {id:231,cat:"رخصة المدربين - صفحة 34",q:"ما نوع التدريب الاكثر مناسبة لتنمية الموظف الجديد وتأهيله للاندماج في بيئة العمل؟",o:["التدريب التحويلي", "التدريب التهيئي (التعريفي).", "التدريب العلاجي", "التدريب المتقدم"],a:1},
+  {id:232,cat:"رخصة المدربين - صفحة 35",q:"هل يُعد قيام المدرب بتسجيل البيانات الشخصية للمتدربين في موقع المؤسسة الرسمي باستخدام جهازه الشخصي إجراءً نظاميًا؟",o:["نعم، يُعد إجراءً نظاميًا لأنه مدرب.", "إجراء غير نظامي.", "نعم، إذا كان الموقع رسميًا بغضّ النظر عن نوع الجهاز المستخدم", "نظامي إذا كان جهازه محميًا."],a:1},
+  {id:233,cat:"رخصة المدربين - صفحة 35",q:"أي من البدائل التالية يُصنّف البرامج الحاسوبية المستخدمة في التطوير والتدريب تصنيفًا صحيحًا وشاملًا:",o:["PowerPoint، Word، Excel.باعتبارها أدوات إعداد محتوى تدريبي فقط", "Power BI لتحليل البيانات، TalentLMS لإدارة التعلم، PowerPoint للعروض، Microsoft Teams للتعاون، وOneNote لتدوين الملاحظات.", "Microsoft Teams وOneNote بوصفهما أدوات تواصل دون علاقة مباشرة بالتدريب.", "Power BI وExcel لكونهما برامج تحليل بيانات دون توظيف تدريبي مباشر."],a:1},
+  {id:234,cat:"رخصة المدربين - صفحة 35",q:"كنت مدربًا ولاحظت أن أحد المتدربين يجلس في آخر القاعة ولا يشارك مع بقية المتدربين أثناء البرنامج التدريبي، ما التصرف الاكثر ملاءمة مهنيًا للتعامل مع هذا الموقف؟",o:["تجاهل المتدرب وعدم التدخل حتى لا يُسبب إرباكًا لسير التدريب", "إشراكه بأسئلة وأنشطة مناسبة بطريقة تدريجية مع مراعاة أسلوبه وشخصيته", "توجيه ملاحظة مباشرة له أمام المتدربين لإلزامه بالمشاركة.", "مطالبة الجهة المنظمة بإخراجه من القاعة لعدم تفاعله"],a:1},
+  {id:235,cat:"رخصة المدربين - صفحة 35",q:"كنت مدربًا ودار نقاش بينك وبين المتدربين، وحدث اختلاف في وجهات النظر حول موضوع معين. ما التصرف الاكثر مهنية لاحتواء الموقف؟",o:["الإصرار على رأيك وإيقاف النقاش حفاظًا على سير البرنامج", "الاستماع لوجهات نظر المتدربين باحترام، وتنظيم النقاش وتوجيهه نحو أهداف التدريب", "تجاهل آراء المتدربين والانتقال مباشرة إلى المحور التالي", "إنهاء الجلسة مؤقتًا لتجنب تصاعد الخلاف."],a:1},
+  {id:236,cat:"رخصة المدربين - صفحة 35",q:"أثناء تنفيذ برنامج تدريبي، دخل أحد المتدربين في جدال حول قضية شرعية واحتد النقاش داخل القاعة التدريبية. ما الإجراء المهني الأنسب الذي ينبغي على المدرب اتخاذه؟",o:["الاستمرار في النقاش لإثبات الرأي الصحيح حفاظًا على هيبة المدرب", "تهدئة الحوار وضبط إدارة النقاش مع احترام الآراء، وتوجيهه بما لا يخلّ بأهداف البرنامج", "إيقاف المتدرب عن المشاركة وإنهاء النقاش فورًا", "تجاهل النقاش ومتابعة المحتوى التدريبي دون تدخل"],a:1},
+  {id:237,cat:"رخصة المدربين - صفحة 35",q:"مؤسسة تدريبية درست وضعها الحالي، وحددت نقاط القوة والضعف، ثم صاغت رؤيتها ورسالتها، وأعدّت خطة مستقبلية؛ فما الإجراء الذي اتبعته المؤسسة؟",o:["تحليل الاحتياجات التدريبية", "التخطيط الاستراتيجي", "التقويم الختامي للبرامج التدريبية", "إدارة الجودة الشاملة"],a:1},
+  {id:238,cat:"رخصة المدربين - صفحة 36",q:"مؤسسة تدريبية قدمت عرضًا لك لتدرب لديها، فما أهم معلومة تركز عليها؟",o:["كم عدد الأيام التدريبية المطلوبة", "ما هو موضوع الدورة التدريبية", "أين مقر التدريب", "من هي الفئة المستهدفة"],a:1},
+  {id:239,cat:"رخصة المدربين - صفحة 36",q:"عرض مدرب موقفًا تدريبيًا على الشاشة، وطلب من القادة تحليل الموقف، وجمع أسبابه، واقتراح حلول مناسبة للمشكلة. ما نوع الممارسة التدريبية التي استخدمها المدرب؟",o:["العصف الذهني", "دراسة الحالة", "المحاضرة التفاعلية", "التعلم الذاتي"],a:1},
+  {id:240,cat:"رخصة المدربين - صفحة 36",q:"مدرب يقدم دورة تدريبية مدتها ثلاثة أيام، وفي نهاية اليوم الأول كلف المتدربين بنشاط منزلي، ثم ناقش معهم نتائج هذا النشاط في اليوم التالي. ما نوع التقييم الذي قام به المدرب؟",o:["تقييم قبلي", "تقييم تكويني", "تقييم بعدي", "تقييم تجميعي"],a:1},
+  {id:241,cat:"رخصة المدربين - صفحة 36",q:"في دورة تدريبية مقدمة لمجموعة من القادة، تتناول موضوع المستقبل وما قد يطرأ من مشكلات مع استعراض الحلول الممكنة لها، أي أسلوب تدريبي يُعد الأنسب ليقدم المدرب من خلاله مقدمة فعالة للمتدربين؟",o:["أسلوب المحاكاة", "أسلوب السيناريو", "أسلوب العصف الذهني", "أسلوب تمثيل الأدوار"],a:1},
+  {id:242,cat:"رخصة المدربين - صفحة 36",q:"السلوك المهني الصحيح للمدرب عند حدوث خلاف داخل القاعة:",o:["تجاهل الموقف", "إدارة الحوار بحياد", "الانحياز لطرف", "إنهاء الجلسة"],a:1},
+  {id:243,cat:"رخصة المدربين - صفحة 36",q:"عند اختلاف مستويات المتدربين وفق الذكاءات المتعددة، يُفضل أن يستخدم المدرب:",o:["أسلوبًا واحدًا", "أنشطة متنوعة", "التلقين فقط", "الشرح النظري"],a:1},
+  {id:244,cat:"رخصة المدربين - صفحة 37",q:"التدريب على رأس العمل (OJT) يتميز بـ:",o:["ًارتفاع التكلفة جدا", "واقعية التدريب وارتباطه المباشر بالمهام اليومية", "عدم الحاجة لمشرف", "أنه نظري فقط"],a:1},
+  {id:245,cat:"رخصة المدربين - صفحة 37",q:"ماذا تعني مصفوفة المهارات/الصلاحيات في إدارة التدريب؟",o:["تحديد من يحق له الحضور ومن لا يحق له", "تحديد المهارات المطلوبة لكل وظيفة ومستوى إتقانها", "في إدارة التدريب: جدول رواتب المدربين", "خريطة القاعة"],a:1},
+  {id:246,cat:"رخصة المدربين - صفحة 37",q:"يقصد بالصدق في أدوات التقييم:",o:["أن النتائج لا تتغير بتكرار الاختبار", "أن الأداة تقيس فعالً ما وضعت لقياسه", "ًأن الاختبار سهل جدا", "أن المدرب صادق في كالمه"],a:1},
+  {id:247,cat:"رخصة المدربين - صفحة 37",q:"الاختبارات العملية هي الأفضل لتقييم:",o:["المعلومات التاريخية", "المهارات الأدائية (مثل القيادة أو البرمجة).", "المشاعر والوجدان", "الحضور والانصراف"],a:1},
+  {id:248,cat:"رخصة المدربين - صفحة 37",q:"أهم معوقات انتقال أثر التدريب للعمل:",o:["جودة الورق المطبوع", "عدم دعم الإدارة المباشرة للمتدرب لتطبيق ما تعلمه", "لون السجاد في القاعة", "كثرة الوجبات الغذائية"],a:1},
+  {id:249,cat:"رخصة المدربين - صفحة 37",q:"العائد على الاستثمار في التدريب (ROI) يعني:",o:["عدد ساعات التدريب", "الفائدة الاقتصادية التي حققتها المنظمة مقابل ما أنفقته", "عدد الشهادات الموزعة", "رضا المدرب عن مكافأته"],a:1},
+  {id:250,cat:"رخصة المدربين - صفحة 38",q:"استبانة تقييم البرنامج التي توزع في النهاية تقيس:",o:["مستوى التعلم العميق", "رد الفعل (الانطباع عن المدرب والقاعة والمحتوى).", "التغير في سلوك الموظف في العمل", "العائد المادي للشركة"],a:1},
+  {id:251,cat:"رخصة المدربين - صفحة 38",q:"توزيع المتدربين في مجموعات يُفضل أن يكون:",o:["ًحسب الصداقة دائما", "متنوعًا (خبير مع مبتدئ) لتبادل الخبرات.", "عشوائيًا بدون هدف", "حسب العمر"],a:1},
+  {id:252,cat:"رخصة المدربين - صفحة 38",q:"تأخر المدرب عن موعد الجلسة:",o:["ًمسموح به إذا كان المدرب مشهورا", "سلوك غير مهني يضعف هيبة المدرب والتزام المتدربين", "ًمقبول إذا اعتذر الحقا", "ضروري لإثبات أهمية المدرب"],a:1},
+  {id:253,cat:"رخصة المدربين - صفحة 38",q:"المتدرب المتعالي الذي يدعي معرفة كل شيء:",o:["إحراجه بأسئلة تعجيزية", "توظيف خبرته في مساعدة المجموعات بتقدير متزن", "تركه يدير الجلسة بدالً من المدرب", "تجاهل وجوده"],a:1},
+  {id:254,cat:"رخصة المدربين - صفحة 38",q:"أفضل طريقة لإدارة الخلاف بين متدربين داخل القاعة:",o:["الوقوف مع الطرف الأقوى", "التدخل بحياد وتركيز النقاش على الموضوع وليس الأشخاص", "تركهم حتى يتشاجروا", "طرد الطرفين"],a:1},
+  {id:255,cat:"رخصة المدربين - صفحة 38",q:"في حال طرح متدرب سؤالًا مستفزًا للمدرب:",o:["يرد عليه بنفس الأسلوب", "يلتزم الهدوء، ويعيد صياغة السؤال بشكل موضوعي", "يطلب من الأمن التدخل", "يحوله للمدير المباشر للمتدرب"],a:1},
+  {id:256,cat:"رخصة المدربين - صفحة 39",q:"عند حدوث عطل فني في جهاز العرض، ماذا يفعل المدرب الناجح؟",o:["ينهي التدريب فورًا ويكمل الغد", "يستخدم البدائل (مثل السبورة الورقية) ويكمل البرنامج", "ينتظر مهندس الصيانة ويتوقف عن الحديث", "يلوم المركز التدريبي أمام المتدربين"],a:1},
+  {id:257,cat:"رخصة المدربين - صفحة 39",q:"أفضل مكان لوقوف المدرب في قاعة حرف (U) هو:",o:["في زاوية القاعة الخلفية", "الجلوس على الكرسي خلف الطاولة", "الوقوف بجانب الباب", "في المنطقة المفتوحة ليتمكن الجميع من رؤيته"],a:3},
+  {id:258,cat:"رخصة المدربين - صفحة 39",q:"استخدام القصص في التدريب يساعد على:",o:["استرخاء عميق للمتدربين", "تقريب المفاهيم المجردة وربطها بالواقع", "إطالة وقت البرنامج بدون فائدة", "إظهار بطوالت المدرب الشخصية فقط"],a:1},
+  {id:259,cat:"رخصة المدربين - صفحة 39",q:"توزيع النظرات على المتدربين (Technique Z) يهدف إلى:",o:["مراقبة المتدربين باستمرار أثناء التدريب", "إشعار جميع المتدربين بالاهتمام والتواصل", "التأكد من الحضور والغياب", "تخويف المتدربين المشاكسين"],a:1},
+  {id:260,cat:"رخصة المدربين - صفحة 39",q:"قاعدة (7% - 38% - 55%) لمهرابيان تشير إلى أن التأثير الأكبر في الرسالة يكون لـ:",o:["الكلمات المنطوقة اللفظية", "لغة الجسد ونبرات الصوت والكلام", "مدة استخدام الميكروفون", "حدود استخدام اللغة التعبيرية"],a:1},
+  {id:261,cat:"رخصة المدربين - صفحة 39",q:"ما ميزة المجموعات الصغيرة في التدريب؟",o:["زيادة عدد المجموعات", "إتاحة فرصة أكبر لكل متدرب للمشاركة والتعلم", "تقليل جهد على المدرب", "عدم الحاجة للحقيبة التدريبية"],a:1},
+  {id:262,cat:"رخصة المدربين - صفحة 40",q:"التدريب المدمج (Blended Learning) هو:",o:["تدريب رجالي ونسائي", "مزيج بين التدريب التقليدي (وجهًا لوجه) والتدريب الالكتروني.", "تدريب في قاعتين مختلفتين", "تدريب يجمع بين لغتين"],a:1},
+  {id:263,cat:"رخصة المدربين - صفحة 40",q:"التعلم باللعب (Gamification) في التدريب يهدف إلى:",o:["التسلية فقط وزيادة الوقت", "زيادة التفاعل والمشاركة وتحقيق أهداف تعليمية", "تقليل تكلفة التدريب", "إراحة المدرب من الشرح."],a:1},
+  {id:264,cat:"رخصة المدربين - صفحة 40",q:"البيان العملي (Demonstration) هو الأفضل لـ:",o:["شرح النظريات الفلسفية", "تحسين مهارات الخطابة", "مناقشة القوانين", "تعليم مهارة يدوية أو تقنية (مثل فك جهاز)."],a:3},
+  {id:265,cat:"رخصة المدربين - صفحة 40",q:"يستخدم العصف الذهني بهدف:",o:["تقييم الحفظ", "توليد أكبر قدر من الأفكار الإبداعية", "قضاء وقت الفراغ", "اختبار سرعة الكتابة"],a:1},
+  {id:266,cat:"رخصة المدربين - صفحة 40",q:"الأسلوب الأنسب لتدريب خدمة العملاء على التعامل مع العميل الغاضب:",o:["نقاشات", "لعب الأدوار", "إعطاء نصائح شفهية", "عصف ذهني"],a:1},
+  {id:267,cat:"رخصة المدربين - صفحة 40",q:"أسلوب تدريبي يعتمد على عرض مشكلة واقعية وطلب الحلول من المتدربين:",o:["المحاضرة", "دراسة الحالة", "العصف الذهني", "الإلقاء"],a:1},
+  {id:268,cat:"رخصة المدربين - صفحة 41",q:"أي الأساليب أفضل لقياس الاحتياج التدريبي لمهارة إدخال بيانات؟",o:["المقابلات الشخصية عن الطموح.", "الملاحظة المباشرة للأداء.", "توزيع استبيان عن الهوايات", "اختبار ذكاء عام"],a:1},
+  {id:269,cat:"رخصة المدربين - صفحة 41",q:"في قاعدة (6×6) لتصميم الشرائح، الرقم 6 الثاني يشير إلى:",o:["6 ألوان", "6 كلمات في السطر الواحد كحد أقصى", "6 صور في الشريحة", "6 دقائق لكل شريحة"],a:1},
+  {id:270,cat:"رخصة المدربين - صفحة 41",q:"عند صياغة الأهداف السلوكية، نستخدم أفعالًا:",o:["غامضة مثل (يفهم، يدرك).", "قابلة للملاحظة والقياس مثل (يطبع، يعدد، يصمم).", "عامة مثل (يعرف الشمولية).", "سلبية مثل (لا يخطئ)."],a:1},
+  {id:271,cat:"رخصة المدربين - صفحة 41",q:"ما المصطلح الذي يطلق على تعليم الكبار؟",o:["البيداغوجيا (Pedagogy).", "السيكولوجيا", "الأنثروبولوجيا", "الأندراغوجيا (Andragogy)."],a:3},
+  {id:272,cat:"رخصة المدربين - صفحة 41",q:"من أسس تدريب الكبار (Andragogy) أنهم:",o:["يتعلمون بدافع خارجي فقط.", "يفضلون التعلم الذي يركز على حل المشكلات الواقعية.", "ليس لديهم خبرات سابقة يمكن الاستفادة منها", "يميلون للاعتماد الكلي على المدرب."],a:1},
+  {id:273,cat:"رخصة المدربين - صفحة 41",q:"التعلم الذاتي في البيئة التدريبية يعني:",o:["ترك المتدرب يتدرب وحده دون مدرب", "توفير مصادر تعلم متنوعة تمكن المتدرب من البحث والاكتشاف", "عدم وجود أهداف للبرنامج", "التدريب عبر المراسلة الورقية فقط"],a:1},
+  {id:274,cat:"رخصة المدربين - صفحة 42",q:"عندما يطرح متدرب سؤالًا لا يعرف المدرب إجابته، فإن التصرف المهني هو:",o:["تأليف إجابة سريعة لعدم اهتزاز الثقة", "الاعتراف بعدم التأكد والوعد بالبحث أو توجيهه لمصدر المعلومة", "تنبيه المتدرب أن سؤاله خارج التخصص", "تغيير الموضوع فورًا"],a:1},
+  {id:275,cat:"رخصة المدربين - صفحة 42",q:"أي مما يلي يعتبر من المعينات التدريبية؟",o:["استراتيجيات التدريب", "جهاز العرض (Projector)", "القاعة التدريبية", "الحقيبة التدريبية"],a:1},
+  {id:276,cat:"رخصة المدربين - صفحة 42",q:"ما الأسلوب التدريبي الذي يعتمد على محاكاة واقع عملي حقيقي داخل القاعة؟",o:["الإلقاء", "لعب الأدوار", "العصف الذهني", "القصة التدريبية"],a:1},
+  {id:277,cat:"رخصة المدربين - صفحة 42",q:"ماذا نعني بكسر الجليد (Ice Breaking) في بداية البرنامج؟",o:["توزيع الحقائب التدريبية", "نشاط يهدف لإزالة التوتر وبناء الألفة بين المشاركين", "اختبار قبلي لقياس مستوى الذكاء", "شرح قواعد الانضباط والحضور"],a:1},
+  {id:278,cat:"رخصة المدربين - صفحة 42",q:"أي الأساليب التالية هو الأنسب لتدريب المديرين على اتخاذ القرار في الأزمات؟",o:["المحاضرة", "البيان العملي", "القراءة الموجهة", "دراسة الحالة"],a:3},
+  {id:279,cat:"رخصة المدربين - صفحة 42",q:"خارطة الطريق التي يستخدمها المدرب أثناء تنفيذ الجلسة وتتضمن التوقيت والأنشطة تسمى:",o:["دليل المتدرب", "خطة الجلسة (Lesson Plan)", "الحقيبة التدريبية", "المادة العلمية"],a:1},
+  {id:280,cat:"رخصة المدربين - صفحة 42",q:"واجه المدرب متدربًا كثير المقاطعة بهدف استعراض معلوماته، التصرف الأمثل هو:",o:["إحراجه أمام الزملاء ليتوقف", "شكره على معلوماته وتوجيهه لتدوين نقاطه لمناقشتها في نهاية الجلسة", "تجاهل مداخلاته تمامًا", "السماح له بالحديث تقديرًا لخبرته"],a:1},
+  {id:281,cat:"رخصة المدربين - صفحة 43",q:"في نموذج كيركباتريك لتقييم التدريب، ماذا يقيس المستوى الثالث:",o:["رد فعل المتدربين وانطباعهم", "السلوك ونقل أثر التدريب لمكان العمل", "مقدار التعلم واكتساب المعارف", "العائد المادي على الاستثمار"],a:1},
+  {id:282,cat:"رخصة المدربين - صفحة 43",q:"أي من الأهداف التالية يتبع صياغة SMART الصحيحة؟",o:["أن يدرك المتدرب أهمية الوقت", "بنهاية البرنامج، يطبع المتدرب 40 كلمة في الدقيقة بدقة 95%", "أن يتدرب الموظفون على الحاسب الآلي", "تحسين أداء المنظمة بشكل عام خلال عام"],a:1},
+  {id:283,cat:"رخصة المدربين - صفحة 43",q:"وفقًا لنظام التدريب في المملكة، الجهة المسؤولة عن اعتماد مراكز التدريب الأهلي هي:",o:["وزارة الموارد البشرية والتنمية الاجتماعية", "المؤسسة العامة للتدريب التقني والمهني", "هيئة تقويم التعليم والتدريب", "وزارة التعليم"],a:1},
+  {id:284,cat:"رخصة المدربين - صفحة 43",q:"أي من الأدوار التالية يمثل الدور الحديث للمدرب في العملية التدريبية:",o:["الملقن والمصدر الوحيد للمعلومات", "الميسر والموجه لعملية التعلم", "المراقب الصامت لسلوك المتدربين", "المسؤول عن الجوانب الإدارية"],a:1},
+  {id:285,cat:"رخصة المدربين - صفحة 43",q:"الربط بين التقويم والتطوير يعني:",o:["التقييم فقط", "إنهاء البرنامج", "المقارنة", "استخدام النتائج للتحسين"],a:3},
+  {id:286,cat:"رخصة المدربين - صفحة 43",q:"من متطلبات اعتماد البرنامج التدريبي:",o:["عدد المتدربين", "وضوح الأهداف والمحتوى", "مدة البرنامج فقط", "تكلفة التدريب"],a:1},
+  {id:287,cat:"رخصة المدربين - صفحة 43",q:"المدرب الذي يشجع الأسئلة يعزز:",o:["الفوضى", "التفاعل والتعلم", "ضياع الوقت", "النقد"],a:1},
+  {id:288,cat:"رخصة المدربين - صفحة 44",q:"عند فشل نشاط تدريبي، يُفضل:",o:["الاستمرار", "الانتقال لخطة بديلة", "لوم المتدربين", "إنهاء البرنامج"],a:1},
+  {id:289,cat:"رخصة المدربين - صفحة 44",q:"إشراك المتدربين في الحلول يعزز؟",o:["السيطرة", "الدافعية", "الوقت", "الصمت"],a:1},
+  {id:290,cat:"رخصة المدربين - صفحة 44",q:"متدرب يعترض على محتوى البرنامج، التصرف الصحيح هو:",o:["تجاهل رأيه", "الاستماع وتوضيح الهدف", "الدفاع عن المحتوى فقط", "إنهاء النقاش"],a:1},
+  {id:291,cat:"رخصة المدربين - صفحة 44",q:"التخطيط قصير المدى يركز على:",o:["الرؤية الاستراتيجية", "الجلسة أو البرنامج الحالي", "الخطة السنوية", "السياسات التدريبية"],a:1},
+  {id:292,cat:"رخصة المدربين - صفحة 44",q:"من أدوات التخطيط للتدريب:",o:["التقارير المالية", "أوراق الحضور فقط", "شهادات المتدربين", "استبيانات الاحتياج"],a:3},
+  {id:293,cat:"رخصة المدربين - صفحة 44",q:"المدرب القدوة هو من:",o:["يكثر من التوجيه", "يطبق ما يدرب عليه", "يعتمد على الشرح النظري", "يقلل من النقاش"],a:1},
+  {id:294,cat:"رخصة المدربين - صفحة 44",q:"المهنية في التدريب تعني:",o:["سرعة التنفيذ", "الالتزام بالمعايير والسلوك", "كثرة المحتوى", "الصرامة والجدية"],a:1}
+];
+
+// ══ STATE ══
+let timer=null, cdTimer=null, watchTimer=null;
+let nextIdx=0, countdown=0, totalSent=0, sentCount=0, running=false;
+let lastUpdateId=0;
+// scores: { uid: {name, correct, wrong, total} }
+let scores={};
+// pollMap: { pollId: answerIndex }
+let pollMap={};
+const L=['أ','ب','ج','د'];
+
+// ══ INIT ══
+window.onload=()=>{
+  loadS();
+  buildStartFrom();
+  buildPreview();
+  let sp,sc,lu; try{sp=localStorage.getItem('tg_pollMap');sc=localStorage.getItem('tg_scores');lu=localStorage.getItem('tg_lastUpd');}catch(e){}
+  if(sp) try{pollMap=JSON.parse(sp);}catch(e){}
+  if(sc) try{scores=JSON.parse(sc);}catch(e){}
+  if(lu) lastUpdateId=parseInt(lu)||0;
+  if(Object.keys(scores).length>0) renderLb();
+};
+
+function buildStartFrom(){
+  const sel=document.getElementById('startFrom');
+  sel.innerHTML='';
+  Q.forEach((q,i)=>{
+    const o=document.createElement('option');
+    o.value=i; o.textContent=`س${q.id} — ${q.cat}`;
+    sel.appendChild(o);
+  });
+  let saved=0,savedCount=0;try{saved=parseInt(localStorage.getItem('tg_nextIdx')||'0');savedCount=parseInt(localStorage.getItem('tg_sentCount')||'0');}catch(e){}
+  sel.value=saved; nextIdx=saved; totalSent=saved; sentCount=savedCount;
+  updateProg();
+}
+
+function buildPreview(){
+  const c=document.getElementById('previewList');
+  Q.forEach(q=>{
+    const d=document.createElement('div');
+    d.className='qprev';
+    d.innerHTML=`<div class="qnum">س${q.id}</div>
+      <div class="qt">${q.q}</div>
+      <div class="qo">${q.o.map((o,i)=>`${L[i]}) ${o}`).join('<br>')}</div>
+      <div class="qa">✅ الإجابة: ${L[q.a]}) ${q.o[q.a]}</div>`;
+    c.appendChild(d);
+  });
+}
+
+// ══ SETTINGS ══
+function saveS(){try{
+  localStorage.setItem('tg_token',      document.getElementById('botToken').value);
+  localStorage.setItem('tg_chatId',     document.getElementById('chatId').value);
+  localStorage.setItem('tg_interval',   document.getElementById('interval').value);
+  localStorage.setItem('tg_sendType',   document.getElementById('sendType').value);
+  localStorage.setItem('tg_custSec',    document.getElementById('customSec').value);
+  localStorage.setItem('tg_pollPeriod', document.getElementById('pollOpenPeriod').value);
+  localStorage.setItem('tg_pollAnon',   document.getElementById('pollAnonymous').value);
+  localStorage.setItem('tg_labelStyle',      document.getElementById('labelStyle').value);
+  localStorage.setItem('tg_customLabel',     document.getElementById('customLabel').value);
+  localStorage.setItem('tg_questionSuffix',  document.getElementById('questionSuffix').value);
+  localStorage.setItem('tg_alertTitle',   document.getElementById('alertTitle').value);
+  localStorage.setItem('tg_alertQCount',  document.getElementById('alertQCount').value);
+  localStorage.setItem('tg_alertSeconds', document.getElementById('alertSeconds').value);
+  localStorage.setItem('tg_alertDelay',   document.getElementById('alertDelay').value);
+  previewAlert();
+}catch(e){}}
+function loadS(){try{
+  const f=(id,k)=>{const v=localStorage.getItem(k);if(v)document.getElementById(id).value=v;};
+  f('botToken','tg_token'); f('chatId','tg_chatId');
+  f('interval','tg_interval'); f('sendType','tg_sendType'); f('customSec','tg_custSec');
+  f('pollOpenPeriod','tg_pollPeriod');
+  f('labelStyle','tg_labelStyle'); f('customLabel','tg_customLabel'); f('questionSuffix','tg_questionSuffix');
+  f('alertTitle','tg_alertTitle'); f('alertQCount','tg_alertQCount');
+  f('alertSeconds','tg_alertSeconds'); f('alertDelay','tg_alertDelay');
+  onIvChange(); onLabelStyleChange(); previewAlert();
+}catch(e){}}
+function clearS(){
+  if(!confirm('حذف الإعدادات؟')) return;
+  ['tg_token','tg_chatId','tg_interval','tg_sendType','tg_custSec',
+   'tg_nextIdx','tg_sentCount','tg_pollMap','tg_scores','tg_lastUpd'].forEach(k=>localStorage.removeItem(k));
+  document.getElementById('botToken').value='';
+  document.getElementById('chatId').value='';
+  log('🗑️ تم الحذف','warn');
+}
+function onIvChange(){
+  const v=document.getElementById('interval').value;
+  document.getElementById('customRow').style.display=v==='custom'?'flex':'none';
+  saveS();
+}
+function onLabelStyleChange(){
+  const v=document.getElementById('labelStyle').value;
+  document.getElementById('customLabelWrap').style.display=v==='custom'?'block':'none';
+  if(v==='custom') previewLabel();
+  saveS();
+}
+
+function previewLabel(){
+  const tpl=document.getElementById('customLabel').value;
+  if(!tpl){document.getElementById('labelPreview').style.display='none';return;}
+  const preview=buildLabel(tpl,5,192,{cat:'النظريات السلوكية'});
+  document.getElementById('labelPreviewText').textContent=preview;
+  document.getElementById('labelPreview').style.display='block';
+}
+
+function buildAlertMsg(){
+  const title=document.getElementById('alertTitle').value.trim()||'الاختبار التربوي';
+  const qCount=document.getElementById('alertQCount').value||'30';
+  const secs=document.getElementById('alertSeconds').value||'30';
+  const delay=parseInt(document.getElementById('alertDelay').value)||0;
+  const delayTxt=delay>0?`\n\n🏁 سيبدأ الاختبار خلال ${delay} ثانية...`:`\n\n🏁 سيبدأ الاختبار الآن!`;
+  const anonEl=document.getElementById('pollAnonymous');
+  const anonVal=anonEl?anonEl.value:'track';
+  let modeNote='📰 ستكون الإجابات ظاهرة لمالك الاختبار وأعضاء المجموعة';
+  if(anonVal==='track')  modeNote='🔒 الإجابات سرية — لا يرى أحد من أجاب بماذا — سيُعلن التقرير بعد الانتهاء';
+  if(anonVal==='hidden') modeNote='🔐 الإجابات سرية تماماً — لا يظهر لأحد شيء — سيُعلن التقرير بعد الانتهاء';
+  return `🎲 استعد جيدًا لاختبار '${title}'\n\n🖊 ${qCount} أسئلة\n⏱ ${secs} ثانيةً لكل سؤال\n${modeNote}${delayTxt}`;
+}
+
+function previewAlert(){
+  const el=document.getElementById('alertPreview');
+  if(!el)return;
+  const msg=buildAlertMsg();
+  el.innerHTML=msg.replace(/\n/g,'<br>').replace(/'([^']+)'/g,"<strong style='color:#c9a227'>'$1'</strong>");
+}
+
+async function sendAlertNow(){
+  const tok=document.getElementById('botToken').value.trim();
+  const cid=document.getElementById('chatId').value.trim();
+  if(!tok||!cid){alert('أدخل التوكن والـ Chat ID أولاً');showTab('setup');return;}
+  const msg=buildAlertMsg();
+  try{
+    log('📤 إرسال رسالة التنبيه...','info');
+    const r=await fetch(`https://api.telegram.org/bot${tok}/sendMessage`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({chat_id:cid,text:msg})
+    });
+    const d=await r.json();
+    if(d.ok) log('✅ تم إرسال رسالة التنبيه','ok');
+    else      log('❌ فشل التنبيه: '+d.description,'err');
+  }catch(e){log('❌ '+e.message,'err');}
+}
+
+function buildLabel(tpl,n,total,q){
+  return tpl
+    .replace(/{n}/g,n)
+    .replace(/{total}/g,total)
+    .replace(/{cat}/g,q.cat||'');
+}
+
+function getQuestionLabel(n,total,q){
+  const style=document.getElementById('labelStyle').value;
+  if(style==='custom'){
+    const tpl=document.getElementById('customLabel').value.trim();
+    if(tpl) return buildLabel(tpl,n,total,q);
+  }
+  return `[${n}/${total}]`;
+}
+
+function getIv(){
+  const v=document.getElementById('interval').value;
+  return v==='custom'? parseInt(document.getElementById('customSec').value)||30 : parseInt(v);
+}
+
+// ══ CONNECTION TEST ══
+async function testConn(){
+  const tok=document.getElementById('botToken').value.trim();
+  const cid=document.getElementById('chatId').value.trim();
+  document.getElementById('connOk').classList.remove('show');
+  document.getElementById('connErr').classList.remove('show');
+  if(!tok){showErr('connErr','أدخل الـ Token');return;}
+  try{
+    const r=await fetch(`https://api.telegram.org/bot${tok}/getMe`);
+    const d=await r.json();
+    if(!d.ok){showErr('connErr','Token خاطئ: '+(d.description||''));return;}
+    if(cid){
+      const r2=await fetch(`https://api.telegram.org/bot${tok}/sendMessage`,{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({chat_id:cid,text:`✅ تم اتصال منصة البوت\nاستعدوا... 🎯`})
+      });
+      const d2=await r2.json();
+      if(!d2.ok){showErr('connErr','Chat ID خاطئ: '+(d2.description||''));return;}
+    }
+    document.getElementById('connOk').classList.add('show');
+    log(`✅ اتصال ناجح — ${d.result.first_name}`,'ok');
+  }catch(e){showErr('connErr','خطأ: '+e.message);}
+}
+function showErr(id,msg){const e=document.getElementById(id);e.textContent='❌ '+msg;e.classList.add('show');}
+
+// ══ SEND ══
+async function sendQuestion(idx){
+  const tok        = document.getElementById('botToken').value.trim();
+  const cid        = document.getElementById('chatId').value.trim();
+  const type       = document.getElementById('sendType').value;
+  if(!tok||!cid){log('❌ Token أو Chat ID مفقود','err');return false;}
+  if(idx>=Q.length){stopSending();return false;}
+  const q          = Q[idx];
+  const lbl        = getQuestionLabel(q.id, Q.length, q);
+  const suffix     = document.getElementById('questionSuffix').value.trim();
+  const openPeriod = parseInt(document.getElementById('pollOpenPeriod').value)||0;
+
+  try{
+    if(type==='poll_public' || type==='poll_anon'){
+      const isAnon = type==='poll_anon';   // true=سري, false=علني
+      const qText  = `${lbl} ${q.q}`.substring(0,300);
+      const expl   = `✅ الإجابة: ${L[q.a]}) ${q.o[q.a]}\n📚 ${q.cat}${suffix?'\n'+suffix:''}`;
+      const body   = {
+        chat_id: cid,
+        question: qText,
+        options:  q.o.map((o,i)=>`${L[i]}) ${o}`),
+        type: 'quiz',
+        correct_option_id: q.a,
+        is_anonymous: isAnon,
+        explanation: expl.substring(0,200)
+      };
+      if(openPeriod>=5 && openPeriod<=600) body.open_period=openPeriod;
+      const r=await fetch(`https://api.telegram.org/bot${tok}/sendPoll`,{
+        method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)
+      });
+      const d=await r.json();
+      if(!d.ok){log(`❌ فشل س${q.id}: ${d.description}`,'err');return false;}
+      // رصد الإجابات فقط في الوضع العلني
+      if(!isAnon && d.result?.poll?.id){
+        pollMap[d.result.poll.id]={a:q.a, qid:q.id};
+        localStorage.setItem('tg_pollMap',JSON.stringify(pollMap));
+      }
+      log(`${isAnon?'🔒':'👥'} س${q.id} أُرسل — ${lbl}`,'ok');
+
+    } else {
+      // رسالة نصية
+      const txt=[`📚 ${lbl} — ${q.cat}`,'',`❓ ${q.q}`,'',
+        ...q.o.map((o,i)=>`${L[i]}) ${o}`),'',
+        `✅ الإجابة: ${L[q.a]}) ${q.o[q.a]}`,
+        ...(suffix?[suffix]:[])].join('\n');
+      const r=await fetch(`https://api.telegram.org/bot${tok}/sendMessage`,{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({chat_id:cid,text:txt})
+      });
+      const d=await r.json();
+      if(!d.ok){log(`❌ فشل س${q.id}: ${d.description}`,'err');return false;}
+      log(`✅ س${q.id} أُرسل`,'ok');
+    }
+    return true;
+  }catch(e){log('❌ '+e.message,'err');return false;}
+}
+
+async function sendNext(){
+  if(nextIdx>=Q.length){log('🏁 انتهت جميع الأسئلة!','warn');stopSending();return;}
+  document.getElementById('currentQ').textContent=`${nextIdx+1}/${Q.length}`;
+  const ok=await sendQuestion(nextIdx);
+  if(ok){
+    nextIdx++; totalSent=nextIdx; sentCount++;
+    localStorage.setItem('tg_nextIdx',nextIdx);
+    localStorage.setItem('tg_sentCount',sentCount);
+    document.getElementById('startFrom').value=nextIdx<Q.length?nextIdx:0;
+    updateProg();
+    if(nextIdx>=Q.length){log('🏁 انتهت جميع الأسئلة!','warn');stopSending();}
+  }
+}
+
+// ══ SCHEDULER ══
+async function startSending(){
+  nextIdx=parseInt(document.getElementById('startFrom').value)||0;
+  const iv=getIv();
+  if(!document.getElementById('botToken').value.trim()){showTab('setup');log('❌ أدخل Token','err');return;}
+  if(!document.getElementById('chatId').value.trim()){showTab('setup');log('❌ أدخل Chat ID','err');return;}
+  running=true;
+  document.getElementById('btnStart').disabled=true;
+  document.getElementById('btnStop').disabled=false;
+  document.getElementById('statusText').textContent='🟢 يعمل — إرسال تلقائي';
+  log(`▶️ بدأ الإرسال — كل ${fmtS(iv)} — من س${nextIdx+1}`,'info');
+
+  // إرسال رسالة التنبيه أولاً
+  const delay=parseInt(document.getElementById('alertDelay').value)||0;
+  await sendAlertNow();
+
+  if(delay>0){
+    log(`⏳ الانتظار ${delay} ثانية قبل بدء الأسئلة...`,'warn');
+    await new Promise(res=>setTimeout(res, delay*1000));
+  }
+
+  if(!running) return; // ربما أوقفه المستخدم أثناء الانتظار
+  sendNext();
+  timer=setInterval(()=>{if(running)sendNext();},iv*1000);
+  startCd(iv);
+  startPollWatcher();
+}
+
+function stopSending(){
+  running=false;
+  if(timer){clearInterval(timer);timer=null;}
+  if(cdTimer){clearInterval(cdTimer);cdTimer=null;}
+  document.getElementById('btnStart').disabled=false;
+  document.getElementById('btnStop').disabled=true;
+  document.getElementById('statusText').textContent='⏸️ متوقف';
+  document.getElementById('cdBadge').textContent='—';
+  log('⏹️ إيقاف الإرسال','warn');
+  // fetch results one more time
+  setTimeout(()=>fetchUpdates(),1500);
+}
+
+function resetProg(){
+  stopSending();
+  stopPollWatcher();
+  nextIdx=0;totalSent=0;sentCount=0;
+  localStorage.setItem('tg_nextIdx',0);
+  localStorage.setItem('tg_sentCount',0);
+  document.getElementById('startFrom').value=0;
+  document.getElementById('currentQ').textContent='—';
+  updateProg();
+  log('🔄 إعادة من البداية','info');
+}
+
+// ══ COUNTDOWN ══
+function startCd(sec){
+  if(cdTimer)clearInterval(cdTimer);
+  countdown=sec; updateCd();
+  cdTimer=setInterval(()=>{countdown--;if(countdown<0)countdown=sec;updateCd();},1000);
+}
+function updateCd(){
+  if(!running){document.getElementById('cdBadge').textContent='—';return;}
+  const m=Math.floor(countdown/60),s=countdown%60;
+  document.getElementById('cdBadge').textContent=m>0?`${m}د ${String(s).padStart(2,'0')}ث`:`${countdown}ث`;
+}
+
+// ══ PROGRESS ══
+function updateProg(){
+  const pct=Math.round((nextIdx/Q.length)*100);
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('progLabel').textContent=`${sentCount} سؤال تم إرساله (من س${nextIdx}/${Q.length})`;
+  if(sentCount>0)document.getElementById('currentQ').textContent=`${nextIdx}/${Q.length}`;
+}
+
+// ══ BACKGROUND POLL WATCHER ══
+function startPollWatcher(){
+  if(watchTimer)clearInterval(watchTimer);
+  document.getElementById('liveBadge').style.display='inline-flex';
+  watchTimer=setInterval(fetchUpdates, 8000);
+  log('👁️ بدأت مراقبة ردود المشاركين (كل 8 ث)','info');
+}
+function stopPollWatcher(){
+  if(watchTimer){clearInterval(watchTimer);watchTimer=null;}
+  document.getElementById('liveBadge').style.display='none';
+}
+
+// ══ FETCH UPDATES (poll_answer) ══
+async function fetchUpdates(){
+  const tok=document.getElementById('botToken').value.trim();
+  if(!tok)return;
+  try{
+    const offset=lastUpdateId?lastUpdateId+1:0;
+    // إرسال allowed_updates كـ JSON في الـ body بدلاً من URL لتجنب مشكلة الترميز
+    const r=await fetch(`https://api.telegram.org/bot${tok}/getUpdates`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        offset:offset,
+        limit:100,
+        allowed_updates:['poll_answer']
+      })
+    });
+    const d=await r.json();
+    if(!d.ok){
+      log('⚠️ getUpdates: '+d.description,'warn');
+      return;
+    }
+    let newAns=0;
+    d.result.forEach(upd=>{
+      if(upd.update_id>lastUpdateId) lastUpdateId=upd.update_id;
+      if(!upd.poll_answer) return;
+      const pa=upd.poll_answer;
+      const uid=String(pa.user.id);
+      const fname=(pa.user.first_name||'');
+      const lname=(pa.user.last_name?' '+pa.user.last_name:'');
+      const uname=pa.user.username?'@'+pa.user.username:'';
+      const displayName=uname || (fname+lname) || uid;
+      const chosen=pa.option_ids?.[0];
+      if(chosen===undefined||chosen===null) return;
+      const entry=pollMap[pa.poll_id];
+      if(!entry) return;
+      if(!scores[uid]) scores[uid]={name:displayName,correct:0,wrong:0,total:0};
+      scores[uid].name=displayName;
+      scores[uid].total++;
+      if(chosen===entry.a) scores[uid].correct++;
+      else scores[uid].wrong++;
+      newAns++;
+    });
+    localStorage.setItem('tg_lastUpd', String(lastUpdateId));
+    localStorage.setItem('tg_scores', JSON.stringify(scores));
+    if(newAns>0){
+      log(`📊 ${newAns} إجابة جديدة — إجمالي المشاركين: ${Object.keys(scores).length}`,'ok');
+      renderLb();
+    }
+  }catch(e){
+    log('⚠️ خطأ في fetchUpdates: '+e.message,'warn');
+  }
+}
+
+async function fetchNow(){
+  log('🔄 جلب التحديثات الآن...','info');
+  // Start watcher if not running
+  if(!watchTimer) startPollWatcher();
+  await fetchUpdates();
+  renderLb();
+}
+
+// ══ LEADERBOARD ══
+function getLvl(pct){
+  if(pct>=90)return{l:'ممتاز 🏆',c:'lv-ex'};
+  if(pct>=75)return{l:'جيد جداً 🌟',c:'lv-vg'};
+  if(pct>=60)return{l:'جيد 👍',c:'lv-g'};
+  return{l:'يراجع 📖',c:'lv-p'};
+}
+
+function renderLb(){
+  const data=Object.values(scores).sort((a,b)=>b.correct-a.correct||a.wrong-b.wrong);
+  const n=data.length;
+  document.getElementById('liveCountWrap').style.display=n>0?'block':'none';
+  document.getElementById('liveCount').textContent=n;
+
+  if(n===0){
+    document.getElementById('lbTable').innerHTML='<div style="text-align:center;padding:24px;color:#aaa;font-size:.88rem">📭 لا توجد إجابات بعد</div>';
+    return;
+  }
+  const now=new Date().toLocaleString('ar-SA');
+  document.getElementById('lbSub').textContent=`آخر تحديث: ${now} | الأسئلة المُرسَلة: ${sentCount}`;
+
+  const top=data[0].correct;
+  const avg=Math.round(data.reduce((s,x)=>s+x.correct,0)/n);
+  document.getElementById('lbStats').innerHTML=`
+    <div class="lb-stat"><div class="lb-stat-n">${n}</div><div class="lb-stat-l">مشارك</div></div>
+    <div class="lb-stat"><div class="lb-stat-n" style="color:var(--green)">${top}</div><div class="lb-stat-l">أعلى نتيجة</div></div>
+    <div class="lb-stat"><div class="lb-stat-n" style="color:var(--teal)">${avg}</div><div class="lb-stat-l">المتوسط</div></div>
+    <div class="lb-stat"><div class="lb-stat-n" style="color:var(--gold)">${sentCount}</div><div class="lb-stat-l">سؤال أُرسل</div></div>`;
+
+  const medals=['🥇','🥈','🥉'];
+  let rows='';
+  data.forEach((u,i)=>{
+    const pct=u.total>0?Math.round((u.correct/u.total)*100):0;
+    const lvl=getLvl(pct);
+    const rc=i===0?'r1':i===1?'r2':i===2?'r3':'rx';
+    const rk=i<3?medals[i]:`${i+1}`;
+    rows+=`<tr>
+      <td><div class="rank-badge ${rc}">${rk}</div></td>
+      <td style="font-weight:700">${u.name}</td>
+      <td style="color:var(--green);font-weight:700">${u.correct}</td>
+      <td style="color:var(--red)">${u.wrong}</td>
+      <td>${u.total}</td>
+      <td><div class="bar-w"><div class="bar-f" style="width:${pct}%"></div></div>
+          <div style="font-size:.7rem;color:#666;margin-top:2px">${pct}%</div></td>
+      <td><span class="lvl ${lvl.c}">${lvl.l}</span></td>
+    </tr>`;
+  });
+  document.getElementById('lbTable').innerHTML=`
+    <table class="lb">
+      <thead><tr><th>الترتيب</th><th>الاسم</th><th>✅ صحيح</th><th>❌ خطأ</th><th>أجاب</th><th>النسبة</th><th>المستوى</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  document.getElementById('lbNote').textContent='* النتائج حية — تتحدث كل 8 ثوانٍ تلقائيًا';
+}
+
+async function sendLbToChat(){
+  const tok=document.getElementById('botToken').value.trim();
+  const cid=document.getElementById('chatId').value.trim();
+  if(!tok||!cid){alert('أدخل البيانات أولاً من تبويب الإعداد');return;}
+  const data=Object.values(scores).sort((a,b)=>b.correct-a.correct||a.wrong-b.wrong);
+  if(data.length===0){alert('لا توجد نتائج بعد!\nاضغط "تحديث النتائج الآن" أولاً');return;}
+
+  // اسم الاختبار من إعداد التنبيه
+  const title=document.getElementById('alertTitle').value.trim()||'الرخصة المهنية';
+  const medals=['🥇','🥈','🥉'];
+
+  let lines=[];
+
+  // ── الرأس بنفس تنسيق QuizBot ──
+  lines.push(`🏁 لقد انتهى اختبار '${title}'!`);
+  lines.push('');
+  lines.push(`تمت الإجابة على ${sentCount} سؤالًا`);
+  lines.push('');
+
+  // ── قائمة المشاركين ──
+  data.slice(0,20).forEach((u,i)=>{
+    const rk = i===0?'🥇':i===1?'🥈':i===2?'🥉':`  ${i+1}. `;
+    lines.push(`${rk} ${u.name} – ${u.correct} ✅`);
+  });
+
+  const msg=lines.join('\n');
+
+  try{
+    log('📤 جارٍ إرسال النتائج...','info');
+    const r=await fetch(`https://api.telegram.org/bot${tok}/sendMessage`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({chat_id:cid, text:msg})
+    });
+    const d=await r.json();
+    if(d.ok){
+      log('✅ تم إرسال لوحة النتائج للمجموعة بنجاح','ok');
+    } else {
+      log('❌ فشل الإرسال: '+d.description,'err');
+    }
+  }catch(e){
+    log('❌ خطأ في الشبكة: '+e.message,'err');
+  }
+}
+
+function clearLb(){
+  if(!confirm('مسح جميع نتائج المشاركين؟'))return;
+  scores={}; pollMap={}; lastUpdateId=0;
+  ['tg_scores','tg_pollMap','tg_lastUpd'].forEach(k=>localStorage.removeItem(k));
+  document.getElementById('lbStats').innerHTML='';
+  document.getElementById('lbTable').innerHTML='';
+  document.getElementById('lbSub').textContent='في انتظار إجابات المشاركين...';
+  document.getElementById('liveCountWrap').style.display='none';
+  log('🗑️ مُسحت النتائج','warn');
+}
+
+// ══ LOG ══
+function log(msg,type='info'){
+  const b=document.getElementById('logBox');
+  const now=new Date().toLocaleTimeString('ar-SA');
+  const d=document.createElement('div');
+  d.className=`log-line log-${type}`;
+  d.textContent=`[${now}] ${msg}`;
+  b.appendChild(d); b.scrollTop=b.scrollHeight;
+}
+function clearLog(){document.getElementById('logBox').innerHTML='<div class="log-line log-info">🗑️ مسح السجل</div>';}
+
+// ══ HELPERS ══
+function fmtS(s){if(s<60)return`${s}ث`;if(s<3600)return`${s/60}د`;return`${s/3600}س`;}
+function showTab(name){
+  ['setup','send','results','preview','guide'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display=t===name?'block':'none';
+  });
+  document.querySelectorAll('.tab').forEach((el,i)=>{
+    el.classList.toggle('active',['setup','send','results','preview','guide'][i]===name);
+  });
+}
+</script>
+</body>
+</html>
