@@ -1,0 +1,2355 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>التقويم الدراسي 1448/1449هـ | مكة - المدينة - جدة - الطائف</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --primary: #1a3a5c;
+      --primary-light: #2a5298;
+      --secondary: #c8a951;
+      --accent: #4a9d8f;
+      --accent2: #e07b39;
+      --bg: #f0f4f8;
+      --card: #ffffff;
+      --text: #1a2535;
+      --text-light: #5a6a7e;
+      --holiday: #e8f5e9;
+      --holiday-border: #4caf50;
+      --exam: #fff3e0;
+      --exam-border: #ff9800;
+      --admin: #e3f2fd;
+      --admin-border: #2196f3;
+      --start: #f3e5f5;
+      --start-border: #9c27b0;
+      --term1-header: #1a3a5c;
+      --term2-header: #2a5298;
+      --shadow: 0 4px 20px rgba(0,0,0,0.08);
+      --shadow-hover: 0 8px 30px rgba(0,0,0,0.15);
+      --radius: 16px;
+      --radius-sm: 8px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      direction: rtl;
+    }
+
+    /* ===== HEADER ===== */
+    .site-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 60%, #3a6db5 100%);
+      color: white;
+      padding: 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 20px rgba(26,58,92,0.4);
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-icon {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, var(--secondary), #e8c96a);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      box-shadow: 0 4px 12px rgba(200,169,81,0.4);
+    }
+
+    .logo-text h1 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .logo-text p {
+      font-size: 0.85rem;
+      opacity: 0.85;
+      font-weight: 400;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.25s ease;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--secondary), #e8c96a);
+      color: var(--primary);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(200,169,81,0.5);
+    }
+
+    .btn-outline {
+      background: rgba(255,255,255,0.1);
+      color: white;
+      border: 1.5px solid rgba(255,255,255,0.3);
+      backdrop-filter: blur(4px);
+    }
+
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.2);
+      transform: translateY(-2px);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #e53935, #ef5350);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(229,57,53,0.4);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #43a047, #66bb6a);
+      color: white;
+    }
+
+    .btn-success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(67,160,71,0.4);
+    }
+
+    .btn-sm {
+      padding: 6px 14px;
+      font-size: 0.82rem;
+    }
+
+    /* NAV TABS */
+    .nav-tabs {
+      display: flex;
+      padding: 0 32px;
+      gap: 4px;
+      overflow-x: auto;
+    }
+
+    .nav-tab {
+      padding: 12px 22px;
+      background: transparent;
+      border: none;
+      color: rgba(255,255,255,0.7);
+      cursor: pointer;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border-bottom: 3px solid transparent;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-tab:hover { color: white; }
+
+    .nav-tab.active {
+      color: var(--secondary);
+      border-bottom-color: var(--secondary);
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    .main-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    /* SECTION */
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* ===== HERO STATS ===== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      border-top: 4px solid var(--primary);
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .stat-card:nth-child(2) { border-top-color: var(--secondary); }
+    .stat-card:nth-child(3) { border-top-color: var(--accent); }
+    .stat-card:nth-child(4) { border-top-color: var(--accent2); }
+    .stat-card:nth-child(5) { border-top-color: #9c27b0; }
+
+    .stat-icon {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+
+    .stat-value {
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: var(--primary);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.88rem;
+      color: var(--text-light);
+      margin-top: 6px;
+      font-weight: 500;
+    }
+
+    /* ===== SECTION HEADER ===== */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .section-header-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: white;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      flex-shrink: 0;
+    }
+
+    .section-header h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .section-header p {
+      font-size: 0.88rem;
+      color: var(--text-light);
+    }
+
+    /* ===== CALENDAR TABLE ===== */
+    .table-wrapper {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+
+    .table-title {
+      padding: 18px 24px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .table-title.term1 { background: linear-gradient(135deg, #1a3a5c, #2a5298); }
+    .table-title.term2 { background: linear-gradient(135deg, #2a5298, #3a6db5); }
+    .table-title.pre { background: linear-gradient(135deg, #4a9d8f, #2e7d72); }
+    .table-title.next { background: linear-gradient(135deg, #c8a951, #a8892e); }
+
+    .table-num {
+      width: 32px;
+      height: 32px;
+      background: rgba(255,255,255,0.25);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: 900;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead th {
+      background: #f8fafc;
+      padding: 13px 16px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-light);
+      text-align: right;
+      border-bottom: 2px solid #e8edf2;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid #f0f4f8;
+      transition: background 0.2s ease;
+    }
+
+    tbody tr:hover { background: #f8fafc; }
+    tbody tr:last-child { border-bottom: none; }
+
+    tbody td {
+      padding: 13px 16px;
+      font-size: 0.92rem;
+      vertical-align: middle;
+    }
+
+    .date-m { font-weight: 700; color: var(--primary); }
+    .date-h { font-size: 0.82rem; color: var(--text-light); }
+    .day-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      background: #e8edf2;
+      color: var(--text-light);
+    }
+
+    .event-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .event-holiday { background: var(--holiday); color: #2e7d32; border: 1px solid #a5d6a7; }
+    .event-exam { background: var(--exam); color: #e65100; border: 1px solid #ffcc80; }
+    .event-admin { background: var(--admin); color: #1565c0; border: 1px solid #90caf9; }
+    .event-start { background: var(--start); color: #6a1b9a; border: 1px solid #ce93d8; }
+
+    /* ===== LEGEND ===== */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+    }
+
+    .legend-item:hover { transform: translateY(-2px); }
+    .legend-item.active { border-color: currentColor; }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    /* ===== WEEKS GRID ===== */
+    .weeks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .week-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .week-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .week-card-header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .week-num {
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1rem;
+    }
+
+    .week-title-text { font-weight: 700; font-size: 0.95rem; }
+    .week-month { font-size: 0.78rem; opacity: 0.85; }
+
+    .week-days { padding: 12px; }
+
+    .week-day-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 7px 10px;
+      border-radius: 8px;
+      margin-bottom: 4px;
+      transition: background 0.2s;
+    }
+
+    .week-day-row:hover { background: #f0f4f8; }
+
+    .week-day-name {
+      font-size: 0.83rem;
+      font-weight: 600;
+      color: var(--text-light);
+      min-width: 70px;
+    }
+
+    .week-day-dates {
+      display: flex;
+      gap: 12px;
+    }
+
+    .week-date-m {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .week-date-h {
+      font-size: 0.78rem;
+      color: var(--text-light);
+    }
+
+    /* ===== APPOINTMENT FORM ===== */
+    .form-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+      margin-bottom: 28px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .form-group label {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 11px 14px;
+      border: 2px solid #e8edf2;
+      border-radius: 10px;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 0.92rem;
+      color: var(--text);
+      background: #f8fafc;
+      transition: all 0.2s ease;
+      outline: none;
+      direction: rtl;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--primary-light);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(42,82,152,0.1);
+    }
+
+    .form-group textarea { resize: vertical; min-height: 80px; }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* ===== APPOINTMENTS LIST ===== */
+    .appointments-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .appointment-item {
+      background: var(--card);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.3s ease;
+      border-right: 5px solid var(--primary);
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .appointment-item:hover {
+      transform: translateX(-4px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .appointment-item.priority-high { border-right-color: #e53935; }
+    .appointment-item.priority-medium { border-right-color: #ff9800; }
+    .appointment-item.priority-low { border-right-color: #4caf50; }
+
+    .appointment-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .appointment-content { flex: 1; }
+
+    .appointment-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .appointment-meta {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .appointment-meta span {
+      font-size: 0.82rem;
+      color: var(--text-light);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .appointment-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-icon-edit { background: #e3f2fd; color: #1565c0; }
+    .btn-icon-delete { background: #ffebee; color: #c62828; }
+    .btn-icon-print { background: #e8f5e9; color: #2e7d32; }
+
+    .btn-icon:hover { transform: scale(1.1); }
+
+    /* ===== EMPTY STATE ===== */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-light);
+    }
+
+    .empty-state i {
+      font-size: 4rem;
+      margin-bottom: 16px;
+      opacity: 0.4;
+    }
+
+    .empty-state h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    /* ===== SEARCH & FILTER ===== */
+    .filter-bar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 200px;
+      padding: 10px 16px;
+      border: 2px solid #e8edf2;
+      border-radius: 10px;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 0.92rem;
+      outline: none;
+      background: var(--card);
+      transition: all 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(42,82,152,0.1);
+    }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      width: 100%;
+      max-width: 560px;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: scale(0.9) translateY(20px);
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.open .modal {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-header {
+      padding: 22px 24px;
+      border-bottom: 1px solid #e8edf2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+
+    .modal-header h3 {
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+
+    .modal-close {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+
+    .modal-close:hover { background: rgba(255,255,255,0.25); }
+
+    .modal-body { padding: 24px; }
+
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid #e8edf2;
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    /* ===== PRINT SECTION ===== */
+    .print-options {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+
+    .print-preview {
+      background: white;
+      border: 2px dashed #e8edf2;
+      border-radius: var(--radius);
+      padding: 32px;
+      min-height: 400px;
+    }
+
+    /* ===== TOAST ===== */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      z-index: 3000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .toast {
+      padding: 14px 20px;
+      border-radius: 12px;
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
+      max-width: 320px;
+    }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes toastOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(20px); }
+    }
+
+    .toast-success { background: linear-gradient(135deg, #43a047, #66bb6a); }
+    .toast-error { background: linear-gradient(135deg, #e53935, #ef5350); }
+    .toast-info { background: linear-gradient(135deg, #1e88e5, #42a5f5); }
+
+    /* ===== PROGRESS BAR ===== */
+    .progress-section {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      margin-bottom: 28px;
+    }
+
+    .progress-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--primary);
+    }
+
+    .progress-item {
+      margin-bottom: 16px;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .progress-bar-bg {
+      height: 10px;
+      background: #e8edf2;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 20px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      transition: width 1s ease;
+    }
+
+    /* ===== PRINT STYLES ===== */
+    @media print {
+      .site-header, .nav-tabs, .no-print { display: none !important; }
+      .section { display: block !important; }
+      body { background: white; }
+      .main-content { padding: 0; }
+      .table-wrapper { box-shadow: none; border: 1px solid #ddd; }
+      .appointment-item { box-shadow: none; border: 1px solid #ddd; }
+      .print-header { display: block !important; }
+    }
+
+    .print-header { display: none; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .header-top { padding: 12px 16px; }
+      .logo-text h1 { font-size: 1.1rem; }
+      .main-content { padding: 16px 12px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .weeks-grid { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      .nav-tabs { padding: 0 12px; }
+      .nav-tab { padding: 10px 14px; font-size: 0.85rem; }
+    }
+
+    /* ===== COLOR CHIPS ===== */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .chip-holiday { background: #e8f5e9; color: #2e7d32; }
+    .chip-exam { background: #fff3e0; color: #e65100; }
+    .chip-admin { background: #e3f2fd; color: #1565c0; }
+    .chip-start { background: #f3e5f5; color: #6a1b9a; }
+
+    /* ===== HOLIDAY CARD ===== */
+    .holidays-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .holiday-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      border-right: 5px solid var(--holiday-border);
+      transition: all 0.3s ease;
+    }
+
+    .holiday-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .holiday-card-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .holiday-dates {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .holiday-date-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+    }
+
+    .holiday-date-label { color: var(--text-light); font-weight: 600; }
+    .holiday-date-value { font-weight: 700; color: var(--primary); }
+
+    /* ===== ABOUT SECTION ===== */
+    .about-card {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
+      border-radius: var(--radius);
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .about-card h2 {
+      font-size: 2rem;
+      font-weight: 900;
+      margin-bottom: 12px;
+    }
+
+    .about-card p {
+      font-size: 1rem;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .info-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      text-align: center;
+    }
+
+    .info-card i {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    .info-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .info-card p {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    /* ===== DESIGNER BAR ===== */
+    .designer-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 8px 32px;
+      background: rgba(0,0,0,0.25);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      flex-wrap: wrap;
+    }
+
+    .designer-text {
+      color: rgba(255,255,255,0.85);
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    .designer-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--secondary);
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-decoration: none;
+      padding: 4px 14px;
+      border-radius: 20px;
+      background: rgba(200,169,81,0.15);
+      border: 1px solid rgba(200,169,81,0.35);
+      transition: all 0.25s ease;
+    }
+
+    .designer-link:hover {
+      background: rgba(200,169,81,0.3);
+      color: #f0d070;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(200,169,81,0.25);
+    }
+
+    .designer-link i {
+      font-size: 1rem;
+      color: #29b6f6;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f0f4f8; }
+    ::-webkit-scrollbar-thumb { background: #c0cdd8; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--primary-light); }
+
+    /* Appointment type colors */
+    .type-meeting { background: #e3f2fd; color: #1565c0; }
+    .type-exam { background: #fff3e0; color: #e65100; }
+    .type-event { background: #f3e5f5; color: #6a1b9a; }
+    .type-reminder { background: #e8f5e9; color: #2e7d32; }
+    .type-other { background: #f5f5f5; color: #616161; }
+
+    .badge-count {
+      background: var(--secondary);
+      color: var(--primary);
+      border-radius: 20px;
+      padding: 2px 8px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      margin-right: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-top">
+    <div class="header-logo">
+      <div class="logo-icon">📅</div>
+      <div class="logo-text">
+        <h1>التقويم الدراسي 1448/1449هـ</h1>
+        <p>مكة المكرمة · المدينة المنورة · جدة · الطائف</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-outline no-print" onclick="openAddModal()">
+        <i class="fas fa-plus"></i> إضافة موعد
+      </button>
+      <button class="btn btn-primary no-print" onclick="printPage()">
+        <i class="fas fa-print"></i> طباعة
+      </button>
+    </div>
+  </div>
+  <nav class="nav-tabs no-print">
+    <button class="nav-tab active" onclick="showSection('overview')" id="tab-overview">
+      <i class="fas fa-home"></i> نظرة عامة
+    </button>
+    <button class="nav-tab" onclick="showSection('calendar')" id="tab-calendar">
+      <i class="fas fa-calendar-alt"></i> التقويم الكامل
+    </button>
+    <button class="nav-tab" onclick="showSection('weeks')" id="tab-weeks">
+      <i class="fas fa-table"></i> الأسابيع الدراسية
+    </button>
+    <button class="nav-tab" onclick="showSection('holidays')" id="tab-holidays">
+      <i class="fas fa-umbrella-beach"></i> الإجازات
+    </button>
+    <button class="nav-tab" onclick="showSection('appointments')" id="tab-appointments">
+      <i class="fas fa-bookmark"></i> مواعيدي
+      <span class="badge-count" id="appt-count">0</span>
+    </button>
+    <button class="nav-tab" onclick="showSection('print')" id="tab-print">
+      <i class="fas fa-print"></i> الطباعة
+    </button>
+  </nav>
+  <div class="designer-bar">
+    <span class="designer-text">تصميم د/ فواز &nbsp;|&nbsp; تفضل للمزيد هنا</span>
+    <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" class="designer-link">
+      <i class="fab fa-telegram"></i> https://t.me/TAqhjT3MFVE1Yzk0
+    </a>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="main-content">
+
+  <!-- ===== OVERVIEW SECTION ===== -->
+  <section class="section active" id="section-overview">
+
+    <div class="about-card" style="margin-bottom:28px;">
+      <div style="font-size:3rem;margin-bottom:12px;">🎓</div>
+      <h2>التقويم الدراسي للعام 1448 / 1449هـ</h2>
+      <p>التقويم الدراسي لمواعيد بداية ونهاية الفصول الدراسية والإجازات الرسمية لمنطقة مكة المكرمة والمدينة المنورة وجدة والطائف · إعداد وتصميم: الأستاذ / أحمد الغامدي</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">📚</div>
+        <div class="stat-value">2</div>
+        <div class="stat-label">فصل دراسي</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📅</div>
+        <div class="stat-value">19</div>
+        <div class="stat-label">أسبوع في الفصل الثاني</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🏫</div>
+        <div class="stat-value">93</div>
+        <div class="stat-label">يوم دراسي (الفصل الثاني)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🌴</div>
+        <div class="stat-value">3</div>
+        <div class="stat-label">إجازة في الفصل الثاني</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🎉</div>
+        <div class="stat-value">43</div>
+        <div class="stat-label">يوم إجازة (الفصل الثاني)</div>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-section">
+      <div class="progress-title"><i class="fas fa-chart-line" style="color:var(--primary);margin-left:8px;"></i> نسب التقدم في العام الدراسي</div>
+      <div class="progress-item">
+        <div class="progress-label">
+          <span>الفصل الدراسي الأول</span>
+          <span style="color:var(--primary);">30 أغسطس 2026 — 7 يناير 2027</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width:100%;background:linear-gradient(90deg,#1a3a5c,#2a5298);"></div>
+        </div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-label">
+          <span>إجازة منتصف العام</span>
+          <span style="color:var(--secondary);">8 — 16 يناير 2027</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width:100%;background:linear-gradient(90deg,#c8a951,#e8c96a);"></div>
+        </div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-label">
+          <span>الفصل الدراسي الثاني</span>
+          <span style="color:var(--accent);">17 يناير — 30 يونيو 2027</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="term2-progress" style="width:0%;background:linear-gradient(90deg,#4a9d8f,#2e7d72);"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Events -->
+    <div class="section-header">
+      <div class="section-header-icon"><i class="fas fa-bell"></i></div>
+      <div>
+        <h2>أبرز المواعيد</h2>
+        <p>أهم محطات العام الدراسي 1448/1449هـ</p>
+      </div>
+    </div>
+
+    <div class="holidays-grid" id="quick-events"></div>
+
+  </section>
+
+  <!-- ===== CALENDAR SECTION ===== -->
+  <section class="section" id="section-calendar">
+
+    <div class="section-header">
+      <div class="section-header-icon"><i class="fas fa-calendar-alt"></i></div>
+      <div>
+        <h2>التقويم الدراسي الكامل</h2>
+        <p>جميع مواعيد العام الدراسي 1448/1449هـ</p>
+      </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend no-print">
+      <div class="legend-item event-start" onclick="filterTable('start')" id="legend-start">
+        <span class="legend-dot" style="background:#9c27b0;"></span> بداية الدراسة
+      </div>
+      <div class="legend-item event-holiday" onclick="filterTable('holiday')" id="legend-holiday">
+        <span class="legend-dot" style="background:#4caf50;"></span> إجازة
+      </div>
+      <div class="legend-item event-exam" onclick="filterTable('exam')" id="legend-exam">
+        <span class="legend-dot" style="background:#ff9800;"></span> اختبارات
+      </div>
+      <div class="legend-item event-admin" onclick="filterTable('admin')" id="legend-admin">
+        <span class="legend-dot" style="background:#2196f3;"></span> إداري
+      </div>
+      <div class="legend-item" style="background:#f5f5f5;color:#616161;" onclick="filterTable('all')">
+        <i class="fas fa-list"></i> الكل
+      </div>
+    </div>
+
+    <!-- Pre-Term -->
+    <div class="table-wrapper">
+      <div class="table-title pre">
+        <i class="fas fa-door-open"></i>
+        ما قبل العام الدراسي — العودة للمدارس
+      </div>
+      <table id="table-pre">
+        <thead>
+          <tr>
+            <th>البيان</th>
+            <th>اليوم</th>
+            <th>التاريخ الهجري</th>
+            <th>التاريخ الميلادي</th>
+            <th class="no-print">إجراء</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-pre"></tbody>
+      </table>
+    </div>
+
+    <!-- Term 1 -->
+    <div class="table-wrapper">
+      <div class="table-title term1">
+        <div class="table-num">١</div>
+        الفصل الدراسي الأول
+      </div>
+      <table id="table-term1">
+        <thead>
+          <tr>
+            <th>البيان</th>
+            <th>اليوم</th>
+            <th>التاريخ الهجري</th>
+            <th>التاريخ الميلادي</th>
+            <th class="no-print">إجراء</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-term1"></tbody>
+      </table>
+    </div>
+
+    <!-- Term 2 -->
+    <div class="table-wrapper">
+      <div class="table-title term2">
+        <div class="table-num">٢</div>
+        الفصل الدراسي الثاني
+      </div>
+      <table id="table-term2">
+        <thead>
+          <tr>
+            <th>البيان</th>
+            <th>اليوم</th>
+            <th>التاريخ الهجري</th>
+            <th>التاريخ الميلادي</th>
+            <th class="no-print">إجراء</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-term2"></tbody>
+      </table>
+    </div>
+
+    <!-- Next Year -->
+    <div class="table-wrapper">
+      <div class="table-title next">
+        <i class="fas fa-forward"></i>
+        العودة للعام الجديد 1449/1450هـ
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>البيان</th>
+            <th>اليوم</th>
+            <th>التاريخ الهجري</th>
+            <th>التاريخ الميلادي</th>
+            <th class="no-print">إجراء</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-next"></tbody>
+      </table>
+    </div>
+
+  </section>
+
+  <!-- ===== WEEKS SECTION ===== -->
+  <section class="section" id="section-weeks">
+
+    <div class="section-header">
+      <div class="section-header-icon" style="background:linear-gradient(135deg,#2a5298,#3a6db5);">
+        <i class="fas fa-table"></i>
+      </div>
+      <div>
+        <h2>توزيع الأسابيع الدراسية — الفصل الثاني</h2>
+        <p>19 أسبوعاً · 93 يوم دراسي · 3 إجازات · 43 يوم إجازة</p>
+      </div>
+    </div>
+
+    <!-- Holiday cards inline -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:28px;">
+      <div class="holiday-card" style="border-right-color:#ff9800;">
+        <div class="holiday-card-title"><i class="fas fa-moon" style="color:#ff9800;margin-left:8px;"></i> إجازة عيد الفطر</div>
+        <div class="holiday-dates">
+          <div class="holiday-date-row"><span class="holiday-date-label">تبدأ:</span><span class="holiday-date-value">الجمعة 26/2/2027</span></div>
+          <div class="holiday-date-row"><span class="holiday-date-label">تنتهي:</span><span class="holiday-date-value">السبت 13/3/2027</span></div>
+          <div class="holiday-date-row"><span class="holiday-date-label">العودة:</span><span class="holiday-date-value">الأحد 14/3/2027</span></div>
+        </div>
+      </div>
+      <div class="holiday-card" style="border-right-color:#9c27b0;">
+        <div class="holiday-card-title"><i class="fas fa-star" style="color:#9c27b0;margin-left:8px;"></i> إجازة عيد الأضحى</div>
+        <div class="holiday-dates">
+          <div class="holiday-date-row"><span class="holiday-date-label">تبدأ:</span><span class="holiday-date-value">الجمعة 30/4/2027</span></div>
+          <div class="holiday-date-row"><span class="holiday-date-label">تنتهي:</span><span class="holiday-date-value">السبت 22/5/2027</span></div>
+          <div class="holiday-date-row"><span class="holiday-date-label">العودة:</span><span class="holiday-date-value">الأحد 23/5/2027</span></div>
+        </div>
+      </div>
+      <div class="holiday-card" style="border-right-color:#2196f3;">
+        <div class="holiday-card-title"><i class="fas fa-flag" style="color:#2196f3;margin-left:8px;"></i> إجازة يوم التأسيس</div>
+        <div class="holiday-dates">
+          <div class="holiday-date-row"><span class="holiday-date-label">تبدأ:</span><span class="holiday-date-value">الجمعة 19/2/2027</span></div>
+          <div class="holiday-date-row"><span class="holiday-date-label">تنتهي:</span><span class="holiday-date-value">الاثنين 22/2/2027</span></div>
+          <div class="holiday-date-row"><span class="holiday-date-label">العودة:</span><span class="holiday-date-value">الثلاثاء 23/2/2027</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="weeks-grid" id="weeks-grid"></div>
+
+  </section>
+
+  <!-- ===== HOLIDAYS SECTION ===== -->
+  <section class="section" id="section-holidays">
+
+    <div class="section-header">
+      <div class="section-header-icon" style="background:linear-gradient(135deg,#4caf50,#2e7d32);">
+        <i class="fas fa-umbrella-beach"></i>
+      </div>
+      <div>
+        <h2>الإجازات الرسمية</h2>
+        <p>جميع الإجازات والعطل الرسمية خلال العام الدراسي 1448/1449هـ</p>
+      </div>
+    </div>
+
+    <div id="holidays-container"></div>
+
+  </section>
+
+  <!-- ===== APPOINTMENTS SECTION ===== -->
+  <section class="section" id="section-appointments">
+
+    <div class="section-header">
+      <div class="section-header-icon" style="background:linear-gradient(135deg,#c8a951,#a8892e);">
+        <i class="fas fa-bookmark"></i>
+      </div>
+      <div>
+        <h2>مواعيدي الشخصية</h2>
+        <p>سجّل وتابع مواعيدك الدراسية والشخصية</p>
+      </div>
+    </div>
+
+    <!-- Add Form -->
+    <div class="form-card no-print">
+      <div style="font-size:1rem;font-weight:800;color:var(--primary);margin-bottom:18px;display:flex;align-items:center;gap:8px;">
+        <i class="fas fa-plus-circle" style="color:var(--secondary);"></i> إضافة موعد جديد
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label><i class="fas fa-heading" style="color:var(--primary-light);margin-left:6px;"></i> عنوان الموعد *</label>
+          <input type="text" id="appt-title" placeholder="مثال: اجتماع أولياء الأمور" />
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-calendar" style="color:var(--primary-light);margin-left:6px;"></i> التاريخ *</label>
+          <input type="date" id="appt-date" />
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-clock" style="color:var(--primary-light);margin-left:6px;"></i> الوقت</label>
+          <input type="time" id="appt-time" />
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-tag" style="color:var(--primary-light);margin-left:6px;"></i> النوع</label>
+          <select id="appt-type">
+            <option value="meeting">اجتماع</option>
+            <option value="exam">اختبار</option>
+            <option value="event">فعالية</option>
+            <option value="reminder">تذكير</option>
+            <option value="other">أخرى</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-exclamation-circle" style="color:var(--primary-light);margin-left:6px;"></i> الأولوية</label>
+          <select id="appt-priority">
+            <option value="high">عالية 🔴</option>
+            <option value="medium" selected>متوسطة 🟡</option>
+            <option value="low">منخفضة 🟢</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-map-marker-alt" style="color:var(--primary-light);margin-left:6px;"></i> المكان</label>
+          <input type="text" id="appt-location" placeholder="مثال: قاعة الاجتماعات" />
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:18px;">
+        <label><i class="fas fa-align-right" style="color:var(--primary-light);margin-left:6px;"></i> ملاحظات</label>
+        <textarea id="appt-notes" placeholder="أضف أي تفاصيل إضافية..."></textarea>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="addAppointment()">
+          <i class="fas fa-save"></i> حفظ الموعد
+        </button>
+        <button class="btn btn-outline" style="color:var(--text);border-color:#e8edf2;" onclick="clearForm()">
+          <i class="fas fa-times"></i> مسح
+        </button>
+      </div>
+    </div>
+
+    <!-- Filter -->
+    <div class="filter-bar no-print">
+      <input type="text" class="search-input" id="appt-search" placeholder="🔍 بحث في المواعيد..." oninput="filterAppointments()" />
+      <select class="search-input" style="flex:0 0 160px;" id="appt-filter-type" onchange="filterAppointments()">
+        <option value="all">كل الأنواع</option>
+        <option value="meeting">اجتماع</option>
+        <option value="exam">اختبار</option>
+        <option value="event">فعالية</option>
+        <option value="reminder">تذكير</option>
+        <option value="other">أخرى</option>
+      </select>
+      <select class="search-input" style="flex:0 0 160px;" id="appt-filter-priority" onchange="filterAppointments()">
+        <option value="all">كل الأولويات</option>
+        <option value="high">عالية</option>
+        <option value="medium">متوسطة</option>
+        <option value="low">منخفضة</option>
+      </select>
+      <button class="btn btn-danger btn-sm no-print" onclick="clearAllAppointments()">
+        <i class="fas fa-trash"></i> حذف الكل
+      </button>
+    </div>
+
+    <!-- List -->
+    <div id="appointments-list"></div>
+
+  </section>
+
+  <!-- ===== PRINT SECTION ===== -->
+  <section class="section" id="section-print">
+
+    <div class="section-header">
+      <div class="section-header-icon" style="background:linear-gradient(135deg,#e07b39,#c0622a);">
+        <i class="fas fa-print"></i>
+      </div>
+      <div>
+        <h2>خيارات الطباعة</h2>
+        <p>اختر ما تريد طباعته وانقر على زر الطباعة</p>
+      </div>
+    </div>
+
+    <div class="print-options no-print">
+      <div class="form-grid" style="margin-bottom:20px;">
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:14px;background:#f8fafc;border-radius:10px;border:2px solid #e8edf2;">
+          <input type="checkbox" id="print-calendar" checked style="width:18px;height:18px;accent-color:var(--primary);" />
+          <span style="font-weight:700;">📅 التقويم الدراسي الكامل</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:14px;background:#f8fafc;border-radius:10px;border:2px solid #e8edf2;">
+          <input type="checkbox" id="print-weeks" checked style="width:18px;height:18px;accent-color:var(--primary);" />
+          <span style="font-weight:700;">📊 توزيع الأسابيع الدراسية</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:14px;background:#f8fafc;border-radius:10px;border:2px solid #e8edf2;">
+          <input type="checkbox" id="print-holidays" style="width:18px;height:18px;accent-color:var(--primary);" />
+          <span style="font-weight:700;">🌴 الإجازات الرسمية</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:14px;background:#f8fafc;border-radius:10px;border:2px solid #e8edf2;">
+          <input type="checkbox" id="print-appointments" checked style="width:18px;height:18px;accent-color:var(--primary);" />
+          <span style="font-weight:700;">📌 مواعيدي الشخصية</span>
+        </label>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="smartPrint()">
+          <i class="fas fa-print"></i> طباعة المحتوى المحدد
+        </button>
+        <button class="btn btn-outline" style="color:var(--text);border-color:#e8edf2;" onclick="printAll()">
+          <i class="fas fa-file-pdf"></i> طباعة الكل
+        </button>
+      </div>
+    </div>
+
+    <!-- Print Preview -->
+    <div id="print-preview-area"></div>
+
+  </section>
+
+</main>
+
+<!-- ===== MODAL ===== -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-title"><i class="fas fa-calendar-plus" style="margin-left:8px;"></i> إضافة موعد</h3>
+      <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>عنوان الموعد *</label>
+          <input type="text" id="modal-title-input" placeholder="عنوان الموعد" />
+        </div>
+        <div class="form-group">
+          <label>التاريخ *</label>
+          <input type="date" id="modal-date" />
+        </div>
+        <div class="form-group">
+          <label>الوقت</label>
+          <input type="time" id="modal-time" />
+        </div>
+        <div class="form-group">
+          <label>النوع</label>
+          <select id="modal-type">
+            <option value="meeting">اجتماع</option>
+            <option value="exam">اختبار</option>
+            <option value="event">فعالية</option>
+            <option value="reminder">تذكير</option>
+            <option value="other">أخرى</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>الأولوية</label>
+          <select id="modal-priority">
+            <option value="high">عالية 🔴</option>
+            <option value="medium" selected>متوسطة 🟡</option>
+            <option value="low">منخفضة 🟢</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>المكان</label>
+          <input type="text" id="modal-location" placeholder="المكان" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>ملاحظات</label>
+        <textarea id="modal-notes" placeholder="ملاحظات إضافية..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" onclick="saveModal()">
+        <i class="fas fa-save"></i> حفظ
+      </button>
+      <button class="btn btn-outline" style="color:var(--text);border-color:#e8edf2;" onclick="closeModal()">
+        <i class="fas fa-times"></i> إلغاء
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- ===== SCRIPT ===== -->
+<script>
+// ==================== DATA ====================
+const calendarData = {
+  mainEvents: [
+    { id:1, dateM:"16/8/2026", dateH:"3/3/1448هـ", day:"الأحد", event:"عودة الهيئة الإدارية والمشرفين التربويين في جميع المراحل الدراسية", type:"admin", section:"pre" },
+    { id:2, dateM:"23/8/2026", dateH:"3/10/1448هـ", day:"الأحد", event:"عودة المعلمين الممارسين للتدريس في جميع المراحل", type:"admin", section:"pre" },
+    { id:3, dateM:"30/8/2026", dateH:"3/17/1448هـ", day:"الأحد", event:"بداية الفصل الدراسي الأول", type:"start", section:"term1" },
+    { id:4, dateM:"23/9/2026", dateH:"4/12/1448هـ", day:"من الأربعاء", event:"إجازة اليوم الوطني — البداية", type:"holiday", section:"term1" },
+    { id:5, dateM:"26/9/2026", dateH:"4/15/1448هـ", day:"إلى السبت", event:"إجازة اليوم الوطني — النهاية", type:"holiday", section:"term1" },
+    { id:6, dateM:"20/11/2026", dateH:"6/10/1448هـ", day:"من الجمعة", event:"بداية إجازة الخريف", type:"holiday", section:"term1" },
+    { id:7, dateM:"28/11/2026", dateH:"6/18/1448هـ", day:"إلى السبت", event:"نهاية إجازة الخريف", type:"holiday", section:"term1" },
+    { id:8, dateM:"3/1/2027", dateH:"7/25/1448هـ", day:"الأحد", event:"بداية اختبار الفصل الدراسي الأول", type:"exam", section:"term1" },
+    { id:9, dateM:"8/1/2027", dateH:"7/30/1448هـ", day:"من الجمعة", event:"بداية إجازة منتصف العام الدراسي", type:"holiday", section:"term1" },
+    { id:10, dateM:"16/1/2027", dateH:"8/8/1448هـ", day:"إلى السبت", event:"نهاية إجازة منتصف العام الدراسي", type:"holiday", section:"term1" },
+    { id:11, dateM:"17/1/2027", dateH:"8/9/1448هـ", day:"الأحد", event:"بداية الفصل الدراسي الثاني", type:"start", section:"term2" },
+    { id:12, dateM:"19/2/2027", dateH:"9/12/1448هـ", day:"من الجمعة", event:"إجازة يوم التأسيس — البداية", type:"holiday", section:"term2" },
+    { id:13, dateM:"22/2/2027", dateH:"9/15/1448هـ", day:"إلى الاثنين", event:"إجازة يوم التأسيس — النهاية", type:"holiday", section:"term2" },
+    { id:14, dateM:"26/2/2027", dateH:"9/19/1448هـ", day:"من الجمعة", event:"إجازة عيد الفطر — البداية", type:"holiday", section:"term2" },
+    { id:15, dateM:"13/3/2027", dateH:"10/5/1448هـ", day:"إلى السبت", event:"إجازة عيد الفطر — النهاية", type:"holiday", section:"term2" },
+    { id:16, dateM:"14/3/2027", dateH:"10/6/1448هـ", day:"الأحد", event:"بداية الدراسة بعد إجازة عيد الفطر", type:"start", section:"term2" },
+    { id:17, dateM:"30/4/2027", dateH:"11/23/1448هـ", day:"من الجمعة", event:"إجازة عيد الأضحى — البداية", type:"holiday", section:"term2" },
+    { id:18, dateM:"22/5/2027", dateH:"12/16/1448هـ", day:"إلى السبت", event:"إجازة عيد الأضحى — النهاية", type:"holiday", section:"term2" },
+    { id:19, dateM:"23/5/2027", dateH:"12/17/1448هـ", day:"الأحد", event:"بداية الدراسة بعد إجازة عيد الأضحى", type:"start", section:"term2" },
+    { id:20, dateM:"27/6/2027", dateH:"1/22/1449هـ", day:"الأحد", event:"بداية اختبار الفصل الدراسي الثاني", type:"exam", section:"term2" },
+    { id:21, dateM:"1/7/2027", dateH:"1/26/1449هـ", day:"الخميس", event:"بداية إجازة نهاية العام الدراسي", type:"holiday", section:"term2" },
+    { id:22, dateM:"15/8/2027", dateH:"3/13/1449هـ", day:"الأحد", event:"عودة الهيئة الإدارية والمشرفين التربويين (العام الجديد 1449/1450هـ)", type:"admin", section:"next" },
+    { id:23, dateM:"22/8/2027", dateH:"3/20/1449هـ", day:"الأحد", event:"عودة المعلمين الممارسين للتدريس (العام الجديد)", type:"admin", section:"next" },
+    { id:24, dateM:"29/8/2027", dateH:"3/27/1449هـ", day:"الأحد", event:"بداية الدراسة للعام 1449/1450هـ", type:"start", section:"next" }
+  ],
+  term2Weeks: [
+    { week:1, title:"الأسبوع الأول", month:"يناير 2027", hijri:"شعبان", days:[
+      {dateM:"17/1",dateH:"8/9",day:"الأحد"},{dateM:"18/1",dateH:"8/10",day:"الاثنين"},
+      {dateM:"19/1",dateH:"8/11",day:"الثلاثاء"},{dateM:"20/1",dateH:"8/12",day:"الأربعاء"},{dateM:"21/1",dateH:"8/13",day:"الخميس"}
+    ]},
+    { week:2, title:"الأسبوع الثاني", month:"يناير 2027", hijri:"شعبان", days:[
+      {dateM:"24/1",dateH:"8/16",day:"الأحد"},{dateM:"25/1",dateH:"8/17",day:"الاثنين"},
+      {dateM:"26/1",dateH:"8/18",day:"الثلاثاء"},{dateM:"27/1",dateH:"8/19",day:"الأربعاء"},{dateM:"28/1",dateH:"8/20",day:"الخميس"}
+    ]},
+    { week:3, title:"الأسبوع الثالث", month:"يناير/فبراير 2027", hijri:"شعبان", days:[
+      {dateM:"31/1",dateH:"8/23",day:"الأحد"},{dateM:"1/2",dateH:"8/24",day:"الاثنين"},
+      {dateM:"2/2",dateH:"8/25",day:"الثلاثاء"},{dateM:"3/2",dateH:"8/26",day:"الأربعاء"},{dateM:"4/2",dateH:"8/27",day:"الخميس"}
+    ]},
+    { week:4, title:"الأسبوع الرابع", month:"فبراير 2027", hijri:"شعبان/رمضان", days:[
+      {dateM:"7/2",dateH:"8/30",day:"الأحد"},{dateM:"8/2",dateH:"9/1",day:"الاثنين"},
+      {dateM:"9/2",dateH:"9/2",day:"الثلاثاء"},{dateM:"10/2",dateH:"9/3",day:"الأربعاء"},{dateM:"11/2",dateH:"9/4",day:"الخميس"}
+    ]},
+    { week:5, title:"الأسبوع الخامس", month:"فبراير 2027", hijri:"رمضان", days:[
+      {dateM:"14/2",dateH:"9/7",day:"الأحد"},{dateM:"15/2",dateH:"9/8",day:"الاثنين"},
+      {dateM:"16/2",dateH:"9/9",day:"الثلاثاء"},{dateM:"17/2",dateH:"9/10",day:"الأربعاء"},{dateM:"18/2",dateH:"9/11",day:"الخميس"}
+    ]},
+    { week:6, title:"الأسبوع السادس", month:"فبراير 2027", hijri:"رمضان", days:[
+      {dateM:"21/2",dateH:"9/14",day:"الأحد ★"},{dateM:"22/2",dateH:"9/15",day:"الاثنين"},
+      {dateM:"23/2",dateH:"9/16",day:"الثلاثاء"},{dateM:"24/2",dateH:"9/17",day:"الأربعاء"},{dateM:"25/2",dateH:"9/18",day:"الخميس"}
+    ]},
+    { week:7, title:"الأسبوع السابع", month:"مارس 2027", hijri:"شوال", days:[
+      {dateM:"14/3",dateH:"10/6",day:"الأحد"},{dateM:"15/3",dateH:"10/7",day:"الاثنين"},
+      {dateM:"16/3",dateH:"10/8",day:"الثلاثاء"},{dateM:"17/3",dateH:"10/9",day:"الأربعاء"},{dateM:"18/3",dateH:"10/10",day:"الخميس"}
+    ]},
+    { week:8, title:"الأسبوع الثامن", month:"مارس 2027", hijri:"شوال", days:[
+      {dateM:"21/3",dateH:"10/13",day:"الأحد"},{dateM:"22/3",dateH:"10/14",day:"الاثنين"},
+      {dateM:"23/3",dateH:"10/15",day:"الثلاثاء"},{dateM:"24/3",dateH:"10/16",day:"الأربعاء"},{dateM:"25/3",dateH:"10/17",day:"الخميس"}
+    ]},
+    { week:9, title:"الأسبوع التاسع", month:"مارس/أبريل 2027", hijri:"شوال", days:[
+      {dateM:"28/3",dateH:"10/20",day:"الأحد"},{dateM:"29/3",dateH:"10/21",day:"الاثنين"},
+      {dateM:"30/3",dateH:"10/22",day:"الثلاثاء"},{dateM:"31/3",dateH:"10/23",day:"الأربعاء"},{dateM:"1/4",dateH:"10/24",day:"الخميس"}
+    ]},
+    { week:10, title:"الأسبوع العاشر", month:"أبريل 2027", hijri:"شوال/ذو القعدة", days:[
+      {dateM:"4/4",dateH:"10/27",day:"الأحد"},{dateM:"5/4",dateH:"10/28",day:"الاثنين"},
+      {dateM:"6/4",dateH:"10/29",day:"الثلاثاء"},{dateM:"7/4",dateH:"11/1",day:"الأربعاء"},{dateM:"8/4",dateH:"11/2",day:"الخميس"}
+    ]},
+    { week:11, title:"الأسبوع الحادي عشر", month:"أبريل 2027", hijri:"ذو القعدة", days:[
+      {dateM:"11/4",dateH:"11/4",day:"الأحد"},{dateM:"12/4",dateH:"11/5",day:"الاثنين"},
+      {dateM:"13/4",dateH:"11/6",day:"الثلاثاء"},{dateM:"14/4",dateH:"11/7",day:"الأربعاء"},{dateM:"15/4",dateH:"11/8",day:"الخميس"}
+    ]},
+    { week:12, title:"الأسبوع الثاني عشر", month:"أبريل 2027", hijri:"ذو القعدة", days:[
+      {dateM:"18/4",dateH:"11/11",day:"الأحد"},{dateM:"19/4",dateH:"11/12",day:"الاثنين"},
+      {dateM:"20/4",dateH:"11/13",day:"الثلاثاء"},{dateM:"21/4",dateH:"11/14",day:"الأربعاء"},{dateM:"22/4",dateH:"11/15",day:"الخميس"}
+    ]},
+    { week:13, title:"الأسبوع الثالث عشر", month:"أبريل 2027", hijri:"ذو القعدة", days:[
+      {dateM:"25/4",dateH:"11/18",day:"الأحد"},{dateM:"26/4",dateH:"11/19",day:"الاثنين"},
+      {dateM:"27/4",dateH:"11/20",day:"الثلاثاء"},{dateM:"28/4",dateH:"11/21",day:"الأربعاء"},{dateM:"29/4",dateH:"11/22",day:"الخميس"}
+    ]},
+    { week:14, title:"الأسبوع الرابع عشر", month:"مايو 2027", hijri:"ذو الحجة", days:[
+      {dateM:"23/5",dateH:"12/17",day:"الأحد"},{dateM:"24/5",dateH:"12/18",day:"الاثنين"},
+      {dateM:"25/5",dateH:"12/19",day:"الثلاثاء"},{dateM:"26/5",dateH:"12/20",day:"الأربعاء"},{dateM:"27/5",dateH:"12/21",day:"الخميس"}
+    ]},
+    { week:15, title:"الأسبوع الخامس عشر", month:"مايو/يونيو 2027", hijri:"ذو الحجة", days:[
+      {dateM:"30/5",dateH:"12/24",day:"الأحد"},{dateM:"31/5",dateH:"12/25",day:"الاثنين"},
+      {dateM:"1/6",dateH:"12/26",day:"الثلاثاء"},{dateM:"2/6",dateH:"12/27",day:"الأربعاء"},{dateM:"3/6",dateH:"12/28",day:"الخميس"}
+    ]},
+    { week:16, title:"الأسبوع السادس عشر", month:"يونيو 2027", hijri:"محرم 1449هـ", days:[
+      {dateM:"6/6",dateH:"1/1",day:"الأحد"},{dateM:"7/6",dateH:"1/2",day:"الاثنين"},
+      {dateM:"8/6",dateH:"1/3",day:"الثلاثاء"},{dateM:"9/6",dateH:"1/4",day:"الأربعاء"},{dateM:"10/6",dateH:"1/5",day:"الخميس"}
+    ]},
+    { week:17, title:"الأسبوع السابع عشر", month:"يونيو 2027", hijri:"محرم", days:[
+      {dateM:"13/6",dateH:"1/8",day:"الأحد"},{dateM:"14/6",dateH:"1/9",day:"الاثنين"},
+      {dateM:"15/6",dateH:"1/10",day:"الثلاثاء"},{dateM:"16/6",dateH:"1/11",day:"الأربعاء"},{dateM:"17/6",dateH:"1/12",day:"الخميس"}
+    ]},
+    { week:18, title:"الأسبوع الثامن عشر", month:"يونيو 2027", hijri:"محرم", days:[
+      {dateM:"20/6",dateH:"1/15",day:"الأحد"},{dateM:"21/6",dateH:"1/16",day:"الاثنين"},
+      {dateM:"22/6",dateH:"1/17",day:"الثلاثاء"},{dateM:"23/6",dateH:"1/18",day:"الأربعاء"},{dateM:"24/6",dateH:"1/19",day:"الخميس"}
+    ]},
+    { week:19, title:"الأسبوع التاسع عشر (اختبارات)", month:"يونيو/يوليو 2027", hijri:"محرم", days:[
+      {dateM:"27/6",dateH:"1/22",day:"الأحد"},{dateM:"28/6",dateH:"1/23",day:"الاثنين"},
+      {dateM:"29/6",dateH:"1/24",day:"الثلاثاء"},{dateM:"30/6",dateH:"1/25",day:"الأربعاء"},{dateM:"1/7",dateH:"1/26",day:"الخميس"}
+    ]}
+  ]
+};
+
+// ==================== APPOINTMENTS ====================
+let appointments = JSON.parse(localStorage.getItem('academic_appointments') || '[]');
+let editingId = null;
+let currentFilter = 'all';
+
+function saveAppointments() {
+  localStorage.setItem('academic_appointments', JSON.stringify(appointments));
+  updateApptCount();
+}
+
+function updateApptCount() {
+  document.getElementById('appt-count').textContent = appointments.length;
+}
+
+// ==================== NAVIGATION ====================
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('section-' + name).classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+  if (name === 'appointments') renderAppointments();
+  if (name === 'print') renderPrintPreview();
+}
+
+// ==================== TABLE RENDERING ====================
+function getEventBadge(type) {
+  const map = {
+    holiday: { cls: 'event-holiday', icon: 'fa-umbrella-beach', text: 'إجازة' },
+    exam: { cls: 'event-exam', icon: 'fa-file-alt', text: 'اختبار' },
+    admin: { cls: 'event-admin', icon: 'fa-user-tie', text: 'إداري' },
+    start: { cls: 'event-start', icon: 'fa-play-circle', text: 'بداية' }
+  };
+  const e = map[type] || map.admin;
+  return `<span class="event-badge ${e.cls}"><i class="fas ${e.icon}"></i></span>`;
+}
+
+function renderTable(tbodyId, events) {
+  const tbody = document.getElementById(tbodyId);
+  if (!tbody) return;
+  tbody.innerHTML = events.map(e => `
+    <tr>
+      <td>
+        <div style="display:flex;align-items:center;gap:10px;">
+          ${getEventBadge(e.type)}
+          <span style="font-weight:600;">${e.event}</span>
+        </div>
+      </td>
+      <td><span class="day-badge">${e.day}</span></td>
+      <td><span class="date-h">${e.dateH}</span></td>
+      <td><span class="date-m">${e.dateM}</span></td>
+      <td class="no-print">
+        <button class="btn btn-outline btn-sm" onclick="quickAddFromEvent('${e.event.replace(/'/g,"\\'")}','${e.dateM}')">
+          <i class="fas fa-bookmark"></i> حفظ
+        </button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function renderAllTables() {
+  const sections = { pre: [], term1: [], term2: [], next: [] };
+  calendarData.mainEvents.forEach(e => { if (sections[e.section]) sections[e.section].push(e); });
+  renderTable('tbody-pre', sections.pre);
+  renderTable('tbody-term1', sections.term1);
+  renderTable('tbody-term2', sections.term2);
+  renderTable('tbody-next', sections.next);
+}
+
+function filterTable(type) {
+  currentFilter = type;
+  document.querySelectorAll('.legend-item').forEach(l => l.classList.remove('active'));
+  if (type !== 'all') document.getElementById('legend-' + type)?.classList.add('active');
+
+  const sections = { pre: [], term1: [], term2: [], next: [] };
+  calendarData.mainEvents.forEach(e => {
+    if (type === 'all' || e.type === type) {
+      if (sections[e.section]) sections[e.section].push(e);
+    }
+  });
+  renderTable('tbody-pre', sections.pre);
+  renderTable('tbody-term1', sections.term1);
+  renderTable('tbody-term2', sections.term2);
+  renderTable('tbody-next', sections.next);
+}
+
+// ==================== WEEKS RENDERING ====================
+function renderWeeks() {
+  const grid = document.getElementById('weeks-grid');
+  const colors = ['#1a3a5c','#2a5298','#3a6db5','#4a9d8f','#c8a951','#e07b39','#9c27b0','#e53935'];
+  grid.innerHTML = calendarData.term2Weeks.map((w, i) => {
+    const color = colors[i % colors.length];
+    const isExam = w.week === 19;
+    return `
+      <div class="week-card">
+        <div class="week-card-header" style="background:linear-gradient(135deg,${color},${color}cc);">
+          <div>
+            <div class="week-title-text">${w.title}</div>
+            <div class="week-month">${w.month} · ${w.hijri}</div>
+          </div>
+          <div class="week-num" style="${isExam ? 'background:rgba(229,57,53,0.4);' : ''}">${w.week}</div>
+        </div>
+        <div class="week-days">
+          ${w.days.map(d => `
+            <div class="week-day-row">
+              <span class="week-day-name">${d.day}</span>
+              <div class="week-day-dates">
+                <span class="week-date-m">${d.dateM}</span>
+                <span class="week-date-h">${d.dateH}</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ==================== HOLIDAYS RENDERING ====================
+function renderHolidays() {
+  const container = document.getElementById('holidays-container');
+  const holidays = [
+    {
+      title: 'إجازة اليوم الوطني',
+      icon: '🇸🇦',
+      color: '#4caf50',
+      term: 'الفصل الأول',
+      start: '23/9/2026',
+      startH: '4/12/1448هـ',
+      end: '26/9/2026',
+      endH: '4/15/1448هـ',
+      days: 4,
+      note: 'اليوم الوطني السعودي 96'
+    },
+    {
+      title: 'إجازة الخريف',
+      icon: '🍂',
+      color: '#ff9800',
+      term: 'الفصل الأول',
+      start: '20/11/2026',
+      startH: '6/10/1448هـ',
+      end: '28/11/2026',
+      endH: '6/18/1448هـ',
+      days: 9,
+      note: 'إجازة الخريف السنوية'
+    },
+    {
+      title: 'إجازة منتصف العام',
+      icon: '❄️',
+      color: '#2196f3',
+      term: 'بين الفصلين',
+      start: '8/1/2027',
+      startH: '7/30/1448هـ',
+      end: '16/1/2027',
+      endH: '8/8/1448هـ',
+      days: 9,
+      note: 'إجازة نهاية الفصل الأول'
+    },
+    {
+      title: 'إجازة يوم التأسيس',
+      icon: '🏛️',
+      color: '#9c27b0',
+      term: 'الفصل الثاني',
+      start: '19/2/2027',
+      startH: '9/12/1448هـ',
+      end: '22/2/2027',
+      endH: '9/15/1448هـ',
+      days: 4,
+      note: 'يوم التأسيس السعودي 22 فبراير'
+    },
+    {
+      title: 'إجازة عيد الفطر',
+      icon: '🌙',
+      color: '#e07b39',
+      term: 'الفصل الثاني',
+      start: '26/2/2027',
+      startH: '9/19/1448هـ',
+      end: '13/3/2027',
+      endH: '10/5/1448هـ',
+      days: 16,
+      note: 'عيد الفطر المبارك 1448هـ'
+    },
+    {
+      title: 'إجازة عيد الأضحى',
+      icon: '🐑',
+      color: '#e53935',
+      term: 'الفصل الثاني',
+      start: '30/4/2027',
+      startH: '11/23/1448هـ',
+      end: '22/5/2027',
+      endH: '12/16/1448هـ',
+      days: 23,
+      note: 'عيد الأضحى المبارك 1448هـ'
+    }
+  ];
+
+  container.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;">
+      ${holidays.map(h => `
+        <div class="holiday-card" style="border-right-color:${h.color};">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+            <div style="font-size:2rem;">${h.icon}</div>
+            <div>
+              <div class="holiday-card-title">${h.title}</div>
+              <span style="font-size:0.78rem;padding:2px 10px;border-radius:20px;background:${h.color}22;color:${h.color};font-weight:700;">${h.term}</span>
+            </div>
+            <div style="margin-right:auto;text-align:center;">
+              <div style="font-size:1.8rem;font-weight:900;color:${h.color};">${h.days}</div>
+              <div style="font-size:0.72rem;color:var(--text-light);">يوم</div>
+            </div>
+          </div>
+          <div class="holiday-dates">
+            <div class="holiday-date-row">
+              <span class="holiday-date-label">📅 تبدأ:</span>
+              <span class="holiday-date-value">${h.start} — ${h.startH}</span>
+            </div>
+            <div class="holiday-date-row">
+              <span class="holiday-date-label">📅 تنتهي:</span>
+              <span class="holiday-date-value">${h.end} — ${h.endH}</span>
+            </div>
+            <div style="margin-top:10px;padding:8px;background:#f8fafc;border-radius:8px;font-size:0.82rem;color:var(--text-light);">
+              💡 ${h.note}
+            </div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+// ==================== QUICK EVENTS ====================
+function renderQuickEvents() {
+  const container = document.getElementById('quick-events');
+  const keyEvents = [
+    { icon:'🏫', color:'#1a3a5c', title:'بداية الفصل الأول', date:'30/8/2026', dateH:'3/17/1448هـ' },
+    { icon:'🎉', color:'#4caf50', title:'إجازة اليوم الوطني', date:'23-26/9/2026', dateH:'4/12-15/1448هـ' },
+    { icon:'🍂', color:'#ff9800', title:'إجازة الخريف', date:'20-28/11/2026', dateH:'6/10-18/1448هـ' },
+    { icon:'📝', color:'#e53935', title:'اختبارات الفصل الأول', date:'3/1/2027', dateH:'7/25/1448هـ' },
+    { icon:'❄️', color:'#2196f3', title:'إجازة منتصف العام', date:'8-16/1/2027', dateH:'7/30-8/8/1448هـ' },
+    { icon:'📚', color:'#2a5298', title:'بداية الفصل الثاني', date:'17/1/2027', dateH:'8/9/1448هـ' },
+    { icon:'🌙', color:'#e07b39', title:'إجازة عيد الفطر', date:'26/2-13/3/2027', dateH:'9/19-10/5/1448هـ' },
+    { icon:'🐑', color:'#9c27b0', title:'إجازة عيد الأضحى', date:'30/4-22/5/2027', dateH:'11/23-12/16/1448هـ' },
+    { icon:'📝', color:'#e53935', title:'اختبارات الفصل الثاني', date:'27/6/2027', dateH:'1/22/1449هـ' },
+    { icon:'🎊', color:'#4caf50', title:'إجازة نهاية العام', date:'1/7/2027', dateH:'1/26/1449هـ' },
+    { icon:'🔄', color:'#c8a951', title:'عودة للعام الجديد', date:'15/8/2027', dateH:'3/13/1449هـ' },
+    { icon:'🆕', color:'#4a9d8f', title:'بداية العام 1449/1450هـ', date:'29/8/2027', dateH:'3/27/1449هـ' }
+  ];
+
+  container.innerHTML = keyEvents.map(e => `
+    <div class="holiday-card" style="border-right-color:${e.color};">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="font-size:2rem;">${e.icon}</div>
+        <div>
+          <div class="holiday-card-title">${e.title}</div>
+          <div style="font-size:0.85rem;color:var(--primary);font-weight:700;">${e.date}</div>
+          <div style="font-size:0.78rem;color:var(--text-light);">${e.dateH}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ==================== APPOINTMENTS ====================
+function getTypeLabel(type) {
+  const map = { meeting:'اجتماع', exam:'اختبار', event:'فعالية', reminder:'تذكير', other:'أخرى' };
+  return map[type] || type;
+}
+
+function getTypeIcon(type) {
+  const map = { meeting:'fa-users', exam:'fa-file-alt', event:'fa-star', reminder:'fa-bell', other:'fa-bookmark' };
+  return map[type] || 'fa-bookmark';
+}
+
+function getTypeColors(type) {
+  const map = {
+    meeting: { bg:'#e3f2fd', color:'#1565c0' },
+    exam: { bg:'#fff3e0', color:'#e65100' },
+    event: { bg:'#f3e5f5', color:'#6a1b9a' },
+    reminder: { bg:'#e8f5e9', color:'#2e7d32' },
+    other: { bg:'#f5f5f5', color:'#616161' }
+  };
+  return map[type] || map.other;
+}
+
+function getPriorityLabel(p) {
+  const map = { high:'عالية 🔴', medium:'متوسطة 🟡', low:'منخفضة 🟢' };
+  return map[p] || p;
+}
+
+function addAppointment() {
+  const title = document.getElementById('appt-title').value.trim();
+  const date = document.getElementById('appt-date').value;
+  if (!title || !date) { showToast('يرجى إدخال العنوان والتاريخ', 'error'); return; }
+
+  const appt = {
+    id: Date.now(),
+    title,
+    date,
+    time: document.getElementById('appt-time').value,
+    type: document.getElementById('appt-type').value,
+    priority: document.getElementById('appt-priority').value,
+    location: document.getElementById('appt-location').value.trim(),
+    notes: document.getElementById('appt-notes').value.trim(),
+    createdAt: new Date().toISOString()
+  };
+
+  appointments.unshift(appt);
+  saveAppointments();
+  clearForm();
+  showToast('تم حفظ الموعد بنجاح ✓', 'success');
+  renderAppointments();
+}
+
+function clearForm() {
+  ['appt-title','appt-date','appt-time','appt-location','appt-notes'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('appt-type').value = 'meeting';
+  document.getElementById('appt-priority').value = 'medium';
+}
+
+function deleteAppointment(id) {
+  appointments = appointments.filter(a => a.id !== id);
+  saveAppointments();
+  renderAppointments();
+  showToast('تم حذف الموعد', 'info');
+}
+
+function clearAllAppointments() {
+  if (!appointments.length) return;
+  if (confirm('هل أنت متأكد من حذف جميع المواعيد؟')) {
+    appointments = [];
+    saveAppointments();
+    renderAppointments();
+    showToast('تم حذف جميع المواعيد', 'info');
+  }
+}
+
+function editAppointment(id) {
+  const appt = appointments.find(a => a.id === id);
+  if (!appt) return;
+  editingId = id;
+
+  document.getElementById('modal-title').innerHTML = '<i class="fas fa-edit" style="margin-left:8px;"></i> تعديل الموعد';
+  document.getElementById('modal-title-input').value = appt.title;
+  document.getElementById('modal-date').value = appt.date;
+  document.getElementById('modal-time').value = appt.time || '';
+  document.getElementById('modal-type').value = appt.type;
+  document.getElementById('modal-priority').value = appt.priority;
+  document.getElementById('modal-location').value = appt.location || '';
+  document.getElementById('modal-notes').value = appt.notes || '';
+
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function saveModal() {
+  const title = document.getElementById('modal-title-input').value.trim();
+  const date = document.getElementById('modal-date').value;
+  if (!title || !date) { showToast('يرجى إدخال العنوان والتاريخ', 'error'); return; }
+
+  if (editingId) {
+    const idx = appointments.findIndex(a => a.id === editingId);
+    if (idx !== -1) {
+      appointments[idx] = {
+        ...appointments[idx],
+        title,
+        date,
+        time: document.getElementById('modal-time').value,
+        type: document.getElementById('modal-type').value,
+        priority: document.getElementById('modal-priority').value,
+        location: document.getElementById('modal-location').value.trim(),
+        notes: document.getElementById('modal-notes').value.trim()
+      };
+    }
+    editingId = null;
+    showToast('تم تحديث الموعد بنجاح ✓', 'success');
+  }
+
+  saveAppointments();
+  closeModal();
+  renderAppointments();
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  editingId = null;
+}
+
+function openAddModal() {
+  editingId = null;
+  document.getElementById('modal-title').innerHTML = '<i class="fas fa-calendar-plus" style="margin-left:8px;"></i> إضافة موعد';
+  document.getElementById('modal-title-input').value = '';
+  document.getElementById('modal-date').value = '';
+  document.getElementById('modal-time').value = '';
+  document.getElementById('modal-type').value = 'meeting';
+  document.getElementById('modal-priority').value = 'medium';
+  document.getElementById('modal-location').value = '';
+  document.getElementById('modal-notes').value = '';
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function quickAddFromEvent(eventName, dateM) {
+  showSection('appointments');
+  document.getElementById('appt-title').value = eventName;
+  document.getElementById('appt-title').focus();
+  showToast('تم نقل الحدث — أكمل البيانات واضغط حفظ', 'info');
+}
+
+function filterAppointments() {
+  renderAppointments();
+}
+
+function renderAppointments() {
+  const list = document.getElementById('appointments-list');
+  const search = document.getElementById('appt-search')?.value.toLowerCase() || '';
+  const typeFilter = document.getElementById('appt-filter-type')?.value || 'all';
+  const priorityFilter = document.getElementById('appt-filter-priority')?.value || 'all';
+
+  let filtered = appointments.filter(a => {
+    const matchSearch = !search || a.title.toLowerCase().includes(search) || (a.notes||'').toLowerCase().includes(search) || (a.location||'').toLowerCase().includes(search);
+    const matchType = typeFilter === 'all' || a.type === typeFilter;
+    const matchPriority = priorityFilter === 'all' || a.priority === priorityFilter;
+    return matchSearch && matchType && matchPriority;
+  });
+
+  filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  if (!filtered.length) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <i class="fas fa-calendar-times"></i>
+        <h3>${appointments.length ? 'لا توجد نتائج مطابقة' : 'لا توجد مواعيد مسجلة'}</h3>
+        <p>${appointments.length ? 'جرب تغيير معايير البحث' : 'أضف موعدك الأول باستخدام النموذج أعلاه'}</p>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = `<div class="appointments-list">` + filtered.map(a => {
+    const colors = getTypeColors(a.type);
+    const dateFormatted = a.date ? new Date(a.date + 'T00:00:00').toLocaleDateString('ar-SA', { weekday:'long', year:'numeric', month:'long', day:'numeric' }) : '';
+    return `
+      <div class="appointment-item priority-${a.priority}" id="appt-${a.id}">
+        <div class="appointment-icon" style="background:${colors.bg};color:${colors.color};">
+          <i class="fas ${getTypeIcon(a.type)}"></i>
+        </div>
+        <div class="appointment-content">
+          <div class="appointment-title">${a.title}</div>
+          <div class="appointment-meta">
+            <span><i class="fas fa-calendar"></i> ${dateFormatted}</span>
+            ${a.time ? `<span><i class="fas fa-clock"></i> ${a.time}</span>` : ''}
+            ${a.location ? `<span><i class="fas fa-map-marker-alt"></i> ${a.location}</span>` : ''}
+            <span style="background:${colors.bg};color:${colors.color};padding:2px 8px;border-radius:20px;font-weight:700;">
+              ${getTypeLabel(a.type)}
+            </span>
+            <span>${getPriorityLabel(a.priority)}</span>
+          </div>
+          ${a.notes ? `<div style="margin-top:6px;font-size:0.83rem;color:var(--text-light);background:#f8fafc;padding:6px 10px;border-radius:6px;">${a.notes}</div>` : ''}
+        </div>
+        <div class="appointment-actions no-print">
+          <button class="btn-icon btn-icon-print" onclick="printAppointment(${a.id})" title="طباعة"><i class="fas fa-print"></i></button>
+          <button class="btn-icon btn-icon-edit" onclick="editAppointment(${a.id})" title="تعديل"><i class="fas fa-edit"></i></button>
+          <button class="btn-icon btn-icon-delete" onclick="deleteAppointment(${a.id})" title="حذف"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+    `;
+  }).join('') + `</div>`;
+}
+
+function printAppointment(id) {
+  const a = appointments.find(ap => ap.id === id);
+  if (!a) return;
+  const colors = getTypeColors(a.type);
+  const dateFormatted = a.date ? new Date(a.date + 'T00:00:00').toLocaleDateString('ar-SA', { weekday:'long', year:'numeric', month:'long', day:'numeric' }) : '';
+  const win = window.open('', '_blank');
+  win.document.write(`
+    <!DOCTYPE html><html lang="ar" dir="rtl">
+    <head><meta charset="UTF-8"><title>طباعة موعد</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+      body { font-family:'Tajawal',sans-serif; padding:40px; color:#1a2535; }
+      .header { background:linear-gradient(135deg,#1a3a5c,#2a5298); color:white; padding:24px; border-radius:12px; margin-bottom:24px; text-align:center; }
+      .header h1 { font-size:1.5rem; margin-bottom:4px; }
+      .card { border:2px solid #e8edf2; border-radius:12px; padding:24px; }
+      .row { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #f0f4f8; }
+      .label { color:#5a6a7e; font-weight:600; }
+      .value { font-weight:700; color:#1a3a5c; }
+      .type-badge { display:inline-block; padding:4px 14px; border-radius:20px; background:${colors.bg}; color:${colors.color}; font-weight:700; }
+      @media print { body { padding:20px; } }
+    </style></head>
+    <body>
+    <div class="header"><h1>📅 تفاصيل الموعد</h1><p>التقويم الدراسي 1448/1449هـ</p></div>
+    <div class="card">
+      <div class="row"><span class="label">العنوان</span><span class="value">${a.title}</span></div>
+      <div class="row"><span class="label">التاريخ</span><span class="value">${dateFormatted}</span></div>
+      ${a.time ? `<div class="row"><span class="label">الوقت</span><span class="value">${a.time}</span></div>` : ''}
+      <div class="row"><span class="label">النوع</span><span class="value"><span class="type-badge">${getTypeLabel(a.type)}</span></span></div>
+      <div class="row"><span class="label">الأولوية</span><span class="value">${getPriorityLabel(a.priority)}</span></div>
+      ${a.location ? `<div class="row"><span class="label">المكان</span><span class="value">${a.location}</span></div>` : ''}
+      ${a.notes ? `<div class="row"><span class="label">ملاحظات</span><span class="value">${a.notes}</span></div>` : ''}
+    </div>
+    <p style="text-align:center;margin-top:20px;color:#999;font-size:0.8rem;">التقويم الدراسي 1448/1449هـ — مكة · المدينة · جدة · الطائف</p>
+    <script>window.onload=()=>window.print();<\/script>
+    </body></html>
+  `);
+  win.document.close();
+}
+
+// ==================== PRINT ====================
+function printPage() {
+  window.print();
+}
+
+function printAll() {
+  window.print();
+}
+
+function smartPrint() {
+  const printCalendar = document.getElementById('print-calendar').checked;
+  const printWeeks = document.getElementById('print-weeks').checked;
+  const printHolidays = document.getElementById('print-holidays').checked;
+  const printAppts = document.getElementById('print-appointments').checked;
+
+  let content = `
+    <!DOCTYPE html><html lang="ar" dir="rtl">
+    <head><meta charset="UTF-8"><title>طباعة التقويم الدراسي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+      * { margin:0; padding:0; box-sizing:border-box; }
+      body { font-family:'Tajawal',sans-serif; padding:20px; color:#1a2535; font-size:12px; }
+      .print-header { text-align:center; padding:20px; background:linear-gradient(135deg,#1a3a5c,#2a5298); color:white; border-radius:12px; margin-bottom:20px; }
+      .print-header h1 { font-size:1.4rem; margin-bottom:4px; }
+      .section-title { background:#1a3a5c; color:white; padding:10px 16px; border-radius:8px; margin:16px 0 10px; font-size:1rem; font-weight:700; }
+      table { width:100%; border-collapse:collapse; margin-bottom:16px; }
+      th { background:#f0f4f8; padding:8px 12px; text-align:right; font-size:0.82rem; border-bottom:2px solid #e8edf2; }
+      td { padding:8px 12px; border-bottom:1px solid #f0f4f8; font-size:0.82rem; }
+      .appt-item { border:1px solid #e8edf2; border-radius:8px; padding:12px; margin-bottom:8px; }
+      .appt-title { font-weight:700; font-size:0.95rem; }
+      .appt-meta { color:#5a6a7e; font-size:0.8rem; margin-top:4px; }
+      .footer { text-align:center; margin-top:20px; color:#999; font-size:0.75rem; }
+      @page { margin:1.5cm; }
+    </style></head>
+    <body>
+    <div class="print-header">
+      <h1>📅 التقويم الدراسي 1448/1449هـ</h1>
+      <p>مكة المكرمة · المدينة المنورة · جدة · الطائف</p>
+      <p style="font-size:0.8rem;opacity:0.8;margin-top:4px;">تاريخ الطباعة: ${new Date().toLocaleDateString('ar-SA')}</p>
+    </div>
+  `;
+
+  if (printCalendar) {
+    content += `<div class="section-title">📅 التقويم الدراسي الكامل</div>
+    <table><thead><tr><th>البيان</th><th>اليوم</th><th>الهجري</th><th>الميلادي</th></tr></thead><tbody>`;
+    calendarData.mainEvents.forEach(e => {
+      content += `<tr><td>${e.event}</td><td>${e.day}</td><td>${e.dateH}</td><td>${e.dateM}</td></tr>`;
+    });
+    content += `</tbody></table>`;
+  }
+
+  if (printWeeks) {
+    content += `<div class="section-title">📊 توزيع الأسابيع — الفصل الثاني</div>
+    <table><thead><tr><th>الأسبوع</th><th>الشهر</th><th>الهجري</th><th>الأيام</th></tr></thead><tbody>`;
+    calendarData.term2Weeks.forEach(w => {
+      const daysStr = w.days.map(d => `${d.day}: ${d.dateM}`).join(' | ');
+      content += `<tr><td>${w.title}</td><td>${w.month}</td><td>${w.hijri}</td><td style="font-size:0.75rem;">${daysStr}</td></tr>`;
+    });
+    content += `</tbody></table>`;
+  }
+
+  if (printAppts && appointments.length) {
+    content += `<div class="section-title">📌 مواعيدي الشخصية (${appointments.length} موعد)</div>`;
+    appointments.sort((a,b) => new Date(a.date)-new Date(b.date)).forEach(a => {
+      const dateFormatted = a.date ? new Date(a.date+'T00:00:00').toLocaleDateString('ar-SA',{weekday:'long',year:'numeric',month:'long',day:'numeric'}) : '';
+      content += `<div class="appt-item">
+        <div class="appt-title">${a.title}</div>
+        <div class="appt-meta">📅 ${dateFormatted}${a.time?' · ⏰ '+a.time:''}${a.location?' · 📍 '+a.location:''}${a.notes?' · '+a.notes:''}</div>
+      </div>`;
+    });
+  }
+
+  content += `<div class="footer">التقويم الدراسي 1448/1449هـ — إعداد: الأستاذ / أحمد الغامدي</div>
+  <script>window.onload=()=>window.print();<\/script>
+  </body></html>`;
+
+  const win = window.open('', '_blank');
+  win.document.write(content);
+  win.document.close();
+}
+
+function renderPrintPreview() {
+  const area = document.getElementById('print-preview-area');
+  area.innerHTML = `
+    <div class="table-wrapper" style="margin-top:20px;">
+      <div class="table-title pre"><i class="fas fa-eye"></i> معاينة — سيظهر هنا ملخص ما سيتم طباعته</div>
+      <div style="padding:24px;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;">
+          <div style="text-align:center;padding:20px;background:#f8fafc;border-radius:12px;">
+            <div style="font-size:2rem;margin-bottom:8px;">📅</div>
+            <div style="font-weight:700;">${calendarData.mainEvents.length} حدث</div>
+            <div style="font-size:0.82rem;color:var(--text-light);">في التقويم الكامل</div>
+          </div>
+          <div style="text-align:center;padding:20px;background:#f8fafc;border-radius:12px;">
+            <div style="font-size:2rem;margin-bottom:8px;">📊</div>
+            <div style="font-weight:700;">${calendarData.term2Weeks.length} أسبوع</div>
+            <div style="font-size:0.82rem;color:var(--text-light);">في الفصل الثاني</div>
+          </div>
+          <div style="text-align:center;padding:20px;background:#f8fafc;border-radius:12px;">
+            <div style="font-size:2rem;margin-bottom:8px;">📌</div>
+            <div style="font-weight:700;">${appointments.length} موعد</div>
+            <div style="font-size:0.82rem;color:var(--text-light);">مسجل شخصياً</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ==================== TOAST ====================
+function showToast(msg, type = 'info') {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
+  toast.innerHTML = `<i class="fas ${icons[type]||'fa-info-circle'}"></i> ${msg}`;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 3200);
+}
+
+// ==================== PROGRESS ====================
+function updateProgress() {
+  const now = new Date();
+  const term2Start = new Date('2027-01-17');
+  const term2End = new Date('2027-07-01');
+  const total = term2End - term2Start;
+  const elapsed = now - term2Start;
+  const pct = Math.min(100, Math.max(0, (elapsed / total) * 100));
+  const bar = document.getElementById('term2-progress');
+  if (bar) setTimeout(() => bar.style.width = pct.toFixed(1) + '%', 500);
+}
+
+// ==================== INIT ====================
+document.addEventListener('DOMContentLoaded', () => {
+  renderAllTables();
+  renderWeeks();
+  renderHolidays();
+  renderQuickEvents();
+  renderAppointments();
+  updateApptCount();
+  updateProgress();
+
+  // Close modal on overlay click
+  document.getElementById('modal-overlay').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+});
+</script>
+</body>
+</html>
