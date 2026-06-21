@@ -609,7 +609,6 @@ footer span { color: var(--gold2); font-weight: 700; }
       <div class="hero-actions">
         <button class="btn btn-gold" onclick="showSection('search')">🔍 ابحث في الدليل</button>
         <button class="btn btn-outline" onclick="showSection('builder')">📋 أنشئ خطة تحسين</button>
-        <button class="btn btn-outline" onclick="showSection('ai')">🤖 اسأل دليلك</button>
       </div>
     </div>
     <div class="hero-card">
@@ -644,8 +643,6 @@ footer span { color: var(--gold2); font-weight: 700; }
     <button class="nav-btn" onclick="showSection('guide')"><span class="nav-icon">🧭</span> دليل بناء الخطة</button>
     <button class="nav-btn" onclick="showSection('builder')"><span class="nav-icon">📋</span> بناء الخطة <span class="nav-badge" id="nb-plans">0</span></button>
     <button class="nav-btn" onclick="showSection('generator')"><span class="nav-icon">✨</span> المولد الذكي</button>
-    <button class="nav-btn" onclick="showSection('library')"><span class="nav-icon">📚</span> المكتبة</button>
-    <button class="nav-btn" onclick="showSection('ai')"><span class="nav-icon">🤖</span> دليلك الذكي</button>
     <button class="nav-btn" onclick="showSection('reports')"><span class="nav-icon">📄</span> التقارير</button>
   </div>
 </nav>
@@ -936,73 +933,7 @@ footer span { color: var(--gold2); font-weight: 700; }
   </div>
 </section>
 
-<!-- ══ LIBRARY ══════════════════════════════════ -->
-<section id="sec-library" class="section">
-  <div class="sec-head">
-    <div class="sec-head-icon">📚</div>
-    <div><h2>مكتبة المجالات والمعايير والمؤشرات</h2><p>المرجع الكامل لجميع مؤشرات خطة التحسين</p></div>
-  </div>
-  <div class="grid g2" id="libBox"></div>
-  <hr class="divider">
-  <div class="sec-head" style="margin-top:24px">
-    <div class="sec-head-icon">🧩</div>
-    <div><h2>المؤشرات الإشرافية الداعمة</h2></div>
-  </div>
-  <div class="grid g3" id="supBox"></div>
-</section>
 
-<!-- ══ AI ══════════════════════════════════ -->
-<section id="sec-ai" class="section">
-  <div class="sec-head">
-    <div class="sec-head-icon">🤖</div>
-    <div><h2>دليلك الذكي</h2><p>اسأل عن أي جانب في خطط التحسين وسيجيبك فوراً</p></div>
-  </div>
-
-  <!-- API KEY BOX -->
-  <div id="apiKeyBox" class="card" style="margin-bottom:18px;border:1.5px solid rgba(200,151,46,.4);background:linear-gradient(135deg,rgba(200,151,46,.05),rgba(13,115,119,.04))">
-    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-      <span style="font-size:22px">🔑</span>
-      <div style="flex:1;min-width:200px">
-        <div style="font-weight:800;color:var(--navy);font-size:14px;margin-bottom:4px">مفتاح Anthropic API</div>
-        <div style="font-size:12px;color:var(--muted)">أدخل مفتاحك مرة واحدة وسيُحفظ في الجهاز. احصل عليه من <a href="https://console.anthropic.com" target="_blank" style="color:var(--teal)">console.anthropic.com</a></div>
-      </div>
-      <div style="display:flex;gap:8px;align-items:center;flex:1;min-width:260px">
-        <input type="password" id="apiKeyInput" placeholder="sk-ant-..." style="flex:1;border:1.5px solid var(--border);border-radius:10px;padding:10px 13px;font-family:Tajawal,sans-serif;font-size:13px;outline:none;background:#fafbfc" oninput="checkApiKey()">
-        <button class="btn btn-teal btn-sm" onclick="saveApiKey()">حفظ</button>
-        <button class="btn btn-light btn-sm" onclick="clearApiKey()">مسح</button>
-      </div>
-      <div id="apiKeyStatus" style="font-size:13px;font-weight:700;white-space:nowrap"></div>
-    </div>
-  </div>
-
-  <div class="chat-wrap">
-    <div class="chat-head">
-      <div class="chat-head-icon">🤖</div>
-      <div>
-        <h3>دليلك لخطط التحسين</h3>
-        <p>مساعد ذكي متخصص في خطط التحسين المدرسي</p>
-      </div>
-      <span class="chat-badge" id="chatStatus">● في انتظار المفتاح</span>
-    </div>
-    <div class="chat-messages" id="chatMessages">
-      <div class="msg bot">
-        <div class="msg-avatar">🤖</div>
-        <div class="msg-bubble">مرحباً! أنا دليلك لخطط التحسين المدرسي. أدخل مفتاح API أعلاه لتفعيل المساعد الذكي، ثم اسألني عن أي مجال أو معيار أو مؤشر. 😊</div>
-      </div>
-    </div>
-    <div class="quick-chips" style="border-top:1px solid var(--border);padding:12px 16px">
-      <span class="chip" onclick="sendChip('كيف أبني خطة تحسين فعّالة؟')">كيف أبني خطة تحسين؟</span>
-      <span class="chip" onclick="sendChip('ما هي مؤشرات مجال الإدارة المدرسية؟')">مؤشرات الإدارة</span>
-      <span class="chip" onclick="sendChip('اقترح مبادرة لتحسين التحصيل الدراسي')">مبادرة التحصيل</span>
-      <span class="chip" onclick="sendChip('ما هي شواهد تقويم التعلم؟')">شواهد التقويم</span>
-      <span class="chip" onclick="sendChip('كيف أحدد الأولويات في خطة التحسين؟')">تحديد الأولويات</span>
-    </div>
-    <div class="chat-input-wrap">
-      <textarea class="chat-input" id="chatInput" rows="1" placeholder="اكتب سؤالك هنا..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}" oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'"></textarea>
-      <button class="btn btn-teal" onclick="sendChat()">إرسال ➤</button>
-    </div>
-  </div>
-</section>
 
 <!-- ══ REPORTS ══════════════════════════════════ -->
 <section id="sec-reports" class="section">
@@ -1484,32 +1415,17 @@ function copyGenerated() {
 }
 
 // ══════════════════════════════════
-// LIBRARY
+// INIT
 // ══════════════════════════════════
-function renderLibrary() {
-  const libEl = document.getElementById('libBox');
-  libEl.innerHTML = Object.entries(DATA).map(([domain, standards]) => `
-    <div class="lib-domain">
-      <div class="lib-domain-head">
-        <span class="licon">${domain === 'الإدارة المدرسية' ? '🏫' : domain === 'التعليم والتعلم' ? '📚' : domain === 'نواتج التعلم' ? '📈' : '🛡️'}</span>
-        ${domain}
-      </div>
-      ${Object.entries(standards).map(([std, inds]) => `
-        <details class="lib-standard" open>
-          <summary>${std}</summary>
-          <ul>${inds.map(i => `<li>${i}</li>`).join('')}</ul>
-        </details>`).join('')}
-    </div>`).join('');
-
-  const supEl = document.getElementById('supBox');
-  supEl.innerHTML = Object.entries(SUPERVISORY).map(([title, items]) => `
-    <div class="sup-card">
-      <div class="sup-head">${title}</div>
-      <div class="sup-body">
-        ${items.map(i => `<div class="sup-item">${i}</div>`).join('')}
-      </div>
-    </div>`).join('');
+function init() {
+  updateBStandards();
+  const gDomain = document.getElementById('g-domain').value;
+  populateSelect('g-standard', getStandards(gDomain));
+  renderPlanTable();
+  updateStats();
 }
+
+init();
 
 // ══════════════════════════════════
 // REPORTS
@@ -1526,30 +1442,20 @@ function renderReport(type) {
     : type === 'admin' ? 'تقرير مختصر لمجال الإدارة المدرسية'
     : 'تقرير خطة التحسين الكامل';
 
-  const header = `<div class="report-header">
-    <h2>${title}</h2>
-    <p>${admin} — ${school} — ${year}</p>
-    <p>المدير/ة: ${principal} | منسق/ة التقويم الذاتي: ${coord}</p>
-  </div>`;
+  const header = '<div class="report-header"><h2>' + title + '</h2><p>' + admin + ' — ' + school + ' — ' + year + '</p><p>المدير/ة: ' + principal + ' | منسق/ة التقويم الذاتي: ' + coord + '</p></div>';
 
-  const rows = filtered.map((p, i) => `<tr>
-    <td>${i+1}</td><td>${p.domain}</td><td>${p.standard}</td>
-    <td>${p.initiative}</td>
-    <td style="white-space:pre-wrap">${type === 'follow' ? p.progress + '%' : p.activities}</td>
-    <td>${type === 'follow' ? '—' : p.kpi}</td>
-    <td>${p.owner || '—'}</td>
-  </tr>`).join('');
+  const cols5 = type === 'follow' ? 'الإنجاز' : 'الأنشطة';
+  const cols6 = type === 'follow' ? 'الملاحظات' : 'مؤشرات القياس';
 
-  const table = filtered.length ? `
-    <div class="table-wrap"><table>
-      <thead><tr>
-        <th>#</th><th>المجال</th><th>المعيار</th><th>المبادرة</th>
-        <th>${type === 'follow' ? 'الإنجاز' : 'الأنشطة'}</th>
-        <th>${type === 'follow' ? 'الملاحظات' : 'مؤشرات القياس'}</th>
-        <th>المسؤول/ة</th>
-      </tr></thead>
-      <tbody>${rows}</tbody>
-    </table></div>` : '<p style="text-align:center;color:var(--muted);padding:24px">لا توجد مبادرات بعد. أضف مبادرات من تبويب بناء الخطة.</p>';
+  const rows = filtered.map(function(p, i) {
+    const col5val = type === 'follow' ? p.progress + '%' : p.activities;
+    const col6val = type === 'follow' ? '—' : p.kpi;
+    return '<tr><td>' + (i+1) + '</td><td>' + p.domain + '</td><td>' + p.standard + '</td><td>' + p.initiative + '</td><td style="white-space:pre-wrap">' + col5val + '</td><td>' + col6val + '</td><td>' + (p.owner || '—') + '</td></tr>';
+  }).join('');
+
+  const table = filtered.length
+    ? '<div class="table-wrap"><table><thead><tr><th>#</th><th>المجال</th><th>المعيار</th><th>المبادرة</th><th>' + cols5 + '</th><th>' + cols6 + '</th><th>المسؤول/ة</th></tr></thead><tbody>' + rows + '</tbody></table></div>'
+    : '<p style="text-align:center;color:var(--muted);padding:24px">لا توجد مبادرات بعد. أضف مبادرات من تبويب بناء الخطة.</p>';
 
   document.getElementById('reportPage').innerHTML = header + table;
 }
@@ -1563,7 +1469,7 @@ function preparePrint() {
   showSection('reports');
   if (!plans.length) { toast('⚠️ أضف مبادرات أولاً'); return; }
   renderReport('full');
-  setTimeout(() => window.print(), 200);
+  setTimeout(function() { window.print(); }, 200);
 }
 
 function clearAllData() {
@@ -1575,169 +1481,6 @@ function clearAllData() {
     toast('تم مسح البيانات');
   }
 }
-
-// ══════════════════════════════════
-// API KEY MANAGEMENT
-// ══════════════════════════════════
-function saveApiKey() {
-  const key = document.getElementById('apiKeyInput').value.trim();
-  if (!key.startsWith('sk-ant-')) {
-    toast('⚠️ المفتاح يجب أن يبدأ بـ sk-ant-');
-    setApiStatus(false);
-    return;
-  }
-  localStorage.setItem('daleel_api_key', key);
-  setApiStatus(true);
-  toast('✅ تم حفظ المفتاح بنجاح');
-}
-
-function clearApiKey() {
-  localStorage.removeItem('daleel_api_key');
-  document.getElementById('apiKeyInput').value = '';
-  setApiStatus(false);
-  toast('🗑️ تم مسح المفتاح');
-}
-
-function checkApiKey() {
-  const val = document.getElementById('apiKeyInput').value.trim();
-  if (val.startsWith('sk-ant-') && val.length > 20) setApiStatus(true, false);
-  else setApiStatus(false, false);
-}
-
-function setApiStatus(ok, save = true) {
-  const statusEl = document.getElementById('apiKeyStatus');
-  const badgeEl = document.getElementById('chatStatus');
-  if (ok) {
-    statusEl.innerHTML = '<span style="color:var(--green2)">✅ مفتاح صالح</span>';
-    if (badgeEl) badgeEl.textContent = '● متصل';
-    if (badgeEl) badgeEl.style.background = 'var(--green2)';
-  } else {
-    statusEl.innerHTML = '<span style="color:var(--danger)">🔴 أدخل المفتاح</span>';
-    if (badgeEl) badgeEl.textContent = '● في انتظار المفتاح';
-    if (badgeEl) badgeEl.style.background = '';
-  }
-}
-
-function getApiKey() {
-  return localStorage.getItem('daleel_api_key') || document.getElementById('apiKeyInput').value.trim();
-}
-
-function initApiKey() {
-  const saved = localStorage.getItem('daleel_api_key');
-  if (saved) {
-    document.getElementById('apiKeyInput').value = saved;
-    setApiStatus(true);
-  } else {
-    setApiStatus(false);
-  }
-}
-
-// ══════════════════════════════════
-// AI CHAT
-// ══════════════════════════════════
-const chatHistory = [];
-
-function sendChip(text) {
-  document.getElementById('chatInput').value = text;
-  sendChat();
-}
-
-async function sendChat() {
-  const apiKey = getApiKey();
-  if (!apiKey || !apiKey.startsWith('sk-ant-')) {
-    addMsg('bot', '⚠️ يرجى إدخال مفتاح Anthropic API أولاً في الحقل أعلاه، ثم اضغط "حفظ".');
-    return;
-  }
-
-  const input = document.getElementById('chatInput');
-  const msg = input.value.trim();
-  if (!msg) return;
-  input.value = '';
-  input.style.height = 'auto';
-
-  addMsg('user', msg);
-  chatHistory.push({ role: 'user', content: msg });
-
-  const typingId = 'typing-' + Date.now();
-  const messagesEl = document.getElementById('chatMessages');
-  messagesEl.innerHTML += `<div class="msg bot" id="${typingId}">
-    <div class="msg-avatar">🤖</div>
-    <div class="msg-bubble"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>
-  </div>`;
-  messagesEl.scrollTop = messagesEl.scrollHeight;
-
-  try {
-    const systemPrompt = `أنت "دليلك لخطط التحسين"، مساعد ذكي متخصص في خطط التحسين المدرسي للمدارس السعودية وفق إطار وزارة التعليم والتقويم الذاتي (ETEC).
-
-تتخصص في:
-- المجالات الأربعة: الإدارة المدرسية، التعليم والتعلم، نواتج التعلم، البيئة المدرسية
-- المعايير والمؤشرات والمؤشرات الفرعية لكل مجال
-- صياغة المبادرات والأنشطة التنفيذية والشواهد ومؤشرات القياس
-- منهجية بناء خطط التحسين المدرسي
-
-أسلوبك: عربي فصيح، موجز وعملي، موجه للمشرفين التربويين وقادة المدارس. ابدأ إجاباتك مباشرة بالمحتوى. استخدم النقاط والترقيم عند الحاجة.`;
-
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1000,
-        system: systemPrompt,
-        messages: chatHistory
-      })
-    });
-
-    const data = await response.json();
-
-    if (data.error) {
-      document.getElementById(typingId)?.remove();
-      const errMsg = data.error.type === 'authentication_error'
-        ? '❌ المفتاح غير صحيح أو منتهي الصلاحية. تحقق منه وأعد حفظه.'
-        : `❌ خطأ: ${data.error.message}`;
-      addMsg('bot', errMsg);
-      return;
-    }
-
-    const reply = data.content?.[0]?.text || 'عذراً، لم تصل استجابة. حاول مجدداً.';
-    document.getElementById(typingId)?.remove();
-    addMsg('bot', reply);
-    chatHistory.push({ role: 'assistant', content: reply });
-  } catch (e) {
-    document.getElementById(typingId)?.remove();
-    addMsg('bot', '❌ تعذّر الاتصال بالخادم. تأكد من الاتصال بالإنترنت وأن المفتاح صحيح.');
-  }
-}
-
-function addMsg(role, text) {
-  const el = document.getElementById('chatMessages');
-  const avatar = role === 'bot' ? '🤖' : '👤';
-  el.innerHTML += `<div class="msg ${role}">
-    <div class="msg-avatar">${avatar}</div>
-    <div class="msg-bubble">${text.replace(/\n/g, '<br>')}</div>
-  </div>`;
-  el.scrollTop = el.scrollHeight;
-}
-
-// ══════════════════════════════════
-// INIT
-// ══════════════════════════════════
-function init() {
-  updateBStandards();
-  const gDomain = document.getElementById('g-domain').value;
-  populateSelect('g-standard', getStandards(gDomain));
-  renderLibrary();
-  renderPlanTable();
-  updateStats();
-  initApiKey();
-}
-
-init();
 </script>
 </body>
 </html>
