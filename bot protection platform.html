@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة بوت الحماية - د/فواز</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #0a0e1a;
+    --bg-panel: #111827;
+    --bg-card: #1a2235;
+    --bg-input: #0d1424;
+    --accent-gold: #f59e0b;
+    --accent-teal: #14b8a6;
+    --accent-red: #ef4444;
+    --accent-green: #10b981;
+    --accent-blue: #3b82f6;
+    --accent-purple: #8b5cf6;
+    --text-primary: #f1f5f9;
+    --text-muted: #94a3b8;
+    --border: #1e3a5f;
+    --shield: #1e40af;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    min-height: 100vh;
+    direction: rtl;
+  }
+
+  /* ─── HEADER ─── */
+  .header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+    border-bottom: 2px solid var(--accent-gold);
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 30px rgba(245,158,11,0.15);
+  }
+
+  .header-shield {
+    width: 52px; height: 52px;
+    background: linear-gradient(135deg, var(--accent-gold), #d97706);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    box-shadow: 0 0 20px rgba(245,158,11,0.4);
+    animation: pulse-shield 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse-shield {
+    0%,100% { box-shadow: 0 0 20px rgba(245,158,11,0.4); }
+    50%      { box-shadow: 0 0 35px rgba(245,158,11,0.7); }
+  }
+
+  .header-info h1 { font-size: 20px; font-weight: 900; color: var(--accent-gold); }
+  .header-info p  { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  .header-status {
+    margin-right: auto;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .status-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent-green);
+    box-shadow: 0 0 8px var(--accent-green);
+    animation: blink 2s infinite;
+  }
+
+  @keyframes blink {
+    0%,100% { opacity: 1; }
+    50%      { opacity: 0.4; }
+  }
+
+  /* ─── LAYOUT ─── */
+  .layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: calc(100vh - 90px);
+  }
+
+  /* ─── SIDEBAR ─── */
+  .sidebar {
+    background: var(--bg-panel);
+    border-left: 1px solid var(--border);
+    padding: 20px 0;
+  }
+
+  .sidebar-section { padding: 8px 16px; margin-bottom: 4px; }
+  .sidebar-label {
+    font-size: 10px; font-weight: 700;
+    color: var(--accent-gold); letter-spacing: 2px;
+    padding: 0 16px; margin-bottom: 6px; margin-top: 12px;
+    text-transform: uppercase;
+  }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 16px; border-radius: 10px;
+    cursor: pointer; transition: all 0.2s;
+    color: var(--text-muted); font-size: 14px;
+    margin: 2px 8px;
+  }
+
+  .nav-item:hover { background: rgba(245,158,11,0.08); color: var(--text-primary); }
+  .nav-item.active { background: rgba(245,158,11,0.15); color: var(--accent-gold); border-right: 3px solid var(--accent-gold); }
+  .nav-item .icon { font-size: 18px; width: 24px; text-align: center; }
+
+  .stat-mini {
+    background: rgba(255,255,255,0.04);
+    border-radius: 8px;
+    padding: 10px 14px; margin: 4px 8px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .stat-mini-label { font-size: 12px; color: var(--text-muted); }
+  .stat-mini-val   { font-size: 18px; font-weight: 700; color: var(--accent-teal); }
+
+  /* ─── MAIN ─── */
+  .main { padding: 24px; overflow-y: auto; }
+
+  /* ─── STATS ROW ─── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px; margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 14px;
+    text-align: center;
+    transition: transform 0.2s;
+    position: relative; overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  }
+
+  .stat-card.gold::before   { background: var(--accent-gold); }
+  .stat-card.teal::before   { background: var(--accent-teal); }
+  .stat-card.red::before    { background: var(--accent-red); }
+  .stat-card.green::before  { background: var(--accent-green); }
+  .stat-card.purple::before { background: var(--accent-purple); }
+
+  .stat-card:hover { transform: translateY(-3px); }
+  .stat-icon  { font-size: 28px; margin-bottom: 6px; }
+  .stat-val   { font-size: 26px; font-weight: 900; }
+  .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+  /* ─── TABS ─── */
+  .tabs { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
+
+  .tab {
+    padding: 8px 18px; border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-muted);
+    cursor: pointer; font-size: 13px; font-family: 'Tajawal', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .tab:hover { border-color: var(--accent-gold); color: var(--text-primary); }
+  .tab.active { background: var(--accent-gold); color: #000; font-weight: 700; border-color: var(--accent-gold); }
+
+  /* ─── PANELS ─── */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* ─── CARD ─── */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 18px;
+  }
+
+  .card-title {
+    font-size: 15px; font-weight: 700;
+    color: var(--accent-gold);
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  /* ─── INPUTS ─── */
+  input[type="text"], input[type="password"], textarea, select {
+    width: 100%;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: var(--text-primary);
+    font-family: 'Tajawal', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    direction: rtl;
+  }
+
+  input[type="text"]:focus,
+  input[type="password"]:focus,
+  textarea:focus,
+  select:focus { border-color: var(--accent-gold); }
+
+  textarea { min-height: 100px; resize: vertical; }
+
+  label { font-size: 13px; color: var(--text-muted); margin-bottom: 6px; display: block; }
+
+  /* ─── BUTTONS ─── */
+  .btn {
+    padding: 10px 20px; border-radius: 10px;
+    border: none; cursor: pointer;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 14px; font-weight: 700;
+    transition: all 0.2s; display: inline-flex;
+    align-items: center; gap: 6px;
+  }
+
+  .btn-gold  { background: var(--accent-gold);   color: #000; }
+  .btn-teal  { background: var(--accent-teal);   color: #000; }
+  .btn-red   { background: var(--accent-red);    color: #fff; }
+  .btn-green { background: var(--accent-green);  color: #000; }
+  .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
+
+  .btn:hover { opacity: 0.85; transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+
+  /* ─── WORD LIST ─── */
+  .word-grid {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    max-height: 250px; overflow-y: auto;
+    padding: 8px;
+  }
+
+  .word-tag {
+    background: rgba(239,68,68,0.15);
+    border: 1px solid rgba(239,68,68,0.3);
+    color: #fca5a5;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    display: flex; align-items: center; gap: 6px;
+    cursor: default;
+  }
+
+  .word-tag .del {
+    cursor: pointer; color: var(--accent-red);
+    font-size: 16px; line-height: 1;
+    transition: color 0.2s;
+  }
+
+  .word-tag .del:hover { color: #ff0000; }
+
+  /* category tags */
+  .cat-url    { background:rgba(59,130,246,.15);  border-color:rgba(59,130,246,.3);  color:#93c5fd; }
+  .cat-phone  { background:rgba(234,179,8,.15);   border-color:rgba(234,179,8,.3);   color:#fde68a; }
+  .cat-promo  { background:rgba(139,92,246,.15);  border-color:rgba(139,92,246,.3);  color:#c4b5fd; }
+  .cat-spam   { background:rgba(16,185,129,.15);  border-color:rgba(16,185,129,.3);  color:#6ee7b7; }
+
+  /* ─── LOG TABLE ─── */
+  .log-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .log-table th {
+    text-align: right; padding: 10px 12px;
+    background: rgba(255,255,255,0.04);
+    color: var(--text-muted); font-weight: 600;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .log-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    vertical-align: middle;
+  }
+
+  .log-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 10px; border-radius: 12px;
+    font-size: 11px; font-weight: 700;
+  }
+
+  .badge-del    { background:rgba(239,68,68,.2);    color:#fca5a5; }
+  .badge-ban    { background:rgba(139,92,246,.2);   color:#c4b5fd; }
+  .badge-warn   { background:rgba(245,158,11,.2);   color:#fde68a; }
+  .badge-mute   { background:rgba(59,130,246,.2);   color:#93c5fd; }
+
+  /* ─── TOGGLE ─── */
+  .toggle-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .toggle-row:last-child { border-bottom: none; }
+
+  .toggle-info h4  { font-size: 14px; font-weight: 600; }
+  .toggle-info p   { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+
+  .toggle {
+    position: relative; width: 44px; height: 24px;
+    cursor: pointer;
+  }
+
+  .toggle input { display: none; }
+
+  .toggle-slider {
+    position: absolute; inset: 0;
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+    transition: 0.3s;
+  }
+
+  .toggle-slider::after {
+    content: '';
+    position: absolute;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    top: 3px; right: 3px;
+    transition: 0.3s;
+  }
+
+  .toggle input:checked + .toggle-slider { background: var(--accent-green); }
+  .toggle input:checked + .toggle-slider::after { transform: translateX(-20px); }
+
+  /* ─── GRID 2 ─── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+
+  /* ─── ACTION INPUT ROW ─── */
+  .add-row { display: flex; gap: 10px; margin-bottom: 14px; align-items: flex-end; }
+  .add-row > div { flex: 1; }
+
+  /* ─── PYTHON CODE BLOCK ─── */
+  .code-block {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    padding: 20px;
+    overflow-x: auto;
+    position: relative;
+  }
+
+  .code-block pre {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: #e6edf3;
+    white-space: pre;
+    direction: ltr;
+    text-align: left;
+    line-height: 1.6;
+  }
+
+  .code-lang {
+    position: absolute; top: 10px; left: 14px;
+    font-size: 11px; color: #8b949e;
+    background: #161b22;
+    padding: 2px 8px; border-radius: 6px;
+  }
+
+  .copy-btn {
+    position: absolute; top: 10px; right: 14px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text-muted);
+    padding: 4px 12px;
+    border-radius: 6px; font-size: 12px;
+    cursor: pointer; transition: all 0.2s;
+  }
+
+  .copy-btn:hover { background: rgba(255,255,255,0.15); color: var(--text-primary); }
+
+  /* ─── NOTIFICATION ─── */
+  .notif {
+    position: fixed; bottom: 24px; left: 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--accent-green);
+    color: var(--accent-green);
+    padding: 12px 20px; border-radius: 12px;
+    font-size: 14px; font-weight: 600;
+    transform: translateY(100px);
+    transition: transform 0.3s;
+    z-index: 999;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  }
+
+  .notif.show { transform: translateY(0); }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    text-align: center; padding: 12px;
+    color: var(--text-muted); font-size: 12px;
+    border-top: 1px solid var(--border);
+    background: var(--bg-panel);
+  }
+
+  .action-sel select { min-width: 130px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-shield">🛡️</div>
+  <div class="header-info">
+    <h1>منصة بوت الحماية المتكاملة</h1>
+    <p>إدارة احترافية لحماية مجموعات Telegram</p>
+  </div>
+  <div class="header-status">
+    <div class="status-dot"></div>
+    <span style="font-size:13px;color:var(--accent-green)">البوت نشط</span>
+  </div>
+</div>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-label">القائمة الرئيسية</div>
+    <div class="nav-item active" onclick="setTab('dashboard')">
+      <span class="icon">📊</span> لوحة التحكم
+    </div>
+    <div class="nav-item" onclick="setTab('words')">
+      <span class="icon">🚫</span> الكلمات الممنوعة
+    </div>
+    <div class="nav-item" onclick="setTab('links')">
+      <span class="icon">🔗</span> الروابط والإعلانات
+    </div>
+    <div class="nav-item" onclick="setTab('phones')">
+      <span class="icon">📱</span> أرقام الجوالات
+    </div>
+    <div class="nav-item" onclick="setTab('promo')">
+      <span class="icon">💰</span> الترويج والاستثمار
+    </div>
+    <div class="nav-item" onclick="setTab('spam')">
+      <span class="icon">👤</span> مكافحة السبام
+    </div>
+    <div class="nav-item" onclick="setTab('settings')">
+      <span class="icon">⚙️</span> الإعدادات
+    </div>
+    <div class="nav-item" onclick="setTab('code')">
+      <span class="icon">🐍</span> كود البوت Python
+    </div>
+    <div class="nav-item" onclick="setTab('logs')">
+      <span class="icon">📋</span> سجل الإجراءات
+    </div>
+
+    <div class="sidebar-label" style="margin-top:20px">إحصائيات اليوم</div>
+    <div class="stat-mini"><span class="stat-mini-label">رسائل محذوفة</span><span class="stat-mini-val" id="s1">0</span></div>
+    <div class="stat-mini"><span class="stat-mini-label">مستخدمون محظورون</span><span class="stat-mini-val" id="s2">0</span></div>
+    <div class="stat-mini"><span class="stat-mini-label">تحذيرات</span><span class="stat-mini-val" id="s3">0</span></div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- ═══ STATS ═══ -->
+    <div class="stats-row">
+      <div class="stat-card gold">
+        <div class="stat-icon">🛡️</div>
+        <div class="stat-val" id="totalWords">0</div>
+        <div class="stat-label">كلمة ممنوعة</div>
+      </div>
+      <div class="stat-card teal">
+        <div class="stat-icon">🔗</div>
+        <div class="stat-val" id="totalLinks">0</div>
+        <div class="stat-label">نمط رابط محظور</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-icon">📱</div>
+        <div class="stat-val" id="totalPhones">0</div>
+        <div class="stat-label">نمط رقم محظور</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-icon">💰</div>
+        <div class="stat-val" id="totalPromo">0</div>
+        <div class="stat-label">عبارة ترويجية</div>
+      </div>
+      <div class="stat-card purple">
+        <div class="stat-icon">🚨</div>
+        <div class="stat-val" id="totalActions">0</div>
+        <div class="stat-label">إجراء منفذ</div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('dashboard')">📊 الرئيسية</button>
+      <button class="tab" onclick="switchTab('words')">🚫 الكلمات</button>
+      <button class="tab" onclick="switchTab('links')">🔗 الروابط</button>
+      <button class="tab" onclick="switchTab('phones')">📱 الجوالات</button>
+      <button class="tab" onclick="switchTab('promo')">💰 الترويج</button>
+      <button class="tab" onclick="switchTab('spam')">👤 السبام</button>
+      <button class="tab" onclick="switchTab('settings')">⚙️ الإعدادات</button>
+      <button class="tab" onclick="switchTab('code')">🐍 كود Python</button>
+      <button class="tab" onclick="switchTab('logs')">📋 السجل</button>
+    </div>
+
+    <!-- ══════════════════════════════════
+         PANEL: DASHBOARD
+    ══════════════════════════════════ -->
+    <div class="panel active" id="panel-dashboard">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">🛡️ حالة الحماية</div>
+          <div class="toggle-row">
+            <div class="toggle-info"><h4>حماية الكلمات الممنوعة</h4><p>حذف الرسائل التي تحتوي كلمات محظورة</p></div>
+            <label class="toggle"><input type="checkbox" checked id="g_words"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info"><h4>حماية الروابط</h4><p>منع نشر الروابط والإعلانات التجارية</p></div>
+            <label class="toggle"><input type="checkbox" checked id="g_links"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info"><h4>حماية أرقام الجوالات</h4><p>منع مشاركة أرقام الهواتف</p></div>
+            <label class="toggle"><input type="checkbox" checked id="g_phones"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info"><h4>مكافحة الترويج</h4><p>كشف رسائل الاستثمار والتسويق الشبكي</p></div>
+            <label class="toggle"><input type="checkbox" checked id="g_promo"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info"><h4>مكافحة السبام</h4><p>تقييد المستخدمين الجدد والرسائل المتكررة</p></div>
+            <label class="toggle"><input type="checkbox" checked id="g_spam"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">⚡ إجراء الحماية الافتراضي</div>
+          <div style="margin-bottom:14px">
+            <label>الإجراء عند مخالفة الكلمات الممنوعة</label>
+            <select id="action_words">
+              <option value="delete">🗑️ حذف الرسالة فقط</option>
+              <option value="delete_warn">🗑️ + ⚠️ حذف + تحذير</option>
+              <option value="delete_mute">🗑️ + 🔇 حذف + كتم مؤقت</option>
+              <option value="delete_ban">🗑️ + 🚫 حذف + حظر</option>
+            </select>
+          </div>
+          <div style="margin-bottom:14px">
+            <label>الإجراء عند نشر الروابط</label>
+            <select id="action_links">
+              <option value="delete_warn">🗑️ + ⚠️ حذف + تحذير</option>
+              <option value="delete">🗑️ حذف الرسالة فقط</option>
+              <option value="delete_mute">🗑️ + 🔇 حذف + كتم مؤقت</option>
+              <option value="delete_ban">🗑️ + 🚫 حذف + حظر</option>
+            </select>
+          </div>
+          <div style="margin-bottom:14px">
+            <label>الإجراء عند نشر أرقام الجوالات</label>
+            <select id="action_phones">
+              <option value="delete_mute">🗑️ + 🔇 حذف + كتم مؤقت</option>
+              <option value="delete">🗑️ حذف الرسالة فقط</option>
+              <option value="delete_warn">🗑️ + ⚠️ حذف + تحذير</option>
+              <option value="delete_ban">🗑️ + 🚫 حذف + حظر</option>
+            </select>
+          </div>
+          <div>
+            <label>الإجراء عند كشف ترويج/استثمار</label>
+            <select id="action_promo">
+              <option value="delete_ban">🗑️ + 🚫 حذف + حظر فوري</option>
+              <option value="delete_mute">🗑️ + 🔇 حذف + كتم</option>
+              <option value="delete_warn">🗑️ + ⚠️ حذف + تحذير</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📝 رسالة التحذير للمستخدم</div>
+        <div class="grid-2">
+          <div>
+            <label>رسالة عند انتهاك قواعد المجموعة</label>
+            <textarea id="warn_msg" style="min-height:80px">⚠️ تحذير يا {name}!
+رسالتك تنتهك قواعد المجموعة وتمت إزالتها.
+المخالفة: {reason}
+عدد التحذيرات: {warns}/3
+بعد 3 تحذيرات سيتم حظرك.</textarea>
+          </div>
+          <div>
+            <label>رسالة الترحيب بعد كتم المستخدم</label>
+            <textarea id="mute_msg" style="min-height:80px">🔇 تم كتم {name} لمدة {duration} دقيقة.
+السبب: {reason}
+يمكنك التواصل مع المشرف لرفع الكتم.</textarea>
+          </div>
+        </div>
+        <div style="margin-top:14px;display:flex;gap:10px">
+          <button class="btn btn-gold" onclick="saveSettings()">💾 حفظ الإعدادات</button>
+          <button class="btn btn-teal" onclick="exportConfig()">📤 تصدير الإعدادات</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════
+         PANEL: WORDS
+    ══════════════════════════════════ -->
+    <div class="panel" id="panel-words">
+      <div class="card">
+        <div class="card-title">🚫 إضافة كلمات / عبارات ممنوعة</div>
+        <div class="add-row">
+          <div>
+            <label>الكلمة أو العبارة</label>
+            <input type="text" id="word_input" placeholder="اكتب الكلمة أو العبارة الممنوعة..." onkeypress="if(event.key==='Enter')addWord()">
+          </div>
+          <button class="btn btn-red" onclick="addWord()">➕ إضافة</button>
+        </div>
+        <div style="margin-bottom:14px">
+          <label>إضافة قائمة دفعة واحدة (كلمة في كل سطر)</label>
+          <textarea id="bulk_words" placeholder="كلمة 1&#10;كلمة 2&#10;عبارة ممنوعة 3"></textarea>
+          <button class="btn btn-gold" style="margin-top:8px" onclick="bulkAdd()">📥 إضافة الكل</button>
+        </div>
+        <div class="card-title" style="margin-top:8px">قائمة الكلمات المحظورة (<span id="word_count">0</span>)</div>
+        <div class="word-grid" id="word_list"></div>
+        <div style="margin-top:14px;display:flex;gap:10px">
+          <button class="btn btn-ghost" onclick="clearWords()">🗑️ مسح الكل</button>
+          <button class="btn btn-teal" onclick="exportWords()">📤 تصدير</button>
+          <button class="btn btn-gold" onclick="importWordsPrompt()">📥 استيراد</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📚 قوائم جاهزة مقترحة</div>
+        <div class="grid-3">
+          <button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="loadPreset('invest')">💰 قائمة الاستثمار</button>
+          <button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="loadPreset('spam')">📢 قائمة الإعلانات</button>
+          <button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="loadPreset('insult')">🤬 الألفاظ المسيئة</button>
+          <button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="loadPreset('politics')">🏛️ السياسة</button>
+          <button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="loadPreset('religion')">☪️ الإساءة الدينية</button>
+          <button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="loadPreset('adult')">🔞 المحتوى غير اللائق</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════
+         PANEL: LINKS
+    ══════════════════════════════════ -->
+    <div class="panel" id="panel-links">
+      <div class="card">
+        <div class="card-title">🔗 إعدادات حماية الروابط</div>
+        <div class="toggle-row">
+          <div class="toggle-info"><h4>حظر جميع الروابط</h4><p>منع نشر أي رابط http/https</p></div>
+          <label class="toggle"><input type="checkbox" id="block_all_links"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info"><h4>حظر روابط Telegram</h4><p>منع t.me/... دعوات المجموعات والقنوات</p></div>
+          <label class="toggle"><input type="checkbox" checked id="block_tg_links"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info"><h4>حظر روابط يوتيوب / تيك توك</h4><p>منع الترويج بمقاطع الفيديو</p></div>
+          <label class="toggle"><input type="checkbox" id="block_video_links"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info"><h4>السماح للمشرفين بالنشر</h4><p>المشرفون مستثنون من فلتر الروابط</p></div>
+          <label class="toggle"><input type="checkbox" checked id="admins_bypass"><span class="toggle-slider"></span></label>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">✅ الروابط المسموح بها (القائمة البيضاء)</div>
+        <div class="add-row">
+          <div><label>نطاق مسموح به</label><input type="text" id="whitelist_input" placeholder="مثال: drive.google.com"></div>
+          <button class="btn btn-green" onclick="addWhitelist()">➕ إضافة</button>
+        </div>
+        <div class="word-grid" id="whitelist_list" style="margin-top:8px">
+          <span class="word-tag cat-url">drive.google.com <span class="del" onclick="removeTag(this)">×</span></span>
+          <span class="word-tag cat-url">forms.gle <span class="del" onclick="removeTag(this)">×</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════
+         PANEL: PHONES
+    ══════════════════════════════════ -->
+    <div class="panel" id="panel-phones">
+      <div class="card">
+        <div class="card-title">📱 حماية أرقام الجوالات</div>
+        <div class="toggle-row">
+          <div class="toggle-info"><h4>حظر أرقام سعودية (05xxxxxxxx)</h4><p>كشف الأرقام بالصيغة السعودية</p></div>
+          <label class="toggle"><input type="checkbox" checked id="block_sa"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info"><h4>حظر أرقام دولية (+966...)</h4><p>كشف الأرقام بالصيغة الدولية</p></div>
+          <label class="toggle"><input type="checkbox" checked id="block_intl"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info"><h4>كشف الأرقام المكتوبة بحروف عربية</h4><p>مثل: صفر خمسة ...</p></div>
+          <label class="toggle"><input type="checkbox" checked id="block_arabic_nums"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info"><h4>كشف الأرقام بأشكال الأحرف (صفر = 0 = ٠)</h4><p>تحويل الأرقام العربية والمزيفة</p></div>
+          <label class="toggle"><input type="checkbox" checked id="block_mixed_nums"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info"><h4>كشف الأرقام بمسافات أو شرطات</h4><p>مثل: 05 0 - 1234567</p></div>
+          <label class="toggle"><input type="checkbox" checked id="block_spaced_nums"><span class="toggle-slider"></span></label>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">🧪 اختبار رقم</div>
+        <div class="add-row">
+          <div><label>أدخل رقم للاختبار</label><input type="text" id="test_phone" placeholder="0501234567 أو 966501234567+"></div>
+          <button class="btn btn-teal" onclick="testPhone()">🔍 اختبار</button>
+        </div>
+        <div id="test_phone_result" style="margin-top:10px;font-size:14px"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════
+         PANEL: PROMO
+    ══════════════════════════════════ -->
+    <div class="panel" id="panel-promo">
+      <div class="card">
+        <div class="card-title">💰 كشف رسائل الترويج والاستثمار</div>
+        <p style="color:var(--text-muted);font-size:13px;margin-bottom:16px">
+          هذه القائمة تكشف رسائل التسويق الشبكي، الاستثمار بالجوال، ومنصات الربح المشبوهة تلقائياً.
+        </p>
+        <div class="add-row">
+          <div><label>إضافة عبارة ترويجية</label><input type="text" id="promo_input" placeholder="مثال: استثمر معي، دخل يومي..."></div>
+          <button class="btn btn-red" onclick="addPromo()">➕ إضافة</button>
+        </div>
+        <div class="word-grid" id="promo_list" style="margin-top:10px"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">📊 مستوى حساسية الكشف</div>
+        <label>قوة الكشف (كلما زادت، كلما كان أكثر حساسية)</label>
+        <div style="display:flex;align-items:center;gap:12px;margin-top:10px">
+          <input type="range" min="1" max="5" value="3" id="sensitivity" style="flex:1;accent-color:var(--accent-gold)">
+          <span id="sens_label" style="color:var(--accent-gold);font-weight:700;min-width:80px">متوسط (3)</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-top:4px">
+          <span>منخفض</span><span>متوسط</span><span>عالي جداً</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════
+         PANEL: SPAM
+    ══════════════════════════════════ -->
+    <div class="panel" id="panel-spam">
+      <div class="card">
+        <div class="card-title">👤 إعدادات مكافحة السبام</div>
+        <div class="grid-2">
+          <div>
+            <label>الحد الأقصى للرسائل في الدقيقة</label>
+            <input type="text" id="rate_limit" value="5" placeholder="5">
+          </div>
+          <div>
+            <label>مدة الكتم عند تجاوز الحد (دقائق)</label>
+            <input type="text" id="mute_duration" value="30" placeholder="30">
+          </div>
+          <div>
+            <label>قيود المستخدمين الجدد (أيام)</label>
+            <input type="text" id="new_user_days" value="3" placeholder="3">
+          </div>
+          <div>
+            <label>الحد الأقصى للتحذيرات قبل الحظر</label>
+            <input type="text" id="max_warns" value="3" placeholder="3">
+          </div>
+        </div>
+        <div class="toggle-row" style="margin-top:16px">
+          <div class="toggle-info"><h4>تقييد المستخدمين الجدد</h4><p>المستخدمون الجدد لا يستطيعون الإرسال أول 3 أيام</p></div>
+          <label class="toggle"><input type="checkbox" checked id="restrict_new"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info"><h4>كشف الرسائل المتطابقة (Forward)</h4><p>منع تكرار نفس الرسالة من مصادر أخرى</p></div>
+          <label class="toggle"><input type="checkbox" checked id="block_forward"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info"><h4>كشف حسابات البوت</h4><p>حظر تلقائي للحسابات الآلية</p></div>
+          <label class="toggle"><input type="checkbox" checked id="block_bots"><span class="toggle-slider"></span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════
+         PANEL: SETTINGS
+    ══════════════════════════════════ -->
+    <div class="panel" id="panel-settings">
+      <div class="card">
+        <div class="card-title">🔑 إعدادات الاتصال بالبوت</div>
+        <div class="grid-2">
+          <div>
+            <label>Token البوت (من @BotFather)</label>
+            <input type="password" id="bot_token" placeholder="123456:ABC-DEF...">
+          </div>
+          <div>
+            <label>معرف المجموعة (Chat ID)</label>
+            <input type="text" id="chat_id" placeholder="-100xxxxxxxxx">
+          </div>
+          <div>
+            <label>معرف مجموعة السجل (لاستقبال الإشعارات)</label>
+            <input type="text" id="log_chat" placeholder="-100xxxxxxxxx (اختياري)">
+          </div>
+          <div>
+            <label>اسم المجموعة للعرض</label>
+            <input type="text" id="group_name" placeholder="مجموعة التميز التربوي">
+          </div>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:10px">
+          <button class="btn btn-gold" onclick="saveSettings()">💾 حفظ</button>
+          <button class="btn btn-teal" onclick="testConnection()">🔌 اختبار الاتصال</button>
+        </div>
+        <div id="conn_result" style="margin-top:10px;font-size:14px"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════
+         PANEL: CODE
+    ══════════════════════════════════ -->
+    <div class="panel" id="panel-code">
+      <div class="card">
+        <div class="card-title">🐍 كود البوت الكامل - Python</div>
+        <p style="color:var(--text-muted);font-size:13px;margin-bottom:16px">
+          انسخ هذا الكود وشغّله على خادم Python. يدعم جميع أنواع الحماية المضبوطة في المنصة.
+        </p>
+
+        <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+          <button class="btn btn-gold" onclick="generateCode()">⚡ توليد كود مخصص بإعداداتي</button>
+          <button class="btn btn-ghost" onclick="copyCode()">📋 نسخ الكود</button>
+        </div>
+
+        <div class="code-block">
+          <span class="code-lang">Python 3.10+</span>
+          <button class="copy-btn" onclick="copyCode()">📋 نسخ</button>
+          <pre id="code_content">#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+╔══════════════════════════════════════════════════╗
+║     بوت الحماية المتكامل - تصميم د/فواز         ║
+║     Telegram Group Protection Bot               ║
+╚══════════════════════════════════════════════════╝
+المتطلبات:
+    pip install python-telegram-bot==20.7
+    pip install python-dotenv
+
+التشغيل:
+    python bot.py
+"""
+
+import re
+import json
+import time
+import logging
+from datetime import datetime, timedelta
+from collections import defaultdict
+
+from telegram import Update, ChatPermissions
+from telegram.ext import (
+    Application, MessageHandler, CommandHandler,
+    filters, ContextTypes
+)
+from telegram.constants import ParseMode
+
+# ═══════════════════════════════════════════
+# ⚙️ الإعدادات
+# ═══════════════════════════════════════════
+BOT_TOKEN  = "ضع_توكن_البوت_هنا"
+GROUP_CHAT_ID = -1001234567890          # معرف المجموعة
+LOG_CHAT_ID   = -1001234567891          # معرف مجموعة السجل (اختياري)
+ADMIN_IDS     = [123456789]            # معرفات الأدمن
+
+# ═══════════════════════════════════════════
+# 🚫 الكلمات الممنوعة
+# ═══════════════════════════════════════════
+FORBIDDEN_WORDS = [
+    # أضف كلماتك هنا - ستُحدَّث تلقائياً من المنصة
+    "تواصل معي خاص",
+    "دخل يومي",
+    "استثمر معي",
+    "ربح من الجوال",
+    "تسويق شبكي",
+    "فرصة ذهبية",
+]
+
+# قائمة عبارات الترويج والاستثمار
+PROMO_PHRASES = [
+    r"دخل\s*يومي",
+    r"استثمر?\s*مع",
+    r"تسويق\s*شبكي",
+    r"ربح\s*من\s*الجوال",
+    r"فرصة?\s*(ذهبية|استثمارية|عمل)",
+    r"عمل\s*من\s*البيت",
+    r"اربح?\s*\d+\s*(ريال|دولار|درهم)",
+    r"منصة?\s*(ربح|استثمار)",
+    r"بروفت|profit|earn\s*money",
+    r"تواصل\s*(معي|معنا|خاص)",
+    r"واتساب\s*خاص",
+]
+
+# ═══════════════════════════════════════════
+# 📱 أنماط أرقام الجوالات
+# ═══════════════════════════════════════════
+PHONE_PATTERNS = [
+    r'(?<!\d)05\d[\s\-.]?\d{3}[\s\-.]?\d{4}(?!\d)',
+    r'(?<!\d)\+?966\s*5\d[\s\-.]?\d{3}[\s\-.]?\d{4}(?!\d)',
+    r'(?<!\d)009665\d{8}(?!\d)',
+    r'(?<!\d)٠٥[\d٠-٩\s\-.]{8,12}(?!\d)',
+    r'(?<!\d)(\d[\s\-._,]{1,3}){8,10}\d(?!\d)',
+]
+
+# ═══════════════════════════════════════════
+# 🔗 أنماط الروابط المحظورة
+# ═══════════════════════════════════════════
+BLOCKED_LINK_PATTERNS = [
+    r'https?://[^\s]+',
+    r't\.me/[^\s]+',
+    r'@[\w]{5,}',
+    r'bit\.ly/[^\s]+',
+    r'youtu\.be/[^\s]+',
+]
+
+WHITELIST_DOMAINS = [
+    'drive.google.com',
+    'forms.gle',
+    'classroom.google.com',
+]
+
+# ═══════════════════════════════════════════
+# ⚙️ إعدادات السبام
+# ═══════════════════════════════════════════
+RATE_LIMIT_MSGS  = 5    # حد الرسائل في الدقيقة
+MUTE_MINUTES     = 30   # مدة الكتم
+NEW_USER_DAYS    = 3    # تقييد المستخدمين الجدد
+MAX_WARNINGS     = 3    # حد التحذيرات قبل الحظر
+
+# ═══════════════════════════════════════════
+# 📦 الذاكرة المؤقتة
+# ═══════════════════════════════════════════
+user_warnings  = defaultdict(int)
+user_msg_times = defaultdict(list)
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s | %(levelname)s | %(message)s',
+    handlers=[
+        logging.FileHandler('protection_bot.log', encoding='utf-8'),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
+
+# ═══════════════════════════════════════════
+# 🛡️ دوال الكشف
+# ═══════════════════════════════════════════
+
+def arabic_to_western(text: str) -> str:
+    """تحويل الأرقام العربية والفارسية إلى غربية"""
+    arabic  = '٠١٢٣٤٥٦٧٨٩'
+    persian = '۰۱۲۳۴۵۶۷۸۹'
+    for i, (a, p) in enumerate(zip(arabic, persian)):
+        text = text.replace(a, str(i)).replace(p, str(i))
+    return text
+
+def check_forbidden_words(text: str) -> str | None:
+    """فحص الكلمات الممنوعة"""
+    text_lower = text.lower()
+    for word in FORBIDDEN_WORDS:
+        if word.lower() in text_lower:
+            return f"كلمة ممنوعة: {word}"
+    return None
+
+def check_promo(text: str) -> str | None:
+    """كشف رسائل الترويج والاستثمار"""
+    for pattern in PROMO_PHRASES:
+        if re.search(pattern, text, re.IGNORECASE):
+            return "رسالة ترويجية أو استثمارية"
+    return None
+
+def check_phone(text: str) -> str | None:
+    """كشف أرقام الجوالات"""
+    converted = arabic_to_western(text)
+    for pattern in PHONE_PATTERNS:
+        if re.search(pattern, converted):
+            return "رقم جوال"
+    return None
+
+def check_links(text: str) -> str | None:
+    """كشف الروابط غير المسموح بها"""
+    for domain in WHITELIST_DOMAINS:
+        if domain in text:
+            return None
+    for pattern in BLOCKED_LINK_PATTERNS:
+        if re.search(pattern, text, re.IGNORECASE):
+            return "رابط أو إعلان"
+    return None
+
+def check_rate_limit(user_id: int) -> bool:
+    """فحص معدل الرسائل"""
+    now = time.time()
+    user_msg_times[user_id] = [
+        t for t in user_msg_times[user_id]
+        if now - t < 60
+    ]
+    user_msg_times[user_id].append(now)
+    return len(user_msg_times[user_id]) > RATE_LIMIT_MSGS
+
+# ═══════════════════════════════════════════
+# ⚡ دوال الإجراء
+# ═══════════════════════════════════════════
+
+async def delete_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    try:
+        await context.bot.delete_message(
+            chat_id=update.effective_chat.id,
+            message_id=update.message.message_id
+        )
+    except Exception as e:
+        logger.error(f"خطأ في حذف الرسالة: {e}")
+
+async def warn_user(update: Update, context: ContextTypes.DEFAULT_TYPE,
+                    reason: str):
+    user = update.effective_user
+    user_warnings[user.id] += 1
+    warns = user_warnings[user.id]
+
+    if warns >= MAX_WARNINGS:
+        await ban_user(update, context, "تجاوز الحد الأقصى للتحذيرات")
+        return
+
+    msg = (
+        f"⚠️ <b>تحذير</b> يا {user.mention_html()}!\n"
+        f"رسالتك تخالف قواعد المجموعة وتمت إزالتها.\n"
+        f"السبب: <b>{reason}</b>\n"
+        f"عدد التحذيرات: <b>{warns}/{MAX_WARNINGS}</b>\n"
+        f"بعد {MAX_WARNINGS} تحذيرات سيتم حظرك تلقائياً."
+    )
+    sent = await context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=msg, parse_mode=ParseMode.HTML
+    )
+    # حذف التحذير بعد 30 ثانية
+    context.job_queue.run_once(
+        lambda ctx: ctx.bot.delete_message(
+            update.effective_chat.id, sent.message_id
+        ),
+        when=30
+    )
+
+async def mute_user(update: Update, context: ContextTypes.DEFAULT_TYPE,
+                    reason: str, minutes: int = MUTE_MINUTES):
+    user = update.effective_user
+    try:
+        until = datetime.now() + timedelta(minutes=minutes)
+        await context.bot.restrict_chat_member(
+            chat_id=update.effective_chat.id,
+            user_id=user.id,
+            permissions=ChatPermissions(
+                can_send_messages=False,
+                can_send_other_messages=False,
+                can_add_web_page_previews=False,
+            ),
+            until_date=until
+        )
+        msg = (
+            f"🔇 <b>تم كتم</b> {user.mention_html()} لمدة {minutes} دقيقة.\n"
+            f"السبب: <b>{reason}</b>"
+        )
+        await context.bot.send_message(
+            update.effective_chat.id,
+            msg, parse_mode=ParseMode.HTML
+        )
+        await log_action(context, f"كتم | {user.full_name} | {reason}")
+    except Exception as e:
+        logger.error(f"خطأ في كتم المستخدم: {e}")
+
+async def ban_user(update: Update, context: ContextTypes.DEFAULT_TYPE,
+                   reason: str):
+    user = update.effective_user
+    try:
+        await context.bot.ban_chat_member(
+            chat_id=update.effective_chat.id,
+            user_id=user.id
+        )
+        msg = (
+            f"🚫 <b>تم حظر</b> {user.mention_html()}\n"
+            f"السبب: <b>{reason}</b>"
+        )
+        await context.bot.send_message(
+            update.effective_chat.id,
+            msg, parse_mode=ParseMode.HTML
+        )
+        user_warnings.pop(user.id, None)
+        await log_action(context, f"حظر | {user.full_name} | {reason}")
+    except Exception as e:
+        logger.error(f"خطأ في حظر المستخدم: {e}")
+
+async def log_action(context: ContextTypes.DEFAULT_TYPE, action: str):
+    if LOG_CHAT_ID:
+        try:
+            await context.bot.send_message(
+                LOG_CHAT_ID,
+                f"🛡️ <b>سجل الحماية</b>\n"
+                f"⏰ {datetime.now().strftime('%Y-%m-%d %H:%M')}\n"
+                f"📋 {action}",
+                parse_mode=ParseMode.HTML
+            )
+        except:
+            pass
+
+# ═══════════════════════════════════════════
+# 🎯 المعالج الرئيسي للرسائل
+# ═══════════════════════════════════════════
+
+async def handle_message(update: Update,
+                          context: ContextTypes.DEFAULT_TYPE):
+    msg  = update.message
+    user = update.effective_user
+    if not msg or not user: return
+
+    # تجاهل المشرفين
+    chat_member = await context.bot.get_chat_member(
+        msg.chat_id, user.id
+    )
+    if chat_member.status in ('administrator', 'creator'):
+        return
+
+    text = msg.text or msg.caption or ""
+
+    # ──────────────────────────────────────
+    # 1. فحص الكلمات الممنوعة
+    reason = check_forbidden_words(text)
+    if reason:
+        await delete_message(update, context)
+        await warn_user(update, context, reason)
+        return
+
+    # 2. فحص رسائل الترويج والاستثمار
+    reason = check_promo(text)
+    if reason:
+        await delete_message(update, context)
+        await ban_user(update, context, reason)
+        return
+
+    # 3. فحص أرقام الجوالات
+    reason = check_phone(text)
+    if reason:
+        await delete_message(update, context)
+        await mute_user(update, context, reason)
+        return
+
+    # 4. فحص الروابط
+    reason = check_links(text)
+    if reason:
+        await delete_message(update, context)
+        await warn_user(update, context, reason)
+        return
+
+    # 5. فحص معدل الرسائل (سبام)
+    if check_rate_limit(user.id):
+        await delete_message(update, context)
+        await mute_user(update, context, "رسائل متكررة - سبام", 10)
+        return
+
+    # 6. تقييد المستخدمين الجدد
+    if msg.from_user.date:
+        days = (datetime.now() - msg.from_user.date.replace(tzinfo=None)).days
+        if days < NEW_USER_DAYS and msg.forward_origin:
+            await delete_message(update, context)
+            await warn_user(update, context, "مستخدم جديد - تحويل رسائل ممنوع")
+            return
+
+# ═══════════════════════════════════════════
+# 🤖 الأوامر
+# ═══════════════════════════════════════════
+
+async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "🛡️ <b>بوت الحماية المتكامل</b>\n"
+        "تصميم: د/فواز\n\n"
+        "الأوامر:\n"
+        "/status - حالة البوت\n"
+        "/warns @user - عرض تحذيرات مستخدم\n"
+        "/resetwarn @user - إعادة ضبط تحذيرات\n"
+        "/addword كلمة - إضافة كلمة ممنوعة\n",
+        parse_mode=ParseMode.HTML
+    )
+
+async def cmd_status(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    total_warned = len(user_warnings)
+    await update.message.reply_text(
+        f"🛡️ <b>حالة البوت</b>\n"
+        f"✅ يعمل بشكل طبيعي\n"
+        f"👥 مستخدمون لديهم تحذيرات: {total_warned}\n"
+        f"🚫 كلمات ممنوعة: {len(FORBIDDEN_WORDS)}",
+        parse_mode=ParseMode.HTML
+    )
+
+async def cmd_warns(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not context.args:
+        await update.message.reply_text("الاستخدام: /warns @username")
+        return
+    # لتبسيط: تحتاج تحديد user_id من الاسم
+    await update.message.reply_text("⚙️ الأمر قيد التطوير")
+
+async def cmd_addword(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """إضافة كلمة ممنوعة من المشرف"""
+    if not context.args: return
+    user = update.effective_user
+    chat_member = await context.bot.get_chat_member(
+        update.effective_chat.id, user.id
+    )
+    if chat_member.status not in ('administrator', 'creator'):
+        return
+    word = " ".join(context.args)
+    FORBIDDEN_WORDS.append(word)
+    await update.message.reply_text(f"✅ تمت إضافة الكلمة: {word}")
+
+# ═══════════════════════════════════════════
+# 🚀 تشغيل البوت
+# ═══════════════════════════════════════════
+
+def main():
+    logger.info("🛡️ جاري تشغيل بوت الحماية...")
+    app = Application.builder().token(BOT_TOKEN).build()
+
+    # المعالجات
+    app.add_handler(CommandHandler("start",     cmd_start))
+    app.add_handler(CommandHandler("status",    cmd_status))
+    app.add_handler(CommandHandler("warns",     cmd_warns))
+    app.add_handler(CommandHandler("addword",   cmd_addword))
+    app.add_handler(MessageHandler(
+        filters.TEXT & ~filters.COMMAND,
+        handle_message
+    ))
+    app.add_handler(MessageHandler(
+        filters.CAPTION & ~filters.COMMAND,
+        handle_message
+    ))
+
+    logger.info("✅ البوت يعمل الآن!")
+    app.run_polling(allowed_updates=Update.ALL_TYPES)
+
+if __name__ == "__main__":
+    main()</pre>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📦 ملف requirements.txt</div>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyReqs()">📋 نسخ</button>
+          <pre id="reqs_content">python-telegram-bot==20.7
+python-dotenv==1.0.0
+aiohttp==3.9.1</pre>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🚀 تعليمات التشغيل</div>
+        <div style="line-height:2;color:var(--text-muted);font-size:14px">
+          <div>1️⃣ أنشئ بوتاً من <strong style="color:var(--accent-gold)">@BotFather</strong> واحتفظ بالـ Token</div>
+          <div>2️⃣ أضف البوت للمجموعة ومنحه صلاحية <strong style="color:var(--accent-teal)">Admin + حذف + كتم + حظر</strong></div>
+          <div>3️⃣ ثبّت المتطلبات: <code style="background:#1e3a5f;padding:2px 8px;border-radius:4px">pip install -r requirements.txt</code></div>
+          <div>4️⃣ ضع الـ Token ومعرف المجموعة في الكود</div>
+          <div>5️⃣ شغّل: <code style="background:#1e3a5f;padding:2px 8px;border-radius:4px">python bot.py</code></div>
+          <div>6️⃣ للتشغيل المستمر استخدم: <code style="background:#1e3a5f;padding:2px 8px;border-radius:4px">nohup python bot.py &</code></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════
+         PANEL: LOGS
+    ══════════════════════════════════ -->
+    <div class="panel" id="panel-logs">
+      <div class="card">
+        <div class="card-title">📋 سجل الإجراءات (محاكاة)</div>
+        <div style="display:flex;gap:10px;margin-bottom:14px">
+          <button class="btn btn-ghost" onclick="clearLogs()">🗑️ مسح السجل</button>
+          <button class="btn btn-teal" onclick="addFakeLog()">🎲 إضافة سجل تجريبي</button>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="log-table">
+            <thead>
+              <tr>
+                <th>الوقت</th>
+                <th>المستخدم</th>
+                <th>الإجراء</th>
+                <th>السبب</th>
+              </tr>
+            </thead>
+            <tbody id="log_body">
+              <tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:30px">لا توجد سجلات بعد</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  🛡️ منصة بوت الحماية المتكاملة &nbsp;|&nbsp; تصميم د/فواز &nbsp;|&nbsp;
+  <a href="https://t.me/TAqhjT3MFVE1Yzk0" style="color:var(--accent-teal);text-decoration:none">قناة Telegram</a>
+</div>
+
+<!-- NOTIFICATION -->
+<div class="notif" id="notif">✅ تم الحفظ بنجاح</div>
+
+<script>
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+const state = {
+  words: [],
+  whitelist: [],
+  promo: [],
+  logs: [],
+  settings: {},
+  stats: { words:0, links:0, phones:0, promo:0, actions:0 }
+};
+
+// ═══════════════════════════════════════════
+// PRESETS
+// ═══════════════════════════════════════════
+const PRESETS = {
+  invest: [
+    "دخل يومي","استثمر معي","ربح من الجوال","تسويق شبكي",
+    "فرصة ذهبية","اربح","عمل من البيت","منصة ربح","بروفت",
+    "واتساب خاص","تواصل خاص","ادفع","اشتري","اشترك معي",
+    "مكسب","كسب","عمولة","استثمار مضمون"
+  ],
+  spam: [
+    "انضم لقناتنا","اشترك الآن","تابعنا على","متجرنا",
+    "خصم اليوم","عرض خاص","لا تفوتك","للطلب تواصل"
+  ],
+  insult: [
+    "يلعن","ابن الـ","كذاب","غبي","حمار","كلب","خائن","وقح"
+  ],
+  politics: [
+    "الحكومة فاشلة","يسقط","انقلاب","ثورة","ديكتاتور"
+  ],
+  religion: [
+    "الإسلام ضد","الدين خرافة","المسيح","لعنة الله على"
+  ],
+  adult: [
+    "صور إباحية","فيديو للكبار","18+","محتوى مقيد"
+  ]
+};
+
+const DEFAULT_PROMO = [
+  "دخل يومي","استثمر معي","تواصل خاص","واتساب خاص",
+  "ربح من الجوال","منصة ربح","فرصة عمل","عمل من البيت",
+  "تسويق شبكي","كسب سريع","مكسب مضمون"
+];
+
+// ═══════════════════════════════════════════
+// NAV
+// ═══════════════════════════════════════════
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  const idx = ['dashboard','words','links','phones','promo','spam','settings','code','logs'];
+  document.querySelectorAll('.tab')[idx.indexOf(name)]?.classList.add('active');
+  document.getElementById('panel-' + name)?.classList.add('active');
+  // sync sidebar
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.nav-item')[idx.indexOf(name)]?.classList.add('active');
+}
+
+function setTab(name) { switchTab(name); }
+
+// ═══════════════════════════════════════════
+// WORDS
+// ═══════════════════════════════════════════
+function renderWords() {
+  const list = document.getElementById('word_list');
+  const count = document.getElementById('word_count');
+  list.innerHTML = state.words.map((w, i) =>
+    `<span class="word-tag"><span>${w}</span><span class="del" onclick="removeWord(${i})">×</span></span>`
+  ).join('') || '<span style="color:var(--text-muted);font-size:13px">لا توجد كلمات بعد</span>';
+  count.textContent = state.words.length;
+  document.getElementById('totalWords').textContent = state.words.length;
+}
+
+function addWord() {
+  const inp = document.getElementById('word_input');
+  const v = inp.value.trim();
+  if (!v) return;
+  if (!state.words.includes(v)) { state.words.push(v); renderWords(); notify('✅ تمت إضافة الكلمة'); }
+  inp.value = '';
+}
+
+function bulkAdd() {
+  const lines = document.getElementById('bulk_words').value.split('\n').map(l => l.trim()).filter(Boolean);
+  let added = 0;
+  lines.forEach(w => { if (!state.words.includes(w)) { state.words.push(w); added++; } });
+  document.getElementById('bulk_words').value = '';
+  renderWords();
+  notify(`✅ تمت إضافة ${added} كلمة`);
+}
+
+function removeWord(i) { state.words.splice(i, 1); renderWords(); }
+
+function clearWords() {
+  if (confirm('هل تريد مسح جميع الكلمات؟')) { state.words = []; renderWords(); }
+}
+
+function loadPreset(key) {
+  const list = PRESETS[key] || [];
+  let added = 0;
+  list.forEach(w => { if (!state.words.includes(w)) { state.words.push(w); added++; } });
+  renderWords();
+  notify(`✅ تمت إضافة ${added} كلمة من القائمة الجاهزة`);
+}
+
+function exportWords() {
+  const blob = new Blob([state.words.join('\n')], { type: 'text/plain;charset=utf-8' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'forbidden_words.txt'; a.click();
+}
+
+function importWordsPrompt() {
+  const inp = document.createElement('input');
+  inp.type = 'file'; inp.accept = '.txt,.json';
+  inp.onchange = e => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = r => {
+      const lines = r.result.split('\n').map(l => l.trim()).filter(Boolean);
+      let added = 0;
+      lines.forEach(w => { if (!state.words.includes(w)) { state.words.push(w); added++; } });
+      renderWords();
+      notify(`✅ تم استيراد ${added} كلمة`);
+    };
+    reader.readAsText(file);
+  };
+  inp.click();
+}
+
+// ═══════════════════════════════════════════
+// WHITELIST
+// ═══════════════════════════════════════════
+function addWhitelist() {
+  const inp = document.getElementById('whitelist_input');
+  const v = inp.value.trim();
+  if (!v) return;
+  const list = document.getElementById('whitelist_list');
+  const span = document.createElement('span');
+  span.className = 'word-tag cat-url';
+  span.innerHTML = `${v} <span class="del" onclick="removeTag(this)">×</span>`;
+  list.appendChild(span);
+  inp.value = '';
+  notify('✅ تمت إضافة النطاق');
+}
+
+function removeTag(el) { el.parentElement.remove(); }
+
+// ═══════════════════════════════════════════
+// PROMO
+// ═══════════════════════════════════════════
+function renderPromo() {
+  const list = document.getElementById('promo_list');
+  list.innerHTML = state.promo.map((w, i) =>
+    `<span class="word-tag cat-promo"><span>${w}</span><span class="del" onclick="removePromo(${i})">×</span></span>`
+  ).join('');
+  document.getElementById('totalPromo').textContent = state.promo.length;
+}
+
+function addPromo() {
+  const inp = document.getElementById('promo_input');
+  const v = inp.value.trim();
+  if (!v) return;
+  if (!state.promo.includes(v)) { state.promo.push(v); renderPromo(); notify('✅ تمت إضافة العبارة'); }
+  inp.value = '';
+}
+
+function removePromo(i) { state.promo.splice(i, 1); renderPromo(); }
+
+// ═══════════════════════════════════════════
+// PHONE TEST
+// ═══════════════════════════════════════════
+function testPhone() {
+  const val = document.getElementById('test_phone').value.trim();
+  const patterns = [
+    /(?<!\d)05\d[\s\-.]?\d{3}[\s\-.]?\d{4}(?!\d)/,
+    /(?<!\d)\+?966\s*5\d[\s\-.]?\d{3}[\s\-.]?\d{4}(?!\d)/,
+    /(?<!\d)009665\d{8}(?!\d)/,
+  ];
+  const el = document.getElementById('test_phone_result');
+  const matched = patterns.some(p => p.test(val));
+  el.innerHTML = matched
+    ? `<span style="color:var(--accent-red)">🚨 رقم محظور - سيتم اكتشافه وحذفه</span>`
+    : `<span style="color:var(--accent-green)">✅ هذا النص لن يُعدّ رقماً محظوراً</span>`;
+}
+
+// ═══════════════════════════════════════════
+// SETTINGS
+// ═══════════════════════════════════════════
+function saveSettings() {
+  state.settings = {
+    bot_token: document.getElementById('bot_token')?.value,
+    chat_id: document.getElementById('chat_id')?.value,
+    warn_msg: document.getElementById('warn_msg')?.value,
+    mute_msg: document.getElementById('mute_msg')?.value,
+  };
+  localStorage.setItem('bot_config', JSON.stringify({
+    settings: state.settings,
+    words: state.words,
+    promo: state.promo
+  }));
+  notify('💾 تم حفظ الإعدادات بنجاح');
+}
+
+async function testConnection() {
+  const token = document.getElementById('bot_token')?.value;
+  const el = document.getElementById('conn_result');
+  if (!token) { el.innerHTML = '<span style="color:var(--accent-red)">❌ أدخل التوكن أولاً</span>'; return; }
+  el.innerHTML = '<span style="color:var(--accent-gold)">⏳ جاري الاتصال...</span>';
+  try {
+    const r = await fetch(`https://api.telegram.org/bot${token}/getMe`);
+    const d = await r.json();
+    if (d.ok) {
+      el.innerHTML = `<span style="color:var(--accent-green)">✅ متصل! اسم البوت: @${d.result.username}</span>`;
+    } else {
+      el.innerHTML = `<span style="color:var(--accent-red)">❌ خطأ في التوكن</span>`;
+    }
+  } catch {
+    el.innerHTML = `<span style="color:var(--accent-red)">❌ فشل الاتصال</span>`;
+  }
+}
+
+// ═══════════════════════════════════════════
+// LOGS
+// ═══════════════════════════════════════════
+const fakeUsers = ['أحمد العمري','محمد الشهري','سارة الزهراني','خالد المطيري','فيصل الدوسري'];
+const fakeActions = [
+  {action:'حذف + تحذير', badge:'badge-warn', reason:'كلمة ممنوعة'},
+  {action:'حذف + حظر',   badge:'badge-ban',  reason:'ترويج استثمار'},
+  {action:'حذف + كتم',   badge:'badge-mute', reason:'رقم جوال'},
+  {action:'حذف',         badge:'badge-del',  reason:'رابط غير مسموح'},
+];
+
+function addFakeLog() {
+  const user = fakeUsers[Math.floor(Math.random() * fakeUsers.length)];
+  const a = fakeActions[Math.floor(Math.random() * fakeActions.length)];
+  const now = new Date().toLocaleTimeString('ar-SA');
+  state.logs.unshift({ time: now, user, action: a.action, badge: a.badge, reason: a.reason });
+  renderLogs();
+  // update sidebar stats
+  document.getElementById('s1').textContent = parseInt(document.getElementById('s1').textContent) + 1;
+  state.stats.actions++;
+  document.getElementById('totalActions').textContent = state.stats.actions;
+}
+
+function renderLogs() {
+  const tbody = document.getElementById('log_body');
+  if (!state.logs.length) {
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:30px">لا توجد سجلات بعد</td></tr>';
+    return;
+  }
+  tbody.innerHTML = state.logs.slice(0,50).map(l => `
+    <tr>
+      <td style="color:var(--text-muted)">${l.time}</td>
+      <td style="font-weight:600">${l.user}</td>
+      <td><span class="badge ${l.badge}">${l.action}</span></td>
+      <td style="color:var(--text-muted)">${l.reason}</td>
+    </tr>
+  `).join('');
+}
+
+function clearLogs() { state.logs = []; renderLogs(); }
+
+// ═══════════════════════════════════════════
+// CODE GENERATION
+// ═══════════════════════════════════════════
+function generateCode() {
+  const wordsStr = JSON.stringify(state.words, null, 4);
+  const promoStr = JSON.stringify(state.promo, null, 4);
+  const token = document.getElementById('bot_token')?.value || 'ضع_توكن_البوت_هنا';
+  const chatId = document.getElementById('chat_id')?.value || '-1001234567890';
+  const code = document.getElementById('code_content');
+
+  // فقط نحدث المتغيرات في الكود
+  let text = code.textContent;
+  text = text.replace(/BOT_TOKEN\s*=\s*"[^"]*"/, `BOT_TOKEN  = "${token}"`);
+  text = text.replace(/GROUP_CHAT_ID\s*=\s*[-\d]+/, `GROUP_CHAT_ID = ${chatId}`);
+  text = text.replace(
+    /FORBIDDEN_WORDS = \[[^\]]*\]/s,
+    `FORBIDDEN_WORDS = ${wordsStr}`
+  );
+  code.textContent = text;
+  notify('⚡ تم توليد الكود بإعداداتك!');
+}
+
+function copyCode() {
+  navigator.clipboard.writeText(document.getElementById('code_content').textContent)
+    .then(() => notify('📋 تم نسخ الكود!'));
+}
+
+function copyReqs() {
+  navigator.clipboard.writeText(document.getElementById('reqs_content').textContent)
+    .then(() => notify('📋 تم النسخ!'));
+}
+
+function exportConfig() {
+  const config = {
+    words: state.words,
+    promo: state.promo,
+    settings: state.settings,
+    exported: new Date().toISOString()
+  };
+  const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'bot_config.json'; a.click();
+  notify('📤 تم تصدير الإعدادات');
+}
+
+// ═══════════════════════════════════════════
+// NOTIFY
+// ═══════════════════════════════════════════
+let notifTimer;
+function notify(msg) {
+  const el = document.getElementById('notif');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(notifTimer);
+  notifTimer = setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// ═══════════════════════════════════════════
+// SENSITIVITY SLIDER
+// ═══════════════════════════════════════════
+document.getElementById('sensitivity')?.addEventListener('input', function() {
+  const labels = ['','منخفض (1)','متوسط منخفض (2)','متوسط (3)','عالي (4)','عالي جداً (5)'];
+  document.getElementById('sens_label').textContent = labels[this.value] || this.value;
+});
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+(function init() {
+  // تحميل الإعدادات المحفوظة
+  const saved = localStorage.getItem('bot_config');
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      state.words = data.words || [];
+      state.promo = data.promo || [];
+      state.settings = data.settings || {};
+    } catch(e) {}
+  }
+  // تحميل قوائم الترويج الافتراضية
+  if (!state.promo.length) {
+    DEFAULT_PROMO.forEach(w => { if (!state.promo.includes(w)) state.promo.push(w); });
+  }
+  renderWords();
+  renderPromo();
+
+  // إحصاء الروابط والجوالات (ثابتة)
+  document.getElementById('totalLinks').textContent = '12';
+  document.getElementById('totalPhones').textContent = '5';
+})();
+</script>
+</body>
+</html>
