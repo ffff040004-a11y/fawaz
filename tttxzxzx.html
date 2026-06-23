@@ -794,6 +794,1037 @@ async function sendQuestion(idx){
 }
 
 async function sendNext(){
+  if(!running){
+    const chosen=parseInt(document.getElementById('startFrom').value)||0;
+    nextIdx=chosen; totalSent=chosen; sentCount=chosen;
+  }
+  if(nextIdx>=Q.length){log('🏁 انتهت جميع الأسئلة!','warn');stopSending();return;}
+  document.getElementById('currentQ').textContent=`${nextIdx+1}/${Q.length}`;
+  const ok=await sendQuestion(nextIdx);
+  if(ok){
+    nextIdx++; totalSent=nextIdx; sentCount++;
+    localStorage.setItem('tg_nextIdx_ishraf',nextIdx);
+    localStorage.setItem('tg_sentCount_ishraf',sentCount);
+    document.getElementById('startFrom').value=nextIdx<Q.length?nextIdx:0;
+    updateProg();
+    if(nextIdx>=Q.length){log('🏁 انتهت جميع الأسئلة!','warn');stopSending();}
+  }
+}
+
+// ══ SCHEDULER ══
+async function startSending(){
+  const chosen=parseInt(document.getElementById('startFrom').value)||0;
+  nextIdx=chosen; totalSent=chosen; sentCount=chosen;
+  localStorage.setItem('tg_nextIdx_ishraf',nextIdx);
+  localStorage.setItem('tg_sentCount_ishraf',sentCount);
+  updateProg();
+  const iv=getIv();
+  if(!document.getElementById('botToken').value.trim()){showTab('setup');log('❌ أدخل Token','err');return;}
+  if(!document.getElementById('chatId').value.trim()){showTab('setup');log('❌ أدخل Chat ID','err');return;}
+  running=true;
+  document.getElementById('btnStart').disabled=true;
+  document.getElementById('btnStop').disabled=false;
+  document.getElementById('statusText').textContent='🟢 يعمل — إرسال تلقائي';
+  log(`▶️ بدأ الإرسال — كل ${fmtS(iv)} — من س${Q[nextIdx]?.id||nextIdx+1}`,'info');
+  const delay=parseInt(document.getElementById('alertDelay').value)||0;
+  await sendAlertNow();
+  if(delay>0){
+    log(`⏳ الانتظار ${delay} ثانية قبل بدء الأسئلة...`,'warn');
+    await new Promise(res=>setTimeout(res,delay*1000));
+  }
+  if(!running) return;
+  sendNext();
+  timer=setInterval(()=>{if(running)sendNext();},iv*1000);
+  startCd(iv);
+  startPollWatcher();
+}
+
+function stopSending(){
+  running=false;
+  if(timer){clearInterval(timer);timer=null;}
+  if(cdTimer){clearInterval(cdTimer);cdTimer=null;}
+  document.getElementById('btnStart').disabled=false;
+  document.getElementById('btnStop').disabled=true;
+  document.getElementById('statusText').textContent='⏸️ متوقف';
+  document.getElementById('cdBadge').textContent='—';
+  log('⏹️ إيقاف الإرسال','warn');
+  setTimeout(()=>fetchUpdates(),1500);
+}
+
+function resetProg(){
+  stopSending(); stopPollWatcher();
+  nextIdx=0;totalSent=0;sentCount=0;
+  localStorage.setItem('tg_nextIdx_ishraf',0);
+  localStorage.setItem('tg_sentCount_ishraf',0);
+  document.getElementById('startFrom').value=0;
+  document.getElementById('currentQ').textContent='—';
+  updateProg();
+  log('🔄 إعادة من البداية','info');
+}
+
+function startCd(sec){
+  if(cdTimer)clearInterval(cdTimer);
+  countdown=sec; updateCd();
+  cdTimer=setInterval(()=>{countdown--;if(countdown<0)countdown=sec;updateCd();},1000);
+}
+function updateCd(){
+  if(!running){document.getElementById('cdBadge').textContent='—';return;}
+  const m=Math.floor(countdown/60),s=countdown%60;
+  document.getElementById('cdBadge').textContent=m>0?`${m}د ${String(s).padStart(2,'0')}ث`:`${countdown}ث`;
+}
+
+function updateProg(){
+  const total=Q.length||1;
+  const pct=Math.round((nextIdx/total)*100);
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('progLabel').textContent=`${sentCount} سؤال تم إرساله (${nextIdx}/${total})`;
+  if(sentCount>0)document.getElementById('currentQ').textContent=`${nextIdx}/${total}`;
+}
+
+// ══ BACKGROUND POLL WATCHER ══
+function startPollWatcher(){
+  if(watchTimer)clearInterval(watchTimer);
+  document.getElementById('liveBadge').style.display='inline-flex';
+  watchTimer=setInterval(fetchUpdates,8000);
+  log('👁️ بدأت مراقبة ردود المشاركين (كل 8 ث)','info');
+}
+function stopPollWatcher(){
+  if(watchTimer){clearInterval(watchTimer);watchTimer=null;}
+  document.getElementById('liveBadge').style.display='none';
+}
+
+// ══ FETCH UPDATES ══
+async function fetchUpdates(){
+  const tok=document.getElementById('botToken').value.trim();
+  if(!tok)return;
+  try{
+    const offset=lastUpdateId?lastUpdateId+1:0;
+    const r=await fetch(`https://api.telegram.org/bot${tok}/getUpdates`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({offset:offset,limit:100,allowed_updates:['poll_answer']})
+    });
+    const d=await r.json();
+    if(!d.ok){log('⚠️ getUpdates: '+d.description,'warn');return;}
+    let newAns=0;
+    d.result.forEach(upd=>{
+      if(upd.update_id>lastUpdateId) lastUpdateId=upd.update_id;
+      if(!upd.poll_answer) return;
+      const pa=upd.poll_answer;
+      const uid=String(pa.user.id);
+      const fname=(pa.user.first_name||'');
+      const lname=(pa.user.last_name?' '+pa.user.last_name:'');
+      const uname=pa.user.username?'@'+pa.user.username:'';
+      const displayName=uname||(fname+lname)||uid;
+      const chosen=pa.option_ids?.[0];
+      if(chosen===undefined||chosen===null) return;
+      const entry=pollMap[pa.poll_id];
+      if(!entry) return;
+      if(!scores[uid]) scores[uid]={name:displayName,username:pa.user.username||'',correct:0,wrong:0,total:0};
+      scores[uid].name=displayName; scores[uid].username=pa.user.username||'';
+      scores[uid].total++;
+      if(chosen===entry.a) scores[uid].correct++;
+      else scores[uid].wrong++;
+      newAns++;
+    });
+    localStorage.setItem('tg_lastUpd_ishraf',String(lastUpdateId));
+    localStorage.setItem('tg_scores_ishraf',JSON.stringify(scores));
+    if(newAns>0){
+      log(`📊 ${newAns} إجابة جديدة — إجمالي المشاركين: ${Object.keys(scores).length}`,'ok');
+      renderLb();
+    }
+  }catch(e){log('⚠️ خطأ: '+e.message,'warn');}
+}
+
+async function fetchNow(){
+  log('🔄 جلب التحديثات الآن...','info');
+  if(!watchTimer) startPollWatcher();
+  await fetchUpdates();
+  renderLb();
+}
+
+// ══ LEADERBOARD ══
+function getLvl(pct){
+  if(pct>=90)return{l:'ممتاز 🏆',c:'lv-ex'};
+  if(pct>=75)return{l:'جيد جداً 🌟',c:'lv-vg'};
+  if(pct>=60)return{l:'جيد 👍',c:'lv-g'};
+  return{l:'يراجع 📖',c:'lv-p'};
+}
+
+function renderLb(){
+  const data=Object.values(scores).sort((a,b)=>b.correct-a.correct||a.wrong-b.wrong);
+  const n=data.length;
+  document.getElementById('liveCountWrap').style.display=n>0?'block':'none';
+  document.getElementById('liveCount').textContent=n;
+  if(n===0){
+    document.getElementById('lbTable').innerHTML='<div style="text-align:center;padding:24px;color:#aaa;font-size:.88rem">📭 لا توجد إجابات بعد</div>';
+    return;
+  }
+  const now=new Date().toLocaleString('ar-SA');
+  document.getElementById('lbSub').textContent=`آخر تحديث: ${now} | الأسئلة المُرسَلة: ${sentCount}`;
+  const top=data[0].correct;
+  const avg=Math.round(data.reduce((s,x)=>s+x.correct,0)/n);
+  document.getElementById('lbStats').innerHTML=`
+    <div class="lb-stat"><div class="lb-stat-n">${n}</div><div class="lb-stat-l">مشارك</div></div>
+    <div class="lb-stat"><div class="lb-stat-n" style="color:var(--green)">${top}</div><div class="lb-stat-l">أعلى نتيجة</div></div>
+    <div class="lb-stat"><div class="lb-stat-n" style="color:var(--teal)">${avg}</div><div class="lb-stat-l">المتوسط</div></div>
+    <div class="lb-stat"><div class="lb-stat-n" style="color:var(--gold)">${sentCount}</div><div class="lb-stat-l">سؤال أُرسل</div></div>`;
+  const medals=['🥇','🥈','🥉'];
+  let rows='';
+  data.forEach((u,i)=>{
+    const pct=u.total>0?Math.round((u.correct/u.total)*100):0;
+    const lvl=getLvl(pct);
+    const rc=i===0?'r1':i===1?'r2':i===2?'r3':'rx';
+    const rk=i<3?medals[i]:`${i+1}`;
+    rows+=`<tr>
+      <td><div class="rank-badge ${rc}">${rk}</div></td>
+      <td style="font-weight:700">${u.name}</td>
+      <td style="color:var(--green);font-weight:700">${u.correct}</td>
+      <td style="color:var(--red)">${u.wrong}</td>
+      <td>${u.total}</td>
+      <td><div class="bar-w"><div class="bar-f" style="width:${pct}%"></div></div>
+          <div style="font-size:.7rem;color:#666;margin-top:2px">${pct}%</div></td>
+      <td><span class="lvl ${lvl.c}">${lvl.l}</span></td>
+    </tr>`;
+  });
+  document.getElementById('lbTable').innerHTML=`
+    <table class="lb">
+      <thead><tr><th>الترتيب</th><th>الاسم</th><th>✅ صحيح</th><th>❌ خطأ</th><th>أجاب</th><th>النسبة</th><th>المستوى</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  document.getElementById('lbNote').textContent='* النتائج حية — تتحدث كل 8 ثوانٍ تلقائيًا';
+}
+
+async function sendLbToChat(){
+  const tok=document.getElementById('botToken').value.trim();
+  const cid=document.getElementById('chatId').value.trim();
+  if(!tok||!cid){alert('أدخل البيانات أولاً من تبويب الإعداد');return;}
+  const data=Object.values(scores).sort((a,b)=>b.correct-a.correct||a.wrong-b.wrong);
+  if(data.length===0){alert('لا توجد نتائج بعد!\nاضغط "تحديث النتائج الآن" أولاً');return;}
+  const title=document.getElementById('alertTitle').value.trim()||'رخصة الإشراف التربوي';
+  const medals=['🥇','🥈','🥉'];
+  let lines=[];
+  lines.push(`🏁 لقد انتهى اختبار '${title}'!`);
+  lines.push('');
+  data.slice(0,20).forEach((u,i)=>{
+    const rk=i===0?'🥇':i===1?'🥈':i===2?'🥉':`  ${i+1}.`;
+    const display=u.username?`@${u.username}`:u.name;
+    lines.push(`${rk} ${display} – ${u.correct} ✅`);
+  });
+  lines.push('');
+  lines.push('━━━━━━━━━━━━━━━━━━━━');
+  lines.push('');
+  lines.push('🌟 أحسنتم وبارك الله في جهودكم');
+  lines.push('💡 العلم نور — واصلوا المسيرة');
+  lines.push('🤝 شكراً لكل من شارك وأضاء هذا المجال');
+  lines.push('');
+  lines.push('تصميم: د/فواز 🎓 | t.me/TAqhjT3MFVE1Yzk0');
+  const msg=lines.join('\n');
+  try{
+    log('📤 جارٍ إرسال النتائج...','info');
+    const r=await fetch(`https://api.telegram.org/bot${tok}/sendMessage`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({chat_id:cid,text:msg})
+    });
+    const d=await r.json();
+    if(d.ok) log('✅ تم إرسال لوحة النتائج للمجموعة بنجاح','ok');
+    else log('❌ فشل الإرسال: '+d.description,'err');
+  }catch(e){log('❌ خطأ في الشبكة: '+e.message,'err');}
+}
+
+function clearLb(){
+  if(!confirm('مسح جميع نتائج المشاركين؟'))return;
+  scores={}; pollMap={}; lastUpdateId=0;
+  ['tg_scores_ishraf','tg_pollMap_ishraf','tg_lastUpd_ishraf'].forEach(k=>localStorage.removeItem(k));
+  document.getElementById('lbStats').innerHTML='';
+  document.getElementById('lbTable').innerHTML='';
+  document.getElementById('lbSub').textContent='في انتظار إجابات المشاركين...';
+  document.getElementById('liveCountWrap').style.display='none';
+  log('🗑️ مُسحت النتائج','warn');
+}
+
+// ══ LOG ══
+function log(msg,type='info'){
+  const b=document.getElementById('logBox');
+  const now=new Date().toLocaleTimeString('ar-SA');
+  const d=document.createElement('div');
+  d.className=`log-line log-${type}`;
+  d.textContent=`[${now}] ${msg}`;
+  b.appendChild(d); b.scrollTop=b.scrollHeight;
+}
+function clearLog(){document.getElementById('logBox').innerHTML='<div class="log-line log-info">🗑️ مسح السجل</div>';}
+
+// ══ HELPERS ══
+function fmtS(s){if(s<60)return`${s}ث`;if(s<3600)return`${Math.round(s/60)}د`;return`${Math.round(s/3600)}س`;}
+function showTab(name){
+  ['setup','send','results','preview','guide'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display=t===name?'block':'none';
+  });
+  document.querySelectorAll('.tab').forEach((el,i)=>{
+    el.classList.toggle('active',['setup','send','results','preview','guide'][i]===name);
+  });
+}
+</script>
+</body>
+</html>.btn-green{background:var(--green);color:white;} .btn-green:hover:not(:disabled){opacity:.9;}
+.btn-red{background:var(--red);color:white;} .btn-red:hover:not(:disabled){opacity:.9;}
+.btn-outline{background:transparent;color:var(--navy);border:2px solid var(--navy);} .btn-outline:hover:not(:disabled){background:var(--navy);color:white;}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
+.tabs{display:flex;border-bottom:3px solid var(--border);margin-bottom:18px;overflow-x:auto;}
+.tab{padding:11px 18px;cursor:pointer;font-weight:700;font-size:.85rem;color:#777;border-bottom:3px solid transparent;margin-bottom:-3px;white-space:nowrap;transition:all .2s;}
+.tab.active{color:var(--navy);border-bottom-color:var(--gold);}
+.status-bar{background:var(--navy);color:white;border-radius:12px;padding:14px 16px;margin-bottom:16px;}
+.status-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.status-label{font-weight:700;color:var(--gold);font-size:.78rem;}
+.progress-wrap{background:rgba(255,255,255,.15);border-radius:20px;height:10px;margin-top:10px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));border-radius:20px;transition:width .6s ease;}
+.cd-badge{background:var(--gold);color:var(--navy);border-radius:8px;padding:6px 14px;font-weight:900;font-size:1rem;display:inline-block;}
+.log-box{background:#0d1117;border-radius:10px;padding:14px;max-height:240px;overflow-y:auto;font-size:.78rem;line-height:1.8;}
+.log-line{padding:1px 0;border-bottom:1px solid #1e2a3a;}
+.log-ok{color:#4caf50;}.log-err{color:#f44336;}.log-info{color:#64b5f6;}.log-warn{color:#ffb300;}
+.alert{padding:11px 14px;border-radius:9px;font-size:.86rem;font-weight:600;margin-top:10px;display:none;}
+.alert.show{display:flex;align-items:center;gap:8px;}
+.alert-success{background:#d4edda;color:#155724;border:1px solid #c3e6cb;}
+.alert-error{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb;}
+.lb-panel{background:var(--white);border-radius:14px;padding:22px;margin-top:16px;box-shadow:0 4px 18px rgba(0,0,0,.1);border-top:4px solid var(--gold);}
+.lb-head{text-align:center;margin-bottom:18px;}
+.lb-head h2{font-size:1.25rem;font-weight:900;color:var(--navy);}
+.lb-head p{font-size:.82rem;color:#777;margin-top:4px;}
+.lb-stats{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:18px;}
+.lb-stat{text-align:center;background:var(--light);border-radius:10px;padding:10px 18px;min-width:90px;}
+.lb-stat-n{font-size:1.5rem;font-weight:900;color:var(--navy);}
+.lb-stat-l{font-size:.72rem;color:#777;margin-top:2px;}
+table.lb{width:100%;border-collapse:collapse;}
+table.lb th{background:var(--navy);color:white;padding:9px 12px;font-size:.82rem;font-weight:700;text-align:right;}
+table.lb td{padding:9px 12px;font-size:.85rem;border-bottom:1px solid #eef;vertical-align:middle;}
+table.lb tr:hover td{background:#f8f9ff;}
+.rank-badge{width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:900;font-size:.85rem;}
+.r1{background:#FFD700;color:#5a4000;}.r2{background:#C0C0C0;color:#333;}.r3{background:#CD7F32;color:#fff;}.rx{background:var(--light);color:var(--navy);}
+.bar-w{background:#e8ecf5;border-radius:20px;height:7px;min-width:70px;overflow:hidden;}
+.bar-f{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--teal),var(--gold));}
+.lvl{display:inline-block;padding:2px 9px;border-radius:10px;font-size:.72rem;font-weight:700;}
+.lv-ex{background:#d4edda;color:#155724;}.lv-vg{background:#cce5ff;color:#004085;}.lv-g{background:#fff3cd;color:#856404;}.lv-p{background:#f8d7da;color:#721c24;}
+.live-count{display:inline-flex;align-items:center;gap:6px;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:20px;padding:4px 12px;font-size:.8rem;font-weight:700;color:#1b5e20;margin-bottom:10px;}
+.step{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;padding:12px;background:#f8f9fc;border-radius:10px;border-right:4px solid var(--gold);}
+.step-n{background:var(--gold);color:var(--navy);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.85rem;flex-shrink:0;}
+.step-b{font-size:.86rem;line-height:1.7;color:#333;}
+.step-b strong{color:var(--navy);}
+.step-b code{background:#e8f0fe;color:var(--navy);padding:2px 6px;border-radius:4px;font-size:.8rem;direction:ltr;display:inline-block;}
+.qprev{background:#f8f9fc;border:1px solid var(--border);border-radius:9px;padding:12px;margin-bottom:9px;position:relative;}
+.qprev .qnum{position:absolute;top:9px;left:9px;background:var(--navy);color:white;border-radius:6px;padding:2px 7px;font-size:.7rem;font-weight:700;}
+.qprev .qcat{position:absolute;top:9px;right:9px;background:var(--teal);color:white;border-radius:6px;padding:2px 7px;font-size:.68rem;font-weight:700;}
+.qprev .qt{font-size:.86rem;font-weight:700;color:#1a1a2e;margin:28px 0 7px 46px;}
+.qprev .qo{font-size:.8rem;color:#555;line-height:1.7;}
+.qprev .qa{font-size:.78rem;color:var(--green);font-weight:700;margin-top:5px;}
+.custom-row{display:none;gap:8px;align-items:center;margin-top:8px;background:#f0f4ff;border-radius:8px;padding:9px 12px;border:1px dashed var(--navy);}
+.custom-row input{width:80px;padding:7px 8px;border:2px solid var(--border);border-radius:7px;font-family:'Tajawal',sans-serif;font-size:.88rem;text-align:center;direction:ltr;}
+.custom-row label{font-size:.83rem;font-weight:700;color:var(--navy);}
+.domain-tag{display:inline-block;padding:3px 10px;border-radius:12px;font-size:.72rem;font-weight:700;margin-left:6px;}
+.d0{background:#e3f2fd;color:#0d47a1;}
+.d1{background:#f3e5f5;color:#6a1b9a;}
+.d2{background:#e8f5e9;color:#1b5e20;}
+.d3{background:#fff8e1;color:#e65100;}
+.footer-credit{text-align:center;padding:14px;font-size:.75rem;color:#aaa;margin-top:12px;}
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.filter-btn{padding:6px 14px;border:2px solid var(--border);border-radius:20px;background:white;font-family:'Tajawal',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s;color:#555;}
+.filter-btn.active{background:var(--navy);color:white;border-color:var(--navy);}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🎓 بوت إرسال أسئلة رخصة الإشراف التربوي</h1>
+  <p>إرسال تلقائي مجدوَل مع لوحة نتائج المشاركين الحية</p>
+  <span class="hbadge" id="totalBadge">جارٍ التحميل...</span>
+  <span class="live-badge" id="liveBadge" style="display:none"><span class="live-dot"></span> مراقبة النتائج نشطة</span>
+</div>
+
+<div class="container">
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('setup')">⚙️ الإعداد</div>
+  <div class="tab" onclick="showTab('send')">📤 الإرسال</div>
+  <div class="tab" onclick="showTab('results')">🏆 النتائج</div>
+  <div class="tab" onclick="showTab('preview')">👁️ الأسئلة</div>
+  <div class="tab" onclick="showTab('guide')">📖 الدليل</div>
+</div>
+
+<!-- ══ SETUP ══ -->
+<div id="tab-setup">
+  <div class="card">
+    <div class="card-title">🔑 بيانات البوت</div>
+    <div class="field">
+      <label>🔐 Bot Token</label>
+      <input type="password" id="botToken" placeholder="123456789:AABBccDDee..." oninput="saveS()">
+      <div class="hint">من @BotFather بعد إنشاء البوت</div>
+    </div>
+    <div class="field">
+      <label>💬 Chat ID المجموعة / القناة</label>
+      <input type="text" id="chatId" placeholder="-1002014003515" oninput="saveS()">
+      <div class="hint">للمجموعة: رقم سالب يبدأ بـ -100</div>
+    </div>
+    <br>
+    <div class="btn-row">
+      <button class="btn btn-navy" onclick="testConn()">🔍 اختبار الاتصال</button>
+    </div>
+    <div class="alert alert-success" id="connOk">✅ الاتصال ناجح!</div>
+    <div class="alert alert-error" id="connErr"></div>
+  </div>
+
+  <div class="card gold-top">
+    <div class="card-title">⚙️ إعدادات الجدولة والأسئلة</div>
+    <div class="field">
+      <label>📂 المجال / نوع الأسئلة</label>
+      <select id="domainFilter" onchange="applyDomainFilter(); saveS()">
+        <option value="all">📚 جميع المجالات (الكل)</option>
+        <option value="القيادة والإشراف">🔷 القيادة والإشراف</option>
+        <option value="التطوير المهني">🔶 التطوير المهني</option>
+        <option value="دعم التعليم والتعلم">🟢 دعم التعليم والتعلم</option>
+        <option value="القيم وأخلاقيات المهنة ومهارات الاتصال">🌟 القيم وأخلاقيات المهنة</option>
+      </select>
+      <div class="hint">اختر مجالاً محدداً لإرسال أسئلته فقط، أو اختر "الكل" للإرسال من جميع المجالات</div>
+    </div>
+    <div class="grid-2">
+      <div class="field">
+        <label>المدة بين كل سؤال</label>
+        <select id="interval" onchange="onIvChange()">
+          <option value="10">كل 10 ثوانٍ</option>
+          <option value="20">كل 20 ثانية</option>
+          <option value="30">كل 30 ثانية</option>
+          <option value="50">كل 50 ثانية</option>
+          <option value="60">كل دقيقة</option>
+          <option value="120">كل دقيقتين</option>
+          <option value="300">كل 5 دقائق</option>
+          <option value="600">كل 10 دقائق</option>
+          <option value="1800">كل 30 دقيقة</option>
+          <option value="3600" selected>كل ساعة</option>
+          <option value="7200">كل ساعتين</option>
+          <option value="10800">كل 3 ساعات</option>
+          <option value="21600">كل 6 ساعات</option>
+          <option value="43200">كل 12 ساعة</option>
+          <option value="86400">كل يوم</option>
+          <option value="custom">⚙️ مخصص...</option>
+        </select>
+        <div class="custom-row" id="customRow">
+          <label>المدة:</label>
+          <input type="number" id="customSec" min="5" value="45" oninput="saveS()">
+          <span style="font-size:.82rem;color:#555">ثانية</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>البدء من السؤال</label>
+        <select id="startFrom" onchange="saveS()"></select>
+      </div>
+    </div>
+    <div class="field">
+      <label>نوع الأسئلة</label>
+      <select id="sendType" onchange="saveS()">
+        <option value="poll_public">👥 تفاعلي — تظهر قائمة من أجابوا</option>
+        <option value="poll_anon">🔒 سري — لا تظهر قائمة من أجابوا</option>
+        <option value="text">💬 رسالة نصية</option>
+      </select>
+      <div class="hint">
+        👥 <strong>تفاعلي:</strong> تظهر قائمة من أجابوا + يعمل رصد النتائج ولوحة الشرف ✅<br>
+        🔒 <strong>سري:</strong> لا تظهر قائمة من أجابوا — لوحة الشرف لن تعمل
+      </div>
+    </div>
+    <div class="field">
+      <label>⏱️ مؤقت الإجابة للسؤال (بالثواني)</label>
+      <select id="pollOpenPeriod" onchange="saveS()">
+        <option value="0">بدون مؤقت (مفتوح)</option>
+        <option value="15">15 ثانية</option>
+        <option value="20">20 ثانية</option>
+        <option value="30">30 ثانية</option>
+        <option value="45">45 ثانية</option>
+        <option value="60">دقيقة واحدة</option>
+        <option value="90">90 ثانية</option>
+        <option value="120">دقيقتان</option>
+        <option value="180">3 دقائق</option>
+        <option value="300">5 دقائق</option>
+        <option value="600">10 دقائق</option>
+      </select>
+    </div>
+    <input type="hidden" id="pollAnonymous" value="false">
+  </div>
+
+  <div class="card" style="border-top-color:#e65100">
+    <div class="card-title">🔔 رسالة التنبيه قبل الاختبار</div>
+    <div style="background:#fff3e0;border-radius:9px;padding:11px 13px;font-size:.83rem;color:#e65100;font-weight:600;margin-bottom:14px;">
+      💡 تُرسل هذه الرسالة تلقائيًا قبل أول سؤال لتنبيه المجموعة بأن الاختبار على وشك البدء
+    </div>
+    <div class="field">
+      <label>🏷️ اسم الاختبار / المجموعة</label>
+      <input type="text" id="alertTitle" placeholder="مثال: اختبار رخصة الإشراف التربوي" oninput="saveS()" style="direction:rtl;text-align:right">
+    </div>
+    <div class="grid-2">
+      <div class="field">
+        <label>📝 عدد الأسئلة (للعرض في التنبيه)</label>
+        <input type="number" id="alertQCount" value="30" min="1" oninput="saveS()">
+      </div>
+      <div class="field">
+        <label>⏱️ وقت كل سؤال (للعرض)</label>
+        <input type="number" id="alertSeconds" value="30" min="5" oninput="saveS()">
+      </div>
+    </div>
+    <div class="field">
+      <label>🕐 مهلة الانتظار قبل أول سؤال (ثانية)</label>
+      <select id="alertDelay" onchange="saveS()">
+        <option value="0">بدون انتظار — يبدأ فوراً</option>
+        <option value="5">5 ثوانٍ</option>
+        <option value="10">10 ثوانٍ</option>
+        <option value="15" selected>15 ثانية</option>
+        <option value="20">20 ثانية</option>
+        <option value="30">30 ثانية</option>
+        <option value="60">دقيقة</option>
+      </select>
+    </div>
+    <div style="background:#1a2744;border-radius:10px;padding:14px;color:white;font-size:.85rem;line-height:1.9;margin-top:6px;direction:rtl">
+      <div style="color:#c9a227;font-weight:700;margin-bottom:6px">👁️ معاينة رسالة التنبيه:</div>
+      <div id="alertPreview"></div>
+    </div>
+    <br>
+    <div class="btn-row">
+      <button class="btn btn-navy" onclick="previewAlert()">👁️ تحديث المعاينة</button>
+      <button class="btn btn-teal" onclick="sendAlertNow()">📤 إرسال التنبيه الآن</button>
+    </div>
+  </div>
+
+  <div class="card" style="border-top-color:#6a1b9a">
+    <div class="card-title">✏️ تخصيص عنوان الأسئلة</div>
+    <div class="field">
+      <label>📌 نمط ترقيم السؤال</label>
+      <select id="labelStyle" onchange="onLabelStyleChange()">
+        <option value="default">تلقائي: [3/30] نص السؤال</option>
+        <option value="custom">✏️ مخصص بالكامل...</option>
+      </select>
+    </div>
+    <div id="customLabelWrap" style="display:none">
+      <div class="field">
+        <label>📝 نص العنوان المخصص (استخدم {n} للرقم و {total} للإجمالي و {cat} للمجال)</label>
+        <input type="text" id="customLabel" placeholder="مثال: السؤال {n} من {total} — رخصة الإشراف 🎯"
+               oninput="saveS(); previewLabel()" style="direction:rtl;text-align:right">
+      </div>
+      <div id="labelPreview" style="background:#e8f5e9;border-radius:8px;padding:10px 13px;font-size:.85rem;color:#1b5e20;font-weight:600;margin-top:4px;display:none">
+        👁️ معاينة: <span id="labelPreviewText"></span>
+      </div>
+    </div>
+    <div class="field" style="margin-top:10px">
+      <label>🏷️ نص ثابت يظهر في نهاية كل سؤال (اختياري)</label>
+      <input type="text" id="questionSuffix" placeholder="مثال: 📚 رخصة الإشراف التربوي | تصميم د/فواز"
+             oninput="saveS()" style="direction:rtl;text-align:right">
+    </div>
+  </div>
+
+  <div class="card teal-top">
+    <div class="card-title">💾 الإعدادات</div>
+    <div style="font-size:.84rem;color:#555;line-height:1.9;">
+      تُحفظ إعداداتك تلقائيًا. يجب أن تبقى الصفحة مفتوحة لاستمرار الإرسال ومراقبة النتائج.
+    </div>
+    <br>
+    <button class="btn btn-outline" style="font-size:.8rem;padding:6px 12px" onclick="clearS()">🗑️ حذف الإعدادات</button>
+  </div>
+</div>
+
+<!-- ══ SEND ══ -->
+<div id="tab-send" style="display:none">
+  <div class="status-bar">
+    <div class="status-row">
+      <div><div class="status-label">الحالة</div><div id="statusText" style="font-weight:700;font-size:.95rem">⏸️ متوقف</div></div>
+      <div style="text-align:center"><div class="status-label">السؤال</div><div id="currentQ" style="font-weight:900;font-size:1.1rem;color:var(--gold)">—</div></div>
+      <div><div class="status-label">التالي بعد</div><div class="cd-badge" id="cdBadge">—</div></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+    <div style="font-size:.75rem;margin-top:5px;opacity:.7" id="progLabel">0 سؤال تم إرساله</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🎛️ التحكم</div>
+    <div class="btn-row">
+      <button class="btn btn-green"   id="btnStart" onclick="startSending()">▶️ بدء التلقائي</button>
+      <button class="btn btn-red"     id="btnStop"  onclick="stopSending()" disabled>⏹️ إيقاف</button>
+      <button class="btn btn-teal"    onclick="sendNext()">📤 سؤال واحد الآن</button>
+      <button class="btn btn-outline" onclick="resetProg()">🔄 إعادة البداية</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="justify-content:space-between">
+      <span>📋 السجل</span>
+      <button class="btn btn-outline" style="font-size:.72rem;padding:4px 10px" onclick="clearLog()">مسح</button>
+    </div>
+    <div class="log-box" id="logBox"><div class="log-line log-info">⏳ جاهز للإرسال...</div></div>
+  </div>
+</div>
+
+<!-- ══ RESULTS ══ -->
+<div id="tab-results" style="display:none">
+  <div class="card green-top">
+    <div class="card-title">🏆 لوحة نتائج المشاركين</div>
+    <div style="background:#e8f5e9;border:1px solid #a5d6a7;border-radius:10px;padding:13px;font-size:.85rem;color:#1b5e20;font-weight:600;margin-bottom:14px;line-height:1.8;">
+      ✅ <strong>كيف يعمل النظام:</strong><br>
+      • البوت يراقب ردود المشاركين كل <strong>8 ثوانٍ</strong> تلقائيًا<br>
+      • يرصد من أجاب صح ومن أجاب خطأ على كل سؤال<br>
+      • النتائج تتحدث فورًا بمجرد إجابة أي عضو
+    </div>
+    <div id="liveCountWrap" style="display:none">
+      <div class="live-count"><span class="live-dot" style="background:#4caf50"></span> <span id="liveCount">0</span> مشارك سُجِّلت إجاباتهم</div>
+    </div>
+    <div class="btn-row" style="margin-bottom:14px">
+      <button class="btn btn-green" onclick="fetchNow()">🔄 تحديث النتائج الآن</button>
+      <button class="btn btn-gold"  onclick="sendLbToChat()">📤 إرسال النتائج للمجموعة</button>
+      <button class="btn btn-outline" onclick="clearLb()">🗑️ مسح النتائج</button>
+    </div>
+  </div>
+
+  <div class="lb-panel" id="lbPanel">
+    <div class="lb-head">
+      <h2>🏆 لوحة الشرف</h2>
+      <p id="lbSub">في انتظار إجابات المشاركين...</p>
+    </div>
+    <div class="lb-stats" id="lbStats"></div>
+    <div id="lbTable"></div>
+    <p style="font-size:.74rem;color:#aaa;text-align:center;margin-top:10px" id="lbNote"></p>
+  </div>
+
+  <div class="card" style="margin-top:14px;border-top-color:#ff9800">
+    <div class="card-title" style="color:#e65100">⚠️ ملاحظة مهمة</div>
+    <div style="font-size:.83rem;color:#555;line-height:1.9">
+      📌 في وضع <strong>👥 تفاعلي</strong> فقط يعمل رصد النتائج.<br>
+      📌 <strong>يجب أن تبقى الصفحة مفتوحة</strong> لاستقبال التحديثات وتسجيل النتائج.<br>
+      📌 البوت يجلب التحديثات كل 8 ثوانٍ تلقائيًا أثناء الإرسال.
+    </div>
+  </div>
+</div>
+
+<!-- ══ PREVIEW ══ -->
+<div id="tab-preview" style="display:none">
+  <div class="card">
+    <div class="card-title">👁️ معاينة الأسئلة</div>
+    <div class="filter-bar" id="filterBar"></div>
+    <div id="previewCount" style="font-size:.82rem;color:#777;margin-bottom:12px;"></div>
+    <div id="previewList"></div>
+  </div>
+</div>
+
+<!-- ══ GUIDE ══ -->
+<div id="tab-guide" style="display:none">
+  <div class="card">
+    <div class="card-title">📖 دليل الإعداد</div>
+    <div class="step"><div class="step-n">1</div><div class="step-b">افتح تيليجرام وابحث عن <strong>@BotFather</strong> ثم أرسل <code>/newbot</code></div></div>
+    <div class="step"><div class="step-n">2</div><div class="step-b">اختر اسمًا للبوت ثم اسم مستخدم ينتهي بـ <strong>bot</strong> — سيعطيك <strong>Token</strong></div></div>
+    <div class="step"><div class="step-n">3</div><div class="step-b">أضف البوت للمجموعة كـ <strong>مشرف</strong> بصلاحية نشر الرسائل</div></div>
+    <div class="step"><div class="step-n">4</div><div class="step-b">للحصول على Chat ID افتح في المتصفح:<br><code>https://api.telegram.org/botTOKEN/getUpdates</code><br>ابحث عن <strong>"id"</strong> داخل <strong>"chat"</strong> — مثال: <strong>-1002014003515</strong></div></div>
+    <div class="step"><div class="step-n">5</div><div class="step-b">ضع التوكن والـ Chat ID في الإعداد، اختبر الاتصال، ثم اضغط <strong>▶️ بدء التلقائي</strong> 🎉</div></div>
+    <div style="background:#fff3cd;border:1px solid #ffc107;border-radius:9px;padding:12px;font-size:.83rem;color:#856404;font-weight:600;margin-top:10px">
+      ⚠️ ابقِ الصفحة مفتوحة لاستمرار الإرسال ورصد النتائج
+    </div>
+  </div>
+
+  <div class="card gold-top">
+    <div class="card-title">📊 توزيع الأسئلة حسب المجالات</div>
+    <div id="domainStats" style="font-size:.88rem;line-height:2.2;color:#333;"></div>
+  </div>
+</div>
+
+<div class="footer-credit">🎓 بوت رخصة الإشراف التربوي | تصميم د/فواز | https://t.me/TAqhjT3MFVE1Yzk0</div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  بنك أسئلة رخصة الإشراف التربوي
+//  المصدر: ملفا cb88 + cb77 — إجمالي الأسئلة: 90
+// ══════════════════════════════════════════════════════
+const QALL = [
+  // ════ المجال الأول: القيادة والإشراف ════
+  {id:1,cat:"القيادة والإشراف",q:"تتكون معايير المشرف التربوي من كم معياراً موزعة على مجالات؟",o:["10 معايير في 3 مجالات","15 معياراً في 4 مجالات","12 معياراً في 5 مجالات","20 معياراً في 4 مجالات"],a:1},
+  {id:2,cat:"القيادة والإشراف",q:"ما المجالات الأربعة الرئيسية التي تركز عليها المعايير المهنية للمشرفين التربويين؟",o:["التخطيط والتنفيذ والتقويم والمتابعة","القيادة والإشراف - التطوير المهني - دعم التعليم والتعلم - القيم وأخلاق المهنة ومهارات الاتصال","الإدارة والتوجيه والتدريب والتقييم","المناهج والتدريس والبحث والتطوير"],a:1},
+  {id:3,cat:"القيادة والإشراف",q:"ما الوزن النسبي لمجال القيادة والإشراف في اختبار الرخصة المهنية؟",o:["34.6%","12.1%","41.3%","12%"],a:2},
+  {id:4,cat:"القيادة والإشراف",q:"يتعامل مشرف تربوي مع المعلمين المتميزين الذين لديهم دافعية عالية للعمل بشكل مختلف عن المعلمين ذوي المهارات والدافعية المنخفضة. هذا المشرف يتبنى نظرية القيادة:",o:["الظرفية","التحويلية","السلوكية","التشاركية"],a:0},
+  {id:5,cat:"القيادة والإشراف",q:"ما الذي يميز المشرف التربوي كقائد تربوي عن دوره التقليدي؟",o:["الاقتصار على الزيارات الصفية","تجاوز الزيارات الصفية إلى أدوار أخرى تفرضها التحديات التربوية والتقنية","التركيز على التقارير الإدارية فقط","الاهتمام بالجانب الإداري دون التربوي"],a:1},
+  {id:6,cat:"القيادة والإشراف",q:"مشرف تربوي يتبع نمط إشرافي يكافئ الأداء المتميز ويحاسب المعلمين على التقصير، النمط الذي يتبناه المشرف في هذه الحالة هو:",o:["الديمقراطي","التفتيش","الاستبدادي","الحرية المطلقة"],a:1},
+  {id:7,cat:"القيادة والإشراف",q:"أي من التالي يُعدّ من مؤشرات المعيار الخاص بالتخطيط لعمليات التغيير والتطوير؟",o:["يحضر الندوات والمؤتمرات التربوية","يتوقع احتياجات الأفراد والفرق ويسهل الحصول عليها كجزء من تنفيذ عمليات التطوير","يستخدم أدوات متنوعة في عملية التقويم","يشارك في تفعيل مبادرات الشراكات المجتمعية"],a:1},
+  {id:8,cat:"القيادة والإشراف",q:"يتضمن المعيار الخاص بممارسة الأساليب الإشرافية بفاعلية أسلوب الإشراف الإكلينيكي، ما الذي يميز هذا الأسلوب؟",o:["يعتمد على الزيارات المفاجئة","يركز على تحسين أداء المعلم من خلال الملاحظة والتحليل والتغذية الراجعة","يقتصر على الاجتماعات الدورية","يعتمد على التقارير الكتابية فقط"],a:1},
+  {id:9,cat:"القيادة والإشراف",q:"من بين الأساليب الإشرافية المذكورة في المعايير، أيها يُعدّ من التقنيات الإشرافية الحديثة؟",o:["الزيارة الصفية التقليدية","التعليم المصغر واستخدام نافذة جوهاري والتدريب على الحساسية","الاجتماعات الدورية فقط","التقارير الكتابية الرسمية"],a:1},
+  {id:10,cat:"القيادة والإشراف",q:"ما الوزن النسبي للمعيار 4.25.6 في اختبار الرخصة المهنية؟",o:["5.3%","8%","12%","6.7%"],a:2},
+  {id:11,cat:"القيادة والإشراف",q:"ما الذي يراعيه المشرف التربوي وفق المعيار 1.25.6 عند بناء الخطة التشغيلية للإشراف التربوي؟",o:["توجهات الوزارة فقط","توجهات الوزارة ورؤية المملكة 2030 والخبرات العالمية","الخبرات المحلية فقط","التجارب الدولية دون مراعاة التوجهات الوطنية"],a:1},
+  {id:12,cat:"القيادة والإشراف",q:"ما الذي يفعله المشرف التربوي وفق المعيار 3.25.6 تجاه المخاطر في عمليات التطوير؟",o:["يتجاهلها","يستشعر المخاطر ويقومها ويبادر باتخاذ الإجراءات المناسبة لمعالجتها","يحيلها إلى الإدارة العليا فقط","يتجنب عمليات التطوير لتفادي المخاطر"],a:1},
+  {id:13,cat:"القيادة والإشراف",q:"من الأساليب الإشرافية المذكورة في معيار 4.25.6، أيها يُعدّ من الأساليب التقليدية؟",o:["الإشراف الإكلينيكي","الزيارة الصفية والمداولات الإشرافية والنشرة التربوية والقراءة الموجهة","التعليم المصغر","نافذة جوهاري"],a:1},
+  {id:14,cat:"القيادة والإشراف",q:"عندما يستفيد مكتب الإشراف من فرصة متاحة لعقد شراكة مجتمعية مع مؤسسة تقنية لتدريب المشرفين في مجال التقنية الإشرافية؛ تُسمَّى هذه الاستراتيجية في التخطيط:",o:["هجومية","انكماشية","علاجية","دفاعية"],a:2},
+  {id:15,cat:"القيادة والإشراف",q:"أي الخيارات التالية يمثل خطوات التخطيط التشغيلي الصحيحة حسب تسلسلها الزمني؟",o:["الأهداف – المبادرات والبرامج – مؤشرات الأداء – الجدول الزمني","الأهداف – مؤشرات الأداء – المبادرات والبرامج – الجدول الزمني","الأهداف – المبادرات والبرامج – الجدول الزمني – مؤشرات الأداء","الأهداف – مؤشرات الأداء – الجدول الزمني – المبادرات والبرامج"],a:1},
+  {id:16,cat:"القيادة والإشراف",q:"أي من المكونات التالية يُعدّ من ركائز إعداد الخطة الاستراتيجية للإشراف التربوي؟",o:["تحليل الواقع الإشرافي وتوظيف نتائجه","الاكتفاء بالخبرات الميدانية السابقة","تجاهل توجهات رؤية المملكة 2030","التركيز على الجانب الإداري دون التربوي"],a:0},
+  {id:17,cat:"القيادة والإشراف",q:"مشرف يركز على إيجاد دافع مشترك بتحديد رسالة ملهمة، وبناء منظومة قيم تركز على الصالح العام. هذا المشرف يتبنى القيادة:",o:["التشاركية","الديمقراطية","الظرفية","التحويلية"],a:3},
+  {id:18,cat:"القيادة والإشراف",q:"ما الفرق الجوهري بين القيادة التشاركية والقيادة الديمقراطية في السياق الإشرافي؟",o:["القيادة التشاركية تشرك المعلمين في صنع القرار بينما الديمقراطية تعتمد على التصويت","القيادة الديمقراطية تُقرر والقيادة التشاركية تستشير فقط","لا فرق بينهما","القيادة التشاركية مرتبطة بالمنظمات التعليمية فقط"],a:0},
+  {id:19,cat:"القيادة والإشراف",q:"يحتاج فريق من المشرفين أداةً لمتابعة سير خطوات أحد المشاريع التربوية. أفضل أداة لمساعدتهم في ذلك هي:",o:["التحليل الرباعي","مصفوفة معايير","مخطط زمني","شبكة أنشطة"],a:2},
+  {id:20,cat:"القيادة والإشراف",q:"النمط الإشرافي الذي يعتقد أنه لن يكون هناك تحسين في التعليم والتعلم إلا من خلال المعلمين هو:",o:["الديمقراطي","التوجيهي","الاستبدادي","البيروقراطي"],a:0},
+  {id:21,cat:"القيادة والإشراف",q:"أي الأساليب الإشرافية التالية يُعدّ من الأساليب المباشرة التي تتيح للمشرف ملاحظة أداء المعلم في البيئة الطبيعية؟",o:["النشرة التربوية","القراءة الموجهة","الزيارة الصفية","الورشة التربوية"],a:2},
+  {id:22,cat:"القيادة والإشراف",q:"من أبرز مميزات الإشراف الإكلينيكي أنه:",o:["يعتمد على الزيارات المفاجئة","يركز على تطوير المعلم انطلاقاً من احتياجاته","يتم بمعزل عن المعلم","يقتصر على المشرفين ذوي الخبرة"],a:1},
+  {id:23,cat:"القيادة والإشراف",q:"تقييم المشرف للمعلم من خلال تحصيل الطلاب ومنجزاتهم يُعدّ تقييماً:",o:["ذاتياً","غير مباشر","أقران","تكوينياً"],a:1},
+  {id:24,cat:"القيادة والإشراف",q:"أيٌّ من الممارسات التالية يدل على إدارة مخاطر التغيير وفق المعيار 3.25.6؟",o:["تجاهل المقاومة والمضي في التغيير بقوة","استشعار المخاطر وتقويمها والمبادرة باتخاذ الإجراءات المناسبة لمعالجتها","إحالة أي مقاومة للتغيير إلى الإدارة مباشرة","تأجيل عمليات التطوير لحين اختفاء المقاومة"],a:1},
+  {id:25,cat:"القيادة والإشراف",q:"نافذة جوهاري كأداة في الإشراف التربوي تُستخدم بهدف:",o:["رسم الخرائط المفاهيمية","تعزيز الوعي الذاتي وتحسين التواصل بين المشرف والمعلمين","تحليل المناهج الدراسية","وضع معايير الترقي الوظيفي"],a:1},
+  {id:26,cat:"القيادة والإشراف",q:"ما أبرز فوائد تشجيع المعلمين على ممارسة التقويم الذاتي وفق المعيار 5.25.6؟",o:["تقليل دور المشرف في عملية التقويم","تنمية قدرة المعلم على الرقابة الذاتية وتحسين أدائه من الداخل","التخلص من أدوات التقويم الخارجية","زيادة عبء العمل على المعلم"],a:1},
+
+  // ════ المجال الثاني: التطوير المهني ════
+  {id:27,cat:"التطوير المهني",q:"ما الوزن النسبي لمجال التطوير المهني في اختبار الرخصة المهنية؟",o:["41.3%","12.1%","34.6%","12%"],a:1},
+  {id:28,cat:"التطوير المهني",q:"ما الذي يفعله المشرف التربوي وفق المعيار 6.25.6 المتعلق بمراجعة الممارسات الإشرافية؟",o:["يعتمد على التقييم الخارجي فقط","يوظف التغذية الراجعة المقدمة له من المعلمين والزملاء والمسؤولين لتحديد التحسينات","يتجاهل ملاحظات الزملاء","يركز على تقييم الطلاب فقط"],a:1},
+  {id:29,cat:"التطوير المهني",q:"من مؤشرات المعيار 7.25.6 المتعلق بتطور الأداء المهني أن المشرف:",o:["يقتصر على حضور الدورات الإلزامية فقط","يمتلك مهارات استشراف المستقبل وإكساب هذه المهارات للمعلمين والمتعلمين","يتجنب التعلم الإلكتروني","يعتمد على الخبرة الشخصية فقط"],a:1},
+  {id:30,cat:"التطوير المهني",q:"ما مهارات العصر الرقمي التي ينبغي على المشرف التربوي امتلاكها وفق المعيار 7.25.6؟",o:["مهارات الكتابة التقليدية فقط","مهارات العصر الرقمي والتفكير الإبداعي والاتصال الفعال والمعلوماتية والمبادرة والتوجيه الذاتي","مهارات الحفظ والاسترجاع","مهارات الإدارة المالية"],a:1},
+  {id:31,cat:"التطوير المهني",q:"ما الوزن النسبي للمعيار 8.25.6 في اختبار الرخصة المهنية؟",o:["6.7%","5.3%","8%","12%"],a:1},
+  {id:32,cat:"التطوير المهني",q:"يبتكر المشرف التربوي حلولاً إبداعية ومبادرات إيجابية ومشاريع تربوية وفق منهجية علمية مقننة، هذا يندرج تحت:",o:["المعيار الخاص بالشراكة المجتمعية","المعيار الخاص بمراجعة الممارسات الإشرافية على نحو بناء","المعيار الخاص بتقويم أداء المعلم","المعيار الخاص بالرؤية الإستراتيجية"],a:1},
+  {id:33,cat:"التطوير المهني",q:"ما الجهة المسؤولة عن اختبار الرخصة المهنية للمشرفين التربويين في المملكة العربية السعودية؟",o:["وزارة التعليم","هيئة تقويم التعليم والتدريب","مركز القيادة التربوية","الجامعات السعودية"],a:1},
+  {id:34,cat:"التطوير المهني",q:"وفق المعيار 7.25.6، ما الذي يحدده المشرف التربوي وفق الخبرة والاهتمامات الشخصية؟",o:["أهداف الخطة التشغيلية","مجتمعات وشبكات التعلم المهنية","أدوات تقويم المعلمين","مؤشرات الأداء"],a:1},
+  {id:35,cat:"التطوير المهني",q:"أراد مشرف تربوي أخذ تغذية راجعة من المعلمين الحاضرين لدرس تطبيقي بغرض تحسين الآلية التي يتبعها. أكثر أساليب التغذية الراجعة مناسبةً لذلك:",o:["الاستطلاعات","تقييمات 360","مراقبة ردود الفعل","الملاحظة"],a:0},
+  {id:36,cat:"التطوير المهني",q:"أي من الخيارات التالية يمثل المبادرة الإبداعية الإشرافية للمعيار 6.25.6؟",o:["الالتزام بالروتين الإشرافي اليومي","ابتكار حلول إبداعية ومشاريع تربوية للتغلب على التحديات","تطبيق الأنظمة واللوائح حرفياً","تحويل القرارات إلى الجهات العليا"],a:1},
+  {id:37,cat:"التطوير المهني",q:"ما الذي يُميز التقويم الذاتي للمشرف التربوي بوصفه ممارسةً مهنية راقية؟",o:["اكتفاؤه بتقييم ما قدّمه لمرة واحدة سنوياً","تحليل مخرجات عمله وتحديد نقاط القوة والضعف لتعزيز الإيجابيات ومعالجة السلبيات","اعتماده على تقييم المسؤولين فقط","تجنب نشر نتائجه حفاظاً على الخصوصية"],a:1},
+  {id:38,cat:"التطوير المهني",q:"قام مكتب إشراف تربوي بعقد ورشة جُمعت خلال أحد جلساتها مناقشة مع مجموعة قادة مدارس لجمع معلومات متعمقة حول نظام إدارة التعليم الإلكتروني. تُسمّى أداة جمع البيانات هذه:",o:["استبيان","مجموعة تركيز","مقابلة","ملاحظة"],a:1},
+  {id:39,cat:"التطوير المهني",q:"حرص مشرف على تقييم جاذبية الأنشطة، وماذا ينوي المعلمون تنفيذه بعد التدريب، والدعم الذي يحتاجونه لتطبيق ما تعلموه. وفقاً لنموذج كيرك باتريك، ركّز المشرف على تقييم:",o:["النتائج","التعلم","السلوك","رد الفعل"],a:3},
+  {id:40,cat:"التطوير المهني",q:"ما الفرق بين التقييم التكويني والتقييم الختامي في سياق تقييم البرامج التدريبية للمعلمين؟",o:["التقييم التكويني يتم في نهاية البرنامج والختامي أثناءه","التقييم التكويني يتم أثناء البرنامج لتحسينه والختامي بعده لقياس أثره","لا فرق بينهما","التقييم الختامي أدق وأشمل دائماً"],a:1},
+  {id:41,cat:"التطوير المهني",q:"ما المقصود بمجتمعات التعلم المهنية في سياق المعيار 7.25.6؟",o:["المؤتمرات الرسمية فقط","شبكات وفرق يتبادل أعضاؤها الخبرات المهنية وفق الاهتمامات المشتركة","الدورات الإجبارية التي تفرضها الوزارة","اللقاءات الاجتماعية بين المشرفين"],a:1},
+  {id:42,cat:"التطوير المهني",q:"وفق المعيار 8.25.6، ما الخطوة التي تسبق تصميم البرامج التدريبية للمعلمين؟",o:["تحديد ميزانية التدريب","تحديد الاحتياجات التدريبية الفعلية للمعلمين","اختيار مكان إقامة الدورة","تحديد المدربين المتاحين"],a:1},
+  {id:43,cat:"التطوير المهني",q:"يتكون فريق العمل في كل تخصص من مشروع المعايير من:",o:["مختص علمي في الإشراف التربوي + مختص تربوي في المناهج + مشرف تربوي ميداني","مدير تعليم + مشرف تربوي + معلم","أستاذ جامعي + مدير مدرسة + معلم","مختص تقني + مختص تربوي + إداري"],a:0},
+
+  // ════ المجال الثالث: دعم التعليم والتعلم ════
+  {id:44,cat:"دعم التعليم والتعلم",q:"ما الوزن النسبي لمجال دعم التعليم والتعلم في اختبار الرخصة المهنية؟",o:["41.3%","12.1%","34.6%","12%"],a:2},
+  {id:45,cat:"دعم التعليم والتعلم",q:"من مواصفات أدوات التقويم التكويني للطالب أن تكون قادرة على توضيح أوجه القوة كما توضح أوجه القصور، وأن تراعي أنماط المتعلمين واهتماماتهم، وتقلل من المقارنات غير الضرورية. هذه المواصفات تعبر عن:",o:["التنوع","الكفاية","الشمول","الإنصاف"],a:3},
+  {id:46,cat:"دعم التعليم والتعلم",q:"قام فريق من المشرفين والمعلمين بتحليل محتوى أحد المناهج مستخدمين استمارة تتضمن عناصر: المفاهيم، استراتيجيات التدريس، الأنشطة، أساليب التقويم. هذا يمثل طريقة تحليل المحتوى المعروفة بـ:",o:["تجميع","تجزئة","تبويب","هرم"],a:2},
+  {id:47,cat:"دعم التعليم والتعلم",q:"صمم معلم أربع فيديوهات تعليمية، كل فيديو متبوع باختبار قصير ينقله للمرحلة التالية، حتى ينتهي الطالب بالحصول على أربعين درجة في حال أكمل المهمة بشكل صحيح. هذا النوع من التعليم الإلكتروني يسمى:",o:["الموجه من المعلم","المتزامن","غير المتزامن","المدمج"],a:3},
+  {id:48,cat:"دعم التعليم والتعلم",q:"ما الوزن النسبي للمعيار 11.25.6 في اختبار الرخصة المهنية؟",o:["5.3%","6.7%","8%","12%"],a:1},
+  {id:49,cat:"دعم التعليم والتعلم",q:"وفق المعيار 5.25.6، ما الذي يشجع المشرف التربوي المعلمين على ممارسته؟",o:["التقويم الخارجي فقط","التقويم الذاتي وتوظيفه في تحسين أداء المعلم","التقويم التنافسي بين المعلمين","الاعتماد على نتائج الطلاب فقط"],a:1},
+  {id:50,cat:"دعم التعليم والتعلم",q:"ما الوزن النسبي للمعيار 9.25.6 في اختبار الرخصة المهنية؟",o:["5.3%","6.7%","8%","12%"],a:1},
+  {id:51,cat:"دعم التعليم والتعلم",q:"وفق المعيار 5.25.6، ما الذي يلاحظه المشرف التربوي في أداء المعلم؟",o:["السلوك الشخصي للمعلم فقط","أداء المعلم في مجال مهارات التدريس (تخطيطاً وتنفيذاً وتقويماً)","مستوى الطلاب فقط","الالتزام بالحضور والانصراف"],a:1},
+  {id:52,cat:"دعم التعليم والتعلم",q:"أراد معلم إثارة اهتمام الطلاب لموضوع الدرس بأداة تعتمد على: ماذا يعرف الطالب، وماذا يريد أن يعرف، وماذا تعلّم. أفضل استراتيجية لتحقيق ذلك هي:",o:["مخطط T","مخطط KWL","مخطط 1,2,3","الخريطة الذهنية"],a:1},
+  {id:53,cat:"دعم التعليم والتعلم",q:"أي من الممارسات التالية يدعم تنوع استخدام المعلمين لإستراتيجيات التدريس وفق المعيار 9.25.6؟",o:["الاقتصار على طريقة المحاضرة في جميع الدروس","توجيه المعلمين لاختيار الاستراتيجية المناسبة للموقف التعليمي","اعتماد استراتيجية موحدة لجميع المعلمين","تجاهل الفروق الفردية بين الطلاب"],a:1},
+  {id:54,cat:"دعم التعليم والتعلم",q:"قام فريق من المشرفين والمعلمين بتحليل محتوى أحد المناهج باستخدام استمارة تضمنت: الوحدة، الدرس، المفاهيم، استراتيجيات التدريس، الأنشطة، أساليب التقويم. طريقة تحليل المحتوى المستخدمة هي:",o:["تجميع","تجزئة","تبويب","هرمي"],a:0},
+  {id:55,cat:"دعم التعليم والتعلم",q:"ما مهمة المشرف التربوي في ضوء المعيار 10.25.6 فيما يخص تطوير المناهج التعليمية؟",o:["تأليف الكتب المدرسية بصفة منفردة","مراجعة المناهج وتقويمها وإشراك المعلمين في عمليات التحسين","الاكتفاء بتطبيق المنهج المقرر دون مراجعة","رفع تقرير سنوي فقط عن المنهج"],a:1},
+  {id:56,cat:"دعم التعليم والتعلم",q:"ما الهدف الأساسي للبحث الإجرائي في الميدان التربوي وفق المعيار 11.25.6؟",o:["إثراء المكتبة التربوية بالدراسات الأكاديمية","حل مشكلات ميدانية فعلية وتطوير الممارسات التدريسية والإشرافية","الترقي الوظيفي للمشرفين","استيراد النماذج التربوية الأجنبية"],a:1},
+  {id:57,cat:"دعم التعليم والتعلم",q:"نوع من التعلم الإلكتروني يقوم على الاستجابة المباشرة من المتعلم، ويُلزم التحقق من شخصيته، ويوفر فرصة لمتابعة تقدمه. يُطلق على هذا النوع:",o:["مدمج","متزامن","غير متزامن","ذاتي"],a:1},
+  {id:58,cat:"دعم التعليم والتعلم",q:"أي من المهارات التالية تندرج ضمن مهارات الإشراف الإلكتروني التي يجب أن يمتلكها المشرف التربوي؟",o:["الوصول للمصادر المفتوحة والإشراف عبر الفضاء الإلكتروني","الاقتصار على استخدام البريد الإلكتروني","رفض التقنية والاعتماد على الزيارات الميدانية فقط","إحالة كل ما يتعلق بالتقنية للمختصين"],a:0},
+  {id:59,cat:"دعم التعليم والتعلم",q:"مشرف تربوي يوجّه المعلمين نحو استخدام التقويم من أجل التعلم لا من أجل الدرجات. أيٌّ من المبادئ التالية يعكس هذا التوجه؟",o:["التقويم الختامي فقط هو المعتمد","التقويم التكويني يُستخدم لتحسين التعلم ودعم الطالب أثناء العملية التعليمية","التقويم يهدف لترتيب الطلاب حسب أدائهم","درجة النجاح هي المعيار الوحيد لجودة التقويم"],a:1},
+  {id:60,cat:"دعم التعليم والتعلم",q:"ما الهدف الرئيسي من دليل المتقدم لاختبار الرخصة المهنية للمشرفين التربويين؟",o:["تحديد مواعيد الاختبار فقط","مساعدة المتقدم على التهيؤ والاستعداد لأداء الاختبار بتقديم معلومات مفيدة عن محتواه","تقديم الشهادات التدريبية","تحديد أماكن الاختبار"],a:1},
+
+  // ════ المجال الرابع: القيم وأخلاقيات المهنة ومهارات الاتصال ════
+  {id:61,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"ما الوزن النسبي لمجال القيم وأخلاقيات المهنة ومهارات الاتصال في اختبار الرخصة المهنية؟",o:["41.3%","12.1%","34.6%","12%"],a:3},
+  {id:62,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"تعامل المشرف بحياد مع أفكار المعلمين، وعدم تأثير رأيه السلبي عن فكرة على صاحبها، يمثل قيمة:",o:["الثقة","المسؤولية","التعاطف","الإنصاف"],a:3},
+  {id:63,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"مشاركة الكشافة من منسوبي وطلاب وزارة التعليم في تنظيم موسم الحج من أنواع الشراكة:",o:["الاجتماعية","الثقافية","الاقتصادية","العلمية"],a:0},
+  {id:64,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"وضع قواعد وقوانين ومعايير للشراكة مع أحد الجهات يسمى:",o:["محاسبية","مساءلة","جودة","حوكمة"],a:3},
+  {id:65,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"مشرف يأخذ في الاعتبار مكونات الاتصال وشروطها في العملية الإشرافية، فهو يعبر عما يريد بشكل واضح وموجز، مستخدماً كلمات ولغة جسد مناسبة، وهذا يمثل:",o:["التخطيط للرسالة","ترميز الرسالة","اختيار قناة الاتصال","تفسير الرسالة"],a:1},
+  {id:66,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"برنامج مقترح من أحد مكاتب الإشراف لرفع معدلات انضباط الطلاب بالشراكة مع الأسرة والمجتمع المحلي، يعد توظيفاً لأحد مبادئ الشراكة المجتمعية، وهو:",o:["التوقعات الواضحة والمساءلة المشتركة","الاستفادة من الموارد المتبادلة","مراجعة فعالية الشراكة","الحفاظ على خصوصية الشراكة"],a:0},
+  {id:67,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"يدعم المشرف التربوي مبدأ الشراكة المجتمعية بين جهة عمله ومؤسسات المجتمع ذات العلاقة. من مؤشرات ذلك:",o:["الاقتصار على الشراكة الداخلية","المشاركة في تفعيل مبادرات الشراكات المجتمعية الداعمة لتطوير العملية الإشرافية","تجنب التعاون مع الجهات الخارجية","الاهتمام بالشراكة الاقتصادية فقط"],a:1},
+  {id:68,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"ما الوزن النسبي للمعيار 14.25.6 في اختبار الرخصة المهنية؟",o:["6.7%","5.3%","8%","12%"],a:1},
+  {id:69,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"من أبرز مسؤوليات المشرف التربوي في مجال أخلاقيات المهنة (المعيار 13.25.6) أنه:",o:["يحترم المعلمين وقدراتهم ويتقبل آراءهم ويحافظ على أسرارهم","يُبدي آراءه الشخصية في جميع المواقف","يُفاضل بين المعلمين بحسب تخصصاتهم","يُحوّل المشكلات المهنية إلى الجهات القضائية مباشرة"],a:0},
+  {id:70,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"ما الأسلوب الأمثل لبناء الثقة مع المعلمين وفق المعيار 15.25.6؟",o:["إصدار القرارات بصرامة وحزم","بناء علاقات إنسانية تسهم في تطوير أدائهم","الاكتفاء بالتواصل الرسمي الكتابي","تجنب النقاش في المواضيع الحساسة"],a:1},
+  {id:71,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"يُشير المعيار 13.25.6 إلى أن المشرف التربوي ينبغي أن يُعزز أهمية قيم المجتمع وعاداته وتراثه. أيٌّ من السلوكيات التالية يُجسّد هذا المعيار؟",o:["إلزام المعلمين بأسلوب واحد في التعليم","تضمين القيم والموروث الثقافي في الأنشطة والمناشط التربوية","تجاهل الثقافة المحلية والتركيز على النماذج الغربية","الفصل التام بين التعليم والثقافة"],a:1},
+  {id:72,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"أي من المكونات التالية يُعدّ عنصراً أساسياً في عملية الاتصال الفعّال وفق المعيار 15.25.6؟",o:["وجود رسالة ومرسل ومستقبل وقناة وتغذية راجعة","الاكتفاء بالرسالة المكتوبة","استخدام وسيلة رقمية واحدة فقط","التركيز على لغة الجسد دون الكلمات"],a:0},
+  {id:73,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"ما نوع أسئلة اختبار الرخصة المهنية للمشرفين التربويين؟",o:["أسئلة مقالية","أسئلة اختيار من متعدد (موضوعية)","أسئلة صح وخطأ","أسئلة مطابقة"],a:1},
+  {id:74,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"صمَّم مشرف أداةً لتقييم أهداف الخطة وفق مستويات (ضعيف / متوسط / عالٍ / عالٍ جداً). هذه الأداة تُعدّ من أدوات:",o:["الملاحظة الصفية","المداولة الإشرافية","التقويم الذاتي","تقويم الأقران"],a:1},
+  {id:75,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"مشرف تربوي يمتلك مهارات استشراف المستقبل ويحرص على إكسابها للمعلمين والمتعلمين. أيٌّ من المهارات التالية تندرج ضمن هذا الإطار؟",o:["مهارة الخط والتجويد","مهارات العصر الرقمي والتفكير الإبداعي والاتصال الفعال","مهارات الحساب الذهني","مهارات الرسم والتشكيل"],a:1},
+  {id:76,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"قام مشرف تربوي بتقييم أربعة مشاريع تربوية وفق ثلاثة مؤشرات إيجابية ومؤشر سالب واحد هو التكلفة. أفضل البرامج هو:",o:["البرنامج ذو التكلفة الأعلى والتأثير الأكبر","البرنامج ذو الأداء الأعلى في المؤشرات الإيجابية والتكلفة الأدنى","البرنامج الأقدم زمنياً","البرنامج الأعلى في عدد المستفيدين فقط"],a:1},
+  {id:77,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"أيٌّ من الأشكال البيانية التالية يُعدّ الأنسب لتمثيل العلاقة بين متغير قلق الاختبارات ومتغير الأداء الدراسي؟",o:["نوعي","إجرائي","كمي","مزج"],a:2},
+  {id:78,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"كم يوماً استغرقت ورشة العمل المكثفة لتدريب فرق العمل في مشروع إعداد المعايير؟",o:["يوم واحد","يومان","ثلاثة أيام","أسبوع"],a:2},
+  {id:79,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"مشرف تربوي يتعامل مع المعلمين المتميزين بأسلوب مختلف عن المعلمين ذوي المهارات المنخفضة مطبقاً نظرية القيادة الظرفية. ما المؤشر الذي يتحكم في اختيار نمط قيادته؟",o:["الوقت المتاح للإشراف","مستوى نضج المعلم ودافعيته","طبيعة المادة الدراسية","عدد المعلمين في المدرسة"],a:1},
+  {id:80,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"ما العلاقة بين ممارسة المشرف للتقويم الذاتي المهني وجودة الإشراف التربوي الذي يقدمه؟",o:["لا توجد علاقة مباشرة","التقويم الذاتي يُحسّن جودة الإشراف عبر تحديد الثغرات وتطوير الأداء","التقويم الذاتي يُقلل من ثقة المشرف بنفسه","التقويم الذاتي يُغني عن تقييم المسؤولين"],a:1},
+  {id:81,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"يستخدم المشرف التربوي أسلوب العصف الذهني مع فريق المشرفين. ما القاعدة التي يجب مراعاتها خلال الجلسة؟",o:["نقد الأفكار فور طرحها لتصفية الجيد منها","تأجيل الحكم على الأفكار وتشجيع الكمية","الاقتصار على أصحاب الخبرة في الطرح","تحديد عدد الأفكار مسبقاً"],a:1},
+  {id:82,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"أي من القيم التالية يُجسّد مبدأ الشفافية في الممارسة الإشرافية؟",o:["إخفاء نتائج الزيارات الصفية عن المعلمين","الإفصاح عن نتائج الملاحظة وتقاسمها مع المعلم بصدق","الاكتفاء بتقرير رسمي مختصر","تأجيل إعطاء التغذية الراجعة"],a:1},
+  {id:83,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"يعمل مشرف في بيئة تعليمية متنوعة تتضمن معلمين من خلفيات مختلفة. ما القيمة الأساسية التي تحكم تعامله مع هذا التنوع؟",o:["التوحيد في الأساليب الإشرافية مع الجميع","احترام التنوع والإنصاف في التعامل مع جميع المعلمين","تجنب التعامل مع المختلفين","تفضيل أصحاب الخبرة الأطول"],a:1},
+  {id:84,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"وفق المعيار 15.25.6، ما أثر استخدام لغة الجسد الإيجابية في الاتصال الإشرافي؟",o:["يُقلل من مصداقية الرسالة اللفظية","يُعزز الثقة ويجعل الرسالة أكثر وضوحاً وتأثيراً","يُطيل وقت الاجتماعات الإشرافية","لا أثر له على الاتصال"],a:1},
+  {id:85,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"ما الفرق بين الشراكة المجتمعية والمسؤولية الاجتماعية في الإطار الإشرافي؟",o:["لا فرق بينهما","الشراكة تقوم على التعاون المتبادل بين المدرسة والمجتمع، بينما المسؤولية تعني الالتزام الأخلاقي تجاه المجتمع","الشراكة أهم من المسؤولية","المسؤولية تقتصر على المدير فقط"],a:1},
+  {id:86,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"كيف يُعبّر المشرف التربوي عن التزامه بأخلاقيات المهنة في الموقف التالي: معلم أطلعه على مشكلة شخصية تؤثر في أدائه؟",o:["نشر المعلومة لمساعدة المعلم","التعامل معها بسرية تامة وتقديم الدعم المناسب","تجاهل المشكلة وإحالة الأمر لمدير المدرسة","تدوين المعلومة في التقرير الرسمي"],a:1},
+  {id:87,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"ما أسلوب الاتصال الأنسب عندما يريد المشرف إيصال توجيه حساس أو نقد بنّاء لمعلم؟",o:["الاتصال الجماعي في اجتماع الهيئة التدريسية","الاتصال المباشر وجهاً لوجه مع المعلم في مكان خاص","الاتصال الكتابي الرسمي","الاتصال عبر الطرف الثالث"],a:1},
+  {id:88,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"ما الممارسة الإشرافية التي تعكس الاحترام المتبادل وفق أخلاقيات مهنة الإشراف؟",o:["إخبار المعلم بنقاط ضعفه أمام زملائه","الاستماع الفعّال لوجهة نظر المعلم قبل إصدار الأحكام","إلزام المعلم بتنفيذ توصيات المشرف دون نقاش","تجاهل مقترحات المعلم"],a:1},
+  {id:89,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"كيف يُسهم مبدأ العدالة في الممارسة الإشرافية وفق المعيار 13.25.6؟",o:["بتطبيق نفس الأسلوب الإشرافي مع جميع المعلمين","بمعاملة المعلمين وفق احتياجاتهم الفعلية وظروفهم مع ضمان المساواة في الحقوق","بمنح المشرفين ذوي الخبرة معاملة مميزة","بتجنب مواجهة المعلمين بأوجه قصورهم"],a:1},
+  {id:90,cat:"القيم وأخلاقيات المهنة ومهارات الاتصال",q:"صمَّم مشرف تربوي برنامجاً للشراكة المجتمعية مع شركة تقنية لتدريب المعلمين. ما المعيار الذي يتبعه هذا البرنامج؟",o:["المعيار 6.25.6 — مراجعة الممارسات","المعيار 14.25.6 — الشراكة المجتمعية","المعيار 9.25.6 — استراتيجيات التعلم","المعيار 7.25.6 — التطور المهني المستمر"],a:1}
+];
+
+// ══ STATE ══
+let Q = [...QALL];
+let timer=null, cdTimer=null, watchTimer=null;
+let nextIdx=0, countdown=0, totalSent=0, sentCount=0, running=false;
+let lastUpdateId=0;
+let scores={};
+let pollMap={};
+const L=['أ','ب','ج','د'];
+const DOMAINS=['القيادة والإشراف','التطوير المهني','دعم التعليم والتعلم','القيم وأخلاقيات المهنة ومهارات الاتصال'];
+const DOMAIN_COLORS=['d0','d1','d2','d3'];
+
+// ══ INIT ══
+window.onload=()=>{
+  applyDomainFilter();
+  loadS();
+  buildPreview();
+  buildDomainStats();
+  try{
+    const sp=localStorage.getItem('tg_pollMap_ishraf');
+    const sc=localStorage.getItem('tg_scores_ishraf');
+    const lu=localStorage.getItem('tg_lastUpd_ishraf');
+    if(sp) pollMap=JSON.parse(sp);
+    if(sc) scores=JSON.parse(sc);
+    if(lu) lastUpdateId=parseInt(lu)||0;
+  }catch(e){}
+  if(Object.keys(scores).length>0) renderLb();
+  previewAlert();
+};
+
+function applyDomainFilter(){
+  const domain=document.getElementById('domainFilter')?.value||'all';
+  Q = domain==='all' ? [...QALL] : QALL.filter(q=>q.cat===domain);
+  document.getElementById('totalBadge').textContent = `${QALL.length} سؤالاً — 4 مجالات رئيسية — رخصة الإشراف`;
+  buildStartFrom();
+  updateProg();
+}
+
+function buildStartFrom(){
+  const sel=document.getElementById('startFrom');
+  if(!sel) return;
+  sel.innerHTML='';
+  Q.forEach((q,i)=>{
+    const o=document.createElement('option');
+    o.value=i; o.textContent=`س${q.id} — ${q.cat.slice(0,15)}`;
+    sel.appendChild(o);
+  });
+  let saved=0,savedCount=0;
+  try{saved=parseInt(localStorage.getItem('tg_nextIdx_ishraf')||'0');savedCount=parseInt(localStorage.getItem('tg_sentCount_ishraf')||'0');}catch(e){}
+  sel.value=saved<Q.length?saved:0; nextIdx=saved<Q.length?saved:0; totalSent=nextIdx; sentCount=savedCount;
+  updateProg();
+}
+
+function buildPreview(filterDomain='all'){
+  const c=document.getElementById('previewList');
+  c.innerHTML='';
+  const filtered = filterDomain==='all' ? QALL : QALL.filter(q=>q.cat===filterDomain);
+  document.getElementById('previewCount').textContent=`عرض ${filtered.length} سؤال`;
+  filtered.forEach(q=>{
+    const d=document.createElement('div');
+    d.className='qprev';
+    const domIdx=DOMAINS.indexOf(q.cat);
+    const colorCls=domIdx>=0?DOMAIN_COLORS[domIdx]:'d0';
+    d.innerHTML=`<div class="qnum">س${q.id}</div>
+      <div class="qcat">${q.cat.slice(0,12)}</div>
+      <div class="qt">${q.q}</div>
+      <div class="qo">${q.o.map((o,i)=>`${L[i]}) ${o}`).join('<br>')}</div>
+      <div class="qa">✅ الإجابة: ${L[q.a]}) ${q.o[q.a]}</div>`;
+    c.appendChild(d);
+  });
+  // build filter buttons
+  buildFilterButtons(filterDomain);
+}
+
+function buildFilterButtons(active='all'){
+  const bar=document.getElementById('filterBar');
+  bar.innerHTML='';
+  const btns=[{val:'all',label:'📚 الكل'},
+    {val:'القيادة والإشراف',label:'🔷 القيادة'},
+    {val:'التطوير المهني',label:'🔶 التطوير'},
+    {val:'دعم التعليم والتعلم',label:'🟢 دعم التعلم'},
+    {val:'القيم وأخلاقيات المهنة ومهارات الاتصال',label:'🌟 القيم'}
+  ];
+  btns.forEach(b=>{
+    const btn=document.createElement('button');
+    btn.className='filter-btn'+(active===b.val?' active':'');
+    btn.textContent=b.label;
+    btn.onclick=()=>buildPreview(b.val);
+    bar.appendChild(btn);
+  });
+}
+
+function buildDomainStats(){
+  const el=document.getElementById('domainStats');
+  const counts={};
+  QALL.forEach(q=>{ counts[q.cat]=(counts[q.cat]||0)+1; });
+  const icons=['🔷','🔶','🟢','🌟'];
+  el.innerHTML=DOMAINS.map((d,i)=>{
+    const n=counts[d]||0;
+    const pct=Math.round(n/QALL.length*100);
+    return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+      <span>${icons[i]}</span>
+      <span style="min-width:180px;font-weight:700">${d}</span>
+      <span style="background:var(--navy);color:white;border-radius:8px;padding:2px 10px;font-size:.8rem">${n} سؤال</span>
+      <span style="color:#888;font-size:.8rem">(${pct}%)</span>
+    </div>`;
+  }).join('') + `<div style="margin-top:10px;font-weight:900;color:var(--navy)">📊 الإجمالي: ${QALL.length} سؤالاً</div>`;
+}
+
+// ══ SETTINGS ══
+function saveS(){try{
+  localStorage.setItem('tg_token_ishraf',document.getElementById('botToken').value);
+  localStorage.setItem('tg_chatId_ishraf',document.getElementById('chatId').value);
+  localStorage.setItem('tg_interval_ishraf',document.getElementById('interval').value);
+  localStorage.setItem('tg_sendType_ishraf',document.getElementById('sendType').value);
+  localStorage.setItem('tg_custSec_ishraf',document.getElementById('customSec').value);
+  localStorage.setItem('tg_pollPeriod_ishraf',document.getElementById('pollOpenPeriod').value);
+  localStorage.setItem('tg_labelStyle_ishraf',document.getElementById('labelStyle').value);
+  localStorage.setItem('tg_customLabel_ishraf',document.getElementById('customLabel').value);
+  localStorage.setItem('tg_questionSuffix_ishraf',document.getElementById('questionSuffix').value);
+  localStorage.setItem('tg_alertTitle_ishraf',document.getElementById('alertTitle').value);
+  localStorage.setItem('tg_alertQCount_ishraf',document.getElementById('alertQCount').value);
+  localStorage.setItem('tg_alertSeconds_ishraf',document.getElementById('alertSeconds').value);
+  localStorage.setItem('tg_alertDelay_ishraf',document.getElementById('alertDelay').value);
+  localStorage.setItem('tg_domainFilter_ishraf',document.getElementById('domainFilter').value);
+  previewAlert();
+}catch(e){}}
+
+function loadS(){try{
+  const f=(id,k)=>{const v=localStorage.getItem(k);if(v&&document.getElementById(id))document.getElementById(id).value=v;};
+  f('botToken','tg_token_ishraf'); f('chatId','tg_chatId_ishraf');
+  f('interval','tg_interval_ishraf'); f('sendType','tg_sendType_ishraf'); f('customSec','tg_custSec_ishraf');
+  f('pollOpenPeriod','tg_pollPeriod_ishraf'); f('labelStyle','tg_labelStyle_ishraf');
+  f('customLabel','tg_customLabel_ishraf'); f('questionSuffix','tg_questionSuffix_ishraf');
+  f('alertTitle','tg_alertTitle_ishraf'); f('alertQCount','tg_alertQCount_ishraf');
+  f('alertSeconds','tg_alertSeconds_ishraf'); f('alertDelay','tg_alertDelay_ishraf');
+  f('domainFilter','tg_domainFilter_ishraf');
+  onIvChange(); onLabelStyleChange(); applyDomainFilter(); previewAlert();
+}catch(e){}}
+
+function clearS(){
+  if(!confirm('حذف الإعدادات؟')) return;
+  ['tg_token_ishraf','tg_chatId_ishraf','tg_interval_ishraf','tg_sendType_ishraf',
+   'tg_nextIdx_ishraf','tg_sentCount_ishraf','tg_pollMap_ishraf','tg_scores_ishraf',
+   'tg_lastUpd_ishraf'].forEach(k=>localStorage.removeItem(k));
+  document.getElementById('botToken').value=''; document.getElementById('chatId').value='';
+  log('🗑️ تم الحذف','warn');
+}
+
+function onIvChange(){
+  const v=document.getElementById('interval').value;
+  document.getElementById('customRow').style.display=v==='custom'?'flex':'none';
+  saveS();
+}
+
+function onLabelStyleChange(){
+  const v=document.getElementById('labelStyle').value;
+  document.getElementById('customLabelWrap').style.display=v==='custom'?'block':'none';
+  if(v==='custom') previewLabel();
+  saveS();
+}
+
+function previewLabel(){
+  const tpl=document.getElementById('customLabel').value;
+  if(!tpl){document.getElementById('labelPreview').style.display='none';return;}
+  const preview=buildLabel(tpl,5,Q.length,Q[4]||Q[0]);
+  document.getElementById('labelPreviewText').textContent=preview;
+  document.getElementById('labelPreview').style.display='block';
+}
+
+function buildAlertMsg(){
+  const title=document.getElementById('alertTitle').value.trim()||'رخصة الإشراف التربوي';
+  const qCount=document.getElementById('alertQCount').value||'30';
+  const secs=document.getElementById('alertSeconds').value||'30';
+  const delay=parseInt(document.getElementById('alertDelay').value)||0;
+  const delayTxt=delay>0?`\n\n🏁 سيبدأ الاختبار خلال ${delay} ثانية...`:`\n\n🏁 سيبدأ الاختبار الآن!`;
+  return `🎓 استعد جيدًا لاختبار '${title}'\n\n🖊 ${qCount} أسئلة\n⏱ ${secs} ثانيةً لكل سؤال\n📰 ستكون الإجابات ظاهرة للمشرفين وأعضاء المجموعة${delayTxt}`;
+}
+
+function previewAlert(){
+  const el=document.getElementById('alertPreview');
+  if(!el)return;
+  const msg=buildAlertMsg();
+  el.innerHTML=msg.replace(/\n/g,'<br>').replace(/'([^']+)'/g,"<strong style='color:#c9a227'>'$1'</strong>");
+}
+
+async function sendAlertNow(){
+  const tok=document.getElementById('botToken').value.trim();
+  const cid=document.getElementById('chatId').value.trim();
+  if(!tok||!cid){alert('أدخل التوكن والـ Chat ID أولاً');showTab('setup');return;}
+  const msg=buildAlertMsg();
+  try{
+    log('📤 إرسال رسالة التنبيه...','info');
+    const r=await fetch(`https://api.telegram.org/bot${tok}/sendMessage`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({chat_id:cid,text:msg})
+    });
+    const d=await r.json();
+    if(d.ok) log('✅ تم إرسال رسالة التنبيه','ok');
+    else      log('❌ فشل التنبيه: '+d.description,'err');
+  }catch(e){log('❌ '+e.message,'err');}
+}
+
+function buildLabel(tpl,n,total,q){
+  return tpl.replace(/{n}/g,n).replace(/{total}/g,total).replace(/{cat}/g,q.cat||'');
+}
+
+function getQuestionLabel(n,total,q){
+  const style=document.getElementById('labelStyle').value;
+  if(style==='custom'){
+    const tpl=document.getElementById('customLabel').value.trim();
+    if(tpl) return buildLabel(tpl,n,total,q);
+  }
+  return `[${n}/${total}]`;
+}
+
+function getIv(){
+  const v=document.getElementById('interval').value;
+  return v==='custom'? parseInt(document.getElementById('customSec').value)||30 : parseInt(v);
+}
+
+// ══ CONNECTION TEST ══
+async function testConn(){
+  const tok=document.getElementById('botToken').value.trim();
+  const cid=document.getElementById('chatId').value.trim();
+  document.getElementById('connOk').classList.remove('show');
+  document.getElementById('connErr').classList.remove('show');
+  if(!tok){showErr('connErr','أدخل الـ Token');return;}
+  try{
+    const r=await fetch(`https://api.telegram.org/bot${tok}/getMe`);
+    const d=await r.json();
+    if(!d.ok){showErr('connErr','Token خاطئ: '+(d.description||''));return;}
+    if(cid){
+      const r2=await fetch(`https://api.telegram.org/bot${tok}/sendMessage`,{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({chat_id:cid,text:`✅ تم اتصال منصة بوت رخصة الإشراف\n🎓 استعدوا للاختبار...`})
+      });
+      const d2=await r2.json();
+      if(!d2.ok){showErr('connErr','Chat ID خاطئ: '+(d2.description||''));return;}
+    }
+    document.getElementById('connOk').classList.add('show');
+    log(`✅ اتصال ناجح — ${d.result.first_name}`,'ok');
+  }catch(e){showErr('connErr','خطأ: '+e.message);}
+}
+function showErr(id,msg){const e=document.getElementById(id);e.textContent='❌ '+msg;e.classList.add('show');}
+
+// ══ SEND ══
+async function sendQuestion(idx){
+  const tok=document.getElementById('botToken').value.trim();
+  const cid=document.getElementById('chatId').value.trim();
+  const type=document.getElementById('sendType').value;
+  if(!tok||!cid){log('❌ Token أو Chat ID مفقود','err');return false;}
+  if(idx>=Q.length){stopSending();return false;}
+  const q=Q[idx];
+  const lbl=getQuestionLabel(q.id,Q.length,q);
+  const suffix=document.getElementById('questionSuffix').value.trim();
+  const openPeriod=parseInt(document.getElementById('pollOpenPeriod').value)||0;
+  try{
+    if(type==='poll_public'||type==='poll_anon'){
+      const isAnon=type==='poll_anon';
+      const qText=`${lbl} ${q.q}`.substring(0,300);
+      const expl=`✅ الإجابة: ${L[q.a]}) ${q.o[q.a]}\n🎓 ${q.cat}${suffix?'\n'+suffix:''}`;
+      const body={chat_id:cid,question:qText,options:q.o.map((o,i)=>`${L[i]}) ${o}`),
+        type:'quiz',correct_option_id:q.a,is_anonymous:isAnon,explanation:expl.substring(0,200)};
+      if(openPeriod>=5&&openPeriod<=600) body.open_period=openPeriod;
+      const r=await fetch(`https://api.telegram.org/bot${tok}/sendPoll`,{
+        method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)
+      });
+      const d=await r.json();
+      if(!d.ok){log(`❌ فشل س${q.id}: ${d.description}`,'err');return false;}
+      if(!isAnon&&d.result?.poll?.id){
+        pollMap[d.result.poll.id]={a:q.a,qid:q.id};
+        localStorage.setItem('tg_pollMap_ishraf',JSON.stringify(pollMap));
+      }
+      log(`${isAnon?'🔒':'👥'} س${q.id} أُرسل — ${q.cat.slice(0,15)}`,'ok');
+    } else {
+      const txt=[`🎓 ${lbl} — ${q.cat}`,'',`❓ ${q.q}`,'',
+        ...q.o.map((o,i)=>`${L[i]}) ${o}`),'',
+        `✅ الإجابة: ${L[q.a]}) ${q.o[q.a]}`,
+        ...(suffix?[suffix]:[])].join('\n');
+      const r=await fetch(`https://api.telegram.org/bot${tok}/sendMessage`,{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({chat_id:cid,text:txt})
+      });
+      const d=await r.json();
+      if(!d.ok){log(`❌ فشل س${q.id}: ${d.description}`,'err');return false;}
+      log(`✅ س${q.id} أُرسل`,'ok');
+    }
+    return true;
+  }catch(e){log('❌ '+e.message,'err');return false;}
+}
+
+async function sendNext(){
   if(nextIdx>=Q.length){log('🏁 انتهت جميع الأسئلة!','warn');stopSending();return;}
   document.getElementById('currentQ').textContent=`${nextIdx+1}/${Q.length}`;
   const ok=await sendQuestion(nextIdx);
