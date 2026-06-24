@@ -72,7 +72,7 @@ table.lb tr:hover td{background:#f8f9ff;}
 .bar-w{background:#e8ecf5;border-radius:20px;height:7px;min-width:70px;overflow:hidden;}
 .bar-f{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--teal),var(--gold));}
 .lvl{display:inline-block;padding:2px 9px;border-radius:10px;font-size:.72rem;font-weight:700;}
-.lv-ex{background:#d4edda;color:#155724;}.lv-vg{background:#cce5ff;color:#004085;}.lv-g{background:#fff3cd;color:#856404;}.lv-p{background:#f8d7da;color:#721c24;}
+.lv-ex{background:#d4edda;color:#155724;}.lv-vg{background:#cce5ff;color:#004085;}.lv-g{background:#fff3cd;color:#856404;}.lv-ok{background:#ffe0b2;color:#bf360c;}.lv-p{background:#f8d7da;color:#721c24;}
 .live-count{display:inline-flex;align-items:center;gap:6px;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:20px;padding:4px 12px;font-size:.8rem;font-weight:700;color:#1b5e20;margin-bottom:10px;}
 /* STEP */
 .step{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;padding:12px;background:#f8f9fc;border-radius:10px;border-right:4px solid var(--gold);}
@@ -1323,15 +1323,15 @@ async function fetchNow(){
 }
 
 // ══ LEADERBOARD ══
-function getLvl(pct){
-  if(pct>=90)return{l:'ممتاز 🏆',c:'lv-ex'};
-  if(pct>=75)return{l:'جيد جداً 🌟',c:'lv-vg'};
-  if(pct>=60)return{l:'جيد 👍',c:'lv-g'};
-  return{l:'يراجع 📖',c:'lv-p'};
+function getLvl(wrong){
+  if(wrong===0)return{l:'ممتاز 🏆',c:'lv-ex'};
+  if(wrong===1)return{l:'جيد جداً 🌟',c:'lv-vg'};
+  if(wrong<=3)return{l:'جيد 👍',c:'lv-g'};
+  return{l:'مقبول 📘',c:'lv-ok'};
 }
 
 function renderLb(){
-  const data=Object.values(scores).sort((a,b)=>b.correct-a.correct||a.wrong-b.wrong);
+  const data=Object.values(scores).sort((a,b)=>a.wrong-b.wrong||b.correct-a.correct);
   const n=data.length;
   document.getElementById('liveCountWrap').style.display=n>0?'block':'none';
   document.getElementById('liveCount').textContent=n;
@@ -1344,7 +1344,7 @@ function renderLb(){
   document.getElementById('lbSub').textContent=`آخر تحديث: ${now} | الأسئلة المُرسَلة: ${sentCount}`;
 
   const top=data[0].correct;
-  const topPct=data[0].total>0?Math.round((data[0].correct/data[0].total)*100):0;
+  const topPct=sentCount>0?Math.round((data[0].correct/sentCount)*100):0;
   const avg=Math.round(data.reduce((s,x)=>s+x.correct,0)/n);
   const avgPct=sentCount>0?Math.round((avg/sentCount)*100):0;
   document.getElementById('lbStats').innerHTML=`
@@ -1356,8 +1356,8 @@ function renderLb(){
   const medals=['🥇','🥈','🥉'];
   let rows='';
   data.forEach((u,i)=>{
-    const pct=u.total>0?Math.round((u.correct/u.total)*100):0;
-    const lvl=getLvl(pct);
+    const pct=sentCount>0?Math.round((u.correct/sentCount)*100):0;
+    const lvl=getLvl(u.wrong);
     const rc=i===0?'r1':i===1?'r2':i===2?'r3':'rx';
     const rk=i<3?medals[i]:`${i+1}`;
     // نسبة ملوّنة
@@ -1380,14 +1380,14 @@ function renderLb(){
       <thead><tr><th>الترتيب</th><th>الاسم</th><th>✅ صحيح</th><th>❌ خطأ</th><th>النسبة</th><th>المستوى</th></tr></thead>
       <tbody>${rows}</tbody>
     </table>`;
-  document.getElementById('lbNote').textContent='* النتائج حية — تتحدث كل 8 ثوانٍ تلقائيًا';
+  document.getElementById('lbNote').textContent='📌 الترتيب: الأقل أخطاءً → الأكثر صحيحاً | النتائج تتحدث كل 8 ثوانٍ تلقائيًا';
 }
 
 async function sendLbToChat(){
   const tok=document.getElementById('botToken').value.trim();
   const cid=document.getElementById('chatId').value.trim();
   if(!tok||!cid){alert('أدخل البيانات أولاً من تبويب الإعداد');return;}
-  const data=Object.values(scores).sort((a,b)=>b.correct-a.correct||a.wrong-b.wrong);
+  const data=Object.values(scores).sort((a,b)=>a.wrong-b.wrong||b.correct-a.correct);
   if(data.length===0){alert('لا توجد نتائج بعد!\nاضغط "تحديث النتائج الآن" أولاً');return;}
 
   // اسم الاختبار من إعداد التنبيه
@@ -1402,13 +1402,17 @@ async function sendLbToChat(){
   lines.push(`📊 عدد الأسئلة: ${sentCount} سؤال`);
   lines.push('━━━━━━━━━━━━━━━━━━━━');
   lines.push('');
+  lines.push('📌 آلية الترتيب:');
+  lines.push('• الأعلى إجابات صحيحة يتصدر القائمة');
+  lines.push('• عند التساوي → الأقل أخطاءً يتقدم');
+  lines.push('');
 
   // ── قائمة المشاركين مع التفاصيل ──
   data.slice(0,20).forEach((u,i)=>{
     const rk = i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}.`;
     const display = u.username ? `@${u.username}` : u.name;
-    const pct = u.total>0 ? Math.round((u.correct/u.total)*100) : 0;
-    const lvl = getLvl(pct);
+    const pct = sentCount>0 ? Math.round((u.correct/sentCount)*100) : 0;
+    const lvl = getLvl(u.wrong);
     const lvlText = lvl.l.replace(/[🌟👍📖🏆]/g,'').trim();
     lines.push(`${rk} ${display}`);
     lines.push(`   ✅ ${u.correct}  ❌ ${u.wrong}  📊 ${pct}%  ${lvl.l}`);
