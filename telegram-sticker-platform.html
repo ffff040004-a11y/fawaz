@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة إرسال الملصقات | د/فواز</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;500;700&display=swap');
+
+  :root {
+    --navy: #0f1e3d;
+    --navy2: #162447;
+    --gold: #f0a500;
+    --teal: #1abc9c;
+    --teal-dark: #148f77;
+    --red: #e74c3c;
+    --bg: #0b1628;
+    --card: #162040;
+    --card2: #1e2d52;
+    --border: #2a3f6e;
+    --text: #e8eaf6;
+    --muted: #8899bb;
+    --white: #ffffff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Cairo', sans-serif;
+    min-height: 100vh;
+    direction: rtl;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, #1a3060 100%);
+    border-bottom: 3px solid var(--gold);
+    padding: 18px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .logo-icon {
+    width: 52px; height: 52px;
+    background: linear-gradient(135deg, var(--gold), #e08b00);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    box-shadow: 0 4px 12px rgba(240,165,0,0.3);
+  }
+
+  .logo-text h1 {
+    font-size: 20px; font-weight: 900; color: var(--white);
+    line-height: 1.2;
+  }
+
+  .logo-text p {
+    font-size: 12px; color: var(--gold); font-family: 'Tajawal', sans-serif;
+  }
+
+  .header-badge {
+    background: rgba(26,188,156,0.15);
+    border: 1px solid var(--teal);
+    color: var(--teal);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  /* ===== MAIN LAYOUT ===== */
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 30px 20px;
+  }
+
+  /* ===== TABS ===== */
+  .tabs {
+    display: flex;
+    gap: 6px;
+    background: var(--card);
+    border-radius: 14px;
+    padding: 6px;
+    margin-bottom: 28px;
+    border: 1px solid var(--border);
+  }
+
+  .tab {
+    flex: 1;
+    padding: 11px 10px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.25s;
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+  }
+
+  .tab:hover { color: var(--text); background: var(--card2); }
+
+  .tab.active {
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+    color: var(--white);
+    box-shadow: 0 4px 14px rgba(26,188,156,0.35);
+  }
+
+  /* ===== SECTION TITLE ===== */
+  .section-title {
+    font-size: 16px; font-weight: 700; color: var(--gold);
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ===== CARDS ===== */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px;
+    margin-bottom: 20px;
+  }
+
+  .card-accent {
+    border-right: 4px solid var(--gold);
+  }
+
+  /* ===== FORM ELEMENTS ===== */
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 7px;
+  }
+
+  input[type="text"], input[type="password"], textarea, select {
+    width: 100%;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    padding: 11px 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    direction: ltr;
+    text-align: right;
+  }
+
+  input[type="text"]:focus, input[type="password"]:focus,
+  textarea:focus, select:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(26,188,156,0.1);
+  }
+
+  textarea { resize: vertical; min-height: 80px; }
+
+  .form-group { margin-bottom: 16px; }
+
+  /* ===== BUTTONS ===== */
+  .btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+    color: var(--white);
+    box-shadow: 0 4px 14px rgba(26,188,156,0.3);
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(26,188,156,0.4); }
+
+  .btn-gold {
+    background: linear-gradient(135deg, var(--gold), #cc8800);
+    color: var(--navy);
+    box-shadow: 0 4px 14px rgba(240,165,0,0.3);
+  }
+  .btn-gold:hover { transform: translateY(-1px); }
+
+  .btn-danger {
+    background: linear-gradient(135deg, var(--red), #c0392b);
+    color: var(--white);
+  }
+
+  .btn-outline {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--muted);
+  }
+  .btn-outline:hover { border-color: var(--teal); color: var(--teal); }
+
+  .btn-sm { padding: 8px 14px; font-size: 12px; }
+
+  .btn-full { width: 100%; justify-content: center; }
+
+  /* ===== STATUS BADGE ===== */
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .badge-success { background: rgba(26,188,156,0.15); color: var(--teal); border: 1px solid var(--teal); }
+  .badge-warn { background: rgba(240,165,0,0.15); color: var(--gold); border: 1px solid var(--gold); }
+  .badge-danger { background: rgba(231,76,60,0.15); color: var(--red); border: 1px solid var(--red); }
+
+  /* ===== STICKER GRID ===== */
+  .sticker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 12px;
+    margin-top: 14px;
+  }
+
+  .sticker-item {
+    background: var(--bg);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 12px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .sticker-item:hover, .sticker-item.selected {
+    border-color: var(--teal);
+    background: rgba(26,188,156,0.08);
+    transform: scale(1.04);
+  }
+
+  .sticker-item.selected::after {
+    content: '✓';
+    position: absolute;
+    top: -6px; left: -6px;
+    width: 22px; height: 22px;
+    background: var(--teal);
+    border-radius: 50%;
+    font-size: 12px;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-weight: 700;
+  }
+
+  .sticker-emoji { font-size: 38px; display: block; margin-bottom: 6px; }
+  .sticker-name { font-size: 10px; color: var(--muted); font-family: 'Tajawal'; }
+
+  /* ===== LOG ===== */
+  .log-box {
+    background: #0a1020;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    max-height: 220px;
+    overflow-y: auto;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 13px;
+  }
+
+  .log-entry {
+    padding: 7px 0;
+    border-bottom: 1px solid #1a2540;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .log-entry:last-child { border-bottom: none; }
+
+  .log-time { color: var(--muted); font-size: 11px; white-space: nowrap; }
+  .log-msg.success { color: var(--teal); }
+  .log-msg.error { color: var(--red); }
+  .log-msg.info { color: var(--gold); }
+
+  /* ===== GRID LAYOUT ===== */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  /* ===== STATS ===== */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+
+  .stat-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 14px;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-size: 28px; font-weight: 900; color: var(--gold);
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 12px; color: var(--muted); margin-top: 4px;
+    font-family: 'Tajawal';
+  }
+
+  /* ===== SEPARATOR ===== */
+  .sep { height: 1px; background: var(--border); margin: 20px 0; }
+
+  /* ===== ALERT ===== */
+  .alert {
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    margin-bottom: 16px;
+    font-family: 'Tajawal';
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .alert-info {
+    background: rgba(240,165,0,0.08);
+    border: 1px solid rgba(240,165,0,0.3);
+    color: #f0c040;
+  }
+
+  .alert-success {
+    background: rgba(26,188,156,0.08);
+    border: 1px solid rgba(26,188,156,0.3);
+    color: var(--teal);
+  }
+
+  /* ===== PROGRESS ===== */
+  .progress-bar-outer {
+    background: var(--bg);
+    border-radius: 10px;
+    height: 8px;
+    overflow: hidden;
+    margin-top: 10px;
+  }
+
+  .progress-bar-inner {
+    height: 100%;
+    border-radius: 10px;
+    background: linear-gradient(90deg, var(--teal), var(--gold));
+    transition: width 0.4s;
+  }
+
+  /* ===== PANEL DISPLAY ===== */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* ===== FOOTER ===== */
+  footer {
+    text-align: center;
+    padding: 22px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 12px;
+    font-family: 'Tajawal';
+    margin-top: 20px;
+  }
+
+  footer a { color: var(--gold); text-decoration: none; }
+
+  /* ===== UPLOAD AREA ===== */
+  .upload-area {
+    border: 2px dashed var(--border);
+    border-radius: 14px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--bg);
+  }
+
+  .upload-area:hover, .upload-area.drag-over {
+    border-color: var(--teal);
+    background: rgba(26,188,156,0.05);
+  }
+
+  .upload-area p { color: var(--muted); font-size: 13px; font-family: 'Tajawal'; margin-top: 8px; }
+
+  /* ===== INPUT ROW ===== */
+  .input-row {
+    display: flex; gap: 10px; align-items: flex-end;
+  }
+  .input-row > * { flex: 1; }
+  .input-row .btn { flex: 0 0 auto; margin-bottom: 0; }
+
+  /* ===== SPINNER ===== */
+  .spinner {
+    width: 20px; height: 20px;
+    border: 3px solid rgba(255,255,255,0.2);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ===== NOTIFICATION TOAST ===== */
+  #toast {
+    position: fixed;
+    bottom: 28px; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--card2);
+    border: 1px solid var(--teal);
+    color: var(--teal);
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-family: 'Cairo'; font-size: 14px; font-weight: 600;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    z-index: 9999;
+    pointer-events: none;
+  }
+  #toast.show { transform: translateX(-50%) translateY(0); }
+
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">📨</div>
+    <div class="logo-text">
+      <h1>منصة الملصقات</h1>
+      <p>إرسال ملصقات تليجرام - تصميم د/فواز</p>
+    </div>
+  </div>
+  <div id="connectionBadge" class="badge badge-warn">⚡ غير متصل</div>
+</header>
+
+<!-- MAIN -->
+<div class="container">
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-box">
+      <span class="stat-num" id="statSent">0</span>
+      <div class="stat-label">ملصق أُرسل</div>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num" id="statStickers">0</span>
+      <div class="stat-label">ملصق جاهز</div>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num" id="statGroups">0</span>
+      <div class="stat-label">مجموعة مضافة</div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="showPanel('setup')">⚙️ الإعداد</button>
+    <button class="tab" onclick="showPanel('stickers')">🖼️ الملصقات</button>
+    <button class="tab" onclick="showPanel('send')">📤 الإرسال</button>
+    <button class="tab" onclick="showPanel('log')">📋 السجل</button>
+  </div>
+
+  <!-- ===== PANEL: SETUP ===== -->
+  <div id="panel-setup" class="panel active">
+
+    <div class="card card-accent">
+      <div class="section-title">🤖 إعداد البوت</div>
+
+      <div class="alert alert-info">
+        💡 احصل على توكن البوت من <strong>@BotFather</strong> في تليجرام، ثم أضف البوت أدمناً في مجموعتك
+      </div>
+
+      <div class="form-group">
+        <label>توكن البوت (Bot Token)</label>
+        <div class="input-row">
+          <input type="password" id="botToken" placeholder="1234567890:AAFxxxxxxxxxxxxxxxxxxxxxx">
+          <button class="btn btn-primary" onclick="testConnection()">🔗 اختبر</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>اسم البوت (للعرض فقط)</label>
+        <input type="text" id="botName" placeholder="مثال: بوت ملصقات د/فواز">
+      </div>
+
+      <button class="btn btn-gold btn-full" onclick="saveSetup()">💾 حفظ الإعدادات</button>
+    </div>
+
+    <div class="card">
+      <div class="section-title">📣 إدارة المجموعات</div>
+
+      <div class="alert alert-info">
+        💡 لمعرفة ID المجموعة: أرسل رسالة في المجموعة واستخدم <strong>@userinfobot</strong> أو <strong>@getidsbot</strong>
+      </div>
+
+      <div class="form-group">
+        <label>إضافة مجموعة جديدة</label>
+        <div class="grid-2">
+          <input type="text" id="groupId" placeholder="Chat ID مثال: -100123456789">
+          <input type="text" id="groupName" placeholder="اسم المجموعة">
+        </div>
+        <button class="btn btn-primary" style="margin-top:10px" onclick="addGroup()">➕ إضافة المجموعة</button>
+      </div>
+
+      <div class="sep"></div>
+
+      <div id="groupsList">
+        <p style="color:var(--muted); font-size:13px; text-align:center; font-family:Tajawal">لا توجد مجموعات مضافة بعد</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== PANEL: STICKERS ===== -->
+  <div id="panel-stickers" class="panel">
+
+    <div class="card card-accent">
+      <div class="section-title">📁 رفع ملصقات مخصصة</div>
+
+      <div class="upload-area" id="uploadArea" onclick="document.getElementById('stickerFile').click()"
+           ondragover="event.preventDefault();this.classList.add('drag-over')"
+           ondragleave="this.classList.remove('drag-over')"
+           ondrop="handleDrop(event)">
+        <div style="font-size:44px">🖼️</div>
+        <p><strong>اضغط لرفع صورة أو ملف WebP</strong></p>
+        <p>يدعم: PNG, JPG, WEBP, GIF (حجم أقصى 512KB)</p>
+      </div>
+      <input type="file" id="stickerFile" style="display:none" accept="image/*" multiple onchange="handleFileSelect(event)">
+
+      <div class="form-group" style="margin-top:14px">
+        <label>اسم الملصق</label>
+        <input type="text" id="stickerNameInput" placeholder="مثال: ملصق تحفيزي">
+      </div>
+
+      <button class="btn btn-gold btn-full" onclick="addCustomSticker()">✅ إضافة للمكتبة</button>
+    </div>
+
+    <div class="card">
+      <div class="section-title">😊 ملصقات إيموجي جاهزة</div>
+      <p style="color:var(--muted);font-size:12px;font-family:Tajawal;margin-bottom:14px">اضغط لإضافة أي ملصق إيموجي لمكتبتك</p>
+
+      <div class="sticker-grid" id="emojiGrid">
+        <!-- filled by JS -->
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">📚 مكتبة ملصقاتي</div>
+      <div class="sticker-grid" id="myStickers">
+        <p style="color:var(--muted);font-size:12px;text-align:center;grid-column:1/-1;font-family:Tajawal">لا توجد ملصقات بعد. أضف من الأعلى ↑</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== PANEL: SEND ===== -->
+  <div id="panel-send" class="panel">
+
+    <div class="card card-accent">
+      <div class="section-title">📤 إرسال ملصق</div>
+
+      <div class="form-group">
+        <label>اختر المجموعة</label>
+        <select id="targetGroup">
+          <option value="">-- اختر المجموعة --</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>اختر الملصق من مكتبتك</label>
+        <div class="sticker-grid" id="sendStickerGrid" style="max-height:230px;overflow-y:auto">
+          <p style="color:var(--muted);font-size:12px;text-align:center;grid-column:1/-1;font-family:Tajawal">أضف ملصقات أولاً من تبويب الملصقات</p>
+        </div>
+      </div>
+
+      <div class="sep"></div>
+
+      <div class="form-group">
+        <label>رسالة مرفقة (اختياري)</label>
+        <textarea id="captionText" placeholder="أكتب رسالة ترافق الملصق..."></textarea>
+      </div>
+
+      <div id="sendProgress" style="display:none">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+          <div class="spinner"></div>
+          <span style="font-size:13px" id="sendStatus">جاري الإرسال...</span>
+        </div>
+        <div class="progress-bar-outer">
+          <div class="progress-bar-inner" id="progressBar" style="width:0%"></div>
+        </div>
+      </div>
+
+      <button class="btn btn-gold btn-full" id="sendBtn" onclick="sendSticker()" style="margin-top:14px">
+        🚀 إرسال الملصق الآن
+      </button>
+    </div>
+
+    <div class="card">
+      <div class="section-title">📡 إرسال لكل المجموعات دفعة واحدة</div>
+
+      <div class="alert alert-info">
+        ⚠️ سيُرسل الملصق المحدد لجميع المجموعات المضافة
+      </div>
+
+      <button class="btn btn-danger btn-full" onclick="sendToAll()">
+        📣 إرسال للجميع
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ===== PANEL: LOG ===== -->
+  <div id="panel-log" class="panel">
+
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div class="section-title" style="margin:0;border:none;padding:0">📋 سجل الإرسال</div>
+        <button class="btn btn-outline btn-sm" onclick="clearLog()">🗑️ مسح السجل</button>
+      </div>
+      <div class="log-box" id="logBox">
+        <div class="log-entry">
+          <span class="log-time">--:--</span>
+          <span class="log-msg info">🟡 في انتظار أول عملية إرسال...</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">📊 إحصائيات الجلسة</div>
+      <div class="grid-2">
+        <div style="text-align:center;padding:14px">
+          <div style="font-size:32px;font-weight:900;color:var(--teal)" id="statSucc">0</div>
+          <div style="font-size:12px;color:var(--muted);font-family:Tajawal">إرسال ناجح</div>
+        </div>
+        <div style="text-align:center;padding:14px">
+          <div style="font-size:32px;font-weight:900;color:var(--red)" id="statFail">0</div>
+          <div style="font-size:12px;color:var(--muted);font-family:Tajawal">إرسال فاشل</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  تصميم د/فواز &nbsp;|&nbsp; منصة إرسال الملصقات &nbsp;|&nbsp;
+  <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">📲 قناة التليجرام</a>
+</footer>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+// ==================== STATE ====================
+let state = {
+  token: '',
+  botName: '',
+  groups: [],
+  stickers: [],
+  selectedSticker: null,
+  sentCount: 0,
+  successCount: 0,
+  failCount: 0,
+};
+
+// ==================== EMOJIS ====================
+const PRESET_EMOJIS = [
+  {e:'⭐',n:'نجمة'},{e:'🌟',n:'لامع'},{e:'💫',n:'بريق'},
+  {e:'🏆',n:'كأس'},{e:'🎯',n:'هدف'},{e:'📚',n:'كتب'},
+  {e:'🎓',n:'تخرج'},{e:'✅',n:'صح'},{e:'🔥',n:'نار'},
+  {e:'💪',n:'قوة'},{e:'🌹',n:'وردة'},{e:'❤️',n:'قلب'},
+  {e:'🤝',n:'مصافحة'},{e:'👏',n:'تصفيق'},{e:'😊',n:'ابتسامة'},
+  {e:'🎉',n:'احتفال'},{e:'📝',n:'ملاحظات'},{e:'💡',n:'فكرة'},
+  {e:'🕌',n:'مسجد'},{e:'📖',n:'قرآن'},{e:'🌙',n:'هلال'},
+  {e:'🇸🇦',n:'علم السعودية'},{e:'🏫',n:'مدرسة'},{e:'👨‍🏫',n:'معلم'},
+];
+
+// ==================== INIT ====================
+function init() {
+  const saved = localStorage.getItem('stickerPlatformState');
+  if (saved) {
+    const s = JSON.parse(saved);
+    state.token = s.token || '';
+    state.botName = s.botName || '';
+    state.groups = s.groups || [];
+    state.stickers = s.stickers || [];
+    state.sentCount = s.sentCount || 0;
+    if (state.token) document.getElementById('botToken').value = state.token;
+    if (state.botName) document.getElementById('botName').value = state.botName;
+  }
+  renderEmojiGrid();
+  renderGroups();
+  renderMyStickers();
+  renderSendGrid();
+  renderGroupSelect();
+  updateStats();
+  if (state.token) checkConnection();
+}
+
+function saveState() {
+  localStorage.setItem('stickerPlatformState', JSON.stringify(state));
+}
+
+// ==================== PANELS ====================
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  event.target.classList.add('active');
+  if (name === 'send') { renderSendGrid(); renderGroupSelect(); }
+}
+
+// ==================== SETUP ====================
+async function testConnection() {
+  const token = document.getElementById('botToken').value.trim();
+  if (!token) { toast('أدخل توكن البوت أولاً', 'warn'); return; }
+  toast('جاري الاختبار...', 'info');
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${token}/getMe`);
+    const data = await res.json();
+    if (data.ok) {
+      state.token = token;
+      document.getElementById('connectionBadge').textContent = `✅ متصل: @${data.result.username}`;
+      document.getElementById('connectionBadge').className = 'badge badge-success';
+      toast(`✅ البوت متصل: ${data.result.first_name}`, 'success');
+      addLog(`تم الاتصال بالبوت: @${data.result.username}`, 'success');
+      if (!document.getElementById('botName').value)
+        document.getElementById('botName').value = data.result.first_name;
+      saveState();
+    } else {
+      toast('❌ التوكن غير صحيح', 'error');
+      document.getElementById('connectionBadge').textContent = '❌ خطأ في الاتصال';
+      document.getElementById('connectionBadge').className = 'badge badge-danger';
+    }
+  } catch(e) {
+    toast('❌ تعذر الاتصال. تحقق من الإنترنت', 'error');
+  }
+}
+
+async function checkConnection() {
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${state.token}/getMe`);
+    const data = await res.json();
+    if (data.ok) {
+      document.getElementById('connectionBadge').textContent = `✅ @${data.result.username}`;
+      document.getElementById('connectionBadge').className = 'badge badge-success';
+    }
+  } catch(e) {}
+}
+
+function saveSetup() {
+  state.token = document.getElementById('botToken').value.trim();
+  state.botName = document.getElementById('botName').value.trim();
+  saveState();
+  toast('✅ تم حفظ الإعدادات', 'success');
+}
+
+// ==================== GROUPS ====================
+function addGroup() {
+  const id = document.getElementById('groupId').value.trim();
+  const name = document.getElementById('groupName').value.trim();
+  if (!id || !name) { toast('أدخل ID واسم المجموعة', 'warn'); return; }
+  if (state.groups.find(g => g.id === id)) { toast('المجموعة موجودة بالفعل', 'warn'); return; }
+  state.groups.push({ id, name });
+  document.getElementById('groupId').value = '';
+  document.getElementById('groupName').value = '';
+  saveState();
+  renderGroups();
+  renderGroupSelect();
+  updateStats();
+  toast(`✅ تمت إضافة: ${name}`, 'success');
+  addLog(`تمت إضافة مجموعة: ${name} (${id})`, 'info');
+}
+
+function removeGroup(id) {
+  state.groups = state.groups.filter(g => g.id !== id);
+  saveState(); renderGroups(); renderGroupSelect(); updateStats();
+  toast('تم حذف المجموعة', 'info');
+}
+
+function renderGroups() {
+  const el = document.getElementById('groupsList');
+  if (!state.groups.length) {
+    el.innerHTML = `<p style="color:var(--muted);font-size:13px;text-align:center;font-family:Tajawal">لا توجد مجموعات مضافة بعد</p>`;
+    return;
+  }
+  el.innerHTML = state.groups.map(g => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg);border-radius:10px;margin-bottom:8px;border:1px solid var(--border)">
+      <div>
+        <div style="font-weight:700;font-size:14px">${g.name}</div>
+        <div style="font-size:11px;color:var(--muted);direction:ltr;text-align:right">${g.id}</div>
+      </div>
+      <button class="btn btn-danger btn-sm" onclick="removeGroup('${g.id}')">🗑️</button>
+    </div>
+  `).join('');
+}
+
+function renderGroupSelect() {
+  const sel = document.getElementById('targetGroup');
+  sel.innerHTML = '<option value="">-- اختر المجموعة --</option>' +
+    state.groups.map(g => `<option value="${g.id}">${g.name}</option>`).join('');
+}
+
+// ==================== STICKERS ====================
+function renderEmojiGrid() {
+  document.getElementById('emojiGrid').innerHTML = PRESET_EMOJIS.map(s => `
+    <div class="sticker-item" onclick="addEmojiSticker('${s.e}','${s.n}')">
+      <span class="sticker-emoji">${s.e}</span>
+      <span class="sticker-name">${s.n}</span>
+    </div>
+  `).join('');
+}
+
+function addEmojiSticker(emoji, name) {
+  if (state.stickers.find(s => s.emoji === emoji)) { toast('الملصق موجود بالفعل', 'warn'); return; }
+  state.stickers.push({ id: Date.now(), emoji, name, type: 'emoji' });
+  saveState(); renderMyStickers(); renderSendGrid(); updateStats();
+  toast(`✅ تمت إضافة: ${emoji} ${name}`, 'success');
+}
+
+function addCustomSticker() {
+  const name = document.getElementById('stickerNameInput').value.trim();
+  if (!name) { toast('أدخل اسم الملصق', 'warn'); return; }
+  state.stickers.push({ id: Date.now(), emoji: '🖼️', name, type: 'custom' });
+  document.getElementById('stickerNameInput').value = '';
+  saveState(); renderMyStickers(); renderSendGrid(); updateStats();
+  toast(`✅ تمت إضافة الملصق: ${name}`, 'success');
+}
+
+function removeSticker(id) {
+  state.stickers = state.stickers.filter(s => s.id !== id);
+  saveState(); renderMyStickers(); renderSendGrid(); updateStats();
+}
+
+function renderMyStickers() {
+  const el = document.getElementById('myStickers');
+  if (!state.stickers.length) {
+    el.innerHTML = `<p style="color:var(--muted);font-size:12px;text-align:center;grid-column:1/-1;font-family:Tajawal">لا توجد ملصقات بعد. أضف من الأعلى ↑</p>`;
+    return;
+  }
+  el.innerHTML = state.stickers.map(s => `
+    <div class="sticker-item" style="position:relative">
+      <span class="sticker-emoji">${s.emoji}</span>
+      <span class="sticker-name">${s.name}</span>
+      <button onclick="removeSticker(${s.id})" style="position:absolute;top:4px;left:4px;background:var(--red);border:none;border-radius:50%;width:18px;height:18px;color:white;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0">×</button>
+    </div>
+  `).join('');
+}
+
+function renderSendGrid() {
+  const el = document.getElementById('sendStickerGrid');
+  if (!state.stickers.length) {
+    el.innerHTML = `<p style="color:var(--muted);font-size:12px;text-align:center;grid-column:1/-1;font-family:Tajawal">أضف ملصقات أولاً من تبويب الملصقات</p>`;
+    return;
+  }
+  el.innerHTML = state.stickers.map(s => `
+    <div class="sticker-item ${state.selectedSticker?.id === s.id ? 'selected' : ''}" onclick="selectSticker(${s.id})">
+      <span class="sticker-emoji">${s.emoji}</span>
+      <span class="sticker-name">${s.name}</span>
+    </div>
+  `).join('');
+}
+
+function selectSticker(id) {
+  state.selectedSticker = state.stickers.find(s => s.id === id);
+  renderSendGrid();
+}
+
+// ==================== SEND ====================
+async function sendSticker() {
+  if (!state.token) { toast('أدخل توكن البوت في الإعدادات أولاً', 'warn'); return; }
+  const groupId = document.getElementById('targetGroup').value;
+  if (!groupId) { toast('اختر مجموعة للإرسال', 'warn'); return; }
+  if (!state.selectedSticker) { toast('اختر ملصقاً للإرسال', 'warn'); return; }
+
+  const caption = document.getElementById('captionText').value.trim();
+  const group = state.groups.find(g => g.id === groupId);
+
+  document.getElementById('sendProgress').style.display = 'block';
+  document.getElementById('sendBtn').disabled = true;
+  document.getElementById('sendStatus').textContent = `جاري الإرسال إلى: ${group.name}...`;
+  setProgress(30);
+
+  try {
+    // Send emoji as message (real stickers need file_id from Telegram)
+    const msg = state.selectedSticker.emoji + (caption ? '\n\n' + caption : '');
+    const res = await fetch(`https://api.telegram.org/bot${state.token}/sendMessage`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ chat_id: groupId, text: msg })
+    });
+    const data = await res.json();
+    setProgress(100);
+
+    if (data.ok) {
+      state.sentCount++;
+      state.successCount++;
+      toast(`✅ تم الإرسال إلى ${group.name}`, 'success');
+      addLog(`✅ أُرسل "${state.selectedSticker.name}" → ${group.name}`, 'success');
+      document.getElementById('captionText').value = '';
+    } else {
+      state.failCount++;
+      toast(`❌ فشل الإرسال: ${data.description}`, 'error');
+      addLog(`❌ فشل الإرسال إلى ${group.name}: ${data.description}`, 'error');
+    }
+  } catch(e) {
+    state.failCount++;
+    toast('❌ خطأ في الاتصال', 'error');
+    addLog('❌ خطأ في الاتصال بـ Telegram API', 'error');
+  }
+
+  setTimeout(() => {
+    document.getElementById('sendProgress').style.display = 'none';
+    document.getElementById('sendBtn').disabled = false;
+    setProgress(0);
+  }, 1500);
+
+  saveState(); updateStats();
+}
+
+async function sendToAll() {
+  if (!state.token) { toast('أدخل توكن البوت في الإعدادات أولاً', 'warn'); return; }
+  if (!state.groups.length) { toast('أضف مجموعات أولاً', 'warn'); return; }
+  if (!state.selectedSticker) { toast('اختر ملصقاً للإرسال', 'warn'); return; }
+
+  const caption = document.getElementById('captionText').value.trim();
+  let done = 0;
+
+  document.getElementById('sendProgress').style.display = 'block';
+
+  for (const group of state.groups) {
+    document.getElementById('sendStatus').textContent = `إرسال إلى: ${group.name} (${done+1}/${state.groups.length})`;
+    setProgress(Math.round((done / state.groups.length) * 100));
+
+    try {
+      const msg = state.selectedSticker.emoji + (caption ? '\n\n' + caption : '');
+      const res = await fetch(`https://api.telegram.org/bot${state.token}/sendMessage`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ chat_id: group.id, text: msg })
+      });
+      const data = await res.json();
+      if (data.ok) {
+        state.sentCount++; state.successCount++;
+        addLog(`✅ أُرسل إلى ${group.name}`, 'success');
+      } else {
+        state.failCount++;
+        addLog(`❌ فشل: ${group.name} — ${data.description}`, 'error');
+      }
+    } catch(e) {
+      state.failCount++;
+      addLog(`❌ خطأ: ${group.name}`, 'error');
+    }
+
+    done++;
+    await sleep(500); // rate limit protection
+  }
+
+  setProgress(100);
+  toast(`✅ اكتمل الإرسال: ${state.successCount} نجح، ${state.failCount} فشل`, 'success');
+
+  setTimeout(() => {
+    document.getElementById('sendProgress').style.display = 'none';
+    setProgress(0);
+  }, 2000);
+
+  saveState(); updateStats();
+}
+
+// ==================== HELPERS ====================
+function setProgress(pct) {
+  document.getElementById('progressBar').style.width = pct + '%';
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function updateStats() {
+  document.getElementById('statSent').textContent = state.sentCount;
+  document.getElementById('statStickers').textContent = state.stickers.length;
+  document.getElementById('statGroups').textContent = state.groups.length;
+  document.getElementById('statSucc').textContent = state.successCount || 0;
+  document.getElementById('statFail').textContent = state.failCount || 0;
+}
+
+function addLog(msg, type = 'info') {
+  const now = new Date();
+  const time = now.toLocaleTimeString('ar-SA', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+  const box = document.getElementById('logBox');
+  const entry = document.createElement('div');
+  entry.className = 'log-entry';
+  entry.innerHTML = `<span class="log-time">${time}</span><span class="log-msg ${type}">${msg}</span>`;
+  box.insertBefore(entry, box.firstChild);
+}
+
+function clearLog() {
+  document.getElementById('logBox').innerHTML = `<div class="log-entry"><span class="log-time">--:--</span><span class="log-msg info">🟡 تم مسح السجل</span></div>`;
+}
+
+function toast(msg, type = 'info') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.borderColor = type === 'success' ? 'var(--teal)' : type === 'error' ? 'var(--red)' : 'var(--gold)';
+  t.style.color = type === 'success' ? 'var(--teal)' : type === 'error' ? 'var(--red)' : 'var(--gold)';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function handleFileSelect(e) {
+  const files = e.target.files;
+  if (!files.length) return;
+  toast(`تم اختيار ${files.length} ملف`, 'info');
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('uploadArea').classList.remove('drag-over');
+  toast(`تم استقبال ${e.dataTransfer.files.length} ملف`, 'info');
+}
+
+// ==================== START ====================
+init();
+</script>
+</body>
+</html>
