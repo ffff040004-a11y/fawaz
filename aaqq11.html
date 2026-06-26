@@ -503,7 +503,12 @@ function startNewRound(){
   const f=parseInt(document.getElementById('roundFirstQ').value);
   const l=parseInt(document.getElementById('roundLastQ').value);
   if(!f||!l||f>l){alert('❌ أدخل رقم أول وآخر سؤال بشكل صحيح\n(أول ≤ آخر)');return;}
-  if(!confirm(`🚀 بدء جولة جديدة من س${f} إلى س${l} (${l-f+1} أسئلة)\n\nسيتم مسح جميع نتائج الجولة السابقة.\nهل أنت متأكد؟`)) return;
+  const count=l-f+1;
+  if(count<5){
+    alert(`❌ عدد أسئلة الجولة (${count}) أقل من الحد الأدنى المسموح به!\n\n📌 يجب أن تكون الجولة 5 أسئلة على الأقل\nحتى تظهر جميع مستويات التقدير بشكل صحيح.\n\n💡 اضبط نطاق الأسئلة ليشمل 5 أسئلة فأكثر.`);
+    return;
+  }
+  if(!confirm(`🚀 بدء جولة جديدة من س${f} إلى س${l} (${count} أسئلة)\n\nسيتم مسح جميع نتائج الجولة السابقة.\nهل أنت متأكد؟`)) return;
   // مسح النتائج السابقة
   scores={}; pollMap={}; lastUpdateId=0;
   // ضبط نطاق الجولة
