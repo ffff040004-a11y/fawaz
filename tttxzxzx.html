@@ -326,6 +326,32 @@ table.lb tr:hover td{background:#f8f9ff;}
 
 <!-- ══ RESULTS ══ -->
 <div id="tab-results" style="display:none">
+
+  <!-- بطاقة إعداد الجولة -->
+  <div class="card" style="border-top:4px solid #6a1b9a;margin-bottom:16px;">
+    <div class="card-title" style="color:#6a1b9a">🎯 إعداد جولة المسابقة</div>
+    <div style="background:#f3e5f5;border:1px solid #ce93d8;border-radius:10px;padding:13px;font-size:.84rem;color:#4a148c;font-weight:600;margin-bottom:14px;line-height:1.9;">
+      ⚡ <strong>قبل كل جولة جديدة:</strong> حدد رقم أول وآخر سؤال فيها، ثم اضغط "بدء جولة جديدة".<br>
+      📌 <strong>الحد الأدنى: 5 أسئلة</strong> حتى تظهر جميع مستويات التقدير بشكل صحيح.
+    </div>
+    <div class="grid-2" style="margin-bottom:12px">
+      <div class="field">
+        <label>📌 رقم أول سؤال في الجولة</label>
+        <input type="number" id="roundFirstQ" min="1" placeholder="مثال: 10" style="direction:ltr;text-align:center;font-size:1.1rem;font-weight:700;">
+        <div class="hint">رقم السؤال كما يظهر في البوت</div>
+      </div>
+      <div class="field">
+        <label>📌 رقم آخر سؤال في الجولة</label>
+        <input type="number" id="roundLastQ" min="1" placeholder="مثال: 20" style="direction:ltr;text-align:center;font-size:1.1rem;font-weight:700;">
+        <div class="hint">رقم السؤال كما يظهر في البوت</div>
+      </div>
+    </div>
+    <div id="roundInfo" style="display:none;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:10px 14px;font-size:.86rem;color:#1b5e20;font-weight:700;margin-bottom:12px;"></div>
+    <div class="btn-row">
+      <button class="btn" style="background:#6a1b9a;color:white;" onclick="startNewRound()">🚀 بدء جولة جديدة (مسح + ضبط)</button>
+    </div>
+  </div>
+
   <div class="card green-top">
     <div class="card-title">🏆 لوحة نتائج المشاركين</div>
     <div style="background:#e8f5e9;border:2px solid #a5d6a7;border-radius:10px;padding:13px;font-size:.85rem;color:#1b5e20;font-weight:600;margin-bottom:14px;line-height:1.9;">
@@ -344,7 +370,7 @@ table.lb tr:hover td{background:#f8f9ff;}
     <div class="btn-row" style="margin-bottom:14px">
       <button class="btn btn-green" onclick="fetchNow()">🔄 تحديث النتائج الآن</button>
       <button class="btn btn-gold"  onclick="sendLbToChat()">📤 إرسال النتائج للمجموعة</button>
-      <button class="btn btn-outline" onclick="clearLb()">🗑️ مسح النتائج</button>
+      <button class="btn btn-outline" onclick="clearLb()">🗑️ مسح النتائج فقط</button>
     </div>
   </div>
 
@@ -514,6 +540,53 @@ let lastUpdateId=0;
 let scores={};
 let pollMap={};
 const L=['أ','ب','ج','د'];
+
+// ══ ROUND VARIABLES ══
+let roundFirstQid=null;
+let roundLastQid=null;
+let roundQCount=0;
+
+function startNewRound(){
+  const f=parseInt(document.getElementById('roundFirstQ').value);
+  const l=parseInt(document.getElementById('roundLastQ').value);
+  if(!f||!l||f>l){alert('❌ أدخل رقم أول وآخر سؤال بشكل صحيح\n(أول ≤ آخر)');return;}
+  const count=l-f+1;
+  if(count<5){
+    alert(`❌ عدد أسئلة الجولة (${count}) أقل من الحد الأدنى!\n\n📌 يجب أن تكون الجولة 5 أسئلة على الأقل\nحتى تظهر جميع مستويات التقدير بشكل صحيح.\n\n💡 اضبط نطاق الأسئلة ليشمل 5 أسئلة فأكثر.`);
+    return;
+  }
+  if(!confirm(`🚀 بدء جولة جديدة\nمن س${f} إلى س${l} — (${count} أسئلة)\n\n⚠️ سيتم مسح نتائج الجولة السابقة نهائياً.\nهل أنت متأكد؟`)) return;
+  scores={}; pollMap={}; lastUpdateId=0;
+  roundFirstQid=f; roundLastQid=l; roundQCount=count;
+  ['tg_scores_ishraf','tg_pollMap_ishraf','tg_lastUpd_ishraf'].forEach(k=>localStorage.removeItem(k));
+  localStorage.setItem('tg_rfq_ishraf', roundFirstQid);
+  localStorage.setItem('tg_rlq_ishraf', roundLastQid);
+  localStorage.setItem('tg_rqc_ishraf', roundQCount);
+  document.getElementById('lbStats').innerHTML='';
+  document.getElementById('lbTable').innerHTML='<div style="text-align:center;padding:24px;color:#aaa;font-size:.88rem">⏳ جاهز — في انتظار إجابات الجولة الجديدة</div>';
+  document.getElementById('lbSub').textContent=`جولة جديدة | من س${f} إلى س${l} | ${count} أسئلة`;
+  document.getElementById('liveCountWrap').style.display='none';
+  const info=document.getElementById('roundInfo');
+  info.style.display='block';
+  info.innerHTML=`✅ الجولة الحالية: من سؤال <strong>${f}</strong> إلى سؤال <strong>${l}</strong> — إجمالي <strong>${count}</strong> أسئلة`;
+  log(`🚀 جولة جديدة: س${f} ← س${l} | ${count} أسئلة | النتائج مُسحت`,'ok');
+}
+
+function isFullParticipant(u){
+  if(!roundQCount) return true;
+  if(u.total < roundQCount) return false;
+  if(roundFirstQid!==null && (u.firstQid===undefined || u.firstQid > roundFirstQid)) return false;
+  if(roundLastQid!==null  && (u.lastQid===undefined  || u.lastQid  < roundLastQid))  return false;
+  return true;
+}
+
+function getLvlByPct(pct){
+  if(pct>=90) return{l:'ممتاز 🏆',c:'lv-ex'};
+  if(pct>=80) return{l:'جيد جداً 🌟',c:'lv-vg'};
+  if(pct>=70) return{l:'جيد 👍',c:'lv-g'};
+  if(pct>=50) return{l:'مقبول 📝',c:'lv-ok'};
+  return{l:'دون المستوى ❌',c:'lv-p'};
+}
 const DOMAINS=['القيادة والإشراف','التطوير المهني','دعم التعليم والتعلم','القيم وأخلاقيات المهنة ومهارات الاتصال'];
 const DOMAIN_COLORS=['d0','d1','d2','d3'];
 
@@ -530,6 +603,17 @@ window.onload=()=>{
     if(sp) pollMap=JSON.parse(sp);
     if(sc) scores=JSON.parse(sc);
     if(lu) lastUpdateId=parseInt(lu)||0;
+    const rfq=localStorage.getItem('tg_rfq_ishraf');
+    const rlq=localStorage.getItem('tg_rlq_ishraf');
+    const rqc=localStorage.getItem('tg_rqc_ishraf');
+    if(rfq){ roundFirstQid=parseInt(rfq); document.getElementById('roundFirstQ').value=rfq; }
+    if(rlq){ roundLastQid=parseInt(rlq);  document.getElementById('roundLastQ').value=rlq; }
+    if(rqc){ roundQCount=parseInt(rqc)||0; }
+    if(roundFirstQid&&roundLastQid){
+      const info=document.getElementById('roundInfo');
+      info.style.display='block';
+      info.innerHTML=`✅ الجولة الحالية: من سؤال <strong>${roundFirstQid}</strong> إلى سؤال <strong>${roundLastQid}</strong> — إجمالي <strong>${roundQCount}</strong> أسئلة`;
+    }
   }catch(e){}
   if(Object.keys(scores).length>0) renderLb();
   previewAlert();
@@ -923,9 +1007,12 @@ async function fetchUpdates(){
       if(chosen===undefined||chosen===null) return;
       const entry=pollMap[pa.poll_id];
       if(!entry) return;
-      if(!scores[uid]) scores[uid]={name:displayName,username:pa.user.username||'',correct:0,wrong:0,total:0};
+      if(!scores[uid]) scores[uid]={name:displayName,username:pa.user.username||'',correct:0,wrong:0,total:0,
+        firstQid:entry.qid, lastQid:entry.qid, answerTime:upd.update_id};
       scores[uid].name=displayName; scores[uid].username=pa.user.username||'';
       scores[uid].total++;
+      if(entry.qid < scores[uid].firstQid) scores[uid].firstQid=entry.qid;
+      if(entry.qid > scores[uid].lastQid){ scores[uid].lastQid=entry.qid; scores[uid].answerTime=upd.update_id; }
       if(chosen===entry.a) scores[uid].correct++;
       else scores[uid].wrong++;
       newAns++;
@@ -947,42 +1034,58 @@ async function fetchNow(){
 }
 
 // ══ LEADERBOARD ══
-function getLvl(wrong){
-  if(wrong===0)return{l:'ممتاز 🏆',c:'lv-ex'};
-  if(wrong===1)return{l:'جيد جداً 🌟',c:'lv-vg'};
-  if(wrong<=3)return{l:'جيد 👍',c:'lv-g'};
-  return{l:'مقبول 📘',c:'lv-ok'};
+function getLvl(pct){
+  if(pct>=90) return{l:'ممتاز 🏆',c:'lv-ex'};
+  if(pct>=80) return{l:'جيد جداً 🌟',c:'lv-vg'};
+  if(pct>=70) return{l:'جيد 👍',c:'lv-g'};
+  if(pct>=50) return{l:'مقبول 📝',c:'lv-ok'};
+  return{l:'دون المستوى ❌',c:'lv-p'};
 }
 
 function renderLb(){
-  const data=Object.values(scores).sort((a,b)=>a.wrong-b.wrong||b.correct-a.correct);
-  const n=data.length;
-  document.getElementById('liveCountWrap').style.display=n>0?'block':'none';
-  document.getElementById('liveCount').textContent=n;
-  if(n===0){
+  const qCount = roundQCount||sentCount||0;
+  const allData = Object.values(scores);
+  const totalResponded = allData.length;
+  const data = allData
+    .filter(u=>isFullParticipant(u))
+    .sort((a,b)=>{
+      const pa=qCount>0?a.correct/qCount:0;
+      const pb=qCount>0?b.correct/qCount:0;
+      if(pb!==pa) return pb-pa;
+      return (a.answerTime||0)-(b.answerTime||0);
+    });
+  const excluded = totalResponded - data.length;
+  const n = data.length;
+  document.getElementById('liveCountWrap').style.display=totalResponded>0?'block':'none';
+  document.getElementById('liveCount').textContent=totalResponded;
+  if(totalResponded===0){
     document.getElementById('lbTable').innerHTML='<div style="text-align:center;padding:24px;color:#aaa;font-size:.88rem">📭 لا توجد إجابات بعد</div>';
     return;
   }
-  const now=new Date().toLocaleString('ar-SA');
-  document.getElementById('lbSub').textContent=`آخر تحديث: ${now} | الأسئلة المُرسَلة: ${sentCount}`;
-  const top=data[0].correct;
-  const topPct=sentCount>0?Math.round((data[0].correct/sentCount)*100):0;
-  const avg=Math.round(data.reduce((s,x)=>s+x.correct,0)/n);
-  const avgPct=sentCount>0?Math.round((avg/sentCount)*100):0;
+  document.getElementById('lbSub').textContent=`آخر تحديث: ${new Date().toLocaleString('ar-SA')} | أسئلة الجولة: ${qCount}`;
+  const top = n>0 ? data[0].correct : 0;
+  const topPct = qCount>0 ? Math.round((top/qCount)*100) : 0;
   document.getElementById('lbStats').innerHTML=`
-    <div class="lb-stat"><div class="lb-stat-n">${n}</div><div class="lb-stat-l">مشارك</div></div>
-    <div class="lb-stat"><div class="lb-stat-n" style="color:var(--green)">${top} <span style="font-size:.8rem;font-weight:700">(${topPct}%)</span></div><div class="lb-stat-l">أعلى نتيجة</div></div>
-    <div class="lb-stat"><div class="lb-stat-n" style="color:var(--teal)">${avg} <span style="font-size:.8rem;font-weight:700">(${avgPct}%)</span></div><div class="lb-stat-l">المتوسط</div></div>
-    <div class="lb-stat"><div class="lb-stat-n" style="color:var(--gold)">${sentCount}</div><div class="lb-stat-l">سؤال أُرسل</div></div>`;
+    <div class="lb-stat"><div class="lb-stat-n">${n}</div><div class="lb-stat-l">في التصنيف</div></div>
+    <div class="lb-stat"><div class="lb-stat-n" style="color:#e65100">${excluded}</div><div class="lb-stat-l">خارج التصنيف</div></div>
+    <div class="lb-stat"><div class="lb-stat-n" style="color:var(--green)">${top} <span style="font-size:.8rem">(${topPct}%)</span></div><div class="lb-stat-l">أعلى نتيجة</div></div>
+    <div class="lb-stat"><div class="lb-stat-n" style="color:var(--gold)">${qCount}</div><div class="lb-stat-l">أسئلة الجولة</div></div>`;
+  if(n===0){
+    let note='';
+    if(excluded>0) note=`<div style="text-align:center;padding:14px;background:#fff3e0;border-radius:10px;color:#e65100;font-weight:700;font-size:.86rem;margin-top:10px;">⚠️ ${excluded} مشارك لم يُجيبوا على جميع الأسئلة (${qCount} سؤال) — غير مؤهلين للتصنيف</div>`;
+    document.getElementById('lbTable').innerHTML='<div style="text-align:center;padding:24px;color:#aaa;font-size:.88rem">📭 لا يوجد مشاركون مؤهلون بعد</div>'+note;
+    document.getElementById('lbNote').textContent=`* يُشترط الإجابة على جميع الأسئلة الـ ${qCount} للدخول في التصنيف`;
+    return;
+  }
   const medals=['🥇','🥈','🥉'];
   let rows='';
   data.forEach((u,i)=>{
-    const pct=sentCount>0?Math.round((u.correct/sentCount)*100):0;
-    const lvl=getLvl(u.wrong);
-    const rc=i===0?'r1':i===1?'r2':i===2?'r3':'rx';
-    const rk=i<3?medals[i]:`${i+1}`;
-    const pctColor=pct>=90?'#1e7e34':pct>=75?'#1565c0':pct>=60?'#e65100':'#c0392b';
-    const pctBg   =pct>=90?'#d4edda':pct>=75?'#cce5ff':pct>=60?'#fff3cd':'#f8d7da';
+    const pct = qCount>0 ? Math.round((u.correct/qCount)*100) : 0;
+    const lvl = getLvl(pct);
+    const rc = i===0?'r1':i===1?'r2':i===2?'r3':'rx';
+    const rk = i<3 ? medals[i] : `${i+1}`;
+    const pctColor = pct>=90?'#1e7e34':pct>=80?'#1565c0':pct>=70?'#e65100':'#c0392b';
+    const pctBg    = pct>=90?'#d4edda':pct>=80?'#cce5ff':pct>=70?'#fff3cd':'#f8d7da';
     rows+=`<tr>
       <td><div class="rank-badge ${rc}">${rk}</div></td>
       <td style="font-weight:700">${u.name}</td>
@@ -995,54 +1098,71 @@ function renderLb(){
       <td><span class="lvl ${lvl.c}">${lvl.l}</span></td>
     </tr>`;
   });
+  let excludedNote='';
+  if(excluded>0) excludedNote=`<tr><td colspan="6" style="text-align:center;padding:10px;font-size:.78rem;color:#e65100;background:#fff3e0;">⚠️ ${excluded} مشارك خارج التصنيف (لم يُكملوا جميع أسئلة الجولة)</td></tr>`;
   document.getElementById('lbTable').innerHTML=`
     <table class="lb">
       <thead><tr><th>الترتيب</th><th>الاسم</th><th>✅ صحيح</th><th>❌ خطأ</th><th>النسبة</th><th>المستوى</th></tr></thead>
-      <tbody>${rows}</tbody>
+      <tbody>${rows}${excludedNote}</tbody>
     </table>`;
-  document.getElementById('lbNote').textContent='📌 الترتيب: الأقل أخطاءً → الأكثر صحيحاً | النتائج تتحدث كل 8 ثوانٍ تلقائيًا';
+  document.getElementById('lbNote').textContent=`* النسبة من ${qCount} أسئلة الجولة | يُشترط الإجابة على جميعها | الترتيب: نسبة أعلى ثم الأسرع عند التساوي`;
 }
 
 async function sendLbToChat(){
   const tok=document.getElementById('botToken').value.trim();
   const cid=document.getElementById('chatId').value.trim();
   if(!tok||!cid){alert('أدخل البيانات أولاً من تبويب الإعداد');return;}
-  const data=Object.values(scores).sort((a,b)=>a.wrong-b.wrong||b.correct-a.correct);
-  if(data.length===0){alert('لا توجد نتائج بعد!\nاضغط "تحديث النتائج الآن" أولاً');return;}
+  const qCount = roundQCount||sentCount||0;
+  const allData = Object.values(scores);
+  if(!allData.length){alert('لا توجد نتائج بعد!\nاضغط "تحديث النتائج الآن" أولاً');return;}
+  const data = allData
+    .filter(u=>isFullParticipant(u))
+    .sort((a,b)=>{
+      const pa=qCount>0?a.correct/qCount:0;
+      const pb=qCount>0?b.correct/qCount:0;
+      if(pb!==pa) return pb-pa;
+      return (a.answerTime||0)-(b.answerTime||0);
+    });
+  const excluded = allData.length - data.length;
   const title=document.getElementById('alertTitle').value.trim()||'رخصة الإشراف التربوي';
-  const medals=['🥇','🥈','🥉'];
+  const sep='━━━━━━━━━━━━━━━━━━━━';
   let lines=[];
-  lines.push(`🏁 لقد انتهى اختبار '${title}'!`);
+  lines.push(`🏁 انتهت جولة '${title}'!`);
   lines.push('');
-  lines.push(`📊 عدد الأسئلة: ${sentCount} سؤال`);
-  lines.push('━━━━━━━━━━━━━━━━━━━━');
-  lines.push('');
-  lines.push('📌 آلية الترتيب:');
-  lines.push('• الأعلى إجابات صحيحة يتصدر القائمة');
-  lines.push('• عند التساوي → الأقل أخطاءً يتقدم');
-  lines.push('');
-  data.slice(0,20).forEach((u,i)=>{
-    const rk=i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}.`;
-    const display=u.username?`@${u.username}`:u.name;
-    const pct=sentCount>0?Math.round((u.correct/sentCount)*100):0;
-    const lvl=getLvl(u.wrong);
-    lines.push(`${rk} ${display}`);
-    lines.push(`   ✅ ${u.correct}  ❌ ${u.wrong}  📊 ${pct}%  ${lvl.l}`);
-    lines.push('');
-  });
-  lines.push('━━━━━━━━━━━━━━━━━━━━');
+  lines.push(`📊 أسئلة الجولة: ${qCount} سؤال`);
+  if(roundFirstQid&&roundLastQid) lines.push(`📌 من س${roundFirstQid} إلى س${roundLastQid}`);
+  lines.push(`👥 المؤهلون للتصنيف: ${data.length} | خارج التصنيف: ${excluded}`);
+  lines.push(''); lines.push(sep); lines.push('🏆 لوحة التميز — المتأهلون'); lines.push(sep); lines.push('');
+  if(data.length===0){
+    lines.push('⚠️ لا يوجد مشاركون أجابوا على جميع أسئلة الجولة');
+  } else {
+    data.slice(0,20).forEach((u,i)=>{
+      const rk=i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}.`;
+      const display=u.username?`@${u.username}`:u.name;
+      const pct=qCount>0?Math.round((u.correct/qCount)*100):0;
+      const lvl=getLvl(pct);
+      lines.push(`${rk} ${display}`);
+      lines.push(`   ✅ ${u.correct}/${qCount} — ${pct}% — ${lvl.l}`);
+      lines.push('');
+    });
+  }
+  if(excluded>0){ lines.push(sep); lines.push(`⚠️ ${excluded} مشارك خارج التصنيف (لم يُكملوا جميع الأسئلة)`); lines.push(''); }
+  lines.push(sep); lines.push('');
+  lines.push('📌 سلم التقديرات:');
+  lines.push('🏆 ممتاز: 90% فأعلى');
+  lines.push('🌟 جيد جداً: 80% فأعلى');
+  lines.push('👍 جيد: 70% فأعلى');
+  lines.push('📝 مقبول: 50% فأعلى');
   lines.push('');
   lines.push('🌟 أحسنتم وبارك الله في جهودكم');
   lines.push('💡 العلم نور — واصلوا المسيرة');
-  lines.push('🤝 شكراً لكل من شارك وأضاء هذا المجال');
   lines.push('');
   lines.push('تصميم: د/فواز 🎓 | t.me/TAqhjT3MFVE1Yzk0');
-  const msg=lines.join('\n');
   try{
     log('📤 جارٍ إرسال النتائج...','info');
     const r=await fetch(`https://api.telegram.org/bot${tok}/sendMessage`,{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({chat_id:cid,text:msg})
+      body:JSON.stringify({chat_id:cid,text:lines.join('\n')})
     });
     const d=await r.json();
     if(d.ok) log('✅ تم إرسال لوحة النتائج للمجموعة بنجاح','ok');
@@ -1053,12 +1173,16 @@ async function sendLbToChat(){
 function clearLb(){
   if(!confirm('مسح جميع نتائج المشاركين؟'))return;
   scores={}; pollMap={}; lastUpdateId=0;
-  ['tg_scores_ishraf','tg_pollMap_ishraf','tg_lastUpd_ishraf'].forEach(k=>localStorage.removeItem(k));
+  roundFirstQid=null; roundLastQid=null; roundQCount=0;
+  ['tg_scores_ishraf','tg_pollMap_ishraf','tg_lastUpd_ishraf','tg_rfq_ishraf','tg_rlq_ishraf','tg_rqc_ishraf'].forEach(k=>localStorage.removeItem(k));
   document.getElementById('lbStats').innerHTML='';
   document.getElementById('lbTable').innerHTML='';
   document.getElementById('lbSub').textContent='في انتظار إجابات المشاركين...';
   document.getElementById('liveCountWrap').style.display='none';
-  log('🗑️ مُسحت النتائج','warn');
+  document.getElementById('roundInfo').style.display='none';
+  document.getElementById('roundFirstQ').value='';
+  document.getElementById('roundLastQ').value='';
+  log('🗑️ مُسحت النتائج وبيانات الجولة','warn');
 }
 
 // ══ LOG ══
