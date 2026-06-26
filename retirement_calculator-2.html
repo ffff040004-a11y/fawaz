@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>حاسبة التقاعد ومكافأة نهاية الخدمة</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold:    #C9A84C;
+    --gold-lt: #E8C97A;
+    --navy:    #0D1B3E;
+    --navy-md: #162450;
+    --navy-lt: #1E3163;
+    --cream:   #F8F5EE;
+    --white:   #FFFFFF;
+    --green:   #1E7D5E;
+    --red:     #C0392B;
+    --text:    #1A1A2E;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+    direction: rtl;
+  }
+
+  /* ── Hero Header ── */
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-lt) 60%, #2a4a8a 100%);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: -60px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(201,168,76,0.08);
+    pointer-events: none;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; right: -40px;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: rgba(201,168,76,0.05);
+    pointer-events: none;
+  }
+
+  .header-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px 36px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .header-icon {
+    width: 72px; height: 72px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-lt));
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 34px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 20px rgba(201,168,76,0.4);
+  }
+
+  .header-text h1 {
+    font-size: 1.75rem;
+    font-weight: 900;
+    color: var(--white);
+    line-height: 1.3;
+  }
+
+  .header-text p {
+    color: var(--gold-lt);
+    font-size: 0.95rem;
+    margin-top: 4px;
+    font-weight: 400;
+  }
+
+  .gold-bar {
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-lt), var(--gold));
+  }
+
+  /* ── Tab Nav ── */
+  .tab-nav {
+    background: var(--navy-md);
+    display: flex;
+    justify-content: center;
+    gap: 0;
+  }
+
+  .tab-btn {
+    flex: 1;
+    max-width: 220px;
+    padding: 14px 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.55);
+    transition: all 0.25s;
+    border-bottom: 3px solid transparent;
+    position: relative;
+  }
+
+  .tab-btn.active {
+    color: var(--gold-lt);
+    border-bottom-color: var(--gold);
+    background: rgba(201,168,76,0.08);
+  }
+
+  .tab-btn:hover:not(.active) {
+    color: rgba(255,255,255,0.85);
+    background: rgba(255,255,255,0.05);
+  }
+
+  /* ── Main Content ── */
+  .main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 28px 16px 60px;
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 12px rgba(13,27,62,0.08);
+    border: 1px solid rgba(13,27,62,0.07);
+  }
+
+  .card-title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px; height: 20px;
+    background: var(--gold);
+    border-radius: 2px;
+  }
+
+  /* ── Form Grid ── */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 600px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .header-text h1 { font-size: 1.3rem; }
+    .header-icon { width: 56px; height: 56px; font-size: 26px; }
+  }
+
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+
+  label {
+    font-size: 0.87rem;
+    font-weight: 600;
+    color: var(--navy-md);
+  }
+
+  label span {
+    font-weight: 400;
+    color: #888;
+    font-size: 0.8rem;
+  }
+
+  input[type="number"], select {
+    padding: 11px 14px;
+    border: 1.5px solid #DDE3EF;
+    border-radius: 10px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 1rem;
+    color: var(--text);
+    background: #F9FAFD;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+    direction: rtl;
+  }
+
+  input[type="number"]:focus, select:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.15);
+    background: var(--white);
+  }
+
+  /* ── Rank Table (Interactive) ── */
+  .rank-table-wrap {
+    overflow-x: auto;
+  }
+
+  .rank-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+
+  .rank-table th {
+    background: var(--navy);
+    color: var(--gold-lt);
+    padding: 10px 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .rank-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid #EEF0F5;
+    text-align: center;
+    white-space: nowrap;
+    color: var(--navy);
+  }
+
+  .rank-table tr:nth-child(even) td { background: #F5F7FC; }
+
+  .rank-table tr.highlighted td {
+    background: rgba(201,168,76,0.12) !important;
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  .rank-table td.years-col {
+    text-align: right;
+    color: var(--navy-md);
+    font-weight: 600;
+  }
+
+  /* ── Calc Button ── */
+  .calc-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--navy), var(--navy-lt));
+    color: var(--white);
+    border: none;
+    border-radius: 12px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    margin-top: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .calc-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent, rgba(201,168,76,0.15));
+  }
+
+  .calc-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(13,27,62,0.3); }
+  .calc-btn:active { transform: translateY(0); }
+
+  /* ── Results ── */
+  .results-section {
+    display: none;
+    animation: fadeSlide 0.4s ease;
+  }
+
+  .results-section.show { display: block; }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .result-card {
+    background: linear-gradient(135deg, var(--navy), var(--navy-lt));
+    border-radius: 14px;
+    padding: 20px 18px;
+    color: var(--white);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .result-card::before {
+    content: '';
+    position: absolute;
+    top: -30px; left: -30px;
+    width: 100px; height: 100px;
+    background: rgba(201,168,76,0.1);
+    border-radius: 50%;
+  }
+
+  .result-card .rc-icon { font-size: 1.8rem; margin-bottom: 8px; position: relative; z-index:1; }
+  .result-card .rc-label { font-size: 0.82rem; color: rgba(255,255,255,0.7); margin-bottom: 6px; position: relative; z-index:1; }
+  .result-card .rc-value {
+    font-size: 1.55rem;
+    font-weight: 900;
+    color: var(--gold-lt);
+    position: relative; z-index:1;
+    direction: ltr;
+  }
+  .result-card .rc-unit { font-size: 0.78rem; color: rgba(255,255,255,0.6); position: relative; z-index:1; }
+
+  .result-card.highlight-card {
+    background: linear-gradient(135deg, var(--gold), #a67c2e);
+  }
+  .result-card.highlight-card .rc-value { color: var(--navy); }
+  .result-card.highlight-card .rc-label { color: rgba(13,27,62,0.8); }
+  .result-card.highlight-card .rc-unit { color: rgba(13,27,62,0.6); }
+
+  /* ── Progress Bar ── */
+  .service-bar-wrap {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 22px 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 12px rgba(13,27,62,0.07);
+    border: 1px solid rgba(13,27,62,0.07);
+  }
+
+  .service-bar-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--navy-md);
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .service-bar-track {
+    height: 14px;
+    background: #E8ECF6;
+    border-radius: 99px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .service-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-lt));
+    border-radius: 99px;
+    width: 0%;
+    transition: width 1s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .service-milestones {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+
+  .milestone {
+    font-size: 0.72rem;
+    color: #999;
+    text-align: center;
+    position: relative;
+  }
+
+  .milestone.reached { color: var(--gold); font-weight: 700; }
+
+  /* ── Detail Table ── */
+  .detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+  }
+
+  .detail-table tr td:first-child {
+    color: #666;
+    padding: 9px 0;
+    width: 55%;
+  }
+
+  .detail-table tr td:last-child {
+    font-weight: 700;
+    color: var(--navy);
+    text-align: left;
+    direction: ltr;
+  }
+
+  .detail-table tr {
+    border-bottom: 1px solid #F0F2F8;
+  }
+
+  .detail-table tr:last-child { border-bottom: none; }
+
+  /* ── Info Boxes ── */
+  .info-box {
+    background: rgba(30,125,94,0.07);
+    border: 1px solid rgba(30,125,94,0.2);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 0.88rem;
+    color: #155a43;
+    margin-bottom: 14px;
+    line-height: 1.6;
+  }
+
+  .info-box.warning {
+    background: rgba(192,57,43,0.06);
+    border-color: rgba(192,57,43,0.2);
+    color: #8b2218;
+  }
+
+  /* ── Footer ── */
+  footer {
+    background: var(--navy);
+    margin-top: 10px;
+  }
+
+  .footer-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 22px 20px 18px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .footer-credit {
+    font-size: 0.92rem;
+    color: rgba(255,255,255,0.85);
+    font-weight: 500;
+  }
+
+  .footer-credit strong {
+    color: var(--gold-lt);
+    font-weight: 800;
+  }
+
+  .footer-divider {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    border-radius: 99px;
+  }
+
+  .footer-design {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--gold-lt);
+  }
+
+  .footer-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #229ED9, #1a7db5);
+    color: #fff;
+    text-decoration: none;
+    padding: 7px 16px;
+    border-radius: 99px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 2px 10px rgba(34,158,217,0.35);
+  }
+
+  .footer-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 16px rgba(34,158,217,0.5);
+  }
+
+  .footer-note {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.35);
+  }
+
+  /* ── Animated Counter ── */
+  .animated-num { transition: all 0.6s ease; }
+
+  /* ── Type Toggle ── */
+  .type-toggle {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .type-opt {
+    flex: 1;
+    min-width: 120px;
+    padding: 12px 10px;
+    border: 2px solid #DDE3EF;
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    background: #F9FAFD;
+    color: #777;
+    transition: all 0.2s;
+  }
+
+  .type-opt.selected {
+    border-color: var(--navy);
+    background: var(--navy);
+    color: var(--white);
+  }
+
+  .type-opt .opt-icon { font-size: 1.4rem; display: block; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-icon">🏛️</div>
+    <div class="header-text">
+      <h1>حاسبة التقاعد ومكافأة نهاية الخدمة</h1>
+      <p>للموظفين والمعلمين في المملكة العربية السعودية</p>
+    </div>
+  </div>
+</header>
+<div class="gold-bar"></div>
+
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('pension')">🏛️ التقاعد المدني</button>
+  <button class="tab-btn" onclick="switchTab('reward')">🎖️ مكافأة نهاية الخدمة</button>
+  <button class="tab-btn" onclick="switchTab('table')">📋 جدول المكافآت</button>
+</div>
+
+<div class="main">
+
+  <!-- ═══════════════════ TAB: PENSION ═══════════════════ -->
+  <div id="tab-pension" class="tab-panel active">
+
+    <div class="card">
+      <div class="card-title">بيانات الموظف</div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>الراتب الأساسي الأخير <span>(ريال)</span></label>
+          <input type="number" id="p-salary" placeholder="مثال: 8000" min="1000" step="100">
+        </div>
+        <div class="form-group">
+          <label>إجمالي سنوات الخدمة</label>
+          <input type="number" id="p-years" placeholder="مثال: 25" min="1" max="45" step="1">
+        </div>
+        <div class="form-group">
+          <label>إجمالي أشهر الخدمة الإضافية</label>
+          <input type="number" id="p-months" placeholder="مثال: 6" min="0" max="11" step="1">
+        </div>
+        <div class="form-group">
+          <label>نوع التقاعد</label>
+          <select id="p-type">
+            <option value="civil">تقاعد مدني (موارد بشرية)</option>
+            <option value="early">تقاعد مبكر</option>
+            <option value="normal">تقاعد نظامي</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="calc-btn" onclick="calcPension()">⚡ احسب المعاش الآن</button>
+    </div>
+
+    <div id="pension-results" class="results-section">
+
+      <div class="service-bar-wrap">
+        <div class="service-bar-title">
+          <span>مسار الخدمة</span>
+          <span id="bar-label" style="color:var(--gold);font-weight:800"></span>
+        </div>
+        <div class="service-bar-track">
+          <div class="service-bar-fill" id="service-bar"></div>
+        </div>
+        <div class="service-milestones">
+          <div class="milestone" id="m10">10 سنوات</div>
+          <div class="milestone" id="m15">15 سنة</div>
+          <div class="milestone" id="m20">20 سنة</div>
+          <div class="milestone" id="m25">25 سنة</div>
+          <div class="milestone" id="m30">30 سنة</div>
+          <div class="milestone" id="m35">35+ سنة</div>
+        </div>
+      </div>
+
+      <div class="results-grid">
+        <div class="result-card">
+          <div class="rc-icon">📅</div>
+          <div class="rc-label">إجمالي أشهر الخدمة</div>
+          <div class="rc-value animated-num" id="r-total-months">—</div>
+          <div class="rc-unit">شهراً</div>
+        </div>
+        <div class="result-card">
+          <div class="rc-icon">📊</div>
+          <div class="rc-label">نسبة المعاش</div>
+          <div class="rc-value animated-num" id="r-percent">—</div>
+          <div class="rc-unit">% من الراتب الأساسي</div>
+        </div>
+        <div class="result-card highlight-card">
+          <div class="rc-icon">💰</div>
+          <div class="rc-label">المعاش الشهري المتوقع</div>
+          <div class="rc-value animated-num" id="r-pension">—</div>
+          <div class="rc-unit">ريال / شهرياً</div>
+        </div>
+        <div class="result-card">
+          <div class="rc-icon">📆</div>
+          <div class="rc-label">المعاش السنوي</div>
+          <div class="rc-value animated-num" id="r-pension-year">—</div>
+          <div class="rc-unit">ريال / سنوياً</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">تفاصيل الحساب</div>
+        <div class="info-box" id="p-formula-box"></div>
+        <table class="detail-table" id="p-detail-table"></table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════ TAB: REWARD ═══════════════════ -->
+  <div id="tab-reward" class="tab-panel">
+
+    <div class="card">
+      <div class="card-title">نوع المستفيد</div>
+      <div class="type-toggle">
+        <div class="type-opt selected" id="opt-teacher" onclick="selectType('teacher')">
+          <span class="opt-icon">👨‍🏫</span>
+          معلم / وظيفة تعليمية
+        </div>
+        <div class="type-opt" id="opt-civil" onclick="selectType('civil')">
+          <span class="opt-icon">👔</span>
+          موظف مدني
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">بيانات الخدمة</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>الراتب الأساسي الأخير <span>(ريال)</span></label>
+          <input type="number" id="r-salary" placeholder="مثال: 8000" min="1000" step="100">
+        </div>
+        <div class="form-group">
+          <label>سنوات الخدمة الكاملة</label>
+          <input type="number" id="r-years" placeholder="مثال: 20" min="1" max="45" step="1">
+        </div>
+        <div class="form-group">
+          <label id="rank-label">الرتبة الوظيفية</label>
+          <select id="r-rank">
+            <option value="80">معلم / مساعد معلم — 80 ريال</option>
+            <option value="90">معلم مُمارس — 90 ريال</option>
+            <option value="110">معلم ممارس متقدم — 110 ريال</option>
+            <option value="120">معلم متقدم — 120 ريال</option>
+            <option value="150">معلم خبير — 150 ريال</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>نوع التقاعد</label>
+          <select id="r-retire-type">
+            <option value="early">مبكر (4 رواتب)</option>
+            <option value="normal">نظامي (6 رواتب)</option>
+          </select>
+        </div>
+      </div>
+      <button class="calc-btn" onclick="calcReward()">⚡ احسب المكافأة الآن</button>
+    </div>
+
+    <div id="reward-results" class="results-section">
+
+      <div class="service-bar-wrap">
+        <div class="service-bar-title">
+          <span>مستوى المكافأة بحسب سنوات الخدمة</span>
+          <span id="rbar-label" style="color:var(--gold);font-weight:800"></span>
+        </div>
+        <div class="service-bar-track">
+          <div class="service-bar-fill" id="reward-bar"></div>
+        </div>
+        <div class="service-milestones">
+          <div class="milestone" id="rm16">16 سنة</div>
+          <div class="milestone" id="rm21">21 سنة</div>
+          <div class="milestone" id="rm26">26 سنة</div>
+          <div class="milestone" id="rm31">31 سنة</div>
+          <div class="milestone" id="rm41">41+ سنة</div>
+        </div>
+      </div>
+
+      <div class="results-grid">
+        <div class="result-card">
+          <div class="rc-icon">🎖️</div>
+          <div class="rc-label">قيمة المكافأة للسنة الواحدة</div>
+          <div class="rc-value animated-num" id="rr-per-year">—</div>
+          <div class="rc-unit">ريال</div>
+        </div>
+        <div class="result-card">
+          <div class="rc-icon">📅</div>
+          <div class="rc-label">سنوات الخدمة المحتسبة</div>
+          <div class="rc-value animated-num" id="rr-years">—</div>
+          <div class="rc-unit">سنة</div>
+        </div>
+        <div class="result-card highlight-card">
+          <div class="rc-icon">💵</div>
+          <div class="rc-label">إجمالي مكافأة نهاية الخدمة</div>
+          <div class="rc-value animated-num" id="rr-total">—</div>
+          <div class="rc-unit">ريال</div>
+        </div>
+        <div class="result-card">
+          <div class="rc-icon">📝</div>
+          <div class="rc-label">شريحة الخدمة</div>
+          <div class="rc-value" id="rr-tier" style="font-size:0.95rem;line-height:1.4">—</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">تفاصيل الحساب</div>
+        <div class="info-box" id="r-formula-box"></div>
+        <table class="detail-table" id="r-detail-table"></table>
+      </div>
+
+      <div class="info-box">
+        💡 <strong>ملاحظة:</strong> شاغل الوظيفة التعليمية يحصل على المكافأة الموضحة في الجدول على أن لا تقل عما يستحقه في نظام الخدمة المدنية عند التقاعد المبكر (4 رواتب) أو النظامي (6 رواتب).
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ TAB: TABLE ═══════════════════ -->
+  <div id="tab-table" class="tab-panel">
+
+    <div class="card">
+      <div class="card-title">جدول مكافأة نهاية الخدمة — الوظائف التعليمية</div>
+      <div class="info-box">
+        أدخل بياناتك لتمييز صفك في الجدول تلقائياً
+        <div class="form-grid" style="margin-top:12px">
+          <div class="form-group">
+            <label>الرتبة</label>
+            <select id="tbl-rank" onchange="highlightTable()">
+              <option value="0">معلم / مساعد معلم</option>
+              <option value="1">معلم ممارس</option>
+              <option value="2">معلم ممارس متقدم</option>
+              <option value="3">معلم متقدم</option>
+              <option value="4">معلم خبير</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>سنوات الخدمة</label>
+            <input type="number" id="tbl-years" placeholder="مثال: 22" onchange="highlightTable()" oninput="highlightTable()">
+          </div>
+        </div>
+      </div>
+
+      <div class="rank-table-wrap">
+        <table class="rank-table" id="main-table">
+          <thead>
+            <tr>
+              <th>عدد سنوات الخدمة</th>
+              <th>معلم / مساعد معلم</th>
+              <th>معلم ممارس</th>
+              <th>معلم ممارس متقدم</th>
+              <th>معلم متقدم</th>
+              <th>معلم خبير</th>
+            </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">معادلة الحساب</div>
+      <div style="background:#F5F7FC;border-radius:12px;padding:20px;text-align:center;">
+        <div style="font-size:1.3rem;font-weight:900;color:var(--navy);margin-bottom:12px;">
+          المبلغ (المكافأة) × عدد سنوات خدمتك = مكافأة نهاية الخدمة
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;text-align:center">
+          <div style="background:var(--white);border-radius:10px;padding:14px;border:1px solid #E0E5F0">
+            <div style="font-size:0.8rem;color:#888;margin-bottom:4px">حيث المبلغ يُحدد حسب</div>
+            <div style="font-weight:800;color:var(--navy)">الرتبة الوظيفية</div>
+          </div>
+          <div style="background:var(--white);border-radius:10px;padding:14px;border:1px solid #E0E5F0">
+            <div style="font-size:0.8rem;color:#888;margin-bottom:4px">المضروب في</div>
+            <div style="font-weight:800;color:var(--navy)">عدد السنوات</div>
+          </div>
+          <div style="background:var(--gold);border-radius:10px;padding:14px">
+            <div style="font-size:0.8rem;color:rgba(0,0,0,0.6);margin-bottom:4px">الناتج هو</div>
+            <div style="font-weight:800;color:var(--navy)">مكافأة نهاية الخدمة</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-credit">
+      🙏 الشكر والدعاء موصول لمعد الموضوع أخونا <strong>بدر البلوي</strong>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-design">
+      <span>تصميم د/فواز</span>
+      <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" class="footer-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8l-1.7 8.02c-.12.58-.46.72-.93.45l-2.57-1.89-1.24 1.19c-.14.14-.25.25-.51.25l.18-2.6 4.74-4.28c.21-.18-.04-.28-.32-.1L8.3 14.92l-2.52-.79c-.55-.17-.56-.55.12-.81l9.85-3.8c.46-.16.86.11.71.78z" fill="currentColor"/>
+        </svg>
+        تفضل للمزيد هنا
+      </a>
+    </div>
+    <div class="footer-note">للأغراض التوضيحية — يُرجى التحقق من الجهات الرسمية للأرقام النهائية</div>
+  </div>
+</footer>
+
+<script>
+// ────────────────────────────────────────────────────
+//  DATA
+// ────────────────────────────────────────────────────
+const TABLE_DATA = [
+  { label: 'سنوات وأقل من 16 سنة',   rates: [80,  90,  100, 110, 150] },
+  { label: 'سنة 16 وأقل من 21 سنة',  rates: [100, 110, 120, 130, 160] },
+  { label: 'سنة 21 وأقل من 26 سنة',  rates: [120, 140, 150, 160, 180] },
+  { label: 'سنة 26 وأقل من 31 سنة',  rates: [160, 180, 190, 200, 210] },
+  { label: 'سنة 31 وأقل من 41 سنة',  rates: [240, 260, 270, 280, 300] },
+  { label: 'سنة 41 فأكثر',            rates: [280, 300, 310, 320, 350] },
+];
+
+const RANK_NAMES = ['معلم / مساعد معلم','معلم ممارس','معلم ممارس متقدم','معلم متقدم','معلم خبير'];
+
+// ────────────────────────────────────────────────────
+//  TABS
+// ────────────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ────────────────────────────────────────────────────
+//  TYPE TOGGLE
+// ────────────────────────────────────────────────────
+let currentType = 'teacher';
+function selectType(t) {
+  currentType = t;
+  document.getElementById('opt-teacher').classList.toggle('selected', t === 'teacher');
+  document.getElementById('opt-civil').classList.toggle('selected', t === 'civil');
+
+  const rankSel = document.getElementById('r-rank');
+  const rankLabel = document.getElementById('rank-label');
+  const retireType = document.getElementById('r-retire-type');
+
+  if (t === 'civil') {
+    rankSel.innerHTML = `
+      <option value="4">أ ب</option>
+      <option value="5">أ ج</option>
+      <option value="6">مرتبة 5</option>
+      <option value="7">مرتبة 6</option>
+      <option value="8">مرتبة 7</option>
+    `;
+    rankLabel.textContent = 'المرتبة الوظيفية (معادلة مختلفة)';
+    retireType.innerHTML = `
+      <option value="early">مبكر (4 رواتب)</option>
+      <option value="normal">نظامي (6 رواتب)</option>
+    `;
+  } else {
+    rankSel.innerHTML = `
+      <option value="80">معلم / مساعد معلم — 80 ريال</option>
+      <option value="90">معلم ممارس — 90 ريال</option>
+      <option value="110">معلم ممارس متقدم — 110 ريال</option>
+      <option value="120">معلم متقدم — 120 ريال</option>
+      <option value="150">معلم خبير — 150 ريال</option>
+    `;
+    rankLabel.textContent = 'الرتبة الوظيفية';
+    retireType.innerHTML = `
+      <option value="early">مبكر (4 رواتب)</option>
+      <option value="normal">نظامي (6 رواتب)</option>
+    `;
+  }
+}
+
+// ────────────────────────────────────────────────────
+//  PENSION CALCULATOR
+// ────────────────────────────────────────────────────
+function calcPension() {
+  const salary  = parseFloat(document.getElementById('p-salary').value);
+  const years   = parseInt(document.getElementById('p-years').value)  || 0;
+  const months  = parseInt(document.getElementById('p-months').value) || 0;
+  const type    = document.getElementById('p-type').value;
+
+  if (!salary || salary < 100) { alert('يرجى إدخال الراتب الأساسي'); return; }
+  if (!years  || years  < 1)  { alert('يرجى إدخال سنوات الخدمة'); return; }
+
+  const totalMonths = years * 12 + months;
+
+  // Formula: last salary × total months ÷ 480
+  let pension = salary * totalMonths / 480;
+
+  // Cap at 100% of salary
+  let pct = (totalMonths / 480) * 100;
+  if (pct > 100) pct = 100;
+  if (pension > salary) pension = salary;
+
+  // Service bar (max 40 years = 480 months)
+  const barPct = Math.min((totalMonths / 480) * 100, 100);
+
+  document.getElementById('r-total-months').textContent = totalMonths.toLocaleString('ar-SA');
+  document.getElementById('r-percent').textContent      = pct.toFixed(1) + '%';
+  document.getElementById('r-pension').textContent      = Math.round(pension).toLocaleString('ar-SA');
+  document.getElementById('r-pension-year').textContent = Math.round(pension * 12).toLocaleString('ar-SA');
+
+  // Animate bar
+  setTimeout(() => {
+    document.getElementById('service-bar').style.width = barPct + '%';
+  }, 100);
+
+  document.getElementById('bar-label').textContent = years + ' سنة و' + months + ' أشهر';
+
+  // Milestone highlights
+  const milestones = [[10,'m10'],[15,'m15'],[20,'m20'],[25,'m25'],[30,'m30'],[35,'m35']];
+  milestones.forEach(([y, id]) => {
+    document.getElementById(id).classList.toggle('reached', years >= y);
+  });
+
+  // Formula box
+  const typeLabel = type === 'early' ? 'تقاعد مبكر' : type === 'normal' ? 'تقاعد نظامي' : 'تقاعد مدني';
+  document.getElementById('p-formula-box').innerHTML =
+    `<strong>المعادلة المطبقة:</strong><br>
+     آخر راتب أساسي × عدد شهور الخدمة ÷ 480 = المعاش<br>
+     <strong>${salary.toLocaleString('ar-SA')} × ${totalMonths} ÷ 480 = ${Math.round(pension).toLocaleString('ar-SA')} ريال</strong>`;
+
+  // Detail table
+  document.getElementById('p-detail-table').innerHTML = `
+    <tr><td>نوع التقاعد</td><td>${typeLabel}</td></tr>
+    <tr><td>الراتب الأساسي الأخير</td><td>${salary.toLocaleString('ar-SA')} ريال</td></tr>
+    <tr><td>سنوات الخدمة</td><td>${years} سنة</td></tr>
+    <tr><td>أشهر الخدمة الإضافية</td><td>${months} شهر</td></tr>
+    <tr><td>إجمالي أشهر الخدمة</td><td>${totalMonths} شهراً</td></tr>
+    <tr><td>نسبة المعاش</td><td>${pct.toFixed(2)}%</td></tr>
+    <tr><td>المعاش الشهري</td><td><strong>${Math.round(pension).toLocaleString('ar-SA')} ريال</strong></td></tr>
+    <tr><td>المعاش السنوي</td><td><strong>${Math.round(pension*12).toLocaleString('ar-SA')} ريال</strong></td></tr>
+  `;
+
+  document.getElementById('pension-results').classList.add('show');
+  document.getElementById('pension-results').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// ────────────────────────────────────────────────────
+//  REWARD CALCULATOR (Teacher)
+// ────────────────────────────────────────────────────
+function getTeacherTier(years) {
+  if (years < 16)  return { idx: 0, label: 'أقل من 16 سنة' };
+  if (years < 21)  return { idx: 1, label: 'من 16 إلى أقل من 21 سنة' };
+  if (years < 26)  return { idx: 2, label: 'من 21 إلى أقل من 26 سنة' };
+  if (years < 31)  return { idx: 3, label: 'من 26 إلى أقل من 31 سنة' };
+  if (years < 41)  return { idx: 4, label: 'من 31 إلى أقل من 41 سنة' };
+  return             { idx: 5, label: '41 سنة فأكثر' };
+}
+
+function getRankIndex(val) {
+  const map = {'80':0,'90':1,'110':2,'120':3,'150':4};
+  return map[val] ?? 0;
+}
+
+function calcReward() {
+  const salary      = parseFloat(document.getElementById('r-salary').value);
+  const years       = parseInt(document.getElementById('r-years').value) || 0;
+  const rankVal     = document.getElementById('r-rank').value;
+  const retireType  = document.getElementById('r-retire-type').value;
+
+  if (!salary || salary < 100) { alert('يرجى إدخال الراتب الأساسي'); return; }
+  if (!years  || years < 1)   { alert('يرجى إدخال سنوات الخدمة'); return; }
+
+  let total, perYear, tierLabel, note = '';
+
+  if (currentType === 'teacher') {
+    const tier      = getTeacherTier(years);
+    const rankIdx   = getRankIndex(rankVal);
+    perYear         = TABLE_DATA[tier.idx].rates[rankIdx];
+    tierLabel       = tier.label;
+    total           = perYear * years;
+
+    // Compare with civil minimum (4 or 6 salaries)
+    const civilMin  = salary * (retireType === 'early' ? 4 : 6);
+    if (total < civilMin) {
+      total = civilMin;
+      note  = `⚠️ تم تعديل المكافأة لأنها أقل من الحد الأدنى المقرر بنظام الخدمة المدنية (${retireType === 'early' ? '4' : '6'} رواتب = ${civilMin.toLocaleString('ar-SA')} ريال)`;
+    }
+  } else {
+    // Civil: salary × number of months factor
+    const factor = retireType === 'early' ? 4 : 6;
+    perYear       = salary;
+    total         = salary * factor;
+    tierLabel     = retireType === 'early' ? 'تقاعد مبكر (4 رواتب)' : 'تقاعد نظامي (6 رواتب)';
+    note          = `المكافأة تُحسب بضرب آخر راتب في عدد الرواتب المحددة (${factor} رواتب)`;
+  }
+
+  // Bar
+  const tierBars = { 0: 10, 1: 30, 2: 55, 3: 72, 4: 88, 5: 100 };
+  const tier      = getTeacherTier(years);
+  const barPct    = tierBars[tier.idx] ?? 50;
+
+  setTimeout(() => {
+    document.getElementById('reward-bar').style.width = barPct + '%';
+  }, 100);
+
+  document.getElementById('rbar-label').textContent = tierLabel;
+
+  // Milestone highlights
+  [['rm16',16],['rm21',21],['rm26',26],['rm31',31],['rm41',41]].forEach(([id,y]) => {
+    document.getElementById(id).classList.toggle('reached', years >= y);
+  });
+
+  document.getElementById('rr-per-year').textContent = perYear.toLocaleString('ar-SA');
+  document.getElementById('rr-years').textContent    = years;
+  document.getElementById('rr-total').textContent    = Math.round(total).toLocaleString('ar-SA');
+  document.getElementById('rr-tier').textContent     = tierLabel;
+
+  const rankName = currentType === 'teacher' ? RANK_NAMES[getRankIndex(rankVal)] : 'موظف مدني';
+
+  document.getElementById('r-formula-box').innerHTML =
+    `<strong>المعادلة:</strong><br>
+     ${currentType === 'teacher'
+       ? `قيمة المكافأة للرتبة (${perYear} ريال) × عدد السنوات (${years}) = <strong>${Math.round(total).toLocaleString('ar-SA')} ريال</strong>`
+       : `آخر راتب (${salary.toLocaleString('ar-SA')}) × ${retireType === 'early' ? 4 : 6} رواتب = <strong>${Math.round(total).toLocaleString('ar-SA')} ريال</strong>`
+     }`;
+
+  document.getElementById('r-detail-table').innerHTML = `
+    <tr><td>نوع المستفيد</td><td>${currentType === 'teacher' ? 'وظيفة تعليمية' : 'موظف مدني'}</td></tr>
+    <tr><td>الرتبة / المرتبة</td><td>${rankName}</td></tr>
+    <tr><td>الراتب الأساسي</td><td>${salary.toLocaleString('ar-SA')} ريال</td></tr>
+    <tr><td>سنوات الخدمة</td><td>${years} سنة</td></tr>
+    <tr><td>شريحة الخدمة</td><td>${tierLabel}</td></tr>
+    <tr><td>نوع التقاعد</td><td>${retireType === 'early' ? 'مبكر' : 'نظامي'}</td></tr>
+    <tr><td>قيمة المكافأة للسنة</td><td>${perYear.toLocaleString('ar-SA')} ريال</td></tr>
+    <tr><td>إجمالي مكافأة نهاية الخدمة</td><td><strong>${Math.round(total).toLocaleString('ar-SA')} ريال</strong></td></tr>
+  `;
+
+  if (note) {
+    document.getElementById('r-formula-box').innerHTML += `<br><span style="color:#8b2218">${note}</span>`;
+  }
+
+  document.getElementById('reward-results').classList.add('show');
+  document.getElementById('reward-results').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// ────────────────────────────────────────────────────
+//  TABLE TAB
+// ────────────────────────────────────────────────────
+function buildTable() {
+  const tbody = document.getElementById('table-body');
+  tbody.innerHTML = '';
+  TABLE_DATA.forEach((row, i) => {
+    const tr = document.createElement('tr');
+    tr.dataset.tier = i;
+    let html = `<td class="years-col">${row.label}</td>`;
+    row.rates.forEach(r => {
+      html += `<td>${r.toLocaleString('ar-SA')} ريال</td>`;
+    });
+    tr.innerHTML = html;
+    tbody.appendChild(tr);
+  });
+}
+
+function highlightTable() {
+  const years   = parseInt(document.getElementById('tbl-years').value) || 0;
+  const rankIdx = parseInt(document.getElementById('tbl-rank').value);
+  const tier    = years > 0 ? getTeacherTier(years).idx : -1;
+
+  document.querySelectorAll('#table-body tr').forEach((tr, i) => {
+    tr.classList.toggle('highlighted', i === tier);
+    tr.querySelectorAll('td').forEach((td, j) => {
+      if (j === 0) return;
+      td.style.fontWeight = (i === tier && j - 1 === rankIdx) ? '900' : '';
+      td.style.color      = (i === tier && j - 1 === rankIdx) ? 'var(--navy)' : '';
+      td.style.background = (i === tier && j - 1 === rankIdx) ? 'rgba(201,168,76,0.25)' : '';
+    });
+  });
+}
+
+// ────────────────────────────────────────────────────
+//  INIT
+// ────────────────────────────────────────────────────
+buildTable();
+</script>
+</body>
+</html>
