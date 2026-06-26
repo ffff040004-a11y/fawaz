@@ -540,39 +540,84 @@
   <div id="panel-stickers" class="panel">
 
     <div class="card card-accent">
-      <div class="section-title">📁 رفع ملصقات مخصصة</div>
+      <div class="section-title">📁 رفع صورة وتحويلها لملصق</div>
 
-      <div class="upload-area" id="uploadArea" onclick="document.getElementById('stickerFile').click()"
-           ondragover="event.preventDefault();this.classList.add('drag-over')"
-           ondragleave="this.classList.remove('drag-over')"
-           ondrop="handleDrop(event)">
-        <div id="uploadPreview" style="font-size:44px">🖼️</div>
-        <p id="uploadHint"><strong>اضغط لرفع صورة أو ملف WebP</strong></p>
-        <p>يدعم: PNG, JPG, WEBP, GIF</p>
-      </div>
-      <input type="file" id="stickerFile" style="display:none" accept="image/*" onchange="handleFileSelect(event)">
-
-      <div class="form-group" style="margin-top:14px">
-        <label>اسم الملصق</label>
-        <input type="text" id="stickerNameInput" placeholder="مثال: ملصق تحفيزي">
+      <div class="alert alert-info">
+        🎨 سيتم تحويل صورتك تلقائياً إلى <strong>ملصق WebP شفاف 512×512</strong> جاهز للإرسال
       </div>
 
-      <button class="btn btn-gold btn-full" onclick="addCustomSticker()">✅ إضافة للمكتبة</button>
+      <!-- STEP 1: Upload -->
+      <div style="margin-bottom:18px">
+        <div style="font-size:13px;font-weight:700;color:var(--teal);margin-bottom:8px">① رفع الصورة</div>
+        <div class="upload-area" id="uploadArea" onclick="document.getElementById('stickerFile').click()"
+             ondragover="event.preventDefault();this.classList.add('drag-over')"
+             ondragleave="this.classList.remove('drag-over')"
+             ondrop="handleDrop(event)">
+          <div id="uploadPreview" style="font-size:44px">🖼️</div>
+          <p id="uploadHint"><strong>اضغط لرفع صورة</strong></p>
+          <p>PNG · JPG · WEBP</p>
+        </div>
+        <input type="file" id="stickerFile" style="display:none" accept="image/*" onchange="handleFileSelect(event)">
+      </div>
+
+      <!-- STEP 2: BG Removal -->
+      <div style="margin-bottom:18px">
+        <div style="font-size:13px;font-weight:700;color:var(--teal);margin-bottom:8px">② إزالة الخلفية</div>
+        <div class="grid-2" style="gap:8px;margin-bottom:10px">
+          <button class="btn btn-outline" onclick="removeBg('black')" id="btnBlack">🖤 إزالة خلفية سوداء</button>
+          <button class="btn btn-outline" onclick="removeBg('white')" id="btnWhite">🤍 إزالة خلفية بيضاء</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <label style="margin:0;font-size:12px;color:var(--muted)">أو لون مخصص:</label>
+          <input type="color" id="bgColor" value="#000000" style="width:40px;height:32px;border:none;border-radius:6px;cursor:pointer;background:none;padding:2px">
+          <input type="range" id="bgTolerance" min="10" max="120" value="40" style="flex:1;accent-color:var(--teal)" oninput="document.getElementById('tolVal').textContent=this.value">
+          <span id="tolVal" style="font-size:12px;color:var(--gold);min-width:24px">40</span>
+          <button class="btn btn-outline btn-sm" onclick="removeBgCustom()">إزالة</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Preview -->
+      <div style="margin-bottom:18px">
+        <div style="font-size:13px;font-weight:700;color:var(--teal);margin-bottom:8px">③ معاينة الملصق</div>
+        <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">
+          <div style="text-align:center">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;font-family:Tajawal">الأصلية</div>
+            <canvas id="canvasOriginal" width="120" height="120" style="border-radius:10px;border:1px solid var(--border);background:#1a2540"></canvas>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;font-family:Tajawal">بعد الإزالة</div>
+            <canvas id="canvasResult" width="120" height="120" style="border-radius:10px;border:1px solid var(--border);background:repeating-conic-gradient(#2a3f6e 0% 25%, #1a2540 0% 50%) 0 0/16px 16px"></canvas>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;font-family:Tajawal">في تليجرام</div>
+            <div style="width:120px;height:120px;border-radius:10px;border:1px solid var(--border);background:#effdde;display:flex;align-items:center;justify-content:center">
+              <canvas id="canvasTelegram" width="100" height="100"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4: Name & Add -->
+      <div style="font-size:13px;font-weight:700;color:var(--teal);margin-bottom:8px">④ اسم الملصق وإضافته</div>
+      <div class="form-group">
+        <input type="text" id="stickerNameInput" placeholder="مثال: مشرف تربوي">
+      </div>
+      <button class="btn btn-gold btn-full" onclick="addCustomSticker()">✅ إضافة للمكتبة كملصق</button>
+
+      <!-- Hidden full-res canvas -->
+      <canvas id="canvasFull" width="512" height="512" style="display:none"></canvas>
     </div>
 
     <div class="card">
       <div class="section-title">😊 ملصقات إيموجي جاهزة</div>
-      <p style="color:var(--muted);font-size:12px;font-family:Tajawal;margin-bottom:14px">اضغط لإضافة أي ملصق إيموجي لمكتبتك</p>
-
-      <div class="sticker-grid" id="emojiGrid">
-        <!-- filled by JS -->
-      </div>
+      <p style="color:var(--muted);font-size:12px;font-family:Tajawal;margin-bottom:14px">اضغط لإضافة أي إيموجي لمكتبتك (يُرسل كرسالة)</p>
+      <div class="sticker-grid" id="emojiGrid"></div>
     </div>
 
     <div class="card">
       <div class="section-title">📚 مكتبة ملصقاتي</div>
       <div class="sticker-grid" id="myStickers">
-        <p style="color:var(--muted);font-size:12px;text-align:center;grid-column:1/-1;font-family:Tajawal">لا توجد ملصقات بعد. أضف من الأعلى ↑</p>
+        <p style="color:var(--muted);font-size:12px;text-align:center;grid-column:1/-1;font-family:Tajawal">لا توجد ملصقات بعد ↑</p>
       </div>
     </div>
 
@@ -846,31 +891,150 @@ function addEmojiSticker(emoji, name) {
 }
 
 // Holds the current selected image before adding
-let pendingImageData = null;
+let pendingImageData = null;   // WebP base64 after processing (512×512)
 let pendingImageType = null;
+let originalImg = null;        // raw HTMLImageElement
 
+// ==================== FILE HANDLING ====================
+function handleFileSelect(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    const img = new Image();
+    img.onload = function() {
+      originalImg = img;
+      // draw on small preview canvas
+      drawOriginalPreview(img);
+      // clear result
+      clearResultCanvas();
+      document.getElementById('uploadPreview').innerHTML =
+        `<img src="${ev.target.result}" style="max-width:80px;max-height:80px;border-radius:8px;object-fit:contain">`;
+      document.getElementById('uploadHint').textContent = `✅ ${file.name}`;
+      pendingImageData = null;
+      toast('✅ تم تحميل الصورة — اختر طريقة إزالة الخلفية', 'success');
+    };
+    img.src = ev.target.result;
+    pendingImageType = file.type;
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('uploadArea').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file) handleFileSelect({ target: { files: [file] } });
+}
+
+function drawOriginalPreview(img) {
+  const c = document.getElementById('canvasOriginal');
+  const ctx = c.getContext('2d');
+  ctx.clearRect(0,0,120,120);
+  const scale = Math.min(120/img.width, 120/img.height);
+  const w = img.width*scale, h = img.height*scale;
+  ctx.drawImage(img, (120-w)/2, (120-h)/2, w, h);
+}
+
+function clearResultCanvas() {
+  ['canvasResult','canvasTelegram'].forEach(id => {
+    const c = document.getElementById(id);
+    c.getContext('2d').clearRect(0,0,c.width,c.height);
+  });
+}
+
+// ==================== BG REMOVAL ====================
+function colorDistance(r1,g1,b1, r2,g2,b2) {
+  return Math.sqrt((r1-r2)**2+(g1-g2)**2+(b1-b2)**2);
+}
+
+function removeBg(preset) {
+  const color = preset === 'black' ? {r:0,g:0,b:0} : {r:255,g:255,b:255};
+  const tol = parseInt(document.getElementById('bgTolerance').value);
+  applyBgRemoval(color.r, color.g, color.b, tol);
+}
+
+function removeBgCustom() {
+  const hex = document.getElementById('bgColor').value;
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  const tol = parseInt(document.getElementById('bgTolerance').value);
+  applyBgRemoval(r, g, b, tol);
+}
+
+function applyBgRemoval(bgR, bgG, bgB, tolerance) {
+  if (!originalImg) { toast('ارفع صورة أولاً', 'warn'); return; }
+
+  // Work on full 512×512 canvas
+  const full = document.getElementById('canvasFull');
+  const fctx = full.getContext('2d');
+  fctx.clearRect(0,0,512,512);
+  // fit image into 512×512
+  const scale = Math.min(512/originalImg.width, 512/originalImg.height);
+  const w = originalImg.width*scale, h = originalImg.height*scale;
+  fctx.drawImage(originalImg, (512-w)/2, (512-h)/2, w, h);
+
+  const imageData = fctx.getImageData(0,0,512,512);
+  const data = imageData.data;
+
+  for (let i = 0; i < data.length; i += 4) {
+    const r=data[i], g=data[i+1], b=data[i+2];
+    const dist = colorDistance(r,g,b, bgR,bgG,bgB);
+    if (dist < tolerance) {
+      data[i+3] = 0; // transparent
+    } else if (dist < tolerance * 1.5) {
+      // soft edge
+      data[i+3] = Math.round(((dist - tolerance) / (tolerance * 0.5)) * 255);
+    }
+  }
+  fctx.putImageData(imageData, 0, 0);
+
+  // Convert to WebP
+  pendingImageData = full.toDataURL('image/webp', 0.9);
+
+  // Show in small result canvas
+  const rc = document.getElementById('canvasResult');
+  const rctx = rc.getContext('2d');
+  rctx.clearRect(0,0,120,120);
+  rctx.drawImage(full,0,0,120,120);
+
+  // Show telegram preview (green bg)
+  const tc = document.getElementById('canvasTelegram');
+  const tctx = tc.getContext('2d');
+  tctx.clearRect(0,0,100,100);
+  tctx.drawImage(full,0,0,100,100);
+
+  toast('✅ تمت إزالة الخلفية — راجع المعاينة وأضف للمكتبة', 'success');
+}
+
+// ==================== STICKER MANAGEMENT ====================
 function addCustomSticker() {
   const name = document.getElementById('stickerNameInput').value.trim();
   if (!name) { toast('أدخل اسم الملصق', 'warn'); return; }
-  if (!pendingImageData) { toast('ارفع صورة أولاً', 'warn'); return; }
+  if (!pendingImageData) { toast('ارفع صورة وأزل خلفيتها أولاً', 'warn'); return; }
+
   state.stickers.push({
     id: Date.now(),
     emoji: '🖼️',
     name,
-    type: 'image',
+    type: 'sticker',        // real sticker type
     imageData: pendingImageData,
-    imageType: pendingImageType
+    imageType: 'image/webp'
   });
+
   // reset
   pendingImageData = null;
-  pendingImageType = null;
+  originalImg = null;
   document.getElementById('stickerNameInput').value = '';
   document.getElementById('uploadPreview').innerHTML = '🖼️';
   document.getElementById('uploadPreview').style.fontSize = '44px';
-  document.getElementById('uploadPreview').style.backgroundImage = '';
-  document.getElementById('uploadHint').textContent = 'اضغط لرفع صورة أو ملف WebP';
+  document.getElementById('uploadHint').textContent = 'اضغط لرفع صورة';
+  clearResultCanvas();
+  document.getElementById('canvasOriginal').getContext('2d').clearRect(0,0,120,120);
+
   saveState(); renderMyStickers(); renderSendGrid(); updateStats();
-  toast(`✅ تمت إضافة الصورة: ${name}`, 'success');
+  toast(`✅ تمت إضافة الملصق: ${name}`, 'success');
 }
 
 function removeSticker(id) {
@@ -918,20 +1082,42 @@ function selectSticker(id) {
 
 // ==================== SEND ====================
 async function sendOneSticker(token, chatId, sticker, caption) {
-  if (sticker.type === 'image' && sticker.imageData) {
-    // Convert base64 to Blob and send as photo via FormData
+  if (sticker.type === 'sticker' && sticker.imageData) {
+    // Send as real Telegram sticker (WebP)
+    const blob = dataURLtoBlob(sticker.imageData);
+    const form = new FormData();
+    form.append('chat_id', chatId);
+    form.append('sticker', blob, 'sticker.webp');
+    const res = await fetch(`https://api.telegram.org/bot${token}/sendSticker`, {
+      method: 'POST', body: form
+    });
+    const data = await res.json();
+    // If sendSticker fails (some groups), fallback to sendPhoto
+    if (!data.ok && sticker.imageData) {
+      const blob2 = dataURLtoBlob(sticker.imageData);
+      const form2 = new FormData();
+      form2.append('chat_id', chatId);
+      form2.append('photo', blob2, 'sticker.webp');
+      if (caption) form2.append('caption', caption);
+      const res2 = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+        method: 'POST', body: form2
+      });
+      return await res2.json();
+    }
+    return data;
+  } else if (sticker.type === 'image' && sticker.imageData) {
+    // Legacy image type → sendPhoto
     const blob = dataURLtoBlob(sticker.imageData);
     const form = new FormData();
     form.append('chat_id', chatId);
     form.append('photo', blob, 'photo.jpg');
     if (caption) form.append('caption', caption);
     const res = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
-      method: 'POST',
-      body: form
+      method: 'POST', body: form
     });
     return await res.json();
   } else {
-    // Emoji sticker → send as text message
+    // Emoji → sendMessage
     const msg = sticker.emoji + (caption ? '\n\n' + caption : '');
     const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
       method: 'POST',
