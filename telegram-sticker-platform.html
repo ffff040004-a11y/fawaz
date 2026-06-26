@@ -546,11 +546,11 @@
            ondragover="event.preventDefault();this.classList.add('drag-over')"
            ondragleave="this.classList.remove('drag-over')"
            ondrop="handleDrop(event)">
-        <div style="font-size:44px">🖼️</div>
-        <p><strong>اضغط لرفع صورة أو ملف WebP</strong></p>
-        <p>يدعم: PNG, JPG, WEBP, GIF (حجم أقصى 512KB)</p>
+        <div id="uploadPreview" style="font-size:44px">🖼️</div>
+        <p id="uploadHint"><strong>اضغط لرفع صورة أو ملف WebP</strong></p>
+        <p>يدعم: PNG, JPG, WEBP, GIF</p>
       </div>
-      <input type="file" id="stickerFile" style="display:none" accept="image/*" multiple onchange="handleFileSelect(event)">
+      <input type="file" id="stickerFile" style="display:none" accept="image/*" onchange="handleFileSelect(event)">
 
       <div class="form-group" style="margin-top:14px">
         <label>اسم الملصق</label>
@@ -845,13 +845,32 @@ function addEmojiSticker(emoji, name) {
   toast(`✅ تمت إضافة: ${emoji} ${name}`, 'success');
 }
 
+// Holds the current selected image before adding
+let pendingImageData = null;
+let pendingImageType = null;
+
 function addCustomSticker() {
   const name = document.getElementById('stickerNameInput').value.trim();
   if (!name) { toast('أدخل اسم الملصق', 'warn'); return; }
-  state.stickers.push({ id: Date.now(), emoji: '🖼️', name, type: 'custom' });
+  if (!pendingImageData) { toast('ارفع صورة أولاً', 'warn'); return; }
+  state.stickers.push({
+    id: Date.now(),
+    emoji: '🖼️',
+    name,
+    type: 'image',
+    imageData: pendingImageData,
+    imageType: pendingImageType
+  });
+  // reset
+  pendingImageData = null;
+  pendingImageType = null;
   document.getElementById('stickerNameInput').value = '';
+  document.getElementById('uploadPreview').innerHTML = '🖼️';
+  document.getElementById('uploadPreview').style.fontSize = '44px';
+  document.getElementById('uploadPreview').style.backgroundImage = '';
+  document.getElementById('uploadHint').textContent = 'اضغط لرفع صورة أو ملف WebP';
   saveState(); renderMyStickers(); renderSendGrid(); updateStats();
-  toast(`✅ تمت إضافة الملصق: ${name}`, 'success');
+  toast(`✅ تمت إضافة الصورة: ${name}`, 'success');
 }
 
 function removeSticker(id) {
@@ -867,7 +886,9 @@ function renderMyStickers() {
   }
   el.innerHTML = state.stickers.map(s => `
     <div class="sticker-item" style="position:relative">
-      <span class="sticker-emoji">${s.emoji}</span>
+      ${s.type === 'image' && s.imageData
+        ? `<img src="${s.imageData}" style="width:56px;height:56px;object-fit:cover;border-radius:8px;display:block;margin:0 auto 6px">`
+        : `<span class="sticker-emoji">${s.emoji}</span>`}
       <span class="sticker-name">${s.name}</span>
       <button onclick="removeSticker(${s.id})" style="position:absolute;top:4px;left:4px;background:var(--red);border:none;border-radius:50%;width:18px;height:18px;color:white;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0">×</button>
     </div>
@@ -882,7 +903,9 @@ function renderSendGrid() {
   }
   el.innerHTML = state.stickers.map(s => `
     <div class="sticker-item ${state.selectedSticker?.id === s.id ? 'selected' : ''}" onclick="selectSticker(${s.id})">
-      <span class="sticker-emoji">${s.emoji}</span>
+      ${s.type === 'image' && s.imageData
+        ? `<img src="${s.imageData}" style="width:56px;height:56px;object-fit:cover;border-radius:8px;display:block;margin:0 auto 6px">`
+        : `<span class="sticker-emoji">${s.emoji}</span>`}
       <span class="sticker-name">${s.name}</span>
     </div>
   `).join('');
@@ -894,6 +917,40 @@ function selectSticker(id) {
 }
 
 // ==================== SEND ====================
+async function sendOneSticker(token, chatId, sticker, caption) {
+  if (sticker.type === 'image' && sticker.imageData) {
+    // Convert base64 to Blob and send as photo via FormData
+    const blob = dataURLtoBlob(sticker.imageData);
+    const form = new FormData();
+    form.append('chat_id', chatId);
+    form.append('photo', blob, 'photo.jpg');
+    if (caption) form.append('caption', caption);
+    const res = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+      method: 'POST',
+      body: form
+    });
+    return await res.json();
+  } else {
+    // Emoji sticker → send as text message
+    const msg = sticker.emoji + (caption ? '\n\n' + caption : '');
+    const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ chat_id: chatId, text: msg })
+    });
+    return await res.json();
+  }
+}
+
+function dataURLtoBlob(dataURL) {
+  const [header, data] = dataURL.split(',');
+  const mime = header.match(/:(.*?);/)[1];
+  const binary = atob(data);
+  const arr = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) arr[i] = binary.charCodeAt(i);
+  return new Blob([arr], { type: mime });
+}
+
 async function sendSticker() {
   if (!state.token) { toast('أدخل توكن البوت في الإعدادات أولاً', 'warn'); return; }
   const groupId = document.getElementById('targetGroup').value;
@@ -906,24 +963,16 @@ async function sendSticker() {
   document.getElementById('sendProgress').style.display = 'block';
   document.getElementById('sendBtn').disabled = true;
   document.getElementById('sendStatus').textContent = `جاري الإرسال إلى: ${group.name}...`;
-  setProgress(30);
+  setProgress(40);
 
   try {
-    // Send emoji as message (real stickers need file_id from Telegram)
-    const msg = state.selectedSticker.emoji + (caption ? '\n\n' + caption : '');
-    const res = await fetch(`https://api.telegram.org/bot${state.token}/sendMessage`, {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ chat_id: groupId, text: msg })
-    });
-    const data = await res.json();
+    const data = await sendOneSticker(state.token, groupId, state.selectedSticker, caption);
     setProgress(100);
 
     if (data.ok) {
-      state.sentCount++;
-      state.successCount++;
-      toast(`✅ تم الإرسال إلى ${group.name}`, 'success');
-      addLog(`✅ أُرسل "${state.selectedSticker.name}" → ${group.name}`, 'success');
+      state.sentCount++; state.successCount++;
+      toast(`✅ تم إرسال الصورة إلى ${group.name}`, 'success');
+      addLog(`✅ أُرسلت "${state.selectedSticker.name}" → ${group.name}`, 'success');
       document.getElementById('captionText').value = '';
     } else {
       state.failCount++;
@@ -960,16 +1009,10 @@ async function sendToAll() {
     setProgress(Math.round((done / state.groups.length) * 100));
 
     try {
-      const msg = state.selectedSticker.emoji + (caption ? '\n\n' + caption : '');
-      const res = await fetch(`https://api.telegram.org/bot${state.token}/sendMessage`, {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ chat_id: group.id, text: msg })
-      });
-      const data = await res.json();
+      const data = await sendOneSticker(state.token, group.id, state.selectedSticker, caption);
       if (data.ok) {
         state.sentCount++; state.successCount++;
-        addLog(`✅ أُرسل إلى ${group.name}`, 'success');
+        addLog(`✅ أُرسلت إلى ${group.name}`, 'success');
       } else {
         state.failCount++;
         addLog(`❌ فشل: ${group.name} — ${data.description}`, 'error');
@@ -980,7 +1023,7 @@ async function sendToAll() {
     }
 
     done++;
-    await sleep(500); // rate limit protection
+    await sleep(600);
   }
 
   setProgress(100);
@@ -1033,15 +1076,28 @@ function toast(msg, type = 'info') {
 }
 
 function handleFileSelect(e) {
-  const files = e.target.files;
-  if (!files.length) return;
-  toast(`تم اختيار ${files.length} ملف`, 'info');
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    pendingImageData = ev.target.result;
+    pendingImageType = file.type;
+    const prev = document.getElementById('uploadPreview');
+    prev.innerHTML = `<img src="${pendingImageData}" style="max-width:120px;max-height:120px;border-radius:12px;object-fit:contain">`;
+    prev.style.fontSize = 'unset';
+    document.getElementById('uploadHint').textContent = `✅ تم تحميل: ${file.name}`;
+    toast('✅ تم تحميل الصورة — أدخل اسماً ثم اضغط إضافة', 'success');
+  };
+  reader.readAsDataURL(file);
 }
 
 function handleDrop(e) {
   e.preventDefault();
   document.getElementById('uploadArea').classList.remove('drag-over');
-  toast(`تم استقبال ${e.dataTransfer.files.length} ملف`, 'info');
+  const file = e.dataTransfer.files[0];
+  if (!file) return;
+  const fakeEvent = { target: { files: [file] } };
+  handleFileSelect(fakeEvent);
 }
 
 // ==================== START ====================
