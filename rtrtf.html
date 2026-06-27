@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة شهادات التقدير | مقاس A4 متناسق</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0d1b2a;--ink2:#1b3a5c;--gold:#c8963e;--gold-l:#e8b96a;--gold-pale:#fdf6e8;--em:#1a6b4a;--em-l:#2a9d6f;--cream:#fafaf7;--bdr:#e2ddd5;--red:#c0392b;--r:14px;--sh:0 4px 24px rgba(13,27,42,.10);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Tajawal',sans-serif;background:#f0ece4;min-height:100vh;color:var(--ink);}
+header{background:var(--ink);padding:18px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.3);}
+.logo{display:flex;align-items:center;gap:12px;}
+.logo-icon{width:42px;height:42px;background:linear-gradient(135deg,var(--gold),var(--gold-l));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;}
+.logo-text{color:#fff;}.logo-text h1{font-size:18px;font-weight:800;line-height:1.2;}.logo-text p{font-size:11px;color:var(--gold-l);}
+.hbadge{background:rgba(200,150,62,.15);border:1px solid var(--gold);color:var(--gold-l);padding:6px 16px;border-radius:50px;font-size:12px;font-weight:600;}
+.progress-wrap{background:var(--ink2);padding:16px 32px;display:flex;justify-content:center;}
+.step-item{display:flex;align-items:center;gap:10px;cursor:pointer;padding:0 20px;position:relative;}
+.step-item:not(:last-child)::after{content:'';position:absolute;left:-10px;top:50%;transform:translateY(-50%);width:30px;height:2px;background:rgba(255,255,255,.2);}
+.step-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;border:2px solid rgba(255,255,255,.2);color:rgba(255,255,255,.4);transition:all .3s;flex-shrink:0;}
+.step-label{font-size:13px;font-weight:600;color:rgba(255,255,255,.4);transition:all .3s;white-space:nowrap;}
+.step-item.active .step-num{background:var(--gold);border-color:var(--gold);color:var(--ink);}
+.step-item.active .step-label{color:#fff;}
+.step-item.done .step-num{background:var(--em);border-color:var(--em);color:#fff;}
+.step-item.done .step-label{color:rgba(255,255,255,.7);}
+main{max-width:900px;margin:0 auto;padding:32px 20px 120px;}
+.panel{background:var(--cream);border-radius:var(--r);box-shadow:var(--sh);border:1px solid var(--bdr);overflow:hidden;display:none;}
+.panel.active{display:block;}
+.ph{background:linear-gradient(135deg,var(--ink),var(--ink2));padding:22px 28px;display:flex;align-items:center;gap:14px;}
+.ph-icon{width:44px;height:44px;background:rgba(200,150,62,.2);border:1.5px solid var(--gold);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;}
+.ph h2{color:#fff;font-size:20px;font-weight:800;}.ph p{color:rgba(255,255,255,.6);font-size:13px;margin-top:2px;}
+.pb{padding:28px;}
+.fg{margin-bottom:22px;}
+label{display:block;font-weight:700;font-size:14px;color:var(--ink2);margin-bottom:8px;}
+label .req{color:var(--gold);}
+input[type=text],textarea,select{width:100%;padding:12px 16px;border:2px solid var(--bdr);border-radius:10px;font-family:'Tajawal',sans-serif;font-size:15px;color:var(--ink);background:#fff;transition:border-color .2s,box-shadow .2s;outline:none;}
+input[type=text]:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,150,62,.15);}
+textarea{resize:vertical;min-height:110px;line-height:1.7;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.class-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+.class-tag{display:flex;align-items:center;gap:6px;padding:6px 14px;background:var(--ink2);color:#fff;border-radius:50px;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s;}
+.class-tag.active{background:var(--gold);color:var(--ink);}
+.acr{display:flex;gap:8px;}.acr input{flex:1;}
+.btn-sm{padding:10px 20px;border-radius:10px;border:none;font-family:'Tajawal',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.btn-em{background:var(--em);color:#fff;}.btn-em:hover{background:var(--em-l);}
+.btn-gd{background:var(--gold);color:var(--ink);}.btn-gd:hover{background:var(--gold-l);}
+.stw{border:2px solid var(--bdr);border-radius:10px;overflow:hidden;margin-top:16px;}
+.sth{display:grid;grid-template-columns:40px 1fr 100px;background:var(--ink);color:#fff;padding:10px 16px;font-size:13px;font-weight:700;gap:10px;}
+.str{display:grid;grid-template-columns:40px 1fr 100px;padding:9px 16px;gap:10px;align-items:center;border-bottom:1px solid var(--bdr);font-size:14px;background:#fff;transition:background .15s;}
+.str:hover{background:var(--gold-pale);}.str:last-child{border-bottom:none;}
+.str .num{width:26px;height:26px;border-radius:50%;background:var(--ink2);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;}
+.btn-del{padding:4px 12px;background:#fdecea;color:var(--red);border:1px solid #f5c6c2;border-radius:6px;font-family:'Tajawal',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;}
+.btn-del:hover{background:var(--red);color:#fff;}
+.asr{display:flex;gap:8px;margin-top:12px;}.asr input{flex:1;}
+.upzone{border:2.5px dashed var(--gold);border-radius:12px;background:var(--gold-pale);padding:28px 20px;text-align:center;cursor:pointer;transition:all .2s;margin-top:12px;position:relative;}
+.upzone:hover{background:#f9efd5;}.upzone .icon{font-size:36px;margin-bottom:8px;}
+.upzone h4{font-size:15px;font-weight:700;color:var(--ink2);}.upzone p{font-size:12px;color:#888;margin-top:4px;}
+.ttabs{display:flex;gap:8px;margin-bottom:20px;}
+.tab-btn{padding:10px 24px;border-radius:50px;border:2px solid var(--bdr);background:#fff;font-family:'Tajawal',sans-serif;font-size:14px;font-weight:700;color:var(--ink2);cursor:pointer;transition:all .2s;}
+.tab-btn.active{background:var(--ink);border-color:var(--ink);color:#fff;}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.tcard{border:2.5px solid var(--bdr);border-radius:12px;overflow:hidden;cursor:pointer;transition:all .25s;background:#fff;position:relative;}
+.tcard:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.1);}
+.tcard.selected{border-color:var(--em);box-shadow:0 0 0 3px rgba(26,107,74,.2);}
+.tcard .chk{display:none;position:absolute;top:8px;right:8px;width:26px;height:26px;background:var(--em);border-radius:50%;color:#fff;font-size:13px;align-items:center;justify-content:center;font-weight:900;z-index:2;}
+.tcard.selected .chk{display:flex;}
+.tprev{height:140px;position:relative;overflow:hidden;background:#f8f8f8;display:flex;align-items:center;justify-content:center;}
+.tprev .nbadge{position:absolute;top:8px;left:8px;background:var(--gold);color:var(--ink);font-size:10px;font-weight:800;padding:2px 8px;border-radius:50px;}
+.tname{padding:10px 12px;font-size:13px;font-weight:700;border-top:1px solid var(--bdr);text-align:center;color:var(--ink2);}
+.tcard.selected .tname{background:#edfaf4;color:var(--em);}
+.cbadge{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;background:var(--gold);color:var(--ink);border-radius:50px;font-size:12px;font-weight:800;padding:0 6px;margin-right:6px;}
+.bbar{position:fixed;bottom:0;left:0;right:0;background:var(--ink);border-top:2px solid var(--gold);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;z-index:99;}
+.binfo{color:rgba(255,255,255,.7);font-size:14px;}.binfo span{color:var(--gold-l);font-weight:800;}
+.bacts{display:flex;gap:10px;}
+.bnav{padding:11px 28px;border-radius:10px;border:none;font-family:'Tajawal',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px;}
+.bback{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);}.bback:hover{background:rgba(255,255,255,.2);}
+.bnxt{background:var(--gold);color:var(--ink);}.bnxt:hover{background:var(--gold-l);}
+.bgen{background:var(--em);color:#fff;padding:11px 32px;border-radius:10px;border:none;font-family:'Tajawal',sans-serif;font-size:15px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .2s;}
+.bgen:hover{background:var(--em-l);transform:translateY(-1px);}
+.divider{height:1px;background:var(--bdr);margin:24px 0;}
+.st{font-size:15px;font-weight:800;color:var(--ink2);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.st::before{content:'';width:4px;height:20px;background:var(--gold);border-radius:2px;}
+.hint{font-size:12px;color:#888;margin-top:6px;}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;align-items:center;justify-content:center;}
+.overlay.show{display:flex;}
+.modal{background:var(--cream);border-radius:var(--r);padding:32px;max-width:480px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+.modal .mico{font-size:56px;margin-bottom:12px;}
+.modal h3{font-size:22px;font-weight:800;color:var(--ink);margin-bottom:8px;}
+.modal p{color:#666;font-size:15px;line-height:1.6;}
+.macts{display:flex;gap:10px;margin-top:24px;justify-content:center;}
+#parea{display:none;margin-top:24px;}
+.pgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+.pcw{border:2px solid var(--bdr);border-radius:10px;overflow:hidden;box-shadow:var(--sh);background:#fff;width:100%;height:auto;aspect-ratio:297/210;transition:aspect-ratio 0.2s;}
+.pcw.portrait-mode{aspect-ratio:210/297;}
+.pcf{padding:8px 14px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--bdr);font-size:12px;color:var(--ink2);font-weight:600;background:#fff;}
+
+/* توقيع الحقوق البرمجي المخصص - لا يظهر أبداً في النوافذ المنبثقة للطباعة أو التصدير */
+.dev-signature {
+  text-align: center;
+  padding: 15px;
+  margin-top: 25px;
+  background: #fdfdfd;
+  border: 1px dashed var(--gold);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--ink2);
+}
+.dev-signature a {
+  color: var(--gold);
+  text-decoration: none;
+  font-weight: bold;
+}
+.dev-signature a:hover {
+  text-decoration: underline;
+}
+
+@media print {
+  .dev-signature {
+    display: none !important;
+  }
+}
+
+@media(max-width:600px){.two-col{grid-template-columns:1fr;}.tgrid{grid-template-columns:repeat(2,1fr);}.pgrid{grid-template-columns:1fr;}.progress-wrap{padding:12px 8px;}.step-label{font-size:11px;}.step-item{padding:0 10px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">🏅</div>
+    <div class="logo-text"><h1>منصة شهادات التقدير</h1><p>تصميم بمقاس A4 مرن (أفقي / عمودي)</p></div>
+  </div>
+  <div class="hbadge">نسخة A4 مطورة</div>
+</header>
+
+<div class="progress-wrap">
+  <div class="step-item active" id="sp1" onclick="goStep(1)"><div class="step-num">١</div><div class="step-label">الطلاب والفصل</div></div>
+  <div class="step-item" id="sp2" onclick="goStep(2)"><div class="step-num">٢</div><div class="step-label">التصميم</div></div>
+  <div class="step-item" id="sp3" onclick="goStep(3)"><div class="step-num">٣</div><div class="step-label">بيانات الشهادة</div></div>
+</div>
+
+<main>
+<div class="panel active" id="panel1">
+  <div class="ph"><div class="ph-icon">👥</div><div><h2>الفصل والطلاب</h2><p>أضف فصلاً وأدخل أسماء الطلاب</p></div></div>
+  <div class="pb">
+    <div class="st">الفصول المضافة</div>
+    <div class="class-tags" id="classTags"></div>
+    <div class="acr"><input type="text" id="newClassName" placeholder="مثال: أول ١" onkeydown="if(event.key==='Enter')addClass()"><button class="btn-sm btn-gd" onclick="addClass()">＋ إضافة فصل</button></div>
+    <div class="divider"></div>
+    <div id="classPanel" style="display:none">
+      <div class="st" id="currentClassLabel">الطلاب</div>
+      <div style="display:flex;gap:8px;margin-bottom:14px;">
+        <button class="tab-btn active" id="tabManual" onclick="switchTab('manual')">✏️ إدخال يدوي</button>
+        <button class="tab-btn" id="tabFile" onclick="switchTab('file')">📂 استخراج من ملف</button>
+      </div>
+      <div id="manualInput">
+        <div class="stw"><div class="sth"><div>م</div><div>اسم الطالب</div><div>إجراء</div></div><div id="studentsBody"></div></div>
+        <div class="asr"><input type="text" id="newStudentName" placeholder="اسم الطالب..." onkeydown="if(event.key==='Enter')addStudent()"><button class="btn-sm btn-em" onclick="addStudent()">＋ إضافة</button></div>
+      </div>
+      <div id="fileInput" style="display:none">
+        <div class="upzone" onclick="document.getElementById('fu').click()">
+          <input type="file" id="fu" accept=".txt,.csv" onchange="importFile(event)" style="display:none">
+          <div class="icon">📄</div><h4>ارفع ملف الأسماء</h4><p>ملف TXT أو CSV — اسم في كل سطر</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel" id="panel2">
+  <div class="ph"><div class="ph-icon">🎨</div><div><h2>اختر تصميم الشهادة</h2><p>قوالب محسنة ومتناسقة لمقاس A4</p></div></div>
+  <div class="pb">
+    <div class="two-col" style="margin-bottom:20px;">
+      <div>
+        <div class="st">نوع الشهادة</div>
+        <div class="ttabs" style="margin-bottom:0;">
+          <button class="tab-btn active" onclick="setGender('male',this)">👦 طلاب</button>
+          <button class="tab-btn" onclick="setGender('female',this)">👧 طالبات</button>
+        </div>
+      </div>
+      <div>
+        <div class="st">اتجاه الورقة (A4)</div>
+        <select id="pageOrientation" onchange="updateOrientationHint()">
+          <option value="landscape" selected>أفقي (Landscape)</option>
+          <option value="portrait">عمودي (Portrait)</option>
+        </select>
+      </div>
+    </div>
+    <div class="st">القوالب المتاحة</div>
+    <div class="tgrid" id="tplGrid"></div>
+  </div>
+</div>
+
+<div class="panel" id="panel3">
+  <div class="ph"><div class="ph-icon">📝</div><div><h2>بيانات الشهادة</h2><p>أدخل البيانات التي ستظهر في جميع الشهادات</p></div></div>
+  <div class="pb">
+    <div class="fg"><label>اسم المدرسة / الجهة <span class="req">*</span></label><input type="text" id="schoolName" placeholder="مثال: مدرسة الفلاح الابتدائية" value="مدرسة الفلاح الابتدائية"></div>
+    <div class="two-col">
+      <div class="fg"><label>المعلم / رائد الفصل <span class="req">*</span></label><input type="text" id="teacherName" placeholder="الاسم" value="د/ فواز"></div>
+      <div class="fg"><label>المسمى الوظيفي</label><input type="text" id="teacherTitle" placeholder="مثال: معلم المادة" value="معلم المادة"></div>
+    </div>
+    <div class="two-col">
+      <div class="fg"><label>مدير المدرسة <span class="req">*</span></label><input type="text" id="principalName" placeholder="الاسم" value="أ/ محمد العتيبي"></div>
+      <div class="fg"><label>المسمى الوظيفي</label><input type="text" id="principalTitle" placeholder="مثال: مدير المدرسة" value="مدير المدرسة"></div>
+    </div>
+    <div class="fg"><label>نص الشهادة <span class="req">*</span></label><textarea id="certText" placeholder="اكتب نص الشهادة هنا... استخدم {اسم} لاسم الطالب و {فصل} للفصل">نظراً لجهوده المتميزة وتفوقه الدراسي في {فصل}، يسرنا منحه هذه الشهادة تقديراً له متمنين له دوام التوفيق والنجاح.</textarea><p class="hint">يمكنك استخدام الكود <b>{اسم}</b> و <b>{فصل}</b> و <b>{مدرسة}</b> وسيتم استبدالها تلقائياً.</p></div>
+    
+    <div class="dev-signature">
+      تصميم د/فواز &nbsp;&nbsp; تفضل للمزيد هنا 
+      <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">https://t.me/TAqhjT3MFVE1Yzk0</a>
+    </div>
+
+    <div class="divider"></div>
+    <div id="parea">
+      <div class="st">معاينة الشهادات المصغرة</div>
+      <div class="pgrid" id="previewGrid"></div>
+    </div>
+  </div>
+</div>
+</main>
+
+<div class="bbar">
+  <div class="binfo">إجمالي الطلاب: <span id="totalCount">0</span></div>
+  <div class="bacts">
+    <button class="bnav bback" id="btnBack" onclick="prevStep()" style="display:none">السابق</button>
+    <button class="bnav bnxt" id="btnNext" onclick="nextStep()">التالي</button>
+    <button class="bgen" id="btnGen" onclick="generate()" style="display:none">🖨️ طباعة وتصدير الشهادات (A4)</button>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal">
+    <div class="mico">✅</div>
+    <h3 id="modalTitle">تم التجهيز</h3>
+    <p id="modalMsg"></p>
+    <div class="macts"><button class="btn-sm btn-gd" onclick="closeModal()">حسناً</button></div>
+  </div>
+</div>
+
+<script>
+const S = { step: 1, classes: [], ac: null, gender: 'male', tpls: new Set(['t1']) };
+
+const templates = [
+  { id: 't1', name: 'كلاسيكي ذهبي', color: '#1b3a5c' },
+  { id: 't2', name: 'إطار ملكي', color: '#1a6b4a' },
+  { id: 't3', name: 'تراثي فاخر', color: '#8b6914' },
+  { id: 't4', name: 'مودرن أسود', color: '#111' },
+  { id: 't5', name: 'ألوان حيوية', color: '#2c3e50' },
+  { id: 't6', name: 'رسمي هادئ', color: '#2c3e50' }
+];
+
+function init() {
+  const grid = document.getElementById('tplGrid');
+  grid.innerHTML = templates.map(t => `
+    <div class="tcard ${S.tpls.has(t.id)?'selected':''}" onclick="toggleTpl(this,'${t.id}')">
+      <div class="chk">✓</div>
+      <div class="tprev" style="background:${t.color}10">
+        <div style="width:60%;height:60%;border:2px solid ${t.color};border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:14px;color:${t.color};font-weight:bold">A4</div>
+      </div>
+      <div class="tname">${t.name}</div>
+    </div>
+  `).join('');
+  renderTags();
+}
+
+function updateOrientationHint() {
+  const o = document.getElementById('pageOrientation').value;
+  document.querySelectorAll('.pcw').forEach(el => {
+    if(o === 'portrait') el.classList.add('portrait-mode');
+    else el.classList.remove('portrait-mode');
+  });
+}
+
+function certHTML(d, tpl, orient) {
+  const mc = { t1: '#1b3a5c', t2: '#1a6b4a', t3: '#8b6914', t4: '#111', t5: '#2c3e50', t6: '#2c3e50' }[tpl] || '#1b3a5c';
+  const ac = { t1: '#c8963e', t2: '#c8963e', t3: '#c8963e', t4: '#c8963e', t5: '#e74c3c', t6: '#7f8c8d' }[tpl] || '#c8963e';
+  const bg = { t1: '#fff', t2: '#fff', t3: '#fffbf0', t4: '#0e0e0e', t5: '#fff', t6: '#f5f6fa' }[tpl] || '#fff';
+  const tc = { t4: '#e8dcc8' }[tpl] || '#1a1a2e';
+  const gs = S.gender === 'female' ? 'ة' : '';
+  const medalIcon = { t1: '⭐', t2: '💎', t3: '🏆', t4: '✨', t5: '🌟', t6: '🔷' }[tpl] || '⭐';
+
+  const isPortrait = orient === 'portrait';
+
+  const p_width = isPortrait ? '210mm' : '297mm';
+  const p_height = isPortrait ? '297mm' : '210mm';
+  
+  const headerFontSize = isPortrait ? '14px' : '16px';
+  const titleFontSize = isPortrait ? '34px' : '42px';
+  const mainTextFontSize = isPortrait ? '16px' : '19px';
+  const nameFontSize = isPortrait ? '22px' : '26px';
+  const footerFontSize = isPortrait ? '13px' : '15px';
+  
+  const topPadding = isPortrait ? '35mm' : '25mm';
+  const sidePadding = isPortrait ? '15mm' : '25mm';
+  const elementGap = isPortrait ? '15px' : '25px';
+
+  let frame = '';
+  if (tpl === 't1') {
+    frame = `
+      <div style="position:absolute;top:0;right:0;width:15mm;height:100%;background:${mc};opacity:0.95;z-index:0"></div>
+      <div style="position:absolute;top:0;left:0;width:15mm;height:100%;background:${mc};opacity:0.95;z-index:0"></div>
+      <div style="position:absolute;top:0;left:0;right:0;height:4mm;background:${ac};z-index:1"></div>
+      <div style="position:absolute;bottom:0;left:0;right:0;height:4mm;background:${ac};z-index:1"></div>`;
+  } else if (tpl === 't2') {
+    frame = `
+      <div style="position:absolute;inset:0;border:10mm solid ${mc};z-index:0"></div>
+      <div style="position:absolute;inset:13mm;border:2px solid ${ac};opacity:.7;border-radius:4px;z-index:0"></div>`;
+  } else if (tpl === 't3') {
+    frame = `
+      <div style="position:absolute;inset:0;border:1px solid ${ac};z-index:0"></div>
+      <div style="position:absolute;top:0;right:0;width:12mm;height:100%;background:${mc};z-index:0"></div>
+      <div style="position:absolute;top:0;left:0;width:12mm;height:100%;background:${mc};z-index:0"></div>
+      <div style="position:absolute;top:0;left:0;right:0;height:5mm;background:${ac};z-index:1"></div>
+      <div style="position:absolute;bottom:0;left:0;right:0;height:5mm;background:${ac};z-index:1"></div>`;
+  } else if (tpl === 't4') {
+    frame = `
+      <div style="position:absolute;inset:0;border:6mm solid ${ac};z-index:0"></div>
+      <div style="position:absolute;inset:10mm;border:1px solid ${ac};opacity:.3;z-index:0"></div>`;
+  } else if (tpl === 't5') {
+    frame = `
+      <div style="position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 60mm 60mm 0;border-color:transparent #e74c3c transparent transparent;z-index:0"></div>
+      <div style="position:absolute;top:0;left:0;width:0;height:0;border-style:solid;border-width:60mm 60mm 0 0;border-color:#3498db transparent transparent transparent;z-index:0"></div>
+      <div style="position:absolute;bottom:0;right:0;width:0;height:0;border-style:solid;border-width:60mm 0 0 60mm;border-color:transparent transparent transparent #2ecc71;z-index:0"></div>
+      <div style="position:absolute;bottom:0;left:0;width:0;height:0;border-style:solid;border-width:0 0 60mm 60mm;border-color:transparent transparent #f39c12 transparent;z-index:0"></div>`;
+  } else if (tpl === 't6') {
+    frame = `
+      <div style="position:absolute;top:0;left:0;right:0;height:12mm;background:#2c3e50;z-index:0"></div>
+      <div style="position:absolute;bottom:0;left:0;right:0;height:12mm;background:#2c3e50;z-index:0"></div>
+      <div style="position:absolute;top:12mm;right:0;width:6mm;height:calc(100% - 24mm);background:#7f8c8d;opacity:.3;z-index:0"></div>
+      <div style="position:absolute;top:12mm;left:0;width:6mm;height:calc(100% - 24mm);background:#7f8c8d;opacity:.3;z-index:0"></div>`;
+  }
+
+  const goldLine = `<div style="height:2px;background:linear-gradient(to left,transparent,${ac} 30%,${ac} 70%,transparent);margin:${elementGap} auto;width:60%;position:relative;z-index:1"></div>`;
+
+  return `
+    <div style="width:${p_width};height:${p_height};background:${bg};position:relative;font-family:'Tajawal',sans-serif;direction:rtl;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;box-sizing:border-box;padding:${topPadding} ${sidePadding};">
+      ${frame}
+      
+      <div style="position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;width:100%;">
+        <div style="text-align:center; flex:1;">
+          <div style="font-size:${headerFontSize};font-weight:700;color:${mc};opacity:.9;">وزارة التعليم</div>
+          <div style="width:40px;height:2px;background:${mc};opacity:.3;margin:4px auto"></div>
+          <div style="font-size:calc(${headerFontSize} - 3px);color:#666;">${d.school}</div>
+        </div>
+        <div style="font-size:46px; text-align:center; flex:1; line-height:1;">${medalIcon}</div>
+        <div style="text-align:center; flex:1;">
+          <div style="font-size:${headerFontSize};font-weight:700;color:${mc};opacity:.9;">رؤية 2030</div>
+          <div style="width:40px;height:2px;background:${mc};opacity:.3;margin:4px auto"></div>
+        </div>
+      </div>
+
+      <div style="position:relative;z-index:2;text-align:center;margin-top:${elementGap};">
+        <div style="font-size:${titleFontSize};font-weight:900;color:${mc};letter-spacing:2px;line-height:1.2;">شهادة شكر وتقدير</div>
+      </div>
+      
+      ${goldLine}
+
+      <div style="position:relative;z-index:2;text-align:center;font-size:${mainTextFontSize};color:${tc};line-height:1.8;padding:0 10px;flex-grow:1;display:flex;flex-direction:column;justify-content:center;">
+        <div style="margin-bottom:10px;">يسر إدارة مدرسة <span style="font-weight:700;color:${mc};">${d.school}</span> أن تتقدم بوافر الشكر والتقدير</div>
+        <div style="margin-bottom:10px;">
+          للطالب${gs}: 
+          <span style="display:inline-block;border-bottom:2px solid ${ac};color:${mc};padding:0 15px;font-weight:900;font-size:${nameFontSize}; margin:0 5px;">${d.name}</span>
+          بالصف: 
+          <span style="font-weight:700;color:${mc};">${d.cls}</span>
+        </div>
+        <div style="color:${tpl==='t4'?'#bfb08e':'#444'}; font-weight:500; padding:0 20px; font-style:normal;">${d.bodyText}</div>
+      </div>
+
+      ${goldLine}
+
+      <div style="position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;width:100%;margin-top:5px;padding:0 20px;">
+        <div style="text-align:center; min-width:120px;">
+          <div style="font-size:${footerFontSize};color:${mc};font-weight:800;">${d.tTitle}</div>
+          <div style="font-size:calc(${footerFontSize} - 1px);color:#333;margin-top:6px;font-weight:700;">${d.tName}</div>
+          <div style="width:100px;height:1px;border-top:1px dashed #ccc;margin:8px auto 0;"></div>
+        </div>
+        <div style="text-align:center; min-width:120px;">
+          <div style="font-size:${footerFontSize};color:${mc};font-weight:800;">${d.pTitle}</div>
+          <div style="font-size:calc(${footerFontSize} - 1px);color:#333;margin-top:6px;font-weight:700;">${d.pName}</div>
+          <div style="width:100px;height:1px;border-top:1px dashed #ccc;margin:8px auto 0;"></div>
+        </div>
+      </div>
+      
+    </div>`;
+}
+
+function goStep(n) { if (n > S.step) return; S.step = n; renderStep(); }
+function nextStep() {
+  if (S.step === 1 && (!S.classes.length || S.ac === null || !S.classes[S.ac].students.length)) { alert('يرجى إضافة فصل وطالب واحد على الأقل'); return; }
+  if (S.step === 2 && !S.tpls.size) { alert('يرجى اختيار قالب واحد على الأقل'); return; }
+  if (S.step < 3) { S.step++; renderStep(); if(S.step===3) updatePreview(); }
+}
+function prevStep() { if (S.step > 1) { S.step--; renderStep(); } }
+function renderStep() {
+  [1, 2, 3].forEach(i => {
+    document.getElementById('panel' + i).classList.toggle('active', i === S.step);
+    const sp = document.getElementById('sp' + i);
+    sp.classList.remove('active', 'done');
+    if (i === S.step) sp.classList.add('active');
+    if (i < S.step) sp.classList.add('done');
+  });
+  document.getElementById('btnBack').style.display = S.step > 1 ? '' : 'none';
+  document.getElementById('btnNext').style.display = S.step < 3 ? '' : 'none';
+  document.getElementById('btnGen').style.display = S.step === 3 ? '' : 'none';
+}
+
+function addClass() {
+  const inp = document.getElementById('newClassName');
+  const n = inp.value.trim(); if (!n) return;
+  S.classes.push({ name: n, students: [] }); inp.value = '';
+  renderTags(); setAC(S.classes.length - 1);
+}
+function setAC(i) {
+  S.ac = i; renderTags();
+  document.getElementById('classPanel').style.display = '';
+  document.getElementById('currentClassLabel').textContent = 'طلاب فصل: ' + S.classes[i].name;
+  renderStudents();
+}
+function renderTags() {
+  document.getElementById('classTags').innerHTML = S.classes.map((c, i) =>
+    `<div class="class-tag ${i === S.ac ? 'active' : ''}" onclick="setAC(${i})">${c.name}<span class="cbadge">${c.students.length}</span></div>`).join('');
+  document.getElementById('totalCount').textContent = S.classes.reduce((a, c) => a + c.students.length, 0);
+}
+function addStudent() {
+  const inp = document.getElementById('newStudentName');
+  const n = inp.value.trim(); if (!n || S.ac === null) return;
+  S.classes[S.ac].students.push(n); inp.value = ''; renderStudents(); renderTags(); inp.focus();
+}
+function delStudent(i) { S.classes[S.ac].students.splice(i, 1); renderStudents(); renderTags(); }
+function renderStudents() {
+  if (S.ac === null) return;
+  const sts = S.classes[S.ac].students;
+  const b = document.getElementById('studentsBody');
+  if (!sts.length) { b.innerHTML = '<div style="padding:20px;text-align:center;color:#aaa;font-size:14px">لا يوجد طلاب — أضف طالباً أدناه</div>'; return; }
+  b.innerHTML = sts.map((s, i) => `<div class="str"><div class="num">${i + 1}</div><div>${s}</div><button class="btn-del" onclick="delStudent(${i})">حذف</button></div>`).join('');
+}
+function switchTab(t) {
+  document.getElementById('manualInput').style.display = t === 'manual' ? '' : 'none';
+  document.getElementById('fileInput').style.display = t === 'file' ? '' : 'none';
+  document.getElementById('tabManual').classList.toggle('active', t === 'manual');
+  document.getElementById('tabFile').classList.toggle('active', t === 'file');
+}
+function importFile(e) {
+  const f = e.target.files[0]; if (!f || S.ac === null) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    ev.target.result.split(/\r?\n/).map(l => l.trim()).filter(Boolean).forEach(n => {
+      if (!S.classes[S.ac].students.includes(n)) S.classes[S.ac].students.push(n);
+    });
+    renderStudents(); renderTags(); switchTab('manual');
+  };
+  r.readAsText(f, 'UTF-8');
+}
+function setGender(g, btn) { S.gender = g; document.querySelectorAll('.ttabs .tab-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
+function toggleTpl(card, t) {
+  if (S.tpls.has(t)) { if (S.tpls.size === 1) return; S.tpls.delete(t); card.classList.remove('selected'); }
+  else { S.tpls.add(t); card.classList.add('selected'); }
+}
+
+function updatePreview() {
+  const school = document.getElementById('schoolName').value.trim();
+  const tTitle = document.getElementById('teacherTitle').value.trim();
+  const tName = document.getElementById('teacherName').value.trim();
+  const pTitle = document.getElementById('principalTitle').value.trim();
+  const pName = document.getElementById('principalName').value.trim();
+  const bodyText = document.getElementById('certText').value.trim();
+  const orient = document.getElementById('pageOrientation').value;
+
+  const all = [];
+  S.classes.forEach(c => c.students.forEach(s => all.push({ name: s, cls: c.name })));
+  const tpls = [...S.tpls];
+
+  document.getElementById('parea').style.display = 'block';
+  document.getElementById('previewGrid').innerHTML = all.map((st, i) => {
+    const tpl = tpls[i % tpls.length];
+    const bt = bodyText.replace(/{اسم}/g, st.name).replace(/{فصل}/g, st.cls).replace(/{مدرسة}/g, school);
+    const d = { school, name: st.name, cls: st.cls, tTitle, tName, pTitle, pName, bodyText: bt };
+    
+    const scale = orient === 'portrait' ? '0.22' : '0.22';
+    const mb = orient === 'portrait' ? '-180px' : '-130px';
+    const pClass = orient === 'portrait' ? 'pcw portrait-mode' : 'pcw';
+
+    return `<div class="${pClass}" style="transform: scale(${scale}); transform-origin: top right; margin-bottom: ${mb};">${certHTML(d, tpl, orient)}</div>`;
+  }).join('');
+}
+
+document.addEventListener('input', function(e) {
+  if(S.step === 3 && e.target.matches('input, textarea, select')) { updatePreview(); }
+});
+
+function generate() {
+  const school = document.getElementById('schoolName').value.trim();
+  const tTitle = document.getElementById('teacherTitle').value.trim();
+  const tName = document.getElementById('teacherName').value.trim();
+  const pTitle = document.getElementById('principalTitle').value.trim();
+  const pName = document.getElementById('principalName').value.trim();
+  const bodyText = document.getElementById('certText').value.trim();
+  const orient = document.getElementById('pageOrientation').value;
+  
+  if (!school || !tName || !pName) { alert('يرجى ملء جميع الحقول المطلوبة'); return; }
+
+  const all = [];
+  S.classes.forEach(c => c.students.forEach(s => all.push({ name: s, cls: c.name })));
+  const tpls = [...S.tpls];
+
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>طباعة الشهادات A4</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:#fff;margin:0;padding:0;}
+  @page { 
+    size: A4 ${orient}; 
+    margin: 0; 
+  }
+  .cert-page {
+    width: ${orient === 'portrait' ? '210mm' : '297mm'};
+    height: ${orient === 'portrait' ? '297mm' : '210mm'};
+    page-break-after: always;
+    page-break-inside: avoid;
+    overflow: hidden;
+    position: relative;
+  }
+  @media print {
+    body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  }
+</style>
+</head>
+<body>`);
+
+  all.forEach((st, i) => {
+    const tpl = tpls[i % tpls.length];
+    const bt = bodyText.replace(/{اسم}/g, st.name).replace(/{فصل}/g, st.cls).replace(/{مدرسة}/g, school);
+    const d = { school, name: st.name, cls: st.cls, tTitle, tName, pTitle, pName, bodyText: bt };
+    win.document.write(`<div class="cert-page">${certHTML(d, tpl, orient)}</div>`);
+  });
+  
+  win.document.write('</body></html>');
+  win.document.close();
+  
+  setTimeout(() => { 
+    win.focus(); 
+    win.print(); 
+  }, 1000);
+
+  document.getElementById('modalMsg').textContent = `تم تجهيز ${all.length} شهادة بنجاح بمقاس A4 المختار (${orient === 'portrait' ? 'عمودي' : 'أفقي'}). سيفتح أمر الطباعة والتصدير كـ PDF الآن.`;
+  document.getElementById('overlay').classList.add('show');
+}
+
+function closeModal() { document.getElementById('overlay').classList.remove('show'); }
+
+init();
+</script>
+</body>
+</html>
