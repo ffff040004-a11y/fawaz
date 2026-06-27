@@ -214,7 +214,9 @@ textarea{resize:vertical;min-height:110px;line-height:1.7;}
       </div>
     </div>
 
-    <div class="fg"><label>اسم المدرسة / الروضة <span class="req">*</span></label><input type="text" id="schoolName" placeholder="مثال: روضة الأمل / مدرسة الفلاح" value="روضة الأمل للطفولة المبكرة"></div>
+    <div class="fg"><label>عنوان / نوع الشهادة <span class="req">*</span></label><input type="text" id="certTitleInput" placeholder="مثال: شهادة شكر وتقدير، شهادة تخرج، شهادة نجاح" value="شهادة شكر وتقدير"></div>
+
+    <div class="fg"><label>اسم المدرسة / الروضة <span class="req">*</span></label><input type="text" id="schoolName" placeholder="مثال: روضة الأمل / مدرسة الفلاح" value="مدرسة الفلاح الابتدائية"></div>
     
     <div class="two-col">
       <div class="fg"><label>العام الدراسي <span class="req">*</span></label><input type="text" id="academicYear" placeholder="مثال: ١٤٤٧ هـ" value="١٤٤٧ هـ"></div>
@@ -223,16 +225,16 @@ textarea{resize:vertical;min-height:110px;line-height:1.7;}
 
     <div class="two-col">
       <div class="fg"><label>المعلم / رائد الفصل <span class="req">*</span></label><input type="text" id="teacherName" placeholder="الاسم" value="د/ فواز"></div>
-      <div class="fg"><label>المسمى الوظيفي</label><input type="text" id="teacherTitle" placeholder="مثال: معلم المادة / المربية" value="مربية الفصل"></div>
+      <div class="fg"><label>المسمى الوظيفي</label><input type="text" id="teacherTitle" placeholder="مثال: معلم المادة / المربية" value="معلم المادة"></div>
     </div>
     <div class="two-col">
-      <div class="fg"><label>مدير المدرسة / مديرة الروضة <span class="req">*</span></label><input type="text" id="principalName" placeholder="الاسم" value="أ/ هند"></div>
-      <div class="fg"><label>المسمى الوظيفي</label><input type="text" id="principalTitle" placeholder="مثال: مدير المدرسة" value="مديرة الروضة"></div>
+      <div class="fg"><label>مدير المدرسة / مديرة الروضة <span class="req">*</span></label><input type="text" id="principalName" placeholder="الاسم" value="أ/ محمد العتيبي"></div>
+      <div class="fg"><label>المسمى الوظيفي</label><input type="text" id="principalTitle" placeholder="مثال: مدير المدرسة" value="مدير المدرسة"></div>
     </div>
     
     <div class="fg"><label>حرر في (التاريخ) <span class="req">*</span></label><input type="text" id="issueDate" placeholder="مثال: ١٤٤٧/٠٥/١٢ هـ" value="١٤٤٧/٠٥/١٢ هـ"></div>
 
-    <div class="fg"><label>نص الشهادة <span class="req">*</span></label><textarea id="certText" placeholder="اكتب نص الشهادة هنا...">نظراً لتميزك الرائع ومشاركتك الجميلة معنا في {فصل} خلال {الفصل} للعام {السنة}، يسرنا أن نهديك هذه الشهادة حباً وتقديراً لجهودك.</textarea>
+    <div class="fg"><label>نص الشهادة <span class="req">*</span></label><textarea id="certText" placeholder="اكتب نص الشهادة هنا...">نظراً لجهوده المتميزة وتفوقه الدراسي في {فصل} خلال {الفصل} للعام {السنة}، يسرنا منحه هذه الشهادة تقديراً له.</textarea>
     <p class="hint">الأكواد المدعومة للتكبير التلقائي: <b>{اسم}</b>، <b>{فصل}</b>، <b>{مدرسة}</b>، <b>{السنة}</b>، <b>{الفصل}</b></p></div>
     
     <div class="dev-signature">
@@ -268,7 +270,7 @@ textarea{resize:vertical;min-height:110px;line-height:1.7;}
 </div>
 
 <script>
-const S = { step: 1, classes: [], ac: null, gender: 'male', tpls: new Set(['t7']), logos: { ministry: '', school: '', vision: '' } };
+const S = { step: 1, classes: [], ac: null, gender: 'male', tpls: new Set(['t1']), logos: { ministry: '', school: '', vision: '' } };
 
 const templates = [
   { id: 't1', name: 'كلاسيكي ذهبي', color: '#1b3a5c' },
@@ -277,7 +279,7 @@ const templates = [
   { id: 't4', name: 'مودرن أسود', color: '#111' },
   { id: 't5', name: 'ألوان حيوية', color: '#2c3e50' },
   { id: 't6', name: 'رسمي هادئ', color: '#2c3e50' },
-  { id: 't7', name: '🎈 قالب روضة ومرح', color: '#e84393' } // قالب الأطفال الجديد
+  { id: 't7', name: '🎈 قالب روضة ومرح', color: '#e84393' }
 ];
 
 function init() {
@@ -336,9 +338,6 @@ function certHTML(d, tpl, orient) {
   const ministryHTML = S.logos.ministry ? `<img src="${S.logos.ministry}" style="max-height:55px; max-width:105px; object-fit:contain; position:relative; z-index:2;">` : '';
   const visionHTML = S.logos.vision ? `<img src="${S.logos.vision}" style="max-height:50px; max-width:95px; object-fit:contain; position:relative; z-index:2;">` : '';
 
-  // ---------------------------------------------------------
-  // تصميم قالب الأطفال الجديد (t7)
-  // ---------------------------------------------------------
   if (tpl === 't7') {
     const kNameSize = isPortrait ? '28px' : '36px';
     const kTitleSize = isPortrait ? '36px' : '48px';
@@ -348,13 +347,11 @@ function certHTML(d, tpl, orient) {
     return `
     <div style="width:${p_width};height:${p_height};background:#fffdf0;border:12px solid #74b9ff;border-radius:25px;position:relative;font-family:'Tajawal',sans-serif;direction:rtl;padding:${kPad};box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;">
       
-      <!-- زينة الزوايا -->
       <div style="position:absolute;top:15px;right:15px;font-size:35px;">🎈⭐</div>
       <div style="position:absolute;bottom:15px;left:15px;font-size:35px;">🎨🚂</div>
       <div style="position:absolute;top:15px;left:15px;font-size:35px;">🌟🎠</div>
       <div style="position:absolute;bottom:15px;right:15px;font-size:35px;">🧸🎈</div>
 
-      <!-- الترويسة العلوية -->
       <div style="position:relative; z-index:2; display:flex; justify-content:space-between; align-items:center; width:100%;">
         <div style="text-align:right; flex:1;">
           ${schoolLogoHTML}
@@ -364,9 +361,8 @@ function certHTML(d, tpl, orient) {
         <div style="text-align:left; flex:1; display:flex; justify-content:flex-end;">${visionHTML || `<div style="font-size:${headerFontSize};font-weight:700;color:#0984e3;">رؤية 2030</div>`}</div>
       </div>
 
-      <!-- المحتوى الأساسي للشهادة -->
       <div style="text-align:center; position:relative; z-index:2; flex-grow:1; display:flex; flex-direction:column; justify-content:center;">
-        <h1 style="color:#ff9f43; font-size:${kTitleSize}; text-shadow: 2px 2px 0px #fff, 3px 3px 0px #ffeaa7; margin-bottom:10px;">نجمنا الصغير! 🌟</h1>
+        <h1 style="color:#ff9f43; font-size:${kTitleSize}; text-shadow: 2px 2px 0px #fff, 3px 3px 0px #ffeaa7; margin-bottom:10px;">${d.certTitle}</h1>
         <p style="font-size:${kTextSize}; color:#2d3436; margin-bottom:15px; font-weight:bold;">بكل فرح وسرور، نبارك للطفل المبدع:</p>
         
         <div style="font-size:${kNameSize}; font-weight:900; color:#d63031; background:#ffeaa7; padding:10px 40px; border-radius:50px; display:inline-block; margin:0 auto; border:3px dashed #ff9f43; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
@@ -378,7 +374,6 @@ function certHTML(d, tpl, orient) {
         </div>
       </div>
 
-      <!-- التوقيعات والتاريخ -->
       <div style="position:relative; z-index:2; display:flex; justify-content:space-between; align-items:flex-end; padding:0 20px; margin-top:10px;">
         <div style="text-align:center;">
           <div style="font-size:${footerFontSize}; color:#e84393; font-weight:900;">${d.tTitle}</div>
@@ -395,9 +390,6 @@ function certHTML(d, tpl, orient) {
     </div>`;
   }
 
-  // ---------------------------------------------------------
-  // تصميم القوالب الرسمية (t1 - t6)
-  // ---------------------------------------------------------
   const mc = { t1: '#1b3a5c', t2: '#1a6b4a', t3: '#8b6914', t4: '#111', t5: '#2c3e50', t6: '#2c3e50' }[tpl] || '#1b3a5c';
   const ac = { t1: '#c8963e', t2: '#c8963e', t3: '#c8963e', t4: '#c8963e', t5: '#e74c3c', t6: '#7f8c8d' }[tpl] || '#c8963e';
   const bg = { t1: '#fff', t2: '#fff', t3: '#fffbf0', t4: '#0e0e0e', t5: '#fff', t6: '#f5f6fa' }[tpl] || '#fff';
@@ -437,7 +429,6 @@ function certHTML(d, tpl, orient) {
 
   const goldLine = `<div style="height:2px;background:linear-gradient(to left,transparent,${ac} 30%,${ac} 70%,transparent);margin:${elementGap} auto;width:60%;position:relative;z-index:1"></div>`;
 
-  // نصوص الترويسة الافتراضية
   const defaultMinistry = `<div style="font-size:${headerFontSize};font-weight:700;color:${mc};opacity:.9;">وزارة التعليم</div><div style="width:40px;height:2px;background:${mc};opacity:.3;margin:4px auto"></div>`;
   const defaultVision = `<div style="font-size:${headerFontSize};font-weight:700;color:${mc};opacity:.9;">رؤية 2030</div>`;
 
@@ -449,7 +440,6 @@ function certHTML(d, tpl, orient) {
         <div style="text-align:right; flex:1; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
           ${schoolLogoHTML}
           <div style="font-size:calc(${headerFontSize} - 1px);font-weight:800;color:${mc};">${d.school}</div>
-          <!-- تم إزالة العام والفصل لمنع التكرار -->
         </div>
         
         <div style="text-align:center; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;">
@@ -463,7 +453,7 @@ function certHTML(d, tpl, orient) {
       </div>
 
       <div style="position:relative;z-index:2;text-align:center;margin-top:${elementGap};">
-        <div style="font-size:${titleFontSize};font-weight:900;color:${mc};letter-spacing:2px;line-height:1.2;">شهادة شكر وتقدير</div>
+        <div style="font-size:${titleFontSize};font-weight:900;color:${mc};letter-spacing:2px;line-height:1.2;">${d.certTitle}</div>
       </div>
       
       ${goldLine}
@@ -574,6 +564,7 @@ function toggleTpl(card, t) {
 }
 
 function updatePreview() {
+  const certTitle = document.getElementById('certTitleInput').value.trim() || 'شهادة شكر وتقدير';
   const school = document.getElementById('schoolName').value.trim();
   const year = document.getElementById('academicYear').value.trim();
   const semester = document.getElementById('semesterName').value.trim();
@@ -593,7 +584,7 @@ function updatePreview() {
   document.getElementById('previewGrid').innerHTML = all.map((st, i) => {
     const tpl = tpls[i % tpls.length];
     const bt = bodyText.replace(/{اسم}/g, st.name).replace(/{فصل}/g, st.cls).replace(/{مدرسة}/g, school).replace(/{السنة}/g, year).replace(/{الفصل}/g, semester);
-    const d = { school, year, semester, issueDate, name: st.name, cls: st.cls, tTitle, tName, pTitle, pName, bodyText: bt };
+    const d = { certTitle, school, year, semester, issueDate, name: st.name, cls: st.cls, tTitle, tName, pTitle, pName, bodyText: bt };
     
     const scale = '0.22';
     const mb = orient === 'portrait' ? '-180px' : '-130px';
@@ -608,6 +599,7 @@ document.addEventListener('input', function(e) {
 });
 
 function generate() {
+  const certTitle = document.getElementById('certTitleInput').value.trim() || 'شهادة شكر وتقدير';
   const school = document.getElementById('schoolName').value.trim();
   const year = document.getElementById('academicYear').value.trim();
   const semester = document.getElementById('semesterName').value.trim();
@@ -654,7 +646,7 @@ function generate() {
   all.forEach((st, i) => {
     const tpl = tpls[i % tpls.length];
     const bt = bodyText.replace(/{اسم}/g, st.name).replace(/{فصل}/g, st.cls).replace(/{مدرسة}/g, school).replace(/{السنة}/g, year).replace(/{الفصل}/g, semester);
-    const d = { school, year, semester, issueDate, name: st.name, cls: st.cls, tTitle, tName, pTitle, pName, bodyText: bt };
+    const d = { certTitle, school, year, semester, issueDate, name: st.name, cls: st.cls, tTitle, tName, pTitle, pName, bodyText: bt };
     win.document.write(`<div class="cert-page">${certHTML(d, tpl, orient)}</div>`);
   });
   
