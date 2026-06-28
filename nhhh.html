@@ -7,486 +7,196 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0D2B55;--navy-mid:#1A3F73;--teal:#1B7A8C;--teal-light:#2A9BAF;
+  --gold:#C9A227;--gold-light:#F0C94A;--bg:#F4F7FB;--white:#FFF;
+  --gray-1:#EEF2F8;--gray-2:#D8E1EE;--gray-3:#9BACC4;
+  --text:#0D2B55;--text-light:#4A5E7A;
+  --danger:#C0392B;--danger-bg:#FDECEA;
+  --success:#1A7A4A;--success-bg:#E6F5EE;
+  --warn:#B8770A;--warn-bg:#FEF6E4;
+  --shadow:0 4px 20px rgba(13,43,85,.10);
+  --shadow-lg:0 8px 40px rgba(13,43,85,.16);
+  --radius:14px;--radius-sm:8px
+}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;direction:rtl}
 
-  :root {
-    --navy: #0D2B55;
-    --navy-mid: #1A3F73;
-    --teal: #1B7A8C;
-    --teal-light: #2A9BAF;
-    --gold: #C9A227;
-    --gold-light: #F0C94A;
-    --bg: #F4F7FB;
-    --white: #FFFFFF;
-    --gray-1: #EEF2F8;
-    --gray-2: #D8E1EE;
-    --gray-3: #9BACC4;
-    --text: #0D2B55;
-    --text-light: #4A5E7A;
-    --danger: #C0392B;
-    --danger-bg: #FDECEA;
-    --success: #1A7A4A;
-    --success-bg: #E6F5EE;
-    --warn: #B8770A;
-    --warn-bg: #FEF6E4;
-    --shadow: 0 4px 20px rgba(13,43,85,0.10);
-    --shadow-lg: 0 8px 40px rgba(13,43,85,0.16);
-    --radius: 14px;
-    --radius-sm: 8px;
-  }
+/* HEADER */
+header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 60%,var(--teal) 100%);position:relative;overflow:hidden}
+header::before{content:'';position:absolute;top:-40px;left:-60px;width:260px;height:260px;background:rgba(201,162,39,.13);border-radius:50%}
+header::after{content:'';position:absolute;bottom:-30px;right:-40px;width:180px;height:180px;background:rgba(27,122,140,.18);border-radius:50%}
+.header-inner{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;padding:22px 36px;flex-wrap:wrap;gap:12px}
+.header-brand{display:flex;align-items:center;gap:14px}
+.header-icon{width:52px;height:52px;background:linear-gradient(135deg,var(--gold),var(--gold-light));border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 4px 16px rgba(201,162,39,.35)}
+.header-title h1{font-size:21px;font-weight:900;color:#fff;line-height:1.2}
+.header-title p{font-size:12px;color:rgba(255,255,255,.72);margin-top:2px;font-family:'Tajawal',sans-serif}
+.header-badge{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);color:rgba(255,255,255,.9);font-size:12px;padding:6px 16px;border-radius:20px;font-family:'Tajawal',sans-serif}
 
-  body {
-    font-family: 'Cairo', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    direction: rtl;
-  }
+/* LAYOUT */
+main{max-width:1160px;margin:0 auto;padding:28px 18px 60px;display:grid;grid-template-columns:320px 1fr;gap:22px;align-items:start}
+@media(max-width:860px){main{grid-template-columns:1fr}}
 
-  /* HEADER */
-  header {
-    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--teal) 100%);
-    padding: 0;
-    position: relative;
-    overflow: hidden;
-  }
-  header::before {
-    content: '';
-    position: absolute;
-    top: -40px; left: -60px;
-    width: 260px; height: 260px;
-    background: rgba(201,162,39,0.13);
-    border-radius: 50%;
-  }
-  header::after {
-    content: '';
-    position: absolute;
-    bottom: -30px; right: -40px;
-    width: 180px; height: 180px;
-    background: rgba(27,122,140,0.18);
-    border-radius: 50%;
-  }
-  .header-inner {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 24px 40px;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-  .header-brand {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  .header-icon {
-    width: 56px; height: 56px;
-    background: linear-gradient(135deg, var(--gold), var(--gold-light));
-    border-radius: 14px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 26px;
-    box-shadow: 0 4px 16px rgba(201,162,39,0.35);
-  }
-  .header-title h1 {
-    font-size: 22px;
-    font-weight: 900;
-    color: #fff;
-    line-height: 1.2;
-  }
-  .header-title p {
-    font-size: 13px;
-    color: rgba(255,255,255,0.7);
-    margin-top: 2px;
-    font-family: 'Tajawal', sans-serif;
-  }
-  .header-badge {
-    background: rgba(255,255,255,0.13);
-    border: 1px solid rgba(255,255,255,0.22);
-    color: rgba(255,255,255,0.9);
-    font-size: 12px;
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-family: 'Tajawal', sans-serif;
-  }
+/* PANEL LEFT */
+.panel-left{display:flex;flex-direction:column;gap:16px}
 
-  /* MAIN */
-  main {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 32px 20px 60px;
-  }
+/* CARDS */
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px;border:1px solid var(--gray-1)}
+.card-header{display:flex;align-items:center;gap:10px;margin-bottom:18px;padding-bottom:14px;border-bottom:2px solid var(--gray-1)}
+.card-icon{width:38px;height:38px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.icon-navy{background:rgba(13,43,85,.08)}
+.icon-teal{background:rgba(27,122,140,.10)}
+.icon-gold{background:rgba(201,162,39,.12)}
+.card-header h2{font-size:15px;font-weight:800;color:var(--navy)}
+.card-header span{font-size:11px;color:var(--text-light);font-family:'Tajawal',sans-serif}
 
-  /* CARDS */
-  .card {
-    background: var(--white);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 28px 32px;
-    margin-bottom: 22px;
-    border: 1px solid var(--gray-1);
-  }
-  .card-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 22px;
-    padding-bottom: 16px;
-    border-bottom: 2px solid var(--gray-1);
-  }
-  .card-icon {
-    width: 40px; height: 40px;
-    border-radius: var(--radius-sm);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
-  }
-  .icon-navy { background: rgba(13,43,85,0.08); }
-  .icon-teal { background: rgba(27,122,140,0.10); }
-  .icon-gold { background: rgba(201,162,39,0.12); }
-  .card-header h2 {
-    font-size: 17px;
-    font-weight: 800;
-    color: var(--navy);
-  }
-  .card-header span {
-    font-size: 12px;
-    color: var(--text-light);
-    font-family: 'Tajawal', sans-serif;
-  }
+/* FORM */
+.form-group{margin-bottom:13px}
+.form-group label{display:block;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:5px}
+.form-group label em{color:var(--danger);font-style:normal}
+.form-control{width:100%;padding:9px 12px;border:2px solid var(--gray-2);border-radius:var(--radius-sm);font-family:'Cairo',sans-serif;font-size:13px;color:var(--text);background:var(--gray-1);transition:border-color .2s,box-shadow .2s;direction:rtl;appearance:none}
+.form-control:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(27,122,140,.12);background:#fff}
+select.form-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A5E7A' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 10px center;background-size:16px;padding-left:32px;cursor:pointer}
 
-  /* FORM GRID */
-  .form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 18px;
-  }
-  @media(max-width: 700px) { .form-grid { grid-template-columns: 1fr; } }
+/* SUBJECT ADD ROW */
+.add-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.add-row select:first-child{flex:1}
+.add-row select:nth-child(2){width:90px}
 
-  .form-group label {
-    display: block;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--navy);
-    margin-bottom: 7px;
-  }
-  .form-group label span { color: var(--danger); margin-right: 2px; }
-  .form-control {
-    width: 100%;
-    padding: 11px 14px;
-    border: 2px solid var(--gray-2);
-    border-radius: var(--radius-sm);
-    font-family: 'Cairo', sans-serif;
-    font-size: 14px;
-    color: var(--text);
-    background: var(--gray-1);
-    transition: border-color .2s, box-shadow .2s;
-    direction: rtl;
-    appearance: none;
-  }
-  .form-control:focus {
-    outline: none;
-    border-color: var(--teal);
-    box-shadow: 0 0 0 3px rgba(27,122,140,0.12);
-    background: #fff;
-  }
-  select.form-control {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A5E7A' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: left 12px center;
-    background-size: 18px;
-    padding-left: 36px;
-    cursor: pointer;
-  }
+/* SUBJECT CHIPS */
+.subjects-chips{display:flex;flex-direction:column;gap:7px;margin-top:8px}
+.subject-chip{display:grid;grid-template-columns:1fr 72px 64px 28px;gap:6px;align-items:center;padding:9px 11px;background:var(--gray-1);border-radius:var(--radius-sm);border:1.5px solid transparent;transition:border-color .15s,background .15s}
+.subject-chip.active{border-color:var(--teal);background:#e8f5f9}
+.chip-name{font-size:12px;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:6px}
+.chip-dot{width:7px;height:7px;border-radius:50%;background:var(--gray-3);flex-shrink:0}
+.subject-chip.active .chip-dot{background:var(--teal)}
+.chip-hrs{font-size:11px;color:var(--teal);background:rgba(27,122,140,.10);padding:2px 7px;border-radius:12px;font-weight:700;text-align:center;white-space:nowrap}
+.chip-total{font-size:12px;font-weight:800;color:var(--navy);text-align:center}
+.btn-x{background:none;border:none;color:var(--gray-3);cursor:pointer;font-size:15px;line-height:1;padding:3px;border-radius:5px;transition:color .15s,background .15s}
+.btn-x:hover{color:var(--danger);background:var(--danger-bg)}
+.col-labels{display:grid;grid-template-columns:1fr 72px 64px 28px;gap:6px;padding:0 11px 5px;font-size:10px;color:var(--text-light);font-family:'Tajawal',sans-serif}
 
-  /* SUBJECT ROWS */
-  .subjects-list { display: flex; flex-direction: column; gap: 12px; }
-  .subject-row {
-    display: grid;
-    grid-template-columns: 2fr 100px 80px 80px 44px;
-    gap: 10px;
-    align-items: center;
-    padding: 14px 16px;
-    background: var(--gray-1);
-    border-radius: var(--radius-sm);
-    border: 2px solid transparent;
-    transition: border-color .2s, background .2s;
-  }
-  .subject-row:hover { border-color: var(--teal-light); background: #edf6f9; }
-  .subject-row.active { border-color: var(--teal); background: #e8f5f9; }
-  .subject-row .subject-name {
-    font-size: 14px; font-weight: 700; color: var(--navy);
-    display: flex; align-items: center; gap: 8px;
-  }
-  .subject-dot {
-    width: 9px; height: 9px;
-    border-radius: 50%;
-    background: var(--gray-3);
-    flex-shrink: 0;
-    transition: background .2s;
-  }
-  .subject-row.active .subject-dot { background: var(--teal); }
-  .subject-row .hours-badge {
-    font-size: 12px;
-    color: var(--teal);
-    background: rgba(27,122,140,0.10);
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-weight: 700;
-    text-align: center;
-    white-space: nowrap;
-  }
-  .subject-row .calc-result {
-    font-size: 13px;
-    font-weight: 800;
-    color: var(--navy);
-    text-align: center;
-  }
-  .btn-remove {
-    background: none;
-    border: none;
-    color: var(--gray-3);
-    cursor: pointer;
-    font-size: 18px;
-    line-height: 1;
-    padding: 4px;
-    border-radius: var(--radius-sm);
-    transition: color .2s, background .2s;
-  }
-  .btn-remove:hover { color: var(--danger); background: var(--danger-bg); }
+/* QUOTA MINI */
+.quota-mini{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:14px 0 10px}
+.qbox{padding:10px 8px;border-radius:var(--radius-sm);text-align:center}
+.qbox .qval{font-size:26px;font-weight:900;line-height:1;margin-bottom:2px}
+.qbox .qlbl{font-size:10px;font-family:'Tajawal',sans-serif;font-weight:600}
+.q-tot{background:rgba(13,43,85,.06);color:var(--navy)}
+.q-max{background:rgba(27,122,140,.08);color:var(--teal)}
+.q-rem.safe{background:var(--success-bg);color:var(--success)}
+.q-rem.warn{background:var(--warn-bg);color:var(--warn)}
+.q-rem.over{background:var(--danger-bg);color:var(--danger)}
+.prog-wrap{background:var(--gray-2);border-radius:20px;height:8px;overflow:hidden;margin-bottom:6px}
+.prog-bar{height:100%;border-radius:20px;transition:width .4s,background .3s}
+.prog-bar.safe{background:linear-gradient(90deg,var(--teal),var(--teal-light))}
+.prog-bar.warn{background:linear-gradient(90deg,var(--gold),var(--gold-light))}
+.prog-bar.over{background:linear-gradient(90deg,var(--danger),#e74c3c)}
 
-  .col-label {
-    font-size: 11px; color: var(--text-light); font-weight: 600;
-    text-align: center; font-family: 'Tajawal', sans-serif;
-  }
+/* ALERT MINI */
+.alert-mini{padding:9px 13px;border-radius:var(--radius-sm);font-size:12px;font-family:'Tajawal',sans-serif;display:flex;align-items:flex-start;gap:7px;margin-top:6px}
+.alert-mini .ai{font-size:14px;flex-shrink:0;margin-top:1px}
+.alert-success{background:var(--success-bg);color:var(--success);border:1px solid rgba(26,122,74,.20)}
+.alert-warn{background:var(--warn-bg);color:var(--warn);border:1px solid rgba(184,119,10,.20)}
+.alert-danger{background:var(--danger-bg);color:var(--danger);border:1px solid rgba(192,57,43,.20)}
 
-  .add-subject-row {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-    flex-wrap: wrap;
-  }
-  .add-subject-row select { flex: 1; min-width: 180px; }
-  .add-subject-row select:nth-child(2) { max-width: 140px; }
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:var(--radius-sm);font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all .2s;white-space:nowrap}
+.btn-primary{background:linear-gradient(135deg,var(--teal),var(--teal-light));color:#fff;box-shadow:0 3px 12px rgba(27,122,140,.28)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(27,122,140,.38)}
+.btn-navy{background:var(--navy);color:#fff;box-shadow:0 3px 12px rgba(13,43,85,.20)}
+.btn-navy:hover{background:var(--navy-mid)}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--navy);box-shadow:0 3px 12px rgba(201,162,39,.26)}
+.btn-gold:hover{transform:translateY(-1px)}
+.btn-outline{background:transparent;border:2px solid var(--gray-2);color:var(--text-light)}
+.btn-outline:hover{border-color:var(--teal);color:var(--teal)}
+.btn-danger{background:var(--danger-bg);color:var(--danger);border:2px solid rgba(192,57,43,.15)}
+.btn-danger:hover{background:#f9d6d3}
+.btn-success{background:var(--success-bg);color:var(--success);border:2px solid rgba(26,122,74,.18)}
+.btn-success:hover{background:#d0eddf}
+.btn-sm{padding:7px 13px;font-size:12px}
+.btn-xs{padding:5px 10px;font-size:11px}
+.btn-full{width:100%;justify-content:center}
 
-  /* BUTTONS */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 11px 22px;
-    border-radius: var(--radius-sm);
-    font-family: 'Cairo', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    border: none;
-    transition: all .2s;
-    white-space: nowrap;
-  }
-  .btn-primary {
-    background: linear-gradient(135deg, var(--teal), var(--teal-light));
-    color: #fff;
-    box-shadow: 0 4px 14px rgba(27,122,140,0.30);
-  }
-  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(27,122,140,0.40); }
-  .btn-navy {
-    background: var(--navy);
-    color: #fff;
-    box-shadow: 0 4px 14px rgba(13,43,85,0.22);
-  }
-  .btn-navy:hover { background: var(--navy-mid); }
-  .btn-gold {
-    background: linear-gradient(135deg, var(--gold), var(--gold-light));
-    color: var(--navy);
-    box-shadow: 0 4px 14px rgba(201,162,39,0.28);
-  }
-  .btn-gold:hover { transform: translateY(-1px); }
-  .btn-outline {
-    background: transparent;
-    border: 2px solid var(--gray-2);
-    color: var(--text-light);
-  }
-  .btn-outline:hover { border-color: var(--teal); color: var(--teal); }
-  .btn-danger {
-    background: var(--danger-bg);
-    color: var(--danger);
-    border: 2px solid rgba(192,57,43,0.15);
-  }
-  .btn-danger:hover { background: #f9d6d3; }
-  .btn-sm { padding: 8px 14px; font-size: 13px; }
+/* TEACHERS LIST */
+.teachers-list{display:flex;flex-direction:column;gap:10px}
+.teacher-card{border-radius:var(--radius-sm);border:2px solid var(--gray-2);background:var(--white);overflow:hidden;cursor:pointer;transition:border-color .18s,box-shadow .18s}
+.teacher-card:hover{border-color:var(--teal-light);box-shadow:0 2px 12px rgba(27,122,140,.12)}
+.teacher-card.selected{border-color:var(--teal);box-shadow:0 2px 14px rgba(27,122,140,.18)}
+.teacher-card-head{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;gap:8px}
+.teacher-card-info{display:flex;align-items:center;gap:10px}
+.teacher-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal-light));display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;font-weight:900;flex-shrink:0}
+.teacher-name{font-size:13px;font-weight:800;color:var(--navy)}
+.teacher-meta{font-size:11px;color:var(--text-light);font-family:'Tajawal',sans-serif;margin-top:1px}
+.teacher-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;flex-shrink:0}
+.badge-safe{background:var(--success-bg);color:var(--success)}
+.badge-warn{background:var(--warn-bg);color:var(--warn)}
+.badge-over{background:var(--danger-bg);color:var(--danger)}
+.badge-empty{background:var(--gray-1);color:var(--gray-3)}
+.teacher-actions{display:flex;gap:6px;padding:0 14px 11px;border-top:1px solid var(--gray-1);padding-top:9px}
 
-  /* QUOTA DISPLAY */
-  .quota-display {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 18px;
-  }
-  @media(max-width:600px){ .quota-display { grid-template-columns: 1fr; } }
-  .quota-box {
-    padding: 18px 20px;
-    border-radius: var(--radius-sm);
-    text-align: center;
-  }
-  .quota-box .q-value {
-    font-size: 36px;
-    font-weight: 900;
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-  .quota-box .q-label {
-    font-size: 12px;
-    font-family: 'Tajawal', sans-serif;
-    font-weight: 600;
-  }
-  .q-total { background: rgba(13,43,85,0.06); color: var(--navy); }
-  .q-max { background: rgba(27,122,140,0.08); color: var(--teal); }
-  .q-remain.safe { background: var(--success-bg); color: var(--success); }
-  .q-remain.warn { background: var(--warn-bg); color: var(--warn); }
-  .q-remain.over { background: var(--danger-bg); color: var(--danger); }
+/* RIGHT PANEL */
+.panel-right{display:flex;flex-direction:column;gap:18px}
 
-  /* PROGRESS BAR */
-  .progress-wrap {
-    background: var(--gray-2);
-    border-radius: 20px;
-    height: 12px;
-    overflow: hidden;
-    margin-bottom: 10px;
-  }
-  .progress-bar {
-    height: 100%;
-    border-radius: 20px;
-    transition: width .5s cubic-bezier(.4,0,.2,1), background .3s;
-  }
-  .progress-bar.safe { background: linear-gradient(90deg, var(--teal), var(--teal-light)); }
-  .progress-bar.warn { background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
-  .progress-bar.over { background: linear-gradient(90deg, var(--danger), #e74c3c); }
+/* PRINT TABLE */
+.result-table{width:100%;border-collapse:collapse;font-size:13px}
+.result-table th{background:var(--navy);color:#fff;padding:10px 13px;font-weight:700;text-align:center;font-size:12px}
+.result-table th:first-child{text-align:right}
+.result-table td{padding:10px 13px;border-bottom:1px solid var(--gray-1);text-align:center;font-family:'Tajawal',sans-serif}
+.result-table td:first-child{text-align:right;font-family:'Cairo',sans-serif;font-weight:600}
+.result-table tr:nth-child(even) td{background:var(--gray-1)}
+.result-table tfoot td{background:var(--navy);color:#fff;font-weight:900;font-family:'Cairo',sans-serif;font-size:14px;border:none}
 
-  /* ALERT */
-  .alert {
-    padding: 14px 18px;
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    font-family: 'Tajawal', sans-serif;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-  .alert-icon { font-size: 18px; flex-shrink: 0; }
-  .alert-success { background: var(--success-bg); color: var(--success); border: 1px solid rgba(26,122,74,0.20); }
-  .alert-warn { background: var(--warn-bg); color: var(--warn); border: 1px solid rgba(184,119,10,0.20); }
-  .alert-danger { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(192,57,43,0.20); }
+/* EMPTY */
+.empty-state{text-align:center;padding:36px 16px;color:var(--gray-3)}
+.empty-icon{font-size:44px;margin-bottom:10px}
+.empty-state p{font-family:'Tajawal',sans-serif;font-size:13px}
 
-  /* RESULT TABLE */
-  .result-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-  .result-table th {
-    background: var(--navy);
-    color: #fff;
-    padding: 11px 14px;
-    font-weight: 700;
-    text-align: center;
-    font-size: 13px;
-  }
-  .result-table th:first-child { text-align: right; }
-  .result-table td {
-    padding: 11px 14px;
-    border-bottom: 1px solid var(--gray-1);
-    text-align: center;
-    font-family: 'Tajawal', sans-serif;
-  }
-  .result-table td:first-child { text-align: right; font-family: 'Cairo', sans-serif; font-weight: 600; }
-  .result-table tr:nth-child(even) td { background: var(--gray-1); }
-  .result-table tfoot td {
-    background: var(--navy);
-    color: #fff;
-    font-weight: 900;
-    font-family: 'Cairo', sans-serif;
-    font-size: 15px;
-    border: none;
-  }
+/* DIVIDER */
+.divider{height:2px;background:linear-gradient(90deg,var(--teal),transparent);margin:6px 0 16px;border-radius:2px}
 
-  /* ACTION BAR */
-  .action-bar {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    margin-top: 8px;
-  }
+/* TOAST */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--navy);color:#fff;padding:11px 26px;border-radius:28px;font-size:13px;font-family:'Tajawal',sans-serif;box-shadow:var(--shadow-lg);opacity:0;transition:all .3s;z-index:9999;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-  /* EMPTY STATE */
-  .empty-state {
-    text-align: center;
-    padding: 40px 20px;
-    color: var(--gray-3);
-  }
-  .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
-  .empty-state p { font-family: 'Tajawal', sans-serif; font-size: 14px; }
+/* FOOTER */
+footer{text-align:center;padding:16px;font-size:11px;color:var(--gray-3);font-family:'Tajawal',sans-serif;border-top:1px solid var(--gray-2)}
+footer a{color:var(--teal);text-decoration:none}
 
-  /* TOAST */
-  .toast {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: var(--navy);
-    color: #fff;
-    padding: 12px 28px;
-    border-radius: 30px;
-    font-size: 14px;
-    font-family: 'Tajawal', sans-serif;
-    box-shadow: var(--shadow-lg);
-    opacity: 0;
-    transition: all .3s;
-    z-index: 9999;
-    pointer-events: none;
-  }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+/* TIP */
+.tip{font-size:11px;color:var(--text-light);font-family:'Tajawal',sans-serif;margin:-10px 0 12px}
 
-  /* FOOTER */
-  footer {
-    text-align: center;
-    padding: 18px;
-    font-size: 12px;
-    color: var(--gray-3);
-    font-family: 'Tajawal', sans-serif;
-    border-top: 1px solid var(--gray-2);
-  }
-  footer a { color: var(--teal); text-decoration: none; }
+/* ACTION BAR BOTTOM */
+.action-bar{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
 
-  /* PRINT */
-  @media print {
-    header, .card:not(#result-card), .action-bar, footer { display: none !important; }
-    body { background: #fff; }
-    #result-card { box-shadow: none; border: none; }
-    .result-table { font-size: 12px; }
-    .print-header { display: block !important; }
-  }
-  .print-header { display: none; margin-bottom: 16px; }
-  .print-header h2 { font-size: 18px; font-weight: 900; color: var(--navy); }
-  .print-header p { font-size: 13px; color: var(--text-light); margin-top: 4px; }
-
-  .divider { height: 2px; background: linear-gradient(90deg, var(--teal), transparent); margin: 4px 0 18px; border-radius: 2px; }
-
-  /* CHIP */
-  .chip {
-    display: inline-flex; align-items: center; gap: 5px;
-    background: rgba(27,122,140,0.10); color: var(--teal);
-    padding: 3px 10px; border-radius: 20px;
-    font-size: 12px; font-weight: 700;
-  }
-
-  .section-tip {
-    font-size: 12px;
-    color: var(--text-light);
-    font-family: 'Tajawal', sans-serif;
-    margin-top: -14px;
-    margin-bottom: 16px;
-    padding-right: 4px;
-  }
+/* =========================
+   PRINT STYLES
+   ========================= */
+@media print {
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  body{background:#fff;font-size:12pt}
+  header,footer,.panel-left,.action-bar,.no-print{display:none!important}
+  main{display:block!important;padding:0!important;max-width:100%!important}
+  .panel-right{display:block!important}
+  .print-section{page-break-after:always;margin-bottom:0;padding:18px 22px;border:none;box-shadow:none}
+  .print-section:last-child{page-break-after:avoid}
+  .print-teacher-header{display:block!important;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--navy)}
+  .print-teacher-header h2{font-size:16pt;font-weight:900;color:var(--navy)}
+  .print-teacher-header .meta-row{display:flex;gap:28px;margin-top:6px;flex-wrap:wrap}
+  .print-teacher-header .meta-item{font-size:10pt;color:#333;font-family:'Tajawal',sans-serif}
+  .print-teacher-header .meta-item strong{color:var(--navy);font-family:'Cairo',sans-serif}
+  .print-quota-row{display:flex!important;gap:20px;margin:10px 0 12px;flex-wrap:wrap}
+  .print-qbox{padding:8px 14px;border-radius:6px;min-width:120px;text-align:center}
+  .print-qbox .pqval{font-size:20pt;font-weight:900;line-height:1.1}
+  .print-qbox .pqlbl{font-size:9pt;margin-top:2px}
+  .result-table th{font-size:10pt;padding:8px 10px}
+  .result-table td{font-size:10pt;padding:8px 10px}
+  .result-table tfoot td{font-size:11pt}
+  .print-brand{display:flex!important;justify-content:space-between;align-items:center;font-size:9pt;color:#666;margin-top:10px;font-family:'Tajawal',sans-serif;border-top:1px solid #ccc;padding-top:8px}
+  .card{box-shadow:none!important;border:none!important}
+}
+.print-teacher-header{display:none}
+.print-quota-row{display:none}
+.print-brand{display:none}
 </style>
 </head>
 <body>
@@ -497,185 +207,180 @@
       <div class="header-icon">📚</div>
       <div class="header-title">
         <h1>منصة إسناد المقررات الدراسية</h1>
-        <p>توزيع الحصص وحساب نصاب المعلمة تلقائيًا</p>
+        <p>توزيع الحصص وحساب نصاب المعلمات — المرحلة المتوسطة</p>
       </div>
     </div>
-    <div class="header-badge">المرحلة المتوسطة · الفصل الدراسي الأول</div>
+    <div class="header-badge">المرحلة المتوسطة · متعدد المعلمات</div>
   </div>
 </header>
 
 <main>
+  <!-- ====== RIGHT PANEL ====== -->
+  <div class="panel-right" id="panelRight">
 
-  <!-- TEACHER INFO -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-icon icon-navy">👩‍🏫</div>
-      <div>
-        <h2>بيانات المعلمة</h2>
-        <span>أدخلي البيانات الأساسية</span>
+    <!-- Form Card -->
+    <div class="card no-print" id="formCard">
+      <div class="card-header">
+        <div class="card-icon icon-navy">👩‍🏫</div>
+        <div>
+          <h2 id="formTitle">إضافة معلمة جديدة</h2>
+          <span id="formSubtitle">أدخلي بيانات المعلمة والمقررات المُسندة</span>
+        </div>
+      </div>
+
+      <!-- Teacher Info -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="form-group">
+          <label>اسم المعلمة <em>*</em></label>
+          <input type="text" id="fName" class="form-control" placeholder="الاسم الكامل للمعلمة"/>
+        </div>
+        <div class="form-group">
+          <label>التخصص</label>
+          <select id="fSpec" class="form-control">
+            <option value="">-- التخصص --</option>
+            <option>رياضيات</option><option>علوم</option>
+            <option>لغة عربية</option><option>لغة إنجليزية</option>
+            <option>قرآن كريم ودراسات إسلامية</option>
+            <option>دراسات اجتماعية ووطنية</option>
+            <option>تربية فنية</option><option>تربية بدنية</option>
+            <option>مهارات رقمية</option><option>أخرى</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>الصف الدراسي</label>
+          <select id="fStage" class="form-control" onchange="onStageChange()">
+            <option value="">-- الصف --</option>
+            <option value="1">الصف الأول المتوسط</option>
+            <option value="2">الصف الثاني المتوسط</option>
+            <option value="3">الصف الثالث المتوسط</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>الفصل الدراسي</label>
+          <select id="fSem" class="form-control" onchange="onSemesterChange()">
+            <option value="1">الفصل الأول</option>
+            <option value="2">الفصل الثاني</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>الحد الأقصى للنصاب</label>
+          <select id="fMax" class="form-control" onchange="calcQuota()">
+            <option value="24" selected>24 حصة</option>
+            <option value="20">20 حصة</option>
+            <option value="22">22 حصة</option>
+            <option value="26">26 حصة</option>
+            <option value="28">28 حصة</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>السنة الدراسية</label>
+          <select id="fYear" class="form-control">
+            <option>1446 - 1447 هـ</option>
+            <option>1447 - 1448 هـ</option>
+            <option>1448 - 1449 هـ</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Subjects Section -->
+      <div style="margin-top:4px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <label style="font-size:13px;font-weight:800;color:var(--navy);">المقررات المُسندة</label>
+          <button class="btn btn-outline btn-xs" onclick="addAllSubjects()">➕ إضافة الكل</button>
+        </div>
+        <p class="tip">💡 عدد الحصص يُحسب تلقائيًا حسب الصف والفصل</p>
+
+        <div class="add-row">
+          <select id="newSubj" class="form-control">
+            <option value="">اختاري مقررًا...</option>
+          </select>
+          <select id="newCls" class="form-control" style="width:95px">
+            <option value="1">1 فصل</option>
+            <option value="2">2 فصل</option>
+            <option value="3" selected>3 فصول</option>
+            <option value="4">4 فصول</option>
+            <option value="5">5 فصول</option>
+            <option value="6">6 فصول</option>
+            <option value="7">7 فصول</option>
+            <option value="8">8 فصول</option>
+            <option value="9">9 فصول</option>
+            <option value="10">10 فصول</option>
+          </select>
+          <button class="btn btn-primary btn-sm" onclick="addSubject()">إضافة</button>
+        </div>
+
+        <div class="col-labels">
+          <span style="text-align:right">المقرر</span>
+          <span style="text-align:center">ح/أسبوع</span>
+          <span style="text-align:center">إجمالي</span>
+          <span></span>
+        </div>
+        <div id="chipsWrap" class="subjects-chips">
+          <div class="empty-state" style="padding:18px 10px;">
+            <div class="empty-icon" style="font-size:30px;">📋</div>
+            <p>لم تُضف مقررات بعد</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quota -->
+      <div class="divider" style="margin-top:14px;"></div>
+      <div class="quota-mini">
+        <div class="qbox q-tot"><div class="qval" id="qTotal">0</div><div class="qlbl">إجمالي الحصص</div></div>
+        <div class="qbox q-max"><div class="qval" id="qMax">24</div><div class="qlbl">الحد الأقصى</div></div>
+        <div class="qbox q-rem safe" id="qRemBox"><div class="qval" id="qRem">24</div><div class="qlbl" id="qRemLbl">متبقي</div></div>
+      </div>
+      <div class="prog-wrap"><div class="prog-bar safe" id="qProg" style="width:0%"></div></div>
+      <div id="qAlert" style="display:none" class="alert-mini alert-success">
+        <span class="ai" id="qAlertIcon">✅</span>
+        <span id="qAlertText"></span>
+      </div>
+
+      <!-- Save -->
+      <div style="display:flex;gap:10px;margin-top:16px;">
+        <button class="btn btn-primary btn-full" id="btnSave" onclick="saveTeacher()">💾 حفظ المعلمة</button>
+        <button class="btn btn-outline btn-sm" onclick="cancelEdit()">إلغاء</button>
       </div>
     </div>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>اسم المعلمة <span>*</span></label>
-        <input type="text" id="teacherName" class="form-control" placeholder="أدخلي اسم المعلمة" />
+
+    <!-- Print Preview -->
+    <div class="card no-print" style="padding:18px 22px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+        <div style="font-size:14px;font-weight:800;color:var(--navy);">📄 الطباعة والتصدير</div>
+        <div class="action-bar" style="margin:0">
+          <button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ طباعة الكل</button>
+          <button class="btn btn-gold btn-sm" onclick="exportExcel()">📊 Excel</button>
+        </div>
       </div>
-      <div class="form-group">
-        <label>التخصص</label>
-        <select id="teacherSpec" class="form-control">
-          <option value="">-- اختاري التخصص --</option>
-          <option>رياضيات</option>
-          <option>علوم</option>
-          <option>لغة عربية</option>
-          <option>لغة إنجليزية</option>
-          <option>قرآن كريم ودراسات إسلامية</option>
-          <option>دراسات اجتماعية</option>
-          <option>تربية فنية</option>
-          <option>تربية بدنية</option>
-          <option>مهارات رقمية</option>
-          <option>معلمة صف (تدريس جميع المواد)</option>
-          <option>أخرى</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>المرحلة الدراسية</label>
-        <select id="teacherStage" class="form-control" onchange="updateStageDefaults()">
-          <option value="">-- اختاري الصف --</option>
-          <option value="1">الصف الأول المتوسط</option>
-          <option value="2">الصف الثاني المتوسط</option>
-          <option value="3">الصف الثالث المتوسط</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>الفصل الدراسي</label>
-        <select id="teacherSemester" class="form-control" onchange="updateHoursFromSemester()">
-          <option value="1">الفصل الدراسي الأول</option>
-          <option value="2">الفصل الدراسي الثاني</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>الحد الأقصى للنصاب (حصة/أسبوع)</label>
-        <select id="maxQuota" class="form-control" onchange="updateResults()">
-          <option value="24" selected>24 حصة (الحد الأعلى)</option>
-          <option value="20">20 حصة</option>
-          <option value="22">22 حصة</option>
-          <option value="26">26 حصة</option>
-          <option value="28">28 حصة</option>
-          <option value="30">30 حصة</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>السنة الدراسية</label>
-        <select id="schoolYear" class="form-control">
-          <option>1446 - 1447 هـ</option>
-          <option>1447 - 1448 هـ</option>
-          <option>1448 - 1449 هـ</option>
-        </select>
-      </div>
+      <p style="font-size:11px;color:var(--text-light);font-family:'Tajawal',sans-serif;margin-top:8px;">
+        ستُطبع جميع المعلمات مع كامل بياناتهن وجداول الإسناد — كل معلمة في صفحة مستقلة
+      </p>
     </div>
+
+    <!-- Print Pages (hidden on screen) -->
+    <div id="printPages"></div>
+
   </div>
 
-  <!-- SUBJECTS -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-icon icon-teal">📋</div>
-      <div>
-        <h2>المقررات الدراسية المُسندة</h2>
-        <span>اختاري المقرر وعدد الفصول لكل مقرر</span>
+  <!-- ====== LEFT PANEL ====== -->
+  <div class="panel-left no-print">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon icon-teal">👥</div>
+        <div>
+          <h2>قائمة المعلمات</h2>
+          <span id="teacherCount">لا توجد معلمات مُضافة</span>
+        </div>
       </div>
-    </div>
-    <p class="section-tip">💡 عدد الحصص الأسبوعية يُحسب تلقائيًا بناءً على الجدول الرسمي للمركز الوطني للمناهج</p>
-
-    <!-- Column Labels -->
-    <div style="display:grid;grid-template-columns:2fr 100px 80px 80px 44px;gap:10px;padding:0 16px 8px;">
-      <span class="col-label" style="text-align:right">المقرر الدراسي</span>
-      <span class="col-label">ح/أسبوع</span>
-      <span class="col-label">الفصول</span>
-      <span class="col-label">إجمالي الحصص</span>
-      <span></span>
-    </div>
-
-    <div class="subjects-list" id="subjectsList">
-      <div class="empty-state">
-        <div class="empty-icon">📝</div>
-        <p>لم يتم إضافة أي مقرر بعد<br>اختاري من القائمة أدناه لإضافة مقررات</p>
+      <div id="teachersList">
+        <div class="empty-state">
+          <div class="empty-icon">👩‍🏫</div>
+          <p>أضيفي أول معلمة من النموذج<br>وستظهر هنا</p>
+        </div>
       </div>
-    </div>
-
-    <div class="add-subject-row" style="margin-top:18px;">
-      <select id="newSubject" class="form-control">
-        <option value="">➕ اختاري مقررًا لإضافته...</option>
-      </select>
-      <select id="newClasses" class="form-control" style="max-width:130px;">
-        <option value="1">1 فصل</option>
-        <option value="2">2 فصل</option>
-        <option value="3" selected>3 فصول</option>
-        <option value="4">4 فصول</option>
-        <option value="5">5 فصول</option>
-        <option value="6">6 فصول</option>
-        <option value="7">7 فصول</option>
-        <option value="8">8 فصول</option>
-        <option value="9">9 فصول</option>
-        <option value="10">10 فصول</option>
-      </select>
-      <button class="btn btn-primary" onclick="addSubject()">➕ إضافة مقرر</button>
-      <button class="btn btn-outline btn-sm" onclick="addAllSubjects()">إضافة جميع المقررات</button>
-    </div>
-  </div>
-
-  <!-- QUOTA RESULT -->
-  <div class="card" id="result-card">
-    <div class="card-header">
-      <div class="card-icon icon-gold">📊</div>
-      <div>
-        <h2>حساب نصاب المعلمة</h2>
-        <span>النتائج تُحدَّث تلقائيًا</span>
+      <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-danger btn-sm btn-full" onclick="clearAll()">🗑️ حذف الكل</button>
       </div>
-    </div>
-
-    <div class="print-header">
-      <h2 id="printTeacherTitle">بيانات توزيع الحصص</h2>
-      <p id="printTeacherSub"></p>
-    </div>
-
-    <div class="quota-display">
-      <div class="quota-box q-total">
-        <div class="q-value" id="totalHours">0</div>
-        <div class="q-label">إجمالي الحصص الأسبوعية</div>
-      </div>
-      <div class="quota-box q-max">
-        <div class="q-value" id="maxHours">24</div>
-        <div class="q-label">الحد الأقصى للنصاب</div>
-      </div>
-      <div class="quota-box q-remain safe" id="remainBox">
-        <div class="q-value" id="remainHours">24</div>
-        <div class="q-label" id="remainLabel">متبقي من النصاب</div>
-      </div>
-    </div>
-
-    <div class="progress-wrap">
-      <div class="progress-bar safe" id="progressBar" style="width:0%"></div>
-    </div>
-
-    <div id="alertBox" class="alert alert-success" style="display:none">
-      <span class="alert-icon" id="alertIcon">✅</span>
-      <span id="alertText"></span>
-    </div>
-
-    <div class="divider"></div>
-
-    <div id="resultTableWrap">
-      <div class="empty-state" style="padding:24px;">
-        <div class="empty-icon" style="font-size:32px;">📋</div>
-        <p>أضيفي مقررات لعرض جدول التوزيع</p>
-      </div>
-    </div>
-
-    <div class="action-bar" style="margin-top:20px;">
-      <button class="btn btn-primary" onclick="window.print()">🖨️ طباعة</button>
-      <button class="btn btn-gold" onclick="exportExcel()">📊 تصدير Excel</button>
-      <button class="btn btn-navy" onclick="exportPDF()">📄 تصدير PDF</button>
-      <button class="btn btn-danger btn-sm" onclick="resetAll()">🔄 إعادة تعيين</button>
     </div>
   </div>
 
@@ -683,296 +388,455 @@
 
 <div class="toast" id="toast"></div>
 
-<footer>
-  تصميم د/فواز &nbsp;|&nbsp; <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">قروب التميز في التقويم والتعليم</a>
+<footer class="no-print">
+  تصميم د/فواز &nbsp;|&nbsp;
+  <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">قروب التميز في التقويم والتعليم</a>
 </footer>
 
 <script>
-// ==============================
-// DATA: subjects by stage & semester
-// Based on the official NCC table in the image
-// ==============================
+/* =====================================================
+   DATA
+   ===================================================== */
 const SUBJECTS_DATA = {
-  "القرآن الكريم والدراسات الإسلامية": { 1: {1:5, 2:5}, 2: {1:5, 2:5}, 3: {1:5, 2:5} },
-  "اللغة العربية":                       { 1: {1:5, 2:5}, 2: {1:5, 2:5}, 3: {1:4, 2:4} },
-  "الدراسات الاجتماعية":                 { 1: {1:3, 2:3}, 2: {1:3, 2:3}, 3: {1:2, 2:2} },
-  "الرياضيات":                            { 1: {1:6, 2:6}, 2: {1:6, 2:6}, 3: {1:6, 2:6} },
-  "العلوم":                               { 1: {1:4, 2:4}, 2: {1:4, 2:4}, 3: {1:4, 2:4} },
-  "اللغة الإنجليزية":                    { 1: {1:4, 2:4}, 2: {1:4, 2:4}, 3: {1:4, 2:4} },
-  "المهارات الرقمية":                    { 1: {1:2, 2:2}, 2: {1:2, 2:2}, 3: {1:2, 2:2} },
-  "التربية الفنية":                      { 1: {1:2, 2:2}, 2: {1:2, 2:2}, 3: {1:2, 2:2} },
-  "التربية البدنية والدفاع عن النفس":    { 1: {1:2, 2:2}, 2: {1:2, 2:2}, 3: {1:2, 2:2} },
-  "المهارات الحياتية والأسرية":          { 1: {1:1, 2:1}, 2: {1:1, 2:1}, 3: {1:1, 2:1} },
-  "التفكير الناقد":                      { 1: {1:null, 2:null}, 2: {1:null, 2:null}, 3: {1:2, 2:2} },
-  "النشاط":                              { 1: {1:1, 2:1}, 2: {1:1, 2:1}, 3: {1:1, 2:1} },
+  "القرآن الكريم والدراسات الإسلامية":{ 1:{1:5,2:5},2:{1:5,2:5},3:{1:5,2:5} },
+  "اللغة العربية":                      { 1:{1:5,2:5},2:{1:5,2:5},3:{1:5,2:5} },
+  "الدراسات الاجتماعية والوطنية":       { 1:{1:3,2:3},2:{1:3,2:3},3:{1:3,2:3} },
+  "الرياضيات":                           { 1:{1:5,2:5},2:{1:5,2:5},3:{1:5,2:5} },
+  "العلوم":                              { 1:{1:4,2:4},2:{1:4,2:4},3:{1:4,2:4} },
+  "اللغة الإنجليزية":                   { 1:{1:5,2:5},2:{1:5,2:5},3:{1:5,2:5} },
+  "المهارات الرقمية":                   { 1:{1:2,2:2},2:{1:2,2:2},3:{1:2,2:2} },
+  "التربية الفنية":                     { 1:{1:1,2:1},2:{1:1,2:1},3:{1:1,2:1} },
+  "التربية البدنية والدفاع عن النفس":   { 1:{1:2,2:2},2:{1:2,2:2},3:{1:2,2:2} },
+  "المهارات الحياتية والأسرية":         { 1:{1:2,2:2},2:{1:2,2:2},3:{1:2,2:2} },
+  "التفكير الناقد":                     { 1:{1:1,2:1},2:{1:1,2:1},3:{1:1,2:1} },
+  "النشاط":                             { 1:{1:1,2:1},2:{1:1,2:1},3:{1:1,2:1} },
 };
 
-// Added rows list
-let addedSubjects = []; // { name, classCount, hoursPerWeek }
+const STAGE_NAMES = { 1:'الصف الأول المتوسط', 2:'الصف الثاني المتوسط', 3:'الصف الثالث المتوسط' };
+const SEM_NAMES   = { 1:'الفصل الدراسي الأول', 2:'الفصل الدراسي الثاني' };
 
-function getHoursForSubject(name) {
-  const stage = parseInt(document.getElementById('teacherStage').value) || 1;
-  const sem = parseInt(document.getElementById('teacherSemester').value) || 1;
-  const data = SUBJECTS_DATA[name];
-  if (!data) return 0;
-  const h = data[stage]?.[sem];
-  return h === null ? 0 : (h || 0);
+/* =====================================================
+   STATE
+   ===================================================== */
+let teachers = [];        // saved teachers
+let editId    = null;     // null = new, else teacher index
+let formSubjects = [];    // [{name, classCount, hoursPerWeek}]
+
+/* =====================================================
+   HELPERS
+   ===================================================== */
+function getStage(){ return parseInt(document.getElementById('fStage').value)||1; }
+function getSem()  { return parseInt(document.getElementById('fSem').value)||1;   }
+function getMax()  { return parseInt(document.getElementById('fMax').value)||24;  }
+
+function hrsFor(name){
+  const d=SUBJECTS_DATA[name]; if(!d)return 0;
+  const h=d[getStage()]?.[getSem()];
+  return(h===null||h===undefined)?0:h;
 }
 
-function populateSubjectDropdown() {
-  const sel = document.getElementById('newSubject');
-  const added = addedSubjects.map(s => s.name);
-  sel.innerHTML = '<option value="">➕ اختاري مقررًا لإضافته...</option>';
-  Object.keys(SUBJECTS_DATA).forEach(name => {
-    if (!added.includes(name)) {
-      const opt = document.createElement('option');
-      opt.value = name;
-      opt.textContent = name;
-      sel.appendChild(opt);
+function avatarLetter(name){ return name?name.trim()[0]:'م'; }
+
+function statusClass(total,max){
+  if(!total)return 'empty';
+  const r=max-total;
+  if(r>4)return 'safe'; if(r>=0)return 'warn'; return 'over';
+}
+function statusBadge(total,max){
+  const s=statusClass(total,max);
+  if(s==='empty')return{cls:'badge-empty',txt:'—'};
+  if(s==='safe')return{cls:'badge-safe',txt:total+' ح ✓'};
+  if(s==='warn')return{cls:'badge-warn',txt:total+' ح ⚠️'};
+  return{cls:'badge-over',txt:total+' ح 🚫'};
+}
+
+/* =====================================================
+   SUBJECT DROPDOWN
+   ===================================================== */
+function refreshSubjectDropdown(){
+  const sel=document.getElementById('newSubj');
+  const added=formSubjects.map(s=>s.name);
+  sel.innerHTML='<option value="">اختاري مقررًا...</option>';
+  Object.keys(SUBJECTS_DATA).forEach(n=>{
+    if(!added.includes(n)){
+      const o=document.createElement('option');
+      o.value=o.textContent=n; sel.appendChild(o);
     }
   });
 }
 
-function addSubject() {
-  const name = document.getElementById('newSubject').value;
-  const classCount = parseInt(document.getElementById('newClasses').value);
-  if (!name) { showToast('⚠️ اختاري مقررًا أولًا'); return; }
-
-  const hoursPerWeek = getHoursForSubject(name);
-  addedSubjects.push({ name, classCount, hoursPerWeek });
-  renderSubjects();
-  populateSubjectDropdown();
-  updateResults();
-  document.getElementById('newSubject').value = '';
-  showToast(`✅ تمت إضافة: ${name}`);
+function addSubject(){
+  const name=document.getElementById('newSubj').value;
+  const cls=parseInt(document.getElementById('newCls').value)||1;
+  if(!name){showToast('⚠️ اختاري مقررًا');return;}
+  formSubjects.push({name,classCount:cls,hoursPerWeek:hrsFor(name)});
+  renderChips(); refreshSubjectDropdown(); calcQuota();
+  document.getElementById('newSubj').value='';
 }
 
-function addAllSubjects() {
-  const stage = parseInt(document.getElementById('teacherStage').value) || 1;
-  const sem = parseInt(document.getElementById('teacherSemester').value) || 1;
-  const classCount = parseInt(document.getElementById('newClasses').value);
-  const added = addedSubjects.map(s => s.name);
-  Object.keys(SUBJECTS_DATA).forEach(name => {
-    if (!added.includes(name)) {
-      const h = SUBJECTS_DATA[name]?.[stage]?.[sem];
-      if (h !== null && h !== undefined && h > 0) {
-        addedSubjects.push({ name, classCount, hoursPerWeek: h });
-      }
+function addAllSubjects(){
+  const added=formSubjects.map(s=>s.name);
+  const cls=parseInt(document.getElementById('newCls').value)||1;
+  Object.keys(SUBJECTS_DATA).forEach(n=>{
+    if(!added.includes(n)){
+      const h=hrsFor(n);
+      if(h>0) formSubjects.push({name:n,classCount:cls,hoursPerWeek:h});
     }
   });
-  renderSubjects();
-  populateSubjectDropdown();
-  updateResults();
+  renderChips(); refreshSubjectDropdown(); calcQuota();
   showToast('✅ تمت إضافة جميع المقررات');
 }
 
-function removeSubject(idx) {
-  addedSubjects.splice(idx, 1);
-  renderSubjects();
-  populateSubjectDropdown();
-  updateResults();
+function removeSubject(i){
+  formSubjects.splice(i,1);
+  renderChips(); refreshSubjectDropdown(); calcQuota();
 }
 
-function updateClassCount(idx, val) {
-  addedSubjects[idx].classCount = parseInt(val) || 1;
-  renderSubjects();
-  updateResults();
+function updateCls(i,v){
+  formSubjects[i].classCount=parseInt(v)||1;
+  renderChips(); calcQuota();
 }
 
-function renderSubjects() {
-  const list = document.getElementById('subjectsList');
-  if (addedSubjects.length === 0) {
-    list.innerHTML = `<div class="empty-state"><div class="empty-icon">📝</div><p>لم يتم إضافة أي مقرر بعد<br>اختاري من القائمة أدناه لإضافة مقررات</p></div>`;
-    return;
+function renderChips(){
+  const wrap=document.getElementById('chipsWrap');
+  if(!formSubjects.length){
+    wrap.innerHTML=`<div class="empty-state" style="padding:18px 10px;">
+      <div class="empty-icon" style="font-size:30px;">📋</div>
+      <p>لم تُضف مقررات بعد</p></div>`; return;
   }
-  list.innerHTML = addedSubjects.map((s, i) => {
-    const total = s.hoursPerWeek * s.classCount;
-    const options = [1,2,3,4,5,6,7,8,9,10].map(n =>
-      `<option value="${n}" ${s.classCount===n?'selected':''}>${n}</option>`
-    ).join('');
-    return `
-    <div class="subject-row ${total>0?'active':''}">
-      <div class="subject-name">
-        <span class="subject-dot"></span>
-        ${s.name}
+  wrap.innerHTML=formSubjects.map((s,i)=>{
+    const tot=s.hoursPerWeek*s.classCount;
+    const opts=[1,2,3,4,5,6,7,8,9,10].map(n=>`<option value="${n}"${s.classCount===n?' selected':''}>${n}</option>`).join('');
+    return`<div class="subject-chip${tot>0?' active':''}">
+      <div class="chip-name"><span class="chip-dot"></span>${s.name}</div>
+      <div class="chip-hrs">${s.hoursPerWeek} ح</div>
+      <div style="display:flex;align-items:center;gap:4px;justify-content:center;">
+        <select class="form-control" style="font-size:11px;padding:4px 6px;width:56px;" onchange="updateCls(${i},this.value)">${opts}</select>
+        <span class="chip-total">${tot}</span>
       </div>
-      <div class="hours-badge">${s.hoursPerWeek} ح/أسبوع</div>
-      <select class="form-control" style="font-size:13px;padding:8px 10px;" onchange="updateClassCount(${i},this.value)">${options}</select>
-      <div class="calc-result">${total} حصة</div>
-      <button class="btn-remove" onclick="removeSubject(${i})" title="حذف">✕</button>
+      <button class="btn-x" onclick="removeSubject(${i})">✕</button>
     </div>`;
   }).join('');
 }
 
-function updateResults() {
-  const maxQ = parseInt(document.getElementById('maxQuota').value) || 24;
-  const total = addedSubjects.reduce((sum, s) => sum + (s.hoursPerWeek * s.classCount), 0);
-  const remain = maxQ - total;
-  const pct = Math.min((total / maxQ) * 100, 100);
+/* =====================================================
+   QUOTA CALC
+   ===================================================== */
+function calcQuota(){
+  const max=getMax();
+  const total=formSubjects.reduce((s,x)=>s+(x.hoursPerWeek*x.classCount),0);
+  const remain=max-total;
+  const pct=Math.min((total/max)*100,100);
 
-  document.getElementById('totalHours').textContent = total;
-  document.getElementById('maxHours').textContent = maxQ;
-  document.getElementById('remainHours').textContent = Math.abs(remain);
+  document.getElementById('qTotal').textContent=total;
+  document.getElementById('qMax').textContent=max;
+  document.getElementById('qRem').textContent=Math.abs(remain);
 
-  const remainBox = document.getElementById('remainBox');
-  const progressBar = document.getElementById('progressBar');
-  const alertBox = document.getElementById('alertBox');
-  const remainLabel = document.getElementById('remainLabel');
-  const alertText = document.getElementById('alertText');
-  const alertIcon = document.getElementById('alertIcon');
+  const rb=document.getElementById('qRemBox'),
+        pb=document.getElementById('qProg'),
+        al=document.getElementById('qAlert'),
+        at=document.getElementById('qAlertText'),
+        ai=document.getElementById('qAlertIcon'),
+        rl=document.getElementById('qRemLbl');
 
-  remainBox.className = 'quota-box q-remain';
-  progressBar.className = 'progress-bar';
-  alertBox.style.display = 'flex';
+  rb.className='qbox q-rem'; pb.className='prog-bar'; pb.style.width=pct+'%';
 
-  if (total === 0) {
-    alertBox.style.display = 'none';
-    progressBar.style.width = '0%';
-    progressBar.className = 'progress-bar safe';
-    remainBox.classList.add('safe');
-    remainLabel.textContent = 'متبقي من النصاب';
-    document.getElementById('remainHours').textContent = maxQ;
-    return;
-  }
+  if(!total){al.style.display='none';rb.classList.add('safe');pb.classList.add('safe');document.getElementById('qRem').textContent=max;rl.textContent='متبقي';return;}
 
-  if (remain > 4) {
-    remainBox.classList.add('safe');
-    progressBar.classList.add('safe');
-    alertBox.className = 'alert alert-success';
-    alertIcon.textContent = '✅';
-    alertText.textContent = `النصاب مناسب — مجموع الحصص (${total}) ضمن الحد الأقصى (${maxQ} حصة). المتبقي: ${remain} حصة.`;
-    remainLabel.textContent = 'متبقي من النصاب';
-  } else if (remain >= 0) {
-    remainBox.classList.add('warn');
-    progressBar.classList.add('warn');
-    alertBox.className = 'alert alert-warn';
-    alertIcon.textContent = '⚠️';
-    alertText.textContent = `النصاب قريب من الحد الأقصى — مجموع الحصص (${total}) من أصل (${maxQ}). المتبقي: ${remain} حصة فقط.`;
-    remainLabel.textContent = 'متبقي من النصاب';
+  al.style.display='flex';
+  if(remain>4){
+    rb.classList.add('safe');pb.classList.add('safe');
+    al.className='alert-mini alert-success';ai.textContent='✅';
+    at.textContent=`النصاب مناسب — ${total} حصة من أصل ${max}، المتبقي: ${remain} حصة.`;
+    rl.textContent='متبقي';
+  } else if(remain>=0){
+    rb.classList.add('warn');pb.classList.add('warn');
+    al.className='alert-mini alert-warn';ai.textContent='⚠️';
+    at.textContent=`النصاب قريب من الحد الأقصى — المتبقي: ${remain} حصة فقط.`;
+    rl.textContent='متبقي';
   } else {
-    remainBox.classList.add('over');
-    progressBar.classList.add('over');
-    alertBox.className = 'alert alert-danger';
-    alertIcon.textContent = '🚫';
-    alertText.textContent = `تجاوز النصاب المحدد! مجموع الحصص (${total}) يتجاوز الحد الأقصى بـ (${Math.abs(remain)}) حصة. يرجى مراجعة توزيع المقررات.`;
-    remainLabel.textContent = 'تجاوز النصاب بـ';
+    rb.classList.add('over');pb.classList.add('over');
+    al.className='alert-mini alert-danger';ai.textContent='🚫';
+    at.textContent=`تجاوز النصاب! يتجاوز الحد الأقصى بـ ${Math.abs(remain)} حصة.`;
+    rl.textContent='تجاوز بـ';
   }
-
-  progressBar.style.width = pct + '%';
-  renderResultTable(total);
 }
 
-function renderResultTable(total) {
-  const wrap = document.getElementById('resultTableWrap');
-  if (addedSubjects.length === 0) {
-    wrap.innerHTML = `<div class="empty-state" style="padding:24px;"><div class="empty-icon" style="font-size:32px;">📋</div><p>أضيفي مقررات لعرض جدول التوزيع</p></div>`;
-    return;
+function onStageChange(){ refreshHours(); }
+function onSemesterChange(){ refreshHours(); }
+function refreshHours(){
+  formSubjects.forEach(s=>{ s.hoursPerWeek=hrsFor(s.name); });
+  renderChips(); calcQuota();
+}
+
+/* =====================================================
+   SAVE TEACHER
+   ===================================================== */
+function saveTeacher(){
+  const name=document.getElementById('fName').value.trim();
+  if(!name){showToast('⚠️ أدخلي اسم المعلمة');return;}
+
+  const teacher={
+    id: editId!==null ? teachers[editId].id : Date.now(),
+    name,
+    spec:  document.getElementById('fSpec').value,
+    stage: getStage(),
+    sem:   getSem(),
+    max:   getMax(),
+    year:  document.getElementById('fYear').value,
+    subjects: JSON.parse(JSON.stringify(formSubjects)),
+    total: formSubjects.reduce((s,x)=>s+(x.hoursPerWeek*x.classCount),0)
+  };
+
+  if(editId!==null){
+    teachers[editId]=teacher;
+    showToast(`✅ تم تحديث بيانات: ${name}`);
+    editId=null;
+  } else {
+    teachers.push(teacher);
+    showToast(`✅ تمت إضافة المعلمة: ${name}`);
   }
-  const rows = addedSubjects.map(s => {
-    const t = s.hoursPerWeek * s.classCount;
-    return `<tr>
-      <td>${s.name}</td>
-      <td>${s.hoursPerWeek}</td>
-      <td>${s.classCount}</td>
-      <td><strong>${t}</strong></td>
-    </tr>`;
+
+  resetForm();
+  renderTeachersList();
+  buildPrintPages();
+}
+
+function resetForm(){
+  document.getElementById('fName').value='';
+  document.getElementById('fSpec').value='';
+  document.getElementById('fStage').value='';
+  document.getElementById('fSem').value='1';
+  document.getElementById('fMax').value='24';
+  document.getElementById('fYear').selectedIndex=0;
+  formSubjects=[];
+  editId=null;
+  document.getElementById('formTitle').textContent='إضافة معلمة جديدة';
+  document.getElementById('formSubtitle').textContent='أدخلي بيانات المعلمة والمقررات المُسندة';
+  document.getElementById('btnSave').textContent='💾 حفظ المعلمة';
+  renderChips(); refreshSubjectDropdown(); calcQuota();
+}
+
+function cancelEdit(){ resetForm(); }
+
+/* =====================================================
+   EDIT / DELETE
+   ===================================================== */
+function editTeacher(idx){
+  const t=teachers[idx];
+  editId=idx;
+  document.getElementById('fName').value=t.name;
+  document.getElementById('fSpec').value=t.spec;
+  document.getElementById('fStage').value=t.stage||'';
+  document.getElementById('fSem').value=t.sem||1;
+  document.getElementById('fMax').value=t.max||24;
+  document.getElementById('fYear').value=t.year;
+  formSubjects=JSON.parse(JSON.stringify(t.subjects));
+  document.getElementById('formTitle').textContent='✏️ تعديل: '+t.name;
+  document.getElementById('formSubtitle').textContent='عدّلي البيانات ثم احفظي';
+  document.getElementById('btnSave').textContent='💾 حفظ التعديلات';
+  renderChips(); refreshSubjectDropdown(); calcQuota();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function deleteTeacher(idx){
+  if(!confirm('هل تريدين حذف هذه المعلمة؟'))return;
+  teachers.splice(idx,1);
+  if(editId===idx) resetForm();
+  renderTeachersList(); buildPrintPages();
+  showToast('🗑️ تم الحذف');
+}
+
+function clearAll(){
+  if(!teachers.length)return;
+  if(!confirm('هل تريدين حذف جميع المعلمات؟'))return;
+  teachers=[]; resetForm(); renderTeachersList(); buildPrintPages();
+  showToast('🗑️ تم مسح الجميع');
+}
+
+/* =====================================================
+   TEACHERS LIST (sidebar)
+   ===================================================== */
+function renderTeachersList(){
+  const wrap=document.getElementById('teachersList');
+  const cnt=document.getElementById('teacherCount');
+  cnt.textContent=teachers.length?`${teachers.length} معلمة مُضافة`:'لا توجد معلمات مُضافة';
+
+  if(!teachers.length){
+    wrap.innerHTML=`<div class="empty-state">
+      <div class="empty-icon">👩‍🏫</div>
+      <p>أضيفي أول معلمة من النموذج<br>وستظهر هنا</p></div>`; return;
+  }
+
+  wrap.innerHTML=teachers.map((t,i)=>{
+    const b=statusBadge(t.total,t.max);
+    const stageName=STAGE_NAMES[t.stage]||'';
+    const semName=SEM_NAMES[t.sem]||'';
+    return`<div class="teacher-card" id="tc-${i}">
+      <div class="teacher-card-head">
+        <div class="teacher-card-info">
+          <div class="teacher-avatar">${avatarLetter(t.name)}</div>
+          <div>
+            <div class="teacher-name">${t.name}</div>
+            <div class="teacher-meta">${t.spec||'—'} | ${stageName}</div>
+            <div class="teacher-meta">${semName} | ${t.year}</div>
+          </div>
+        </div>
+        <span class="teacher-badge ${b.cls}">${b.txt}</span>
+      </div>
+      <div class="teacher-actions">
+        <button class="btn btn-outline btn-xs" onclick="editTeacher(${i})">✏️ تعديل</button>
+        <button class="btn btn-danger btn-xs" onclick="deleteTeacher(${i})">🗑️ حذف</button>
+      </div>
+    </div>`;
   }).join('');
-  wrap.innerHTML = `
-    <table class="result-table">
-      <thead>
-        <tr>
+}
+
+/* =====================================================
+   BUILD PRINT PAGES
+   ===================================================== */
+function buildPrintPages(){
+  const wrap=document.getElementById('printPages');
+  if(!teachers.length){wrap.innerHTML='';return;}
+
+  wrap.innerHTML=teachers.map((t,i)=>{
+    const total=t.total;
+    const remain=t.max-total;
+    const pct=Math.min(Math.round((total/t.max)*100),100);
+    const sc=statusClass(total,t.max);
+    const stageName=STAGE_NAMES[t.stage]||'—';
+    const semName=SEM_NAMES[t.sem]||'—';
+
+    let remColor='#1A7A4A',remBg='#E6F5EE';
+    if(sc==='warn'){remColor='#B8770A';remBg='#FEF6E4';}
+    if(sc==='over'){remColor='#C0392B';remBg='#FDECEA';}
+
+    const rows=t.subjects.map(s=>{
+      const tot=s.hoursPerWeek*s.classCount;
+      return`<tr>
+        <td>${s.name}</td>
+        <td>${s.hoursPerWeek}</td>
+        <td>${s.classCount}</td>
+        <td><strong>${tot}</strong></td>
+      </tr>`;
+    }).join('');
+
+    const tableOrEmpty=t.subjects.length?`
+      <table class="result-table">
+        <thead><tr>
           <th>المقرر الدراسي</th>
           <th>ح/أسبوع</th>
           <th>عدد الفصول</th>
           <th>إجمالي الحصص</th>
-        </tr>
-      </thead>
-      <tbody>${rows}</tbody>
-      <tfoot>
-        <tr>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+        <tfoot><tr>
           <td colspan="3">المجموع الكلي للحصص الأسبوعية</td>
           <td>${total} حصة</td>
-        </tr>
-      </tfoot>
-    </table>`;
+        </tr></tfoot>
+      </table>`:'<p style="color:#9BACC4;text-align:center;padding:16px;font-family:Tajawal,sans-serif;">لا توجد مقررات مُسندة</p>';
+
+    return`<div class="card print-section">
+      <!-- Teacher Header (visible on print) -->
+      <div class="print-teacher-header">
+        <h2>${t.name}</h2>
+        <div class="meta-row">
+          <div class="meta-item"><strong>التخصص:</strong> ${t.spec||'—'}</div>
+          <div class="meta-item"><strong>الصف:</strong> ${stageName}</div>
+          <div class="meta-item"><strong>الفصل:</strong> ${semName}</div>
+          <div class="meta-item"><strong>السنة:</strong> ${t.year}</div>
+        </div>
+      </div>
+
+      <!-- Quota (visible on print) -->
+      <div class="print-quota-row">
+        <div class="print-qbox" style="background:rgba(13,43,85,.06);color:#0D2B55">
+          <div class="pqval">${total}</div>
+          <div class="pqlbl">إجمالي الحصص الأسبوعية</div>
+        </div>
+        <div class="print-qbox" style="background:rgba(27,122,140,.08);color:#1B7A8C">
+          <div class="pqval">${t.max}</div>
+          <div class="pqlbl">الحد الأقصى للنصاب</div>
+        </div>
+        <div class="print-qbox" style="background:${remBg};color:${remColor}">
+          <div class="pqval">${Math.abs(remain)}</div>
+          <div class="pqlbl">${remain<0?'تجاوز النصاب بـ':'متبقي من النصاب'}</div>
+        </div>
+        <div class="print-qbox" style="background:rgba(13,43,85,.06);color:#0D2B55">
+          <div class="pqval">${pct}%</div>
+          <div class="pqlbl">نسبة الاستخدام</div>
+        </div>
+      </div>
+
+      ${tableOrEmpty}
+
+      <!-- Brand -->
+      <div class="print-brand">
+        <span>تصميم د/فواز</span>
+        <span>منصة إسناد المقررات الدراسية — المرحلة المتوسطة</span>
+        <span>${t.year}</span>
+      </div>
+    </div>`;
+  }).join('');
 }
 
-function updateStageDefaults() {
-  updateHoursFromSemester();
-}
+/* =====================================================
+   EXPORT EXCEL
+   ===================================================== */
+function exportExcel(){
+  if(!teachers.length){showToast('⚠️ لا توجد معلمات لتصديرها');return;}
+  const wb=XLSX.utils.book_new();
 
-function updateHoursFromSemester() {
-  // refresh hours for existing subjects based on new stage/semester
-  const stage = parseInt(document.getElementById('teacherStage').value) || 1;
-  const sem = parseInt(document.getElementById('teacherSemester').value) || 1;
-  addedSubjects.forEach(s => {
-    const d = SUBJECTS_DATA[s.name];
-    if (d) {
-      const h = d[stage]?.[sem];
-      s.hoursPerWeek = (h === null || h === undefined) ? 0 : h;
-    }
-  });
-  renderSubjects();
-  updateResults();
-}
-
-function resetAll() {
-  if (!confirm('هل تريدين إعادة تعيين جميع البيانات؟')) return;
-  addedSubjects = [];
-  document.getElementById('teacherName').value = '';
-  document.getElementById('teacherSpec').value = '';
-  document.getElementById('teacherStage').value = '';
-  document.getElementById('teacherSemester').value = '1';
-  renderSubjects();
-  populateSubjectDropdown();
-  updateResults();
-  showToast('🔄 تمت إعادة التعيين');
-}
-
-function exportExcel() {
-  const name = document.getElementById('teacherName').value || 'المعلمة';
-  const spec = document.getElementById('teacherSpec').value || '';
-  const maxQ = parseInt(document.getElementById('maxQuota').value) || 24;
-  const total = addedSubjects.reduce((sum, s) => sum + (s.hoursPerWeek * s.classCount), 0);
-
-  const wb = XLSX.utils.book_new();
-  const wsData = [
-    ['منصة إسناد المقررات الدراسية'],
-    [''],
-    ['اسم المعلمة:', name, 'التخصص:', spec],
-    [''],
-    ['المقرر الدراسي', 'الحصص/أسبوع', 'عدد الفصول', 'إجمالي الحصص'],
-    ...addedSubjects.map(s => [s.name, s.hoursPerWeek, s.classCount, s.hoursPerWeek * s.classCount]),
-    [''],
-    ['المجموع الكلي', '', '', total],
-    ['الحد الأقصى', '', '', maxQ],
-    ['المتبقي', '', '', maxQ - total],
+  // Summary sheet
+  const summaryData=[
+    ['منصة إسناد المقررات الدراسية — المرحلة المتوسطة'],[''],
+    ['م','اسم المعلمة','التخصص','الصف','الفصل','إجمالي الحصص','الحد الأقصى','المتبقي','الحالة'],
+    ...teachers.map((t,i)=>{
+      const r=t.max-t.total;
+      const st=r>4?'مناسب':r>=0?'قريب من الحد':'تجاوز النصاب';
+      return[i+1,t.name,t.spec,STAGE_NAMES[t.stage]||'',SEM_NAMES[t.sem]||'',t.total,t.max,r,st];
+    })
   ];
-  const ws = XLSX.utils.aoa_to_sheet(wsData);
-  XLSX.utils.book_append_sheet(wb, ws, 'إسناد المقررات');
-  XLSX.writeFile(wb, `إسناد_${name}.xlsx`);
-  showToast('📊 تم تصدير ملف Excel');
+  const wsSummary=XLSX.utils.aoa_to_sheet(summaryData);
+  XLSX.utils.book_append_sheet(wb,wsSummary,'ملخص المعلمات');
+
+  // Individual sheets
+  teachers.forEach((t,i)=>{
+    const data=[
+      [`إسناد المقررات — ${t.name}`],[''],
+      ['التخصص:',t.spec,'الصف:',STAGE_NAMES[t.stage]||''],
+      ['الفصل:',SEM_NAMES[t.sem]||'','السنة:',t.year],[''],
+      ['المقرر الدراسي','الحصص/أسبوع','عدد الفصول','إجمالي الحصص'],
+      ...t.subjects.map(s=>[s.name,s.hoursPerWeek,s.classCount,s.hoursPerWeek*s.classCount]),
+      [''],
+      ['المجموع الكلي','','',t.total],
+      ['الحد الأقصى','','',t.max],
+      ['المتبقي','','',t.max-t.total],
+    ];
+    const ws=XLSX.utils.aoa_to_sheet(data);
+    const sheetName=(t.name.substring(0,28)||`معلمة${i+1}`).replace(/[\\\/\*\?\[\]:]/g,'');
+    XLSX.utils.book_append_sheet(wb,ws,sheetName);
+  });
+
+  XLSX.writeFile(wb,'إسناد_المقررات.xlsx');
+  showToast('📊 تم تصدير ملف Excel بنجاح');
 }
 
-function exportPDF() {
-  const name = document.getElementById('teacherName').value || 'المعلمة';
-  document.getElementById('printTeacherTitle').textContent = `توزيع حصص المعلمة: ${name}`;
-  const spec = document.getElementById('teacherSpec').value;
-  const sem = document.getElementById('teacherSemester').options[document.getElementById('teacherSemester').selectedIndex].text;
-  document.getElementById('printTeacherSub').textContent = `${spec} | ${sem}`;
-  window.print();
+/* =====================================================
+   TOAST
+   ===================================================== */
+function showToast(msg,d=2800){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),d);
 }
 
-function showToast(msg, duration=2800) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), duration);
-}
-
-// Init
-populateSubjectDropdown();
-updateResults();
+/* =====================================================
+   INIT
+   ===================================================== */
+refreshSubjectDropdown();
+calcQuota();
+renderTeachersList();
 </script>
 </body>
 </html>
