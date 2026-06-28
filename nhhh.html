@@ -210,7 +210,16 @@ footer a{color:var(--teal);text-decoration:none}
         <p>توزيع الحصص وحساب نصاب المعلمات — المرحلة المتوسطة</p>
       </div>
     </div>
-    <div class="header-badge">المرحلة المتوسطة · متعدد المعلمات</div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <div id="saveStatus" style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.13);border:1px solid rgba(255,255,255,0.22);color:rgba(255,255,255,0.9);font-size:12px;padding:6px 14px;border-radius:20px;font-family:'Tajawal',sans-serif;">
+        <span id="saveIcon">💾</span>
+        <span id="saveText">لا يوجد حفظ بعد</span>
+      </div>
+      <button onclick="manualSave()" style="display:flex;align-items:center;gap:6px;background:rgba(201,162,39,0.85);border:none;color:#0D2B55;font-size:12px;font-weight:800;padding:7px 16px;border-radius:20px;font-family:'Cairo',sans-serif;cursor:pointer;">
+        💾 حفظ الآن
+      </button>
+      <div class="header-badge">المرحلة المتوسطة · متعدد المعلمات</div>
+    </div>
   </div>
 </header>
 
@@ -379,6 +388,7 @@ footer a{color:var(--teal);text-decoration:none}
         </div>
       </div>
       <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-success btn-sm btn-full" onclick="manualSave()">💾 حفظ البيانات</button>
         <button class="btn btn-danger btn-sm btn-full" onclick="clearAll()">🗑️ حذف الكل</button>
       </div>
     </div>
@@ -600,6 +610,9 @@ function saveTeacher(){
   resetForm();
   renderTeachersList();
   buildPrintPages();
+  // حفظ تلقائي بعد كل إضافة أو تعديل
+  const savedAt = saveToStorage();
+  updateSaveStatus(savedAt);
 }
 
 function resetForm(){
@@ -644,6 +657,8 @@ function deleteTeacher(idx){
   teachers.splice(idx,1);
   if(editId===idx) resetForm();
   renderTeachersList(); buildPrintPages();
+  const savedAt = saveToStorage();
+  updateSaveStatus(savedAt);
   showToast('🗑️ تم الحذف');
 }
 
@@ -651,6 +666,8 @@ function clearAll(){
   if(!teachers.length)return;
   if(!confirm('هل تريدين حذف جميع المعلمات؟'))return;
   teachers=[]; resetForm(); renderTeachersList(); buildPrintPages();
+  localStorage.removeItem(STORAGE_KEY);
+  updateSaveStatus(null);
   showToast('🗑️ تم مسح الجميع');
 }
 
@@ -823,6 +840,46 @@ function exportExcel(){
 }
 
 /* =====================================================
+   SAVE / LOAD — localStorage
+   ===================================================== */
+const STORAGE_KEY = 'isnnad_teachers_v2';
+
+function saveToStorage(){
+  try {
+    const payload = { teachers, savedAt: new Date().toLocaleString('ar-SA') };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    return payload.savedAt;
+  } catch(e){ return null; }
+}
+
+function loadFromStorage(){
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return null;
+    return JSON.parse(raw);
+  } catch(e){ return null; }
+}
+
+function updateSaveStatus(savedAt){
+  const icon = document.getElementById('saveIcon');
+  const text = document.getElementById('saveText');
+  if(savedAt){
+    icon.textContent = '✅';
+    text.textContent = 'محفوظ: ' + savedAt;
+  } else {
+    icon.textContent = '💾';
+    text.textContent = 'لا يوجد حفظ بعد';
+  }
+}
+
+function manualSave(){
+  if(!teachers.length){ showToast('⚠️ لا توجد بيانات للحفظ'); return; }
+  const savedAt = saveToStorage();
+  updateSaveStatus(savedAt);
+  showToast('✅ تم حفظ البيانات بنجاح — ستبقى عند فتح الصفحة مجددًا', 3500);
+}
+
+/* =====================================================
    TOAST
    ===================================================== */
 function showToast(msg,d=2800){
@@ -832,11 +889,20 @@ function showToast(msg,d=2800){
 }
 
 /* =====================================================
-   INIT
+   INIT — تحميل البيانات المحفوظة عند فتح الصفحة
    ===================================================== */
-refreshSubjectDropdown();
-calcQuota();
-renderTeachersList();
+(function(){
+  const saved = loadFromStorage();
+  if(saved && saved.teachers && saved.teachers.length){
+    teachers = saved.teachers;
+    updateSaveStatus(saved.savedAt);
+    showToast(`📂 تم استعادة ${teachers.length} معلمة من آخر حفظ`, 3500);
+  }
+  refreshSubjectDropdown();
+  calcQuota();
+  renderTeachersList();
+  buildPrintPages();
+})();
 </script>
 </body>
 </html>
