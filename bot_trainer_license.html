@@ -76,6 +76,14 @@ table.lb tr:hover td{background:#f8f9ff;}
 .lvl{display:inline-block;padding:2px 9px;border-radius:10px;font-size:.72rem;font-weight:700;}
 .lv-ex{background:#d4edda;color:#155724;}.lv-vg{background:#cce5ff;color:#004085;}.lv-g{background:#fff3cd;color:#856404;}.lv-ok{background:#ffe0b2;color:#bf360c;}.lv-p{background:#f8d7da;color:#721c24;}
 .live-count{display:inline-flex;align-items:center;gap:6px;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:20px;padding:4px 12px;font-size:.8rem;font-weight:700;color:#1b5e20;margin-bottom:10px;}
+
+.lb-method{background:#fff8e1;border:1px solid #ffe082;border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:.82rem;color:#5d4700;line-height:1.8;}
+.honor-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+.honor-card{background:linear-gradient(180deg,#fff,#f8f9fc);border:1px solid var(--border);border-radius:14px;padding:13px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.honor-card .medal{font-size:1.9rem;line-height:1.2}.honor-card .hn{font-weight:900;color:var(--navy);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.honor-card .hs{font-size:.78rem;color:#555;margin-top:4px;line-height:1.6}
+.badges{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}.ach{display:inline-block;background:#eef3ff;color:var(--navy);border:1px solid #dbe5ff;border-radius:14px;padding:2px 7px;font-size:.68rem;font-weight:700;white-space:nowrap}.points-pill{display:inline-block;background:#fff3cd;color:#7a5600;border-radius:8px;padding:3px 8px;font-weight:900}.tiny{font-size:.72rem;color:#777;line-height:1.6}
+@media(max-width:650px){.honor-grid{grid-template-columns:1fr} table.lb{min-width:780px} #lbTable{overflow-x:auto}}
+
 /* STEP */
 .step{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;padding:12px;background:#f8f9fc;border-radius:10px;border-right:4px solid var(--gold);}
 .step-n{background:var(--gold);color:var(--navy);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.85rem;flex-shrink:0;}
@@ -1241,9 +1249,9 @@ const Q = [
 let timer=null, cdTimer=null, watchTimer=null;
 let nextIdx=0, countdown=0, totalSent=0, sentCount=0, running=false;
 let lastUpdateId=0;
-// scores: { uid: {name, correct, wrong, total} }
+// scores: { uid: {name, correct, wrong, total, points, totalTime, avgTime, maxStreak, currentStreak, answered:{qid:true}, firstAnswerAt, lastAnswerAt, fastest, achievements[]} }
 let scores={};
-// pollMap: { pollId: answerIndex }
+// pollMap: { pollId: {a, qid, sentAt} }
 let pollMap={};
 const L=['أ','ب','ج','د'];
 
@@ -1461,7 +1469,7 @@ async function sendQuestion(idx){
       if(!d.ok){log(`❌ فشل س${q.id}: ${d.description}`,'err');return false;}
       // رصد الإجابات فقط في الوضع العلني
       if(!isAnon && d.result?.poll?.id){
-        pollMap[d.result.poll.id]={a:q.a, qid:q.id};
+        pollMap[d.result.poll.id]={a:q.a, qid:q.id, sentAt:Date.now()};
         localStorage.setItem('tg_pollMap',JSON.stringify(pollMap));
       }
       log(`${isAnon?'🔒':'👥'} س${q.id} أُرسل — ${lbl}`,'ok');
@@ -1625,11 +1633,33 @@ async function fetchUpdates(){
       if(chosen===undefined||chosen===null) return;
       const entry=pollMap[pa.poll_id];
       if(!entry) return;
-      if(!scores[uid]) scores[uid]={name:displayName,correct:0,wrong:0,total:0};
+      const qid=String(entry.qid || pa.poll_id);
+      if(!scores[uid]) scores[uid]=newScore(displayName);
+      normalizeScore(scores[uid]);
       scores[uid].name=displayName;
+      // منع التكرار: كل مشارك يُحتسب له السؤال نفسه مرة واحدة فقط حتى لو غيّر إجابته
+      if(scores[uid].answered[qid]) return;
+      scores[uid].answered[qid]=true;
+      const now=Date.now();
+      const sentAt=entry.sentAt || now;
+      const ansSec=Math.max(0, Math.round((now-sentAt)/1000));
+      const speedBonus=getSpeedBonus(ansSec);
+      const isCorrect=chosen===entry.a;
       scores[uid].total++;
-      if(chosen===entry.a) scores[uid].correct++;
-      else scores[uid].wrong++;
+      scores[uid].totalTime += ansSec;
+      scores[uid].avgTime = scores[uid].total>0 ? Math.round(scores[uid].totalTime/scores[uid].total) : 0;
+      scores[uid].fastest = scores[uid].fastest===null ? ansSec : Math.min(scores[uid].fastest, ansSec);
+      if(!scores[uid].firstAnswerAt) scores[uid].firstAnswerAt=now;
+      scores[uid].lastAnswerAt=now;
+      if(isCorrect){
+        scores[uid].correct++;
+        scores[uid].currentStreak++;
+        scores[uid].maxStreak=Math.max(scores[uid].maxStreak, scores[uid].currentStreak);
+        scores[uid].points += 10 + speedBonus;
+      } else {
+        scores[uid].wrong++;
+        scores[uid].currentStreak=0;
+      }
       newAns++;
     });
     localStorage.setItem('tg_lastUpd', String(lastUpdateId));
@@ -1652,16 +1682,55 @@ async function fetchNow(){
 }
 
 // ══ LEADERBOARD ══
+function newScore(name){
+  return {name:name,correct:0,wrong:0,total:0,points:0,totalTime:0,avgTime:0,maxStreak:0,currentStreak:0,answered:{},firstAnswerAt:0,lastAnswerAt:0,fastest:null,achievements:[]};
+}
+function normalizeScore(u){
+  u.correct=Number(u.correct||0); u.wrong=Number(u.wrong||0); u.total=Number(u.total||0);
+  u.points=Number(u.points||u.correct*10||0); u.totalTime=Number(u.totalTime||0); u.avgTime=Number(u.avgTime||0);
+  u.maxStreak=Number(u.maxStreak||0); u.currentStreak=Number(u.currentStreak||0);
+  u.answered=u.answered||{}; u.firstAnswerAt=Number(u.firstAnswerAt||0); u.lastAnswerAt=Number(u.lastAnswerAt||0);
+  if(u.fastest===undefined) u.fastest=null; if(!Array.isArray(u.achievements)) u.achievements=[];
+  return u;
+}
+function getSpeedBonus(sec){
+  if(sec<5)return 3; if(sec<=10)return 2; if(sec<=20)return 1; return 0;
+}
+function fmtTime(sec){
+  sec=Number(sec||0); const m=Math.floor(sec/60), s=sec%60;
+  return m>0?`${m}:${String(s).padStart(2,'0')}`:`${s}ث`;
+}
 function getLvl(pct){
-  if(pct>=90)return{l:'ممتاز 🏆',c:'lv-ex'};
-  if(pct>=75)return{l:'جيد جداً 🌟',c:'lv-vg'};
-  if(pct>=50)return{l:'جيد 👍',c:'lv-g'};
-  if(pct>=40)return{l:'مقبول 📘',c:'lv-ok'};
-  return{l:'يراجع 📖',c:'lv-p'};
+  if(pct===100)return{l:'التميز الذهبي 🥇',c:'lv-ex'};
+  if(pct>=90)return{l:'التميز الفضي 🥈',c:'lv-vg'};
+  if(pct>=80)return{l:'التميز البرونزي 🥉',c:'lv-g'};
+  if(pct>=70)return{l:'متميز ⭐',c:'lv-ok'};
+  return{l:'مشارك 🎖️',c:'lv-p'};
+}
+function rankData(){
+  return Object.values(scores).map(normalizeScore).sort((a,b)=>
+    (b.correct-a.correct) ||
+    (a.totalTime-b.totalTime) ||
+    (b.maxStreak-a.maxStreak) ||
+    (a.wrong-b.wrong) ||
+    ((a.lastAnswerAt||9999999999999)-(b.lastAnswerAt||9999999999999))
+  );
+}
+function buildAchievements(u,i,data){
+  const pct=sentCount>0?Math.round((u.correct/sentCount)*100):0;
+  const topStreak=Math.max(...data.map(x=>x.maxStreak||0));
+  const fastest=Math.min(...data.map(x=>x.fastest===null?999999:x.fastest));
+  const a=[];
+  if(i===0)a.push('🏆 بطل المسابقة');
+  if(u.fastest!==null && u.fastest===fastest)a.push('⚡ أسرع مجيب');
+  if(pct===100 && u.total>0)a.push('🎯 دقة 100%');
+  if(u.maxStreak>0 && u.maxStreak===topStreak)a.push('🔥 أطول سلسلة');
+  if(u.total>=sentCount && sentCount>0)a.push('📚 مشارك نشط');
+  u.achievements=a; return a;
 }
 
 function renderLb(){
-  const data=Object.values(scores).sort((a,b)=>b.correct-a.correct||a.wrong-b.wrong);
+  const data=rankData();
   const n=data.length;
   document.getElementById('liveCountWrap').style.display=n>0?'block':'none';
   document.getElementById('liveCount').textContent=n;
@@ -1677,85 +1746,83 @@ function renderLb(){
   const topPct=sentCount>0?Math.round((data[0].correct/sentCount)*100):0;
   const avg=Math.round(data.reduce((s,x)=>s+x.correct,0)/n);
   const avgPct=sentCount>0?Math.round((avg/sentCount)*100):0;
+  const fastest=Math.min(...data.map(x=>x.fastest===null?999999:x.fastest));
   document.getElementById('lbStats').innerHTML=`
     <div class="lb-stat"><div class="lb-stat-n">${n}</div><div class="lb-stat-l">مشارك</div></div>
     <div class="lb-stat"><div class="lb-stat-n" style="color:var(--green)">${top} <span style="font-size:.8rem;font-weight:700">(${topPct}%)</span></div><div class="lb-stat-l">أعلى نتيجة</div></div>
     <div class="lb-stat"><div class="lb-stat-n" style="color:var(--teal)">${avg} <span style="font-size:.8rem;font-weight:700">(${avgPct}%)</span></div><div class="lb-stat-l">المتوسط</div></div>
+    <div class="lb-stat"><div class="lb-stat-n" style="color:var(--gold)">${fastest===999999?'—':fmtTime(fastest)}</div><div class="lb-stat-l">أسرع إجابة</div></div>
     <div class="lb-stat"><div class="lb-stat-n" style="color:var(--gold)">${sentCount}</div><div class="lb-stat-l">سؤال أُرسل</div></div>`;
 
   const medals=['🥇','🥈','🥉'];
+  const honor=data.slice(0,3).map((u,i)=>{
+    const pct=sentCount>0?Math.round((u.correct/sentCount)*100):0;
+    return `<div class="honor-card"><div class="medal">${medals[i]}</div><div class="hn">${u.name}</div><div class="hs">✅ ${u.correct}/${sentCount} — ${pct}%<br>⭐ ${u.points} نقطة — ⏱️ ${fmtTime(u.totalTime)}</div></div>`;
+  }).join('');
+  const method=`<div class="lb-method"><strong>آلية الترتيب:</strong> الصحيح أولاً، ثم الأقل زمنًا، ثم أطول سلسلة صحيحة، ثم الأقل خطأ، ثم من أنهى أولاً. <br><strong>النقاط:</strong> الصحيح 10 نقاط + مكافأة سرعة: أقل من 5ث = 3، 5–10ث = 2، 10–20ث = 1.</div>`;
+
   let rows='';
   data.forEach((u,i)=>{
     const pct=sentCount>0?Math.round((u.correct/sentCount)*100):0;
     const lvl=getLvl(pct);
     const rc=i===0?'r1':i===1?'r2':i===2?'r3':'rx';
     const rk=i<3?medals[i]:`${i+1}`;
-    // نسبة ملوّنة
+    const ach=buildAchievements(u,i,data).slice(0,3).map(x=>`<span class="ach">${x}</span>`).join('');
     const pctColor=pct>=90?'#1e7e34':pct>=75?'#1565c0':pct>=60?'#e65100':'#c0392b';
     const pctBg   =pct>=90?'#d4edda':pct>=75?'#cce5ff':pct>=60?'#fff3cd':'#f8d7da';
     rows+=`<tr>
       <td><div class="rank-badge ${rc}">${rk}</div></td>
-      <td style="font-weight:700">${u.name}</td>
+      <td style="font-weight:700">${u.name}<div class="badges">${ach}</div></td>
       <td style="color:var(--green);font-weight:700;font-size:.95rem">${u.correct} ✅</td>
       <td style="color:var(--red);font-weight:700;font-size:.95rem">${u.wrong} ❌</td>
-      <td>
-        <span style="display:inline-block;background:${pctBg};color:${pctColor};border-radius:8px;padding:3px 10px;font-weight:900;font-size:.88rem;">${pct}%</span>
-        <div class="bar-w" style="margin-top:4px"><div class="bar-f" style="width:${pct}%"></div></div>
-      </td>
+      <td><span class="points-pill">${u.points}</span></td>
+      <td><span style="display:inline-block;background:${pctBg};color:${pctColor};border-radius:8px;padding:3px 10px;font-weight:900;font-size:.88rem;">${pct}%</span><div class="bar-w" style="margin-top:4px"><div class="bar-f" style="width:${pct}%"></div></div></td>
+      <td class="tiny">إجمالي: ${fmtTime(u.totalTime)}<br>متوسط: ${fmtTime(u.avgTime)}</td>
+      <td style="font-weight:900;color:var(--navy)">${u.maxStreak}</td>
       <td><span class="lvl ${lvl.c}">${lvl.l}</span></td>
     </tr>`;
   });
   document.getElementById('lbTable').innerHTML=`
+    ${method}
+    <div class="honor-grid">${honor}</div>
     <table class="lb">
-      <thead><tr><th>الترتيب</th><th>الاسم</th><th>✅ صحيح</th><th>❌ خطأ</th><th>النسبة</th><th>المستوى</th></tr></thead>
+      <thead><tr><th>الترتيب</th><th>الاسم والأوسمة</th><th>✅ صحيح</th><th>❌ خطأ</th><th>النقاط</th><th>النسبة</th><th>الزمن</th><th>السلسلة</th><th>المستوى</th></tr></thead>
       <tbody>${rows}</tbody>
     </table>`;
-  document.getElementById('lbNote').textContent='* النتائج حية — تتحدث كل 8 ثوانٍ تلقائيًا';
+  document.getElementById('lbNote').textContent='* النتائج حية — كل سؤال يُحتسب مرة واحدة لكل مشارك، والترتيب يوازن بين الدقة والسرعة.';
 }
 
 async function sendLbToChat(){
   const tok=document.getElementById('botToken').value.trim();
   const cid=document.getElementById('chatId').value.trim();
   if(!tok||!cid){alert('أدخل البيانات أولاً من تبويب الإعداد');return;}
-  const data=Object.values(scores).sort((a,b)=>b.correct-a.correct||a.wrong-b.wrong);
+  const data=rankData();
   if(data.length===0){alert('لا توجد نتائج بعد!\nاضغط "تحديث النتائج الآن" أولاً');return;}
 
-  // اسم الاختبار من إعداد التنبيه
   const title=document.getElementById('alertTitle').value.trim()||'الرخصة المهنية';
-  const medals=['🥇','🥈','🥉'];
-
   let lines=[];
-
-  // ── الرأس ──
-  lines.push(`🏁 لقد انتهى اختبار '${title}'!`);
-  lines.push('');
+  lines.push(`🏁 انتهى اختبار '${title}'`);
   lines.push(`📊 عدد الأسئلة: ${sentCount} سؤال`);
   lines.push('━━━━━━━━━━━━━━━━━━━━');
+  lines.push('🏆 لوحة الشرف والتميز');
   lines.push('');
-
-  // ── قائمة المشاركين مع التفاصيل ──
   data.slice(0,20).forEach((u,i)=>{
     const rk = i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}.`;
-    const display = u.username ? `@${u.username}` : u.name;
     const pct = sentCount>0 ? Math.round((u.correct/sentCount)*100) : 0;
-    const lvl = getLvl(pct);
-    const lvlText = lvl.l.replace(/[🌟👍📖🏆]/g,'').trim();
-    lines.push(`${rk} ${display}`);
-    lines.push(`   ✅ ${u.correct}  ❌ ${u.wrong}  📊 ${pct}%  ${lvl.l}`);
+    const lvl = getLvl(pct).l;
+    const ach = buildAchievements(u,i,data).slice(0,2).join(' ');
+    lines.push(`${rk} ${u.name}`);
+    lines.push(`   ✅ ${u.correct}  ❌ ${u.wrong}  📊 ${pct}%  ⭐ ${u.points} نقطة`);
+    lines.push(`   ⏱️ ${fmtTime(u.totalTime)} | متوسط ${fmtTime(u.avgTime)} | 🔥 سلسلة ${u.maxStreak}`);
+    lines.push(`   ${lvl}${ach?' | '+ach:''}`);
     lines.push('');
   });
-
-  // ── ختام ──
   lines.push('━━━━━━━━━━━━━━━━━━━━');
-  lines.push('');
+  lines.push('معيار الترتيب: الصحيح ← الأقل زمنًا ← أطول سلسلة ← الأقل خطأ ← من أنهى أولاً');
   lines.push('🌟 أحسنتم وبارك الله في جهودكم');
-  lines.push('💡 العلم نور — واصلوا المسيرة');
-  lines.push('🤝 شكراً لكل من شارك وأضاء هذا المجال');
-  lines.push('');
   lines.push('تصميم: د/فواز 🎓 | t.me/TAqhjT3MFVE1Yzk0');
 
   const msg=lines.join('\n');
-
   try{
     log('📤 جارٍ إرسال النتائج...','info');
     const r=await fetch(`https://api.telegram.org/bot${tok}/sendMessage`,{
@@ -1764,14 +1831,9 @@ async function sendLbToChat(){
       body:JSON.stringify({chat_id:cid, text:msg})
     });
     const d=await r.json();
-    if(d.ok){
-      log('✅ تم إرسال لوحة النتائج للمجموعة بنجاح','ok');
-    } else {
-      log('❌ فشل الإرسال: '+d.description,'err');
-    }
-  }catch(e){
-    log('❌ خطأ في الشبكة: '+e.message,'err');
-  }
+    if(d.ok){ log('✅ تم إرسال لوحة النتائج للمجموعة بنجاح','ok'); }
+    else { log('❌ فشل الإرسال: '+d.description,'err'); }
+  }catch(e){ log('❌ خطأ في الشبكة: '+e.message,'err'); }
 }
 
 function clearLb(){
