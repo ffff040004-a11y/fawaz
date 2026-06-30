@@ -253,7 +253,7 @@ table.lb tr:hover td{background:#f8f9ff;}
     <div class="btn-row" style="margin-bottom:14px">
       <button class="btn btn-green" onclick="fetchNow()">🔄 تحديث النتائج الآن</button>
       <button class="btn btn-gold"  onclick="sendLbToChat()">📤 إرسال النتائج للمجموعة</button>
-      <button class="btn btn-outline" onclick="clearLb()">🏁 إنهاء المسابقة (أرشفة + مسح)</button>
+      <button class="btn btn-outline" onclick="clearLb()">🗑️ مسح النتائج</button>
     </div>
   </div>
 
@@ -265,20 +265,6 @@ table.lb tr:hover td{background:#f8f9ff;}
     <div class="lb-stats" id="lbStats"></div>
     <div id="lbTable"></div>
     <p style="font-size:.74rem;color:#aaa;text-align:center;margin-top:10px" id="lbNote"></p>
-  </div>
-
-  <div class="card gold-top" style="margin-top:16px">
-    <div class="card-title">📈 لوحة الإحصائيات العامة (تراكمية لكل الجولات)</div>
-    <div class="btn-row" style="margin-bottom:10px">
-      <select id="gStatsRange" onchange="renderGlobalStats()" style="padding:8px 12px;border-radius:8px;border:1px solid #ccc;font-weight:700;">
-        <option value="week">📅 هذا الأسبوع</option>
-        <option value="month">📅 هذا الشهر</option>
-        <option value="year">📅 هذا العام</option>
-        <option value="all" selected>♾️ كل الأوقات</option>
-      </select>
-      <button class="btn btn-outline" onclick="renderGlobalStats()">🔄 تحديث الإحصائيات</button>
-    </div>
-    <div id="gStatsBody"><div style="text-align:center;padding:18px;color:#aaa;font-size:.86rem">لا توجد بيانات تراكمية بعد — تُحفظ تلقائياً عند بدء جولة جديدة</div></div>
   </div>
 
   <div class="card" style="margin-top:14px;border-top-color:#ff9800">
@@ -1315,60 +1301,10 @@ let scores={};
 let pollMap={};
 const L=['أ','ب','ج','د'];
 
-// ══ CUMULATIVE / GLOBAL STATS ══
-// cumStats: { uid: {name, username, rounds, gold, silver, bronze, totalPoints, bestScorePct,
-//             sumPct, sumAvgMs, fastestMs, bestStreak, totalCorrect, totalWrong, lastDate} }
-let cumStats={};
-// roundHistory: [{ts, uid, name, username, correct, wrong, qCount, pct, points, streak, totalTime, avgTime, rank}]
-let roundHistory=[];
-
-function loadCum(){
-  try{cumStats=JSON.parse(localStorage.getItem('tg_cumStats')||'{}');}catch(e){cumStats={};}
-  try{roundHistory=JSON.parse(localStorage.getItem('tg_roundHistory')||'[]');}catch(e){roundHistory=[];}
-}
-function saveCum(){
-  localStorage.setItem('tg_cumStats',JSON.stringify(cumStats));
-  // الاحتفاظ بآخر 2000 سجل فقط لمنع تضخم التخزين
-  if(roundHistory.length>2000) roundHistory=roundHistory.slice(-2000);
-  localStorage.setItem('tg_roundHistory',JSON.stringify(roundHistory));
-}
-
 // عدد أسئلة المسابقة الحالية (قابل للتغيير من واجهة النتائج، افتراضياً 10)
 function getQCount(){
   const v=parseInt(document.getElementById('compQCount')?.value);
   return (v && v>0) ? v : 10;
-}
-
-// أرشفة مسابقة منتهية إلى الإحصائيات التراكمية + السجل التاريخي
-function archiveRound(){
-  const qCount=getQCount();
-  const all=Object.entries(scores);
-  if(all.length===0) return;
-  const ranked=all.map(([uid,u])=>({uid,...computeDerived(u,qCount)}))
-    .sort(cmpRank);
-  const ts=Date.now();
-  ranked.forEach((u,i)=>{
-    const rank=i+1;
-    roundHistory.push({ts,uid:u.uid,name:u.name,username:u.username,correct:u.correct,
-      wrong:u.wrong,qCount,pct:u.pct,points:u.points,streak:u.maxStreak,
-      totalTime:u.totalTimeMs,avgTime:u.avgMs,rank});
-    if(!cumStats[u.uid]) cumStats[u.uid]={name:u.name,username:u.username,rounds:0,
-      gold:0,silver:0,bronze:0,totalPoints:0,bestScorePct:0,sumPct:0,sumAvgMs:0,
-      fastestMs:null,bestStreak:0,totalCorrect:0,totalWrong:0,lastDate:ts};
-    const c=cumStats[u.uid];
-    c.name=u.name; c.username=u.username;
-    c.rounds++;
-    if(rank===1)c.gold++; else if(rank===2)c.silver++; else if(rank===3)c.bronze++;
-    c.totalPoints+=u.points;
-    c.bestScorePct=Math.max(c.bestScorePct,u.pct);
-    c.sumPct+=u.pct;
-    c.sumAvgMs+=u.avgMs||0;
-    if(u.fastestMs!==null && (c.fastestMs===null || u.fastestMs<c.fastestMs)) c.fastestMs=u.fastestMs;
-    c.bestStreak=Math.max(c.bestStreak,u.maxStreak);
-    c.totalCorrect+=u.correct; c.totalWrong+=u.wrong;
-    c.lastDate=ts;
-  });
-  saveCum();
 }
 
 // ══ نظام النقاط: مكافأة السرعة ══
@@ -1439,7 +1375,6 @@ window.onload=()=>{
   loadS();
   buildStartFrom();
   buildPreview();
-  loadCum();
   const sp=localStorage.getItem('tg_pollMap');
   const sc=localStorage.getItem('tg_scores');
   const lu=localStorage.getItem('tg_lastUpd');
@@ -1447,7 +1382,6 @@ window.onload=()=>{
   if(sc) try{scores=JSON.parse(sc);}catch(e){}
   if(lu) lastUpdateId=parseInt(lu)||0;
   if(Object.keys(scores).length>0) renderLb();
-  renderGlobalStats();
 };
 
 function buildStartFrom(){
@@ -1877,100 +1811,14 @@ async function sendLbToChat(){
   }
 }
 function clearLb(){
-  if(!confirm('🏁 إنهاء المسابقة الحالية؟\nسيتم أرشفة نتائج المتأهلين في الإحصائيات التراكمية، ثم مسح لوحة الشرف لبدء مسابقة جديدة.'))return;
-  archiveRound();
+  if(!confirm('🗑️ مسح جميع نتائج المشاركين؟'))return;
   scores={}; pollMap={}; lastUpdateId=0;
   ['tg_scores','tg_pollMap','tg_lastUpd'].forEach(k=>localStorage.removeItem(k));
   document.getElementById('lbStats').innerHTML='';
   document.getElementById('lbTable').innerHTML='';
   document.getElementById('lbSub').textContent='في انتظار إجابات المشاركين...';
   document.getElementById('liveCountWrap').style.display='none';
-  log('🏁 أُرشفت المسابقة ومُسحت النتائج — جاهز لمسابقة جديدة','warn');
-  renderGlobalStats();
-}
-
-// ══ لوحة الإحصائيات العامة (تراكمية عبر كل الجولات) ══
-function rangeStart(range){
-  const now=new Date();
-  if(range==='week'){
-    const d=new Date(now); const day=(d.getDay()+1)%7; // الأحد=0 تقريبي
-    d.setDate(d.getDate()-day); d.setHours(0,0,0,0); return d.getTime();
-  }
-  if(range==='month'){ return new Date(now.getFullYear(),now.getMonth(),1).getTime(); }
-  if(range==='year'){ return new Date(now.getFullYear(),0,1).getTime(); }
-  return 0;
-}
-
-function renderGlobalStats(){
-  const range=document.getElementById('gStatsRange').value;
-  const since=rangeStart(range);
-  const records=roundHistory.filter(r=>r.ts>=since);
-  const body=document.getElementById('gStatsBody');
-
-  if(records.length===0 && Object.keys(cumStats).length===0){
-    body.innerHTML='<div style="text-align:center;padding:18px;color:#aaa;font-size:.86rem">لا توجد بيانات تراكمية بعد — تُحفظ تلقائياً عند بدء جولة جديدة</div>';
-    return;
-  }
-
-  // تجميع نقاط الفترة المختارة لكل مستخدم
-  const agg={};
-  records.forEach(r=>{
-    if(!agg[r.uid]) agg[r.uid]={name:r.name,username:r.username,points:0,rounds:0,correct:0,wrong:0,sumPct:0,sumAvg:0,avgCnt:0};
-    const a=agg[r.uid];
-    a.name=r.name; a.username=r.username;
-    a.points+=r.points; a.rounds++; a.correct+=r.correct; a.wrong+=r.wrong; a.sumPct+=r.pct;
-    if(r.avgTime!=null){ a.sumAvg+=r.avgTime; a.avgCnt++; }
-  });
-  const list=Object.entries(agg).map(([uid,a])=>({uid,...a,
-    avgPct:a.rounds?Math.round(a.sumPct/a.rounds):0,
-    avgSpeed:a.avgCnt?Math.round(a.sumAvg/a.avgCnt):null}));
-
-  const top10=[...list].sort((a,b)=>b.points-a.points||b.avgPct-a.avgPct).slice(0,10);
-  const mostActive=[...list].sort((a,b)=>b.rounds-a.rounds).slice(0,5);
-  const highestAcc=[...list].sort((a,b)=>b.avgPct-a.avgPct).slice(0,5);
-  const fastestList=list.filter(u=>u.avgSpeed!=null).sort((a,b)=>a.avgSpeed-b.avgSpeed).slice(0,5);
-
-  const rangeLabel={week:'هذا الأسبوع',month:'هذا الشهر',year:'هذا العام',all:'كل الأوقات'}[range];
-
-  const rowsHtml=(arr,fmt)=>arr.length? arr.map((u,i)=>`<tr><td>${i+1}</td><td style="font-weight:700">${u.username?'@'+u.username:u.name}</td><td>${fmt(u)}</td></tr>`).join('') :
-    '<tr><td colspan="3" style="text-align:center;color:#aaa;padding:10px">لا توجد بيانات</td></tr>';
-
-  body.innerHTML=`
-    <h3 style="font-size:.95rem;color:#6a1b9a;margin:6px 0">🏆 أفضل 10 — ${rangeLabel}</h3>
-    <div style="overflow-x:auto"><table class="lb"><thead><tr><th>#</th><th>المشارك</th><th>⭐ النقاط</th></tr></thead>
-    <tbody>${rowsHtml(top10,u=>`${u.points} نقطة (${u.rounds} جولة)`)}</tbody></table></div>
-
-    <div class="grid-2" style="margin-top:16px;gap:16px">
-      <div>
-        <h3 style="font-size:.88rem;color:#1565c0;margin:6px 0">📚 الأكثر نشاطاً</h3>
-        <table class="lb"><thead><tr><th>#</th><th>المشارك</th><th>الجولات</th></tr></thead>
-        <tbody>${rowsHtml(mostActive,u=>u.rounds)}</tbody></table>
-      </div>
-      <div>
-        <h3 style="font-size:.88rem;color:#1e7e34;margin:6px 0">🎯 أعلى نسبة نجاح</h3>
-        <table class="lb"><thead><tr><th>#</th><th>المشارك</th><th>النسبة</th></tr></thead>
-        <tbody>${rowsHtml(highestAcc,u=>u.avgPct+'%')}</tbody></table>
-      </div>
-    </div>
-    <div style="margin-top:16px">
-      <h3 style="font-size:.88rem;color:#e65100;margin:6px 0">⚡ أسرع متوسط زمن إجابة</h3>
-      <table class="lb"><thead><tr><th>#</th><th>المشارك</th><th>المتوسط</th></tr></thead>
-      <tbody>${rowsHtml(fastestList,u=>fmtMs(u.avgSpeed))}</tbody></table>
-    </div>
-
-    <h3 style="font-size:.88rem;color:#444;margin:18px 0 6px">🗂️ السجل التراكمي الكلي (كل الأوقات)</h3>
-    <div style="overflow-x:auto"><table class="lb">
-      <thead><tr><th>المشارك</th><th>🥇</th><th>🥈</th><th>🥉</th><th>الجولات</th><th>⭐ مجموع النقاط</th><th>أعلى نتيجة</th><th>متوسط النسبة</th><th>🔥 أطول سلسلة</th></tr></thead>
-      <tbody>${Object.entries(cumStats).sort((a,b)=>b[1].totalPoints-a[1].totalPoints).slice(0,30).map(([uid,c])=>`
-        <tr>
-          <td style="font-weight:700">${c.username?'@'+c.username:c.name}</td>
-          <td>${c.gold||0}</td><td>${c.silver||0}</td><td>${c.bronze||0}</td>
-          <td>${c.rounds}</td><td style="font-weight:900;color:var(--gold)">${c.totalPoints}</td>
-          <td>${c.bestScorePct}%</td><td>${c.rounds?Math.round(c.sumPct/c.rounds):0}%</td>
-          <td>${c.bestStreak}</td>
-        </tr>`).join('') || '<tr><td colspan="8" style="text-align:center;color:#aaa;padding:10px">لا توجد بيانات</td></tr>'}
-      </tbody>
-    </table></div>`;
+  log('🗑️ مُسحت النتائج','warn');
 }
 
 // ══ LOG ══
