@@ -361,12 +361,6 @@ table.lb tr:hover td{background:#f8f9ff;}
     <div id="lbTable"></div>
     <p style="font-size:.74rem;color:#aaa;text-align:center;margin-top:10px" id="lbNote"></p>
   </div>
-  <div class="lb-panel" style="border-top-color:var(--teal)">
-    <div class="lb-head"><h2>📊 الإحصائيات العامة</h2><p>أفضل المتسابقين عبر المسابقات المؤرشفة — تُؤرشف كل مسابقة تلقائيًا عند الضغط على "🗑️ مسح النتائج"</p></div>
-    <div class="filter-bar" id="statsPeriodBar"></div>
-    <div id="statsTopTable"></div>
-    <div class="lb-stats" id="statsExtra" style="margin-top:16px"></div>
-  </div>
   <div class="card" style="margin-top:14px;border-top-color:#ff9800">
     <div class="card-title" style="color:#e65100">⚠️ ملاحظة</div>
     <div style="font-size:.83rem;color:#555;line-height:1.9">
@@ -529,7 +523,6 @@ let timer=null, cdTimer=null, watchTimer=null;
 let nextIdx=0, countdown=0, totalSent=0, sentCount=0, running=false;
 let lastUpdateId=0, scores={}, pollMap={};
 let firstQuestionSentAt=0;
-let history_=[], cumStats={};
 const L=['أ','ب','ج','د'];
 const STAGES = [
   "مفاهيم وأسس القيادة المدرسية",
@@ -555,17 +548,12 @@ window.onload=()=>{
     const sc=localStorage.getItem('tg_sc_qiyada');
     const lu=localStorage.getItem('tg_lu_qiyada');
     const fqt=localStorage.getItem('tg_fqt_qiyada');
-    const hs=localStorage.getItem('tg_hist_qiyada');
-    const cs=localStorage.getItem('tg_cum_qiyada');
     if(sp) pollMap=JSON.parse(sp);
     if(sc) scores=JSON.parse(sc);
     if(lu) lastUpdateId=parseInt(lu)||0;
     if(fqt) firstQuestionSentAt=parseInt(fqt)||0;
-    if(hs) history_=JSON.parse(hs);
-    if(cs) cumStats=JSON.parse(cs);
   }catch(e){}
   if(Object.keys(scores).length>0) renderLb();
-  renderGeneralStats('week');
   previewAlert();
 };
 
@@ -1002,35 +990,6 @@ function computeAchievements(ranked){
   return badges;
 }
 
-// ══ أرشفة المسابقة + الإحصائيات التراكمية ══
-function archiveCompetition(){
-  const ranked=computeRanked();
-  if(!ranked.length) return;
-  const dateIso=new Date().toISOString();
-  const record={date:dateIso,total:sentCount,results:ranked.map(u=>({
-    uid:u.uid,name:u.name,username:u.username,correct:u.correct,wrong:u.wrong,pct:u.pct,
-    points:u.points,totalTime:u.totalTime,avgTime:u.avgTime,maxStreak:u.maxStreak,fastestTime:u.fastestTime}))};
-  history_.push(record);
-  if(history_.length>200) history_=history_.slice(-200);
-  ranked.forEach((u,i)=>{
-    if(!cumStats[u.uid]) cumStats[u.uid]={name:u.name,username:u.username,competitions:0,win1:0,win2:0,win3:0,
-      totalPoints:0,bestScore:0,bestPct:0,sumPct:0,sumAvgTime:0,fastestAnswer:null,maxStreak:0,
-      totalCorrect:0,totalWrong:0,lastDate:''};
-    const c=cumStats[u.uid];
-    c.name=u.name; c.username=u.username; c.competitions++;
-    if(i===0)c.win1++; else if(i===1)c.win2++; else if(i===2)c.win3++;
-    c.totalPoints+=u.points;
-    if(u.correct>c.bestScore)c.bestScore=u.correct;
-    if(u.pct>c.bestPct)c.bestPct=u.pct;
-    c.sumPct+=u.pct; c.sumAvgTime+=u.avgTime;
-    if(u.fastestTime!==null&&u.fastestTime!==undefined&&(c.fastestAnswer===null||u.fastestTime<c.fastestAnswer)) c.fastestAnswer=u.fastestTime;
-    if(u.maxStreak>c.maxStreak)c.maxStreak=u.maxStreak;
-    c.totalCorrect+=u.correct; c.totalWrong+=u.wrong; c.lastDate=dateIso;
-  });
-  localStorage.setItem('tg_hist_qiyada',JSON.stringify(history_));
-  localStorage.setItem('tg_cum_qiyada',JSON.stringify(cumStats));
-}
-
 function renderLb(){
   const ranked=computeRanked();
   const n=ranked.length;
@@ -1118,83 +1077,14 @@ async function sendLbToChat(){
 }
 
 function clearLb(){
-  if(!confirm('سيتم أرشفة النتائج الحالية ضمن السجل التراكمي، ثم مسح لوحة الشرف الحالية للبدء من جديد. متابعة؟'))return;
-  archiveCompetition();
+  if(!confirm('مسح جميع نتائج المشاركين؟'))return;
   scores={}; pollMap={}; lastUpdateId=0; firstQuestionSentAt=0;
   ['tg_sc_qiyada','tg_pm_qiyada','tg_lu_qiyada','tg_fqt_qiyada'].forEach(k=>localStorage.removeItem(k));
   document.getElementById('lbStats').innerHTML='';
   document.getElementById('lbTable').innerHTML='';
   document.getElementById('lbSub').textContent='في انتظار إجابات المشاركين...';
   document.getElementById('liveCountWrap').style.display='none';
-  renderGeneralStats(currentStatsPeriod);
-  log('🗑️ أُرشفت النتائج ومُسحت لوحة الشرف الحالية','warn');
-}
-
-// ══ الإحصائيات العامة (أسبوعي / شهري / سنوي / كل الأوقات) ══
-const STATS_PERIODS=[{val:'week',label:'📅 هذا الأسبوع'},{val:'month',label:'🗓️ هذا الشهر'},{val:'year',label:'📆 هذا العام'},{val:'all',label:'🏆 كل الأوقات'}];
-let currentStatsPeriod='week';
-
-function buildStatsPeriodBar(){
-  const bar=document.getElementById('statsPeriodBar'); if(!bar) return;
-  bar.innerHTML='';
-  STATS_PERIODS.forEach(p=>{
-    const btn=document.createElement('button');
-    btn.className='filter-btn'+(currentStatsPeriod===p.val?' active':'');
-    btn.textContent=p.label;
-    btn.onclick=()=>renderGeneralStats(p.val);
-    bar.appendChild(btn);
-  });
-}
-
-function renderGeneralStats(period){
-  currentStatsPeriod=period;
-  buildStatsPeriodBar();
-  const now=new Date();
-  let fromDate=null;
-  if(period==='week'){fromDate=new Date(now); fromDate.setDate(now.getDate()-7);}
-  else if(period==='month'){fromDate=new Date(now); fromDate.setMonth(now.getMonth()-1);}
-  else if(period==='year'){fromDate=new Date(now); fromDate.setFullYear(now.getFullYear()-1);}
-  const agg={};
-  history_.forEach(rec=>{
-    if(fromDate && new Date(rec.date)<fromDate) return;
-    rec.results.forEach(u=>{
-      if(!agg[u.uid]) agg[u.uid]={name:u.name,username:u.username,points:0,correct:0,wrong:0,competitions:0};
-      agg[u.uid].name=u.name; agg[u.uid].username=u.username;
-      agg[u.uid].points+=u.points; agg[u.uid].correct+=u.correct; agg[u.uid].wrong+=u.wrong; agg[u.uid].competitions++;
-    });
-  });
-  const list=Object.values(agg).sort((a,b)=>b.points-a.points).slice(0,10);
-  const tableEl=document.getElementById('statsTopTable'); if(!tableEl) return;
-  const extraEl=document.getElementById('statsExtra');
-  if(!list.length){
-    tableEl.innerHTML='<div style="text-align:center;padding:20px;color:#aaa">📭 لا توجد بيانات مؤرشفة لهذه الفترة بعد — اضغط "مسح النتائج" بعد انتهاء كل مسابقة لأرشفتها هنا</div>';
-    extraEl.innerHTML=''; return;
-  }
-  const medals=['🥇','🥈','🥉'];
-  const rows=list.map((u,i)=>`<tr>
-    <td><div class="rank-badge ${i===0?'r1':i===1?'r2':i===2?'r3':'rx'}">${i<3?medals[i]:i+1}</div></td>
-    <td style="font-weight:700">${u.name}</td>
-    <td style="color:var(--green);font-weight:700">${u.correct} ✅</td>
-    <td style="color:var(--red);font-weight:700">${u.wrong} ❌</td>
-    <td style="font-weight:900;color:var(--gold)">${u.points}</td>
-    <td>${u.competitions}</td>
-  </tr>`).join('');
-  tableEl.innerHTML=`<div style="overflow-x:auto"><table class="lb">
-    <thead><tr><th>الترتيب</th><th>الاسم</th><th>✅</th><th>❌</th><th>مجموع النقاط</th><th>عدد المسابقات</th></tr></thead>
-    <tbody>${rows}</tbody></table></div>`;
-  const cumList=Object.values(cumStats);
-  let extraHtml='';
-  if(cumList.length){
-    const mostActive=cumList.reduce((m,u)=>u.competitions>m.competitions?u:m,cumList[0]);
-    const highestAcc=cumList.reduce((m,u)=>{const aU=u.competitions?u.sumPct/u.competitions:0;const aM=m.competitions?m.sumPct/m.competitions:0;return aU>aM?u:m;},cumList[0]);
-    const withSpeed=cumList.filter(u=>u.competitions>0);
-    const fastestAvg=withSpeed.length?withSpeed.reduce((m,u)=>{const aU=u.sumAvgTime/u.competitions;const aM=m.sumAvgTime/m.competitions;return aU<aM?u:m;},withSpeed[0]):null;
-    extraHtml=`
-      <div class="lb-stat"><div class="lb-stat-n" style="font-size:.95rem">${mostActive.name}</div><div class="lb-stat-l">📚 الأكثر نشاطاً (${mostActive.competitions} مسابقة)</div></div>
-      <div class="lb-stat"><div class="lb-stat-n" style="font-size:.95rem">${highestAcc.name}</div><div class="lb-stat-l">🎯 أعلى نسبة نجاح (${Math.round(highestAcc.sumPct/highestAcc.competitions)}%)</div></div>
-      ${fastestAvg?`<div class="lb-stat"><div class="lb-stat-n" style="font-size:.95rem">${fastestAvg.name}</div><div class="lb-stat-l">⚡ أسرع متوسط إجابة (${fmtS(Math.round(fastestAvg.sumAvgTime/fastestAvg.competitions))})</div></div>`:''}`;
-  }
-  extraEl.innerHTML=extraHtml;
+  log('🗑️ مُسحت النتائج','warn');
 }
 
 function log(msg,type='info'){
