@@ -126,6 +126,11 @@ table.lb tr:hover td{background:#f8f9ff;}
       <input type="text" id="chatId" placeholder="-1002014003515" oninput="saveS()">
       <div class="hint">للمجموعة: رقم سالب يبدأ بـ -100</div>
     </div>
+    <div class="field">
+      <label>📝 نص رسالة اختبار الاتصال (ترسل للقروب)</label>
+      <textarea id="testMsg" rows="3" placeholder="✅ اتصال ناجح! البوت جاهز لإرسال الأسئلة 🎉" oninput="saveS()" style="width:100%;font-family:inherit;font-size:.9rem;padding:10px;border-radius:8px;border:1px solid #ccc;resize:vertical;direction:rtl;"></textarea>
+      <div class="hint">إذا تُرك الحقل فارغاً، سيتم استخدام رسالة افتراضية عند اختبار الاتصال</div>
+    </div>
     <div class="btn-row">
       <button class="btn btn-navy" onclick="testConn()">🔍 اختبار الاتصال</button>
     </div>
@@ -220,30 +225,6 @@ table.lb tr:hover td{background:#f8f9ff;}
 <!-- ══ RESULTS ══ -->
 <div id="tab-results" style="display:none">
 
-  <!-- بطاقة إعداد الجولة -->
-  <div class="card" style="border-top:4px solid #6a1b9a;margin-bottom:16px;">
-    <div class="card-title" style="color:#6a1b9a">🎯 إعداد جولة المسابقة</div>
-    <div style="background:#f3e5f5;border:1px solid #ce93d8;border-radius:10px;padding:13px;font-size:.84rem;color:#4a148c;font-weight:600;margin-bottom:14px;line-height:1.9;">
-      ⚡ <strong>قبل كل جولة جديدة:</strong> حدد رقم أول وآخر سؤال فيها، ثم اضغط "بدء جولة جديدة" — سيُمسح السجل السابق ويبدأ العداد من الصفر لهذه الجولة فقط.
-    </div>
-    <div class="grid-2" style="margin-bottom:12px">
-      <div class="field">
-        <label>📌 رقم أول سؤال في الجولة</label>
-        <input type="number" id="roundFirstQ" min="1" placeholder="مثال: 65" style="direction:ltr;text-align:center;font-size:1.1rem;font-weight:700;">
-        <div class="hint">رقم السؤال كما يظهر في البوت</div>
-      </div>
-      <div class="field">
-        <label>📌 رقم آخر سؤال في الجولة</label>
-        <input type="number" id="roundLastQ" min="1" placeholder="مثال: 70" style="direction:ltr;text-align:center;font-size:1.1rem;font-weight:700;">
-        <div class="hint">رقم السؤال كما يظهر في البوت</div>
-      </div>
-    </div>
-    <div id="roundInfo" style="display:none;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:10px 14px;font-size:.86rem;color:#1b5e20;font-weight:700;margin-bottom:12px;"></div>
-    <div class="btn-row">
-      <button class="btn" style="background:#6a1b9a;color:white;" onclick="startNewRound()">🚀 بدء جولة جديدة (مسح + ضبط)</button>
-    </div>
-  </div>
-
   <div class="card green-top">
     <div class="card-title">🏆 لوحة نتائج المشاركين</div>
 
@@ -259,6 +240,12 @@ table.lb tr:hover td{background:#f8f9ff;}
       • النتائج تتحدث فورًا بمجرد إجابة أي عضو
     </div>
 
+    <div class="field" style="margin-bottom:14px">
+      <label>🔢 عدد أسئلة المسابقة</label>
+      <input type="number" id="compQCount" min="1" value="10" oninput="saveS()" style="direction:ltr;text-align:center;font-size:1.1rem;font-weight:700;max-width:160px;">
+      <div class="hint">يُستخدم لحساب النسبة المئوية ومستوى التميز لكل مشارك — لا يُستبعد أي مشارك من اللوحة مهما كان عدد إجاباته</div>
+    </div>
+
     <div id="liveCountWrap" style="display:none">
       <div class="live-count"><span class="live-dot" style="background:#4caf50"></span> <span id="liveCount">0</span> مشارك سُجِّلت إجاباتهم</div>
     </div>
@@ -266,7 +253,7 @@ table.lb tr:hover td{background:#f8f9ff;}
     <div class="btn-row" style="margin-bottom:14px">
       <button class="btn btn-green" onclick="fetchNow()">🔄 تحديث النتائج الآن</button>
       <button class="btn btn-gold"  onclick="sendLbToChat()">📤 إرسال النتائج للمجموعة</button>
-      <button class="btn btn-outline" onclick="clearLb()">🗑️ مسح النتائج فقط</button>
+      <button class="btn btn-outline" onclick="clearLb()">🏁 إنهاء المسابقة (أرشفة + مسح)</button>
     </div>
   </div>
 
@@ -278,6 +265,20 @@ table.lb tr:hover td{background:#f8f9ff;}
     <div class="lb-stats" id="lbStats"></div>
     <div id="lbTable"></div>
     <p style="font-size:.74rem;color:#aaa;text-align:center;margin-top:10px" id="lbNote"></p>
+  </div>
+
+  <div class="card gold-top" style="margin-top:16px">
+    <div class="card-title">📈 لوحة الإحصائيات العامة (تراكمية لكل الجولات)</div>
+    <div class="btn-row" style="margin-bottom:10px">
+      <select id="gStatsRange" onchange="renderGlobalStats()" style="padding:8px 12px;border-radius:8px;border:1px solid #ccc;font-weight:700;">
+        <option value="week">📅 هذا الأسبوع</option>
+        <option value="month">📅 هذا الشهر</option>
+        <option value="year">📅 هذا العام</option>
+        <option value="all" selected>♾️ كل الأوقات</option>
+      </select>
+      <button class="btn btn-outline" onclick="renderGlobalStats()">🔄 تحديث الإحصائيات</button>
+    </div>
+    <div id="gStatsBody"><div style="text-align:center;padding:18px;color:#aaa;font-size:.86rem">لا توجد بيانات تراكمية بعد — تُحفظ تلقائياً عند بدء جولة جديدة</div></div>
   </div>
 
   <div class="card" style="margin-top:14px;border-top-color:#ff9800">
@@ -1307,63 +1308,130 @@ const Q = [
 let timer=null, cdTimer=null, pollTimer=null;
 let nextIdx=0, countdown=0, totalSent=0, running=false;
 let lastUpdateId=0;
-// scores: { uid: {name, correct, wrong, total, firstQid, lastQid, answerTime} }
+// scores: { uid: {name, username, correct, wrong, total, firstQid, lastQid, answerTime,
+//           firstAt, lastAt, points, maxStreak, answers:{qid:{correct,ms}}} }
 let scores={};
-// pollMap: { pollId: {a, qid} }
+// pollMap: { pollId: {a, qid, sentAt} }
 let pollMap={};
 const L=['أ','ب','ج','د'];
-// ══ ROUND VARIABLES ══
-let roundFirstQid=null; // أول سؤال الجولة (يدوي)
-let roundLastQid=null;  // آخر سؤال الجولة (يدوي)
-let roundQCount=0;      // عدد أسئلة الجولة
 
-// دالة بدء جولة جديدة
-function startNewRound(){
-  const f=parseInt(document.getElementById('roundFirstQ').value);
-  const l=parseInt(document.getElementById('roundLastQ').value);
-  if(!f||!l||f>l){alert('❌ أدخل رقم أول وآخر سؤال بشكل صحيح\n(أول ≤ آخر)');return;}
-  const count=l-f+1;
-  if(count<5){
-    alert(`❌ عدد أسئلة الجولة (${count}) أقل من الحد الأدنى المسموح به!\n\n📌 يجب أن تكون الجولة 5 أسئلة على الأقل\nحتى تظهر جميع مستويات التقدير بشكل صحيح.\n\n💡 اضبط نطاق الأسئلة ليشمل 5 أسئلة فأكثر.`);
-    return;
-  }
-  if(!confirm(`🚀 بدء جولة جديدة\nمن س${f} إلى س${l} — (${count} أسئلة)\n\n⚠️ سيتم مسح نتائج الجولة السابقة نهائياً.\nهل أنت متأكد؟`)) return;
-  // مسح النتائج السابقة
-  scores={}; pollMap={}; lastUpdateId=0;
-  // ضبط الجولة الجديدة
-  roundFirstQid=f; roundLastQid=l; roundQCount=count;
-  // حفظ في localStorage
-  ['tg_scores','tg_pollMap','tg_lastUpd'].forEach(k=>localStorage.removeItem(k));
-  localStorage.setItem('tg_rfq', roundFirstQid);
-  localStorage.setItem('tg_rlq', roundLastQid);
-  localStorage.setItem('tg_rqc', roundQCount);
-  // تحديث الواجهة
-  document.getElementById('lbStats').innerHTML='';
-  document.getElementById('lbTable').innerHTML='<div style="text-align:center;padding:24px;color:#aaa;font-size:.88rem">⏳ جاهز — في انتظار إجابات الجولة الجديدة</div>';
-  document.getElementById('lbSub').textContent=`جولة جديدة | من س${f} إلى س${l} | ${count} أسئلة`;
-  document.getElementById('liveCountWrap').style.display='none';
-  const info=document.getElementById('roundInfo');
-  info.style.display='block';
-  info.innerHTML=`✅ الجولة الحالية: من سؤال <strong>${f}</strong> إلى سؤال <strong>${l}</strong> — إجمالي <strong>${count}</strong> أسئلة`;
-  log(`🚀 جولة جديدة: س${f} ← س${l} | ${count} أسئلة | النتائج مُسحت`,'ok');
+// ══ CUMULATIVE / GLOBAL STATS ══
+// cumStats: { uid: {name, username, rounds, gold, silver, bronze, totalPoints, bestScorePct,
+//             sumPct, sumAvgMs, fastestMs, bestStreak, totalCorrect, totalWrong, lastDate} }
+let cumStats={};
+// roundHistory: [{ts, uid, name, username, correct, wrong, qCount, pct, points, streak, totalTime, avgTime, rank}]
+let roundHistory=[];
+
+function loadCum(){
+  try{cumStats=JSON.parse(localStorage.getItem('tg_cumStats')||'{}');}catch(e){cumStats={};}
+  try{roundHistory=JSON.parse(localStorage.getItem('tg_roundHistory')||'[]');}catch(e){roundHistory=[];}
+}
+function saveCum(){
+  localStorage.setItem('tg_cumStats',JSON.stringify(cumStats));
+  // الاحتفاظ بآخر 2000 سجل فقط لمنع تضخم التخزين
+  if(roundHistory.length>2000) roundHistory=roundHistory.slice(-2000);
+  localStorage.setItem('tg_roundHistory',JSON.stringify(roundHistory));
 }
 
-// شرط التأهل: أجاب من البداية للنهاية على جميع أسئلة الجولة
-function isFullParticipant(u){
-  if(!roundQCount) return true; // إذا لم تُحدد جولة → اعرض الجميع
-  if(u.total < roundQCount) return false;
-  if(roundFirstQid!==null && (u.firstQid===undefined||u.firstQid > roundFirstQid)) return false;
-  if(roundLastQid!==null  && (u.lastQid===undefined ||u.lastQid  < roundLastQid))  return false;
-  return true;
+// عدد أسئلة المسابقة الحالية (قابل للتغيير من واجهة النتائج، افتراضياً 10)
+function getQCount(){
+  const v=parseInt(document.getElementById('compQCount')?.value);
+  return (v && v>0) ? v : 10;
 }
 
-// سلم التقديرات بالنسبة المئوية
+// أرشفة مسابقة منتهية إلى الإحصائيات التراكمية + السجل التاريخي
+function archiveRound(){
+  const qCount=getQCount();
+  const all=Object.entries(scores);
+  if(all.length===0) return;
+  const ranked=all.map(([uid,u])=>({uid,...computeDerived(u,qCount)}))
+    .sort(cmpRank);
+  const ts=Date.now();
+  ranked.forEach((u,i)=>{
+    const rank=i+1;
+    roundHistory.push({ts,uid:u.uid,name:u.name,username:u.username,correct:u.correct,
+      wrong:u.wrong,qCount,pct:u.pct,points:u.points,streak:u.maxStreak,
+      totalTime:u.totalTimeMs,avgTime:u.avgMs,rank});
+    if(!cumStats[u.uid]) cumStats[u.uid]={name:u.name,username:u.username,rounds:0,
+      gold:0,silver:0,bronze:0,totalPoints:0,bestScorePct:0,sumPct:0,sumAvgMs:0,
+      fastestMs:null,bestStreak:0,totalCorrect:0,totalWrong:0,lastDate:ts};
+    const c=cumStats[u.uid];
+    c.name=u.name; c.username=u.username;
+    c.rounds++;
+    if(rank===1)c.gold++; else if(rank===2)c.silver++; else if(rank===3)c.bronze++;
+    c.totalPoints+=u.points;
+    c.bestScorePct=Math.max(c.bestScorePct,u.pct);
+    c.sumPct+=u.pct;
+    c.sumAvgMs+=u.avgMs||0;
+    if(u.fastestMs!==null && (c.fastestMs===null || u.fastestMs<c.fastestMs)) c.fastestMs=u.fastestMs;
+    c.bestStreak=Math.max(c.bestStreak,u.maxStreak);
+    c.totalCorrect+=u.correct; c.totalWrong+=u.wrong;
+    c.lastDate=ts;
+  });
+  saveCum();
+}
+
+// ══ نظام النقاط: مكافأة السرعة ══
+function speedBonus(ms){
+  if(ms==null) return 0;
+  const s=ms/1000;
+  if(s<5) return 3;
+  if(s<=10) return 2;
+  if(s<=20) return 1;
+  return 0;
+}
+
+// حساب المشتقات: النسبة، الزمن الكلي، متوسط الزمن، أطول سلسلة، النقاط، أسرع إجابة
+function computeDerived(u,qCount){
+  const pct = qCount>0 ? Math.round((u.correct/qCount)*100) : 0;
+  const ans = u.answers||{};
+  const qids = Object.keys(ans).map(Number).sort((a,b)=>a-b);
+  let points=0, sumMs=0, cntMs=0, fastestMs=null, streak=0, maxStreak=0;
+  qids.forEach(qid=>{
+    const a=ans[qid];
+    if(a.ms!=null){ sumMs+=a.ms; cntMs++; if(fastestMs===null||a.ms<fastestMs) fastestMs=a.ms; }
+    if(a.correct){ points+=10+speedBonus(a.ms); streak++; if(streak>maxStreak)maxStreak=streak; }
+    else streak=0;
+  });
+  const avgMs = cntMs>0 ? Math.round(sumMs/cntMs) : null;
+  const totalTimeMs = (u.firstAt && u.lastAt) ? (u.lastAt-u.firstAt) : (u.answerTime||0);
+  return {name:u.name,username:u.username,correct:u.correct,wrong:u.wrong,total:u.total,
+    pct,points,avgMs,fastestMs,maxStreak,totalTimeMs,finishAt:u.lastAt||u.answerTime||0};
+}
+
+// ترتيب رسمي: 1) صحيح⬆ 2) زمن كلي⬇ 3) أطول سلسلة⬆ 4) خطأ⬇ 5) من أنهى أولاً
+function cmpRank(a,b){
+  if(b.correct!==a.correct) return b.correct-a.correct;
+  if(a.totalTimeMs!==b.totalTimeMs) return a.totalTimeMs-b.totalTimeMs;
+  if(b.maxStreak!==a.maxStreak) return b.maxStreak-a.maxStreak;
+  if(a.wrong!==b.wrong) return a.wrong-b.wrong;
+  return (a.finishAt||0)-(b.finishAt||0);
+}
+
+// سلم مستويات التميز بالنسبة المئوية (حسب المواصفات)
 function getLvlByPct(pct){
-  if(pct>=90) return{l:'ممتاز 🏆',c:'lv-ex'};
-  if(pct>=80) return{l:'جيد جداً 🌟',c:'lv-vg'};
-  if(pct>=70) return{l:'جيد 👍',c:'lv-g'};
-  if(pct>=50) return{l:'مقبول 📝',c:'lv-ok'};
-  return{l:'دون المستوى ❌',c:'lv-p'};
+  if(pct>=100) return{l:'التميز الذهبي 🥇',c:'lv-ex'};
+  if(pct>=90)  return{l:'التميز الفضي 🥈',c:'lv-vg'};
+  if(pct>=80)  return{l:'التميز البرونزي 🥉',c:'lv-g'};
+  if(pct>=70)  return{l:'متميز ⭐',c:'lv-ok'};
+  return{l:'مشارك 🎖️',c:'lv-p'};
+}
+
+// إنجازات تلقائية لكل جولة على ضوء بيانات المتأهلين المرتّبين
+function computeAchievements(ranked){
+  const badges={}; // uid -> [emoji,...]
+  const add=(uid,em)=>{(badges[uid]=badges[uid]||[]).push(em);};
+  if(ranked.length===0) return badges;
+  add(ranked[0].uid,'🏆'); // بطل المسابقة
+  ranked.forEach(u=>{ if(u.wrong===0) add(u.uid,'🎯'); }); // دقة 100%
+  let fastest=null, longestStreak=null;
+  ranked.forEach(u=>{
+    if(u.avgMs!=null && (fastest===null || u.avgMs<fastest.avgMs)) fastest=u;
+    if(longestStreak===null || u.maxStreak>longestStreak.maxStreak) longestStreak=u;
+  });
+  if(fastest) add(fastest.uid,'⚡'); // أسرع مجيب
+  if(longestStreak && longestStreak.maxStreak>=3) add(longestStreak.uid,'🔥'); // أطول سلسلة
+  return badges;
 }
 
 // ══ INIT ══
@@ -1371,25 +1439,15 @@ window.onload=()=>{
   loadS();
   buildStartFrom();
   buildPreview();
+  loadCum();
   const sp=localStorage.getItem('tg_pollMap');
   const sc=localStorage.getItem('tg_scores');
   const lu=localStorage.getItem('tg_lastUpd');
   if(sp) try{pollMap=JSON.parse(sp);}catch(e){}
   if(sc) try{scores=JSON.parse(sc);}catch(e){}
   if(lu) lastUpdateId=parseInt(lu)||0;
-  // استرجاع بيانات الجولة
-  const rfq=localStorage.getItem('tg_rfq');
-  const rlq=localStorage.getItem('tg_rlq');
-  const rqc=localStorage.getItem('tg_rqc');
-  if(rfq){ roundFirstQid=parseInt(rfq); document.getElementById('roundFirstQ').value=rfq; }
-  if(rlq){ roundLastQid=parseInt(rlq);  document.getElementById('roundLastQ').value=rlq; }
-  if(rqc){ roundQCount=parseInt(rqc)||0; }
-  if(roundFirstQid&&roundLastQid){
-    const info=document.getElementById('roundInfo');
-    info.style.display='block';
-    info.innerHTML=`✅ الجولة الحالية: من سؤال <strong>${roundFirstQid}</strong> إلى سؤال <strong>${roundLastQid}</strong> — إجمالي <strong>${roundQCount}</strong> أسئلة`;
-  }
   if(Object.keys(scores).length>0) renderLb();
+  renderGlobalStats();
 };
 
 function buildStartFrom(){
@@ -1425,11 +1483,14 @@ function saveS(){
   localStorage.setItem('tg_interval',document.getElementById('interval').value);
   localStorage.setItem('tg_sendType',document.getElementById('sendType').value);
   localStorage.setItem('tg_custSec', document.getElementById('customSec').value);
+  localStorage.setItem('tg_testMsg', document.getElementById('testMsg').value);
+  const cq=document.getElementById('compQCount'); if(cq) localStorage.setItem('tg_compQCount', cq.value);
 }
 function loadS(){
   const f=(id,k)=>{const v=localStorage.getItem(k);if(v)document.getElementById(id).value=v;};
   f('botToken','tg_token'); f('chatId','tg_chatId');
   f('interval','tg_interval'); f('sendType','tg_sendType'); f('customSec','tg_custSec');
+  f('testMsg','tg_testMsg'); f('compQCount','tg_compQCount');
   onIvChange();
 }
 function clearS(){
@@ -1462,9 +1523,11 @@ async function testConn(){
     const d=await r.json();
     if(!d.ok){showErr('connErr','Token خاطئ: '+(d.description||''));return;}
     if(cid){
+      const customMsg=document.getElementById('testMsg').value.trim();
+      const defaultMsg=`✅ اتصال ناجح! البوت: ${d.result.first_name} — جاهز لإرسال ${Q.length} سؤالاً 🎉`;
       const r2=await fetch(`https://api.telegram.org/bot${tok}/sendMessage`,{
         method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({chat_id:cid,text:`✅ اتصال ناجح! البوت: ${d.result.first_name} — جاهز لإرسال ${Q.length} سؤالاً 🎉`})
+        body:JSON.stringify({chat_id:cid,text:customMsg||defaultMsg})
       });
       const d2=await r2.json();
       if(!d2.ok){showErr('connErr','Chat ID خاطئ: '+(d2.description||''));return;}
@@ -1500,7 +1563,7 @@ async function sendQuestion(idx){
     if(!d.ok){log(`❌ فشل س${q.id}: ${d.description}`,'err');return false;}
     // Save poll ID → correct answer index
     if(type==='poll' && d.result?.poll?.id){
-      pollMap[d.result.poll.id]={a:q.a, qid:q.id};
+      pollMap[d.result.poll.id]={a:q.a, qid:q.id, sentAt:Date.now()};
       localStorage.setItem('tg_pollMap',JSON.stringify(pollMap));
     }
     log(`✅ س${q.id} أُرسل — ${q.cat}`,'ok');
@@ -1613,6 +1676,7 @@ async function fetchUpdates(){
     const d=await r.json();
     if(!d.ok)return;
     let newAns=0;
+    const now=Date.now();
     d.result.forEach(upd=>{
       if(upd.update_id>lastUpdateId)lastUpdateId=upd.update_id;
       if(!upd.poll_answer)return;
@@ -1625,21 +1689,31 @@ async function fetchUpdates(){
       const entry=pollMap[pa.poll_id];
       if(!entry)return; // unknown poll
       if(!scores[uid])scores[uid]={name,username,correct:0,wrong:0,total:0,
-        firstQid:entry.qid, lastQid:entry.qid, answerTime:upd.update_id};
-      scores[uid].name=name; scores[uid].username=username;
-      scores[uid].total++;
-      // تتبع أول وآخر سؤال أجاب عليه المشارك
-      if(entry.qid < scores[uid].firstQid) scores[uid].firstQid=entry.qid;
-      if(entry.qid > scores[uid].lastQid){
-        scores[uid].lastQid=entry.qid;
-        scores[uid].answerTime=upd.update_id;
-      }
-      if(chosen===entry.a)scores[uid].correct++;
-      else scores[uid].wrong++;
+        firstQid:entry.qid, lastQid:entry.qid, answerTime:upd.update_id,
+        firstAt:now, lastAt:now, answers:{}};
+      const u=scores[uid];
+      u.name=name; u.username=username;
+      if(!u.answers) u.answers={};
+      // منع الاحتساب المكرر لنفس السؤال (كل سؤال يُحتسب مرة واحدة فقط)
+      if(u.answers[entry.qid]) return;
+      const correct = chosen===entry.a;
+      // زمن الإجابة التقريبي = الآن − وقت إرسال السؤال (للحماية من القيم الشاذة نطرح حداً أعلى منطقياً)
+      let ms = entry.sentAt ? (now-entry.sentAt) : null;
+      if(ms!=null && ms<0) ms=0;
+      u.answers[entry.qid]={correct, ms};
+      u.total++;
+      if(correct)u.correct++; else u.wrong++;
+      // تتبع أول وآخر سؤال أجاب عليه المشارك (لتحديد المشاركة الكاملة)
+      if(entry.qid < u.firstQid) u.firstQid=entry.qid;
+      if(entry.qid > u.lastQid){ u.lastQid=entry.qid; }
+      if(!u.firstAt || now<u.firstAt) u.firstAt=now;
+      u.lastAt=now;
+      u.answerTime=upd.update_id;
       newAns++;
     });
     localStorage.setItem('tg_lastUpd',lastUpdateId);
     localStorage.setItem('tg_scores',JSON.stringify(scores));
+    localStorage.setItem('tg_pollMap',JSON.stringify(pollMap));
     if(newAns>0){
       log(`📊 ${newAns} إجابة جديدة — إجمالي المشاركين: ${Object.keys(scores).length}`,'ok');
       renderLb();
@@ -1663,24 +1737,28 @@ function getLvl(wrong){
   return{l:'مقبول 📘',c:'lv-ok'};
 }
 
-function renderLb(){
-  const qCount = roundQCount||totalSent||0;
-  const allData = Object.values(scores);
+function fmtMs(ms){
+  if(ms==null) return '—';
+  const s=ms/1000;
+  if(s<60) return s.toFixed(1)+'ث';
+  const m=Math.floor(s/60), r=Math.round(s%60);
+  return `${m}د ${r}ث`;
+}
+
+// يبني قائمة المتأهلين مرتّبة رسمياً + خريطة الإنجازات
+function buildRanked(){
+  const qCount = getQCount();
+  const allData = Object.entries(scores).map(([uid,u])=>({uid,...u}));
   const totalResponded = allData.length;
+  const ranked = allData.map(u=>({uid:u.uid, ...computeDerived(u,qCount)}));
+  ranked.sort(cmpRank);
+  const badges = computeAchievements(ranked);
+  return {qCount, totalResponded, ranked, badges};
+}
 
-  // فلترة: فقط من أجاب على جميع أسئلة الجولة من البداية للنهاية
-  const data = allData
-    .filter(u=>isFullParticipant(u))
-    .sort((a,b)=>{
-      const pa=qCount>0?a.correct/qCount:0;
-      const pb=qCount>0?b.correct/qCount:0;
-      if(pb!==pa) return pb-pa;
-      // عند التساوي: الأسرع (أصغر answerTime)
-      return (a.answerTime||0)-(b.answerTime||0);
-    });
-
-  const excluded = totalResponded - data.length;
-  const n = data.length;
+function renderLb(){
+  const {qCount, totalResponded, ranked, badges} = buildRanked();
+  const n = ranked.length;
 
   document.getElementById('liveCountWrap').style.display=totalResponded>0?'block':'none';
   document.getElementById('liveCount').textContent=totalResponded;
@@ -1690,58 +1768,49 @@ function renderLb(){
     return;
   }
 
-  document.getElementById('lbSub').textContent=`آخر تحديث: ${new Date().toLocaleString('ar-SA')} | أسئلة الجولة: ${qCount}`;
+  document.getElementById('lbSub').textContent=`آخر تحديث: ${new Date().toLocaleString('ar-SA')} | أسئلة المسابقة: ${qCount}`;
 
-  const top = n>0 ? data[0].correct : 0;
-  const topPct = qCount>0 ? Math.round((top/qCount)*100) : 0;
+  const top = n>0 ? ranked[0].correct : 0;
+  const topPct = n>0 ? ranked[0].pct : 0;
   document.getElementById('lbStats').innerHTML=`
-    <div class="lb-stat"><div class="lb-stat-n">${n}</div><div class="lb-stat-l">في التصنيف</div></div>
-    <div class="lb-stat"><div class="lb-stat-n" style="color:#e65100">${excluded}</div><div class="lb-stat-l">خارج التصنيف</div></div>
+    <div class="lb-stat"><div class="lb-stat-n">${n}</div><div class="lb-stat-l">عدد المشاركين</div></div>
     <div class="lb-stat"><div class="lb-stat-n" style="color:var(--green)">${top} <span style="font-size:.8rem">(${topPct}%)</span></div><div class="lb-stat-l">أعلى نتيجة</div></div>
-    <div class="lb-stat"><div class="lb-stat-n" style="color:var(--gold)">${qCount}</div><div class="lb-stat-l">أسئلة الجولة</div></div>`;
-
-  if(n===0){
-    let note='';
-    if(excluded>0) note=`<div style="text-align:center;padding:14px;background:#fff3e0;border-radius:10px;color:#e65100;font-weight:700;font-size:.86rem;margin-top:10px;">⚠️ ${excluded} مشارك لم يُجيبوا على جميع الأسئلة (${qCount} سؤال) — غير مؤهلين للتصنيف</div>`;
-    document.getElementById('lbTable').innerHTML='<div style="text-align:center;padding:24px;color:#aaa;font-size:.88rem">📭 لا يوجد مشاركون مؤهلون بعد</div>'+note;
-    document.getElementById('lbNote').textContent=`* يُشترط الإجابة على جميع الأسئلة الـ ${qCount} للدخول في التصنيف`;
-    return;
-  }
+    <div class="lb-stat"><div class="lb-stat-n" style="color:var(--gold)">${qCount}</div><div class="lb-stat-l">أسئلة المسابقة</div></div>`;
 
   const medals=['🥇','🥈','🥉'];
   let rows='';
-  data.forEach((u,i)=>{
-    // النسبة من أسئلة الجولة فقط
-    const pct = qCount>0 ? Math.round((u.correct/qCount)*100) : 0;
-    const lvl = getLvlByPct(pct);
+  ranked.forEach((u,i)=>{
+    const lvl = getLvlByPct(u.pct);
     const rc = i===0?'r1':i===1?'r2':i===2?'r3':'rx';
     const rk = i<3 ? medals[i] : `${i+1}`;
-    const pctColor = pct>=90?'#1e7e34':pct>=80?'#1565c0':pct>=70?'#e65100':'#c0392b';
-    const pctBg    = pct>=90?'#d4edda':pct>=80?'#cce5ff':pct>=70?'#fff3cd':'#f8d7da';
+    const pctColor = u.pct>=90?'#1e7e34':u.pct>=80?'#1565c0':u.pct>=70?'#e65100':'#c0392b';
+    const pctBg    = u.pct>=90?'#d4edda':u.pct>=80?'#cce5ff':u.pct>=70?'#fff3cd':'#f8d7da';
+    const badgeStr = (badges[u.uid]||[]).join(' ');
     rows+=`<tr>
       <td><div class="rank-badge ${rc}">${rk}</div></td>
-      <td style="font-weight:700">${u.name}</td>
+      <td style="font-weight:700">${u.name} ${badgeStr?`<span style="font-size:.9rem">${badgeStr}</span>`:''}</td>
       <td style="color:var(--green);font-weight:700;font-size:.95rem">${u.correct} ✅</td>
       <td style="color:var(--red);font-weight:700;font-size:.95rem">${u.wrong} ❌</td>
       <td>
-        <span style="display:inline-block;background:${pctBg};color:${pctColor};border-radius:8px;padding:3px 10px;font-weight:900;font-size:.88rem;">${pct}%</span>
-        <div class="bar-w" style="margin-top:4px"><div class="bar-f" style="width:${pct}%"></div></div>
+        <span style="display:inline-block;background:${pctBg};color:${pctColor};border-radius:8px;padding:3px 10px;font-weight:900;font-size:.88rem;">${u.pct}%</span>
+        <div class="bar-w" style="margin-top:4px"><div class="bar-f" style="width:${u.pct}%"></div></div>
       </td>
+      <td style="text-align:center;font-size:.82rem">${fmtMs(u.totalTimeMs)}</td>
+      <td style="text-align:center;font-size:.82rem">${fmtMs(u.avgMs)}</td>
+      <td style="text-align:center;font-weight:700">${u.maxStreak}🔥</td>
+      <td style="text-align:center;font-weight:900;color:var(--gold)">${u.points}</td>
       <td><span class="lvl ${lvl.c}">${lvl.l}</span></td>
     </tr>`;
   });
 
-  let excludedNote='';
-  if(excluded>0){
-    excludedNote=`<tr><td colspan="6" style="text-align:center;padding:10px;font-size:.78rem;color:#e65100;background:#fff3e0;">⚠️ ${excluded} مشارك خارج التصنيف (لم يُكملوا جميع أسئلة الجولة)</td></tr>`;
-  }
-
   document.getElementById('lbTable').innerHTML=`
+    <div style="overflow-x:auto">
     <table class="lb">
-      <thead><tr><th>الترتيب</th><th>الاسم</th><th>✅ صحيح</th><th>❌ خطأ</th><th>النسبة</th><th>المستوى</th></tr></thead>
-      <tbody>${rows}${excludedNote}</tbody>
-    </table>`;
-  document.getElementById('lbNote').textContent=`* النسبة من ${qCount} أسئلة الجولة | يُشترط الإجابة على جميعها | الترتيب: نسبة أعلى ثم الأسرع عند التساوي`;
+      <thead><tr><th>الترتيب</th><th>الاسم</th><th>✅ صحيح</th><th>❌ خطأ</th><th>النسبة</th><th>⏱️ الزمن الكلي</th><th>⏱️ متوسط الإجابة</th><th>🔥 أطول سلسلة</th><th>⭐ النقاط</th><th>المستوى</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    </div>`;
+  document.getElementById('lbNote').textContent=`* النسبة من ${qCount} أسئلة المسابقة | الترتيب: عدد الصحيح ← الزمن الكلي ← أطول سلسلة ← أقل خطأ ← من أنهى أولاً`;
 }
 
 async function sendLbToChat(){
@@ -1749,63 +1818,41 @@ async function sendLbToChat(){
   const cid=document.getElementById('chatId').value.trim();
   if(!tok||!cid){alert('أدخل البيانات أولاً من تبويب الإعداد');return;}
 
-  const qCount = roundQCount||totalSent||0;
-  const allData = Object.values(scores);
-  if(allData.length===0){alert('لا توجد نتائج بعد!\nاضغط "تحديث النتائج الآن" أولاً');return;}
-
-  // فلترة وترتيب
-  const data = allData
-    .filter(u=>isFullParticipant(u))
-    .sort((a,b)=>{
-      const pa=qCount>0?a.correct/qCount:0;
-      const pb=qCount>0?b.correct/qCount:0;
-      if(pb!==pa) return pb-pa;
-      return (a.answerTime||0)-(b.answerTime||0);
-    });
-  const excluded = allData.length - data.length;
+  const {qCount, totalResponded, ranked, badges} = buildRanked();
+  if(totalResponded===0){alert('لا توجد نتائج بعد!\nاضغط "تحديث النتائج الآن" أولاً');return;}
 
   const sep='━━━━━━━━━━━━━━━━━━━━';
   const title=document.getElementById('alertTitle')?.value.trim()||'الرخصة المهنية';
   let lines=[];
-  lines.push(`🏁 انتهت جولة '${title}'!`);
+  lines.push(`🏁 انتهت مسابقة '${title}'!`);
   lines.push('');
-  lines.push(`📊 أسئلة الجولة: ${qCount} سؤال`);
-  if(roundFirstQid&&roundLastQid) lines.push(`📌 من س${roundFirstQid} إلى س${roundLastQid}`);
-  lines.push(`👥 المؤهلون للتصنيف: ${data.length} | خارج التصنيف: ${excluded}`);
+  lines.push(`📊 أسئلة المسابقة: ${qCount} سؤال`);
+  lines.push(`👥 عدد المشاركين: ${ranked.length}`);
   lines.push('');
   lines.push(sep);
-  lines.push('🏆 لوحة التميز — المتأهلون');
+  lines.push('🏆 لوحة الشرف والتميز');
   lines.push(sep);
   lines.push('');
 
-  if(data.length===0){
-    lines.push('⚠️ لا يوجد مشاركون أجابوا على جميع أسئلة الجولة');
-  } else {
-    const medals=['🥇','🥈','🥉'];
-    data.slice(0,20).forEach((u,i)=>{
-      const rk=i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}.`;
-      const display=u.username?`@${u.username}`:u.name;
-      const pct=qCount>0?Math.round((u.correct/qCount)*100):0;
-      const lvl=getLvlByPct(pct);
-      lines.push(`${rk} ${display}`);
-      lines.push(`   ✅ ${u.correct}/${qCount} — ${pct}% — ${lvl.l}`);
-      lines.push('');
-    });
-  }
-
-  if(excluded>0){
-    lines.push(sep);
-    lines.push(`⚠️ ${excluded} مشارك خارج التصنيف (لم يُكملوا جميع الأسئلة)`);
+  ranked.slice(0,20).forEach((u,i)=>{
+    const rk=i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}.`;
+    const display=u.username?`@${u.username}`:u.name;
+    const lvl=getLvlByPct(u.pct);
+    const badgeStr=(badges[u.uid]||[]).join(' ');
+    lines.push(`${rk} ${display} ${badgeStr}`);
+    lines.push(`   ✅ ${u.correct}/${qCount} — ${u.pct}% — ${lvl.l}`);
+    lines.push(`   ⭐ ${u.points} نقطة | 🔥 أطول سلسلة ${u.maxStreak} | ⏱️ ${fmtMs(u.totalTimeMs)}`);
     lines.push('');
-  }
+  });
 
   lines.push(sep);
   lines.push('');
-  lines.push('📌 سلم التقديرات:');
-  lines.push('🏆 ممتاز: 90% فأعلى');
-  lines.push('🌟 جيد جداً: 80% فأعلى');
-  lines.push('👍 جيد: 70% فأعلى');
-  lines.push('📝 مقبول: 50% فأعلى');
+  lines.push('📌 سلم مستويات التميز:');
+  lines.push('🥇 التميز الذهبي: 100%');
+  lines.push('🥈 التميز الفضي: 90% فأكثر');
+  lines.push('🥉 التميز البرونزي: 80% فأكثر');
+  lines.push('⭐ متميز: 70% فأكثر');
+  lines.push('🎖️ مشارك: أقل من 70%');
   lines.push('');
   lines.push('🌹 شكراً لكل من شارك');
   lines.push('💡 العلم نور — واصلوا المسيرة');
@@ -1830,18 +1877,100 @@ async function sendLbToChat(){
   }
 }
 function clearLb(){
-  if(!confirm('مسح جميع نتائج المشاركين؟'))return;
+  if(!confirm('🏁 إنهاء المسابقة الحالية؟\nسيتم أرشفة نتائج المتأهلين في الإحصائيات التراكمية، ثم مسح لوحة الشرف لبدء مسابقة جديدة.'))return;
+  archiveRound();
   scores={}; pollMap={}; lastUpdateId=0;
-  roundFirstQid=null; roundLastQid=null; roundQCount=0;
-  ['tg_scores','tg_pollMap','tg_lastUpd','tg_rfq','tg_rlq','tg_rqc'].forEach(k=>localStorage.removeItem(k));
+  ['tg_scores','tg_pollMap','tg_lastUpd'].forEach(k=>localStorage.removeItem(k));
   document.getElementById('lbStats').innerHTML='';
   document.getElementById('lbTable').innerHTML='';
   document.getElementById('lbSub').textContent='في انتظار إجابات المشاركين...';
   document.getElementById('liveCountWrap').style.display='none';
-  document.getElementById('roundInfo').style.display='none';
-  document.getElementById('roundFirstQ').value='';
-  document.getElementById('roundLastQ').value='';
-  log('🗑️ مُسحت النتائج وبيانات الجولة','warn');
+  log('🏁 أُرشفت المسابقة ومُسحت النتائج — جاهز لمسابقة جديدة','warn');
+  renderGlobalStats();
+}
+
+// ══ لوحة الإحصائيات العامة (تراكمية عبر كل الجولات) ══
+function rangeStart(range){
+  const now=new Date();
+  if(range==='week'){
+    const d=new Date(now); const day=(d.getDay()+1)%7; // الأحد=0 تقريبي
+    d.setDate(d.getDate()-day); d.setHours(0,0,0,0); return d.getTime();
+  }
+  if(range==='month'){ return new Date(now.getFullYear(),now.getMonth(),1).getTime(); }
+  if(range==='year'){ return new Date(now.getFullYear(),0,1).getTime(); }
+  return 0;
+}
+
+function renderGlobalStats(){
+  const range=document.getElementById('gStatsRange').value;
+  const since=rangeStart(range);
+  const records=roundHistory.filter(r=>r.ts>=since);
+  const body=document.getElementById('gStatsBody');
+
+  if(records.length===0 && Object.keys(cumStats).length===0){
+    body.innerHTML='<div style="text-align:center;padding:18px;color:#aaa;font-size:.86rem">لا توجد بيانات تراكمية بعد — تُحفظ تلقائياً عند بدء جولة جديدة</div>';
+    return;
+  }
+
+  // تجميع نقاط الفترة المختارة لكل مستخدم
+  const agg={};
+  records.forEach(r=>{
+    if(!agg[r.uid]) agg[r.uid]={name:r.name,username:r.username,points:0,rounds:0,correct:0,wrong:0,sumPct:0,sumAvg:0,avgCnt:0};
+    const a=agg[r.uid];
+    a.name=r.name; a.username=r.username;
+    a.points+=r.points; a.rounds++; a.correct+=r.correct; a.wrong+=r.wrong; a.sumPct+=r.pct;
+    if(r.avgTime!=null){ a.sumAvg+=r.avgTime; a.avgCnt++; }
+  });
+  const list=Object.entries(agg).map(([uid,a])=>({uid,...a,
+    avgPct:a.rounds?Math.round(a.sumPct/a.rounds):0,
+    avgSpeed:a.avgCnt?Math.round(a.sumAvg/a.avgCnt):null}));
+
+  const top10=[...list].sort((a,b)=>b.points-a.points||b.avgPct-a.avgPct).slice(0,10);
+  const mostActive=[...list].sort((a,b)=>b.rounds-a.rounds).slice(0,5);
+  const highestAcc=[...list].sort((a,b)=>b.avgPct-a.avgPct).slice(0,5);
+  const fastestList=list.filter(u=>u.avgSpeed!=null).sort((a,b)=>a.avgSpeed-b.avgSpeed).slice(0,5);
+
+  const rangeLabel={week:'هذا الأسبوع',month:'هذا الشهر',year:'هذا العام',all:'كل الأوقات'}[range];
+
+  const rowsHtml=(arr,fmt)=>arr.length? arr.map((u,i)=>`<tr><td>${i+1}</td><td style="font-weight:700">${u.username?'@'+u.username:u.name}</td><td>${fmt(u)}</td></tr>`).join('') :
+    '<tr><td colspan="3" style="text-align:center;color:#aaa;padding:10px">لا توجد بيانات</td></tr>';
+
+  body.innerHTML=`
+    <h3 style="font-size:.95rem;color:#6a1b9a;margin:6px 0">🏆 أفضل 10 — ${rangeLabel}</h3>
+    <div style="overflow-x:auto"><table class="lb"><thead><tr><th>#</th><th>المشارك</th><th>⭐ النقاط</th></tr></thead>
+    <tbody>${rowsHtml(top10,u=>`${u.points} نقطة (${u.rounds} جولة)`)}</tbody></table></div>
+
+    <div class="grid-2" style="margin-top:16px;gap:16px">
+      <div>
+        <h3 style="font-size:.88rem;color:#1565c0;margin:6px 0">📚 الأكثر نشاطاً</h3>
+        <table class="lb"><thead><tr><th>#</th><th>المشارك</th><th>الجولات</th></tr></thead>
+        <tbody>${rowsHtml(mostActive,u=>u.rounds)}</tbody></table>
+      </div>
+      <div>
+        <h3 style="font-size:.88rem;color:#1e7e34;margin:6px 0">🎯 أعلى نسبة نجاح</h3>
+        <table class="lb"><thead><tr><th>#</th><th>المشارك</th><th>النسبة</th></tr></thead>
+        <tbody>${rowsHtml(highestAcc,u=>u.avgPct+'%')}</tbody></table>
+      </div>
+    </div>
+    <div style="margin-top:16px">
+      <h3 style="font-size:.88rem;color:#e65100;margin:6px 0">⚡ أسرع متوسط زمن إجابة</h3>
+      <table class="lb"><thead><tr><th>#</th><th>المشارك</th><th>المتوسط</th></tr></thead>
+      <tbody>${rowsHtml(fastestList,u=>fmtMs(u.avgSpeed))}</tbody></table>
+    </div>
+
+    <h3 style="font-size:.88rem;color:#444;margin:18px 0 6px">🗂️ السجل التراكمي الكلي (كل الأوقات)</h3>
+    <div style="overflow-x:auto"><table class="lb">
+      <thead><tr><th>المشارك</th><th>🥇</th><th>🥈</th><th>🥉</th><th>الجولات</th><th>⭐ مجموع النقاط</th><th>أعلى نتيجة</th><th>متوسط النسبة</th><th>🔥 أطول سلسلة</th></tr></thead>
+      <tbody>${Object.entries(cumStats).sort((a,b)=>b[1].totalPoints-a[1].totalPoints).slice(0,30).map(([uid,c])=>`
+        <tr>
+          <td style="font-weight:700">${c.username?'@'+c.username:c.name}</td>
+          <td>${c.gold||0}</td><td>${c.silver||0}</td><td>${c.bronze||0}</td>
+          <td>${c.rounds}</td><td style="font-weight:900;color:var(--gold)">${c.totalPoints}</td>
+          <td>${c.bestScorePct}%</td><td>${c.rounds?Math.round(c.sumPct/c.rounds):0}%</td>
+          <td>${c.bestStreak}</td>
+        </tr>`).join('') || '<tr><td colspan="8" style="text-align:center;color:#aaa;padding:10px">لا توجد بيانات</td></tr>'}
+      </tbody>
+    </table></div>`;
 }
 
 // ══ LOG ══
