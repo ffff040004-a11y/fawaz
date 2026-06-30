@@ -25,6 +25,8 @@ body{font-family:'Tajawal',sans-serif;background:var(--light);min-height:100vh;d
 .field{margin-bottom:12px;}
 .field label{display:block;font-size:.86rem;font-weight:700;color:#444;margin-bottom:5px;}
 .field input,.field select{width:100%;padding:10px 13px;border:2px solid var(--border);border-radius:9px;font-family:'Tajawal',sans-serif;font-size:.9rem;color:#222;background:#fafbff;transition:border-color .2s;direction:ltr;text-align:left;}
+.field textarea{width:100%;padding:10px 13px;border:2px solid var(--border);border-radius:9px;font-family:'Tajawal',sans-serif;font-size:.9rem;color:#222;background:#fafbff;transition:border-color .2s;direction:rtl;text-align:right;resize:vertical;}
+.field textarea:focus{outline:none;border-color:var(--navy);background:white;}
 .field input:focus,.field select:focus{outline:none;border-color:var(--navy);background:white;}
 .field .hint{font-size:.74rem;color:#888;margin-top:4px;}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
@@ -125,6 +127,14 @@ table.lb tr:hover td{background:#f8f9ff;}
       <label>💬 Chat ID المجموعة / القناة</label>
       <input type="text" id="chatId" placeholder="-1002014003515" oninput="saveS()">
       <div class="hint">للمجموعة: رقم سالب يبدأ بـ -100</div>
+    </div>
+    <div class="field">
+      <label>📝 نص رسالة اختبار الاتصال (تُرسل للقروب)</label>
+      <textarea id="connTestMsg" rows="3" oninput="saveS()">تم الاتصال ✅ منصة بوت قروب التميز في التقويم والتعليم
+استعدوا... 🎯
+
+ملاحظة: حتى تدخل في التصنيف لازم تبدأ من اول الأسئلة</textarea>
+      <div class="hint">هذا النص هو ما يصل فعلياً للقروب عند الضغط على "اختبار الاتصال" — عدّله كما تشاء</div>
     </div>
     <br>
     <div class="btn-row">
@@ -1279,6 +1289,7 @@ function buildPreview(){
 function saveS(){try{
   localStorage.setItem('tg_token',      document.getElementById('botToken').value);
   localStorage.setItem('tg_chatId',     document.getElementById('chatId').value);
+  localStorage.setItem('tg_connTestMsg', document.getElementById('connTestMsg').value);
   localStorage.setItem('tg_interval',   document.getElementById('interval').value);
   localStorage.setItem('tg_sendType',   document.getElementById('sendType').value);
   localStorage.setItem('tg_custSec',    document.getElementById('customSec').value);
@@ -1295,7 +1306,7 @@ function saveS(){try{
 }catch(e){}}
 function loadS(){try{
   const f=(id,k)=>{const v=localStorage.getItem(k);if(v)document.getElementById(id).value=v;};
-  f('botToken','tg_token'); f('chatId','tg_chatId');
+  f('botToken','tg_token'); f('chatId','tg_chatId'); f('connTestMsg','tg_connTestMsg');
   f('interval','tg_interval'); f('sendType','tg_sendType'); f('customSec','tg_custSec');
   f('pollOpenPeriod','tg_pollPeriod');
   f('labelStyle','tg_labelStyle'); f('customLabel','tg_customLabel'); f('questionSuffix','tg_questionSuffix');
@@ -1402,9 +1413,10 @@ async function testConn(){
     const d=await r.json();
     if(!d.ok){showErr('connErr','Token خاطئ: '+(d.description||''));return;}
     if(cid){
+      const connMsg=(document.getElementById('connTestMsg').value||'').trim() || '✅ تم اتصال منصة البوت';
       const r2=await fetch(`https://api.telegram.org/bot${tok}/sendMessage`,{
         method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({chat_id:cid,text:`✅ تم اتصال منصة البوت\nاستعدوا... 🎯`})
+        body:JSON.stringify({chat_id:cid,text:connMsg})
       });
       const d2=await r2.json();
       if(!d2.ok){showErr('connErr','Chat ID خاطئ: '+(d2.description||''));return;}
