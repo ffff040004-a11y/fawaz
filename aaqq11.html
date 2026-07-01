@@ -491,7 +491,8 @@ function speedBonus(ms){
   return 0;
 }
 function computeDerived(u,qCount){
-  const pct = qCount>0 ? Math.round((u.correct/qCount)*100) : 0;
+  // النسبة المئوية لكل مشارك تُحسب من إجمالي إجاباته هو فقط (صحيح+خطأ)، وليس من عدد أسئلة المسابقة الكلي
+  const pct = u.total>0 ? Math.round((u.correct/u.total)*100) : 0;
   const ans = u.answers||{};
   const qids = Object.keys(ans).map(Number).sort((a,b)=>a-b);
   let points=0, sumMs=0, cntMs=0, fastestMs=null, streak=0, maxStreak=0;
@@ -897,41 +898,51 @@ function renderLb(){
       <thead><tr><th>الترتيب</th><th>الاسم</th><th>✅ صحيح</th><th>❌ خطأ</th><th>النسبة</th><th>⏱️ الزمن الكلي</th><th>⏱️ متوسط الإجابة</th><th>🔥 أطول سلسلة</th><th>⭐ النقاط</th><th>المستوى</th></tr></thead>
       <tbody>${rows}</tbody></table>
     </div>`;
-  document.getElementById('lbNote').textContent=`* النسبة من ${qCount} أسئلة المسابقة | الترتيب: عدد الصحيح ← الزمن الكلي ← أطول سلسلة ← أقل خطأ ← من أنهى أولاً`;
+  document.getElementById('lbNote').textContent=`* النسبة المئوية لكل مشارك من إجمالي إجاباته هو (صحيح+خطأ) | الترتيب: عدد الصحيح ← الزمن الكلي ← أطول سلسلة ← أقل خطأ ← من أنهى أولاً`;
 }
 
 async function sendLbToChat(){
   const tok=document.getElementById('botToken').value.trim();
   const cid=document.getElementById('chatId').value.trim();
   if(!tok||!cid){alert('أدخل البيانات أولاً');return;}
-  const {qCount, totalResponded, ranked, badges} = buildRanked();
+  const {ranked} = buildRanked();
   if(!ranked.length){alert('لا توجد نتائج بعد!\nاضغط "تحديث النتائج الآن" أولاً');return;}
 
-  const sep='━━━━━━━━━━━━━━━━━━━━';
-  let lines=[`🏁 لقد انتهت المسابقة الثقافية المنوعة!`,'',`📊 أسئلة المسابقة: ${qCount} سؤال`,`👥 عدد المشاركين: ${ranked.length}`,'',sep,'🏆 لوحة الشرف والتميز',sep,''];
-  ranked.slice(0,20).forEach((u,i)=>{
-    const rk=i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}.`;
-    const display=u.username?`@${u.username}`:u.name;
-    const lvl=getLvlByPct(u.pct);
-    const badgeStr=(badges[u.uid]||[]).join(' ');
-    lines.push(`${rk} ${display} ${badgeStr}`);
-    lines.push(`   ✅ ${u.correct}/${qCount} — ${u.pct}% — ${lvl.l}`);
-    lines.push(`   ⭐ ${u.points} نقطة | 🔥 أطول سلسلة ${u.maxStreak} | ⏱️ ${fmtMs(u.totalTimeMs)}`);
-    lines.push('');
+  const digitEmoji=['0️⃣','1️⃣','2️⃣','3️⃣','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣'];
+  const display=u=>u.username?`@${u.username}`:u.name;
+
+  let lines=[];
+  lines.push('🏆 نتائج اختبار المسابقة الثقافية المنوعة 🏆');
+  lines.push('');
+
+  // بطاقة المراكز الثلاثة الأولى
+  const top=ranked.slice(0,3);
+  const medals=['🥇','🥈','🥉'];
+  top.forEach((u,i)=>{
+    const isLast = i===top.length-1;
+    const headP = i===0 ? '┌─' : (isLast ? '└─' : '├─');
+    const detP  = isLast ? '   ' : '│  ';
+    lines.push(`${headP} ${medals[i]} ${display(u)}`);
+    lines.push(`${detP}${u.points} نقطة | ${u.correct}/${u.total} ✅ | ${fmtMs(u.avgMs)}`);
   });
-  lines.push(sep);
+
+  // باقي المتصدرين (من المركز الرابع)
+  const rest=ranked.slice(3,20);
+  if(rest.length>0){
+    lines.push('');
+    lines.push('📋 باقي المتصدرين:');
+    rest.forEach((u,i)=>{
+      const rank=i+4;
+      const rk = rank<=9 ? digitEmoji[rank] : `${rank}.`;
+      lines.push(`${rk} ${display(u)} — ${u.points}ن`);
+    });
+  }
+
   lines.push('');
-  lines.push('📌 سلم مستويات التميز:');
-  lines.push('🥇 التميز الذهبي: 100%');
-  lines.push('🥈 التميز الفضي: 90% فأكثر');
-  lines.push('🥉 التميز البرونزي: 80% فأكثر');
-  lines.push('⭐ متميز: 70% فأكثر');
-  lines.push('🎖️ مشارك: أقل من 70%');
+  lines.push('✨ أحسنتم جميعًا!');
   lines.push('');
-  lines.push('🌹 شكراً لكل من شارك');
-  lines.push('💡 استمروا في التعلم والمعرفة');
-  lines.push('');
-  lines.push('تصميم: د/فواز 🎓');
+  lines.push('تصميم: د/فواز 🎓 | t.me/TAqhjT3MFVE1Yzk0');
+
   try{
     log('📤 جارٍ إرسال النتائج...','info');
     const r=await fetch(`https://api.telegram.org/bot${tok}/sendMessage`,{
