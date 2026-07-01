@@ -908,21 +908,40 @@ async function fetchUpdates(){
       const chosen=pa.option_ids?.[0];
       if(chosen===undefined||chosen===null) return;
       const entry=pollMap[pa.poll_id]; if(!entry) return;
-      if(!scores[uid]) scores[uid]={name:displayName,username:pa.user.username||'',correct:0,wrong:0,total:0,points:0,sumTime:0,maxStreak:0,curStreak:0,firstAnswerAt:0,lastAnswerAt:0,fastestTime:null};
+      if(!scores[uid]) scores[uid]={name:displayName,username:pa.user.username||'',correct:0,wrong:0,total:0,points:0,sumTime:0,maxStreak:0,curStreak:0,firstAnswerAt:0,lastAnswerAt:0,fastestTime:null,answeredPolls:{}};
       const s=scores[uid];
-      s.name=displayName; s.username=pa.user.username||''; s.total++;
+      if(!s.answeredPolls) s.answeredPolls={};
+      s.name=displayName; s.username=pa.user.username||'';
       // وقت الإجابة التقريبي لهذا السؤال (منذ إرساله وحتى رصد الإجابة)
       let rt=entry.sentAt?Math.max(0,(now-entry.sentAt)/1000):null;
+      if(!s.firstAnswerAt) s.firstAnswerAt=now;
+      s.lastAnswerAt=now;
+
+      // ── منع الاحتساب المكرر: تيليجرام يرسل poll_answer في كل مرة يغيّر فيها
+      // المشارك اختياره على نفس السؤال. لو سبق له الإجابة على هذا السؤال (poll_id)
+      // نتراجع أولاً عن أثر إجابته القديمة قبل احتساب الإجابة الجديدة، بدل تكديسهما فوق بعض.
+      const prevAns=s.answeredPolls[pa.poll_id];
+      if(prevAns){
+        s.total--;
+        if(prevAns.wasCorrect){
+          s.correct--;
+          s.points-=(10+prevAns.bonus);
+          // لا يمكن التراجع الدقيق عن curStreak/maxStreak بعد أحداث لاحقة، فنكتفي بإعادة حسابها لاحقًا لو لزم
+        }else{
+          s.wrong--;
+        }
+        if(prevAns.rt!==null) s.sumTime-=prevAns.rt;
+      }
+
+      s.total++;
       if(rt!==null){
         s.sumTime+=rt;
         if(s.fastestTime===null||rt<s.fastestTime) s.fastestTime=rt;
       }
-      if(!s.firstAnswerAt) s.firstAnswerAt=now;
-      s.lastAnswerAt=now;
       const isCorrect=chosen===entry.a;
+      let bonus=0;
       if(isCorrect){
         s.correct++; s.curStreak++; if(s.curStreak>s.maxStreak) s.maxStreak=s.curStreak;
-        let bonus=0;
         if(rt!==null){
           if(rt<5) bonus=3; else if(rt<=10) bonus=2; else if(rt<=20) bonus=1; else bonus=0;
         }
@@ -930,6 +949,7 @@ async function fetchUpdates(){
       } else {
         s.wrong++; s.curStreak=0;
       }
+      s.answeredPolls[pa.poll_id]={wasCorrect:isCorrect,bonus,rt};
       newAns++;
     });
     localStorage.setItem('tg_lu_qiyada',String(lastUpdateId));
