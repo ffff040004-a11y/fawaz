@@ -2574,19 +2574,41 @@ async function fetchUpdates(){
       if(chosen===undefined||chosen===null) return;
       const entry=pollMap[pa.poll_id];
       if(!entry) return;
-      if(!scores[uid]) scores[uid]={name:displayName,username:pa.user.username||'',correct:0,wrong:0,total:0,points:0,streak:0,maxStreak:0,totalTimeMs:0,timeCount:0,firstAt:0,lastAt:0};
+      if(!scores[uid]) scores[uid]={name:displayName,username:pa.user.username||'',correct:0,wrong:0,total:0,points:0,streak:0,maxStreak:0,totalTimeMs:0,timeCount:0,firstAt:0,lastAt:0,answeredPolls:{}};
+      if(!scores[uid].answeredPolls) scores[uid].answeredPolls={};
       scores[uid].name=displayName;
       scores[uid].username=pa.user.username||scores[uid].username||'';
-      scores[uid].total++;
       const nowTs=Date.now();
       if(!scores[uid].firstAt) scores[uid].firstAt=nowTs;
       scores[uid].lastAt=nowTs;
       const elapsedMs = entry.sentAt ? Math.max(0, nowTs-entry.sentAt) : null;
-      if(chosen===entry.a){
+
+      // ── منع الاحتساب المكرر: تيليجرام يرسل poll_answer في كل مرة يغيّر فيها
+      // المشارك اختياره على نفس السؤال. لو سبق له الإجابة على هذا السؤال (poll_id)
+      // نتراجع أولاً عن أثر إجابته القديمة قبل احتساب الإجابة الجديدة، بدل تكديسهما فوق بعض.
+      const prevAns = scores[uid].answeredPolls[pa.poll_id];
+      if(prevAns){
+        scores[uid].total--;
+        if(prevAns.wasCorrect){
+          scores[uid].correct--;
+          scores[uid].points=(scores[uid].points||0)-prevAns.pts;
+        }else{
+          scores[uid].wrong--;
+        }
+        if(prevAns.elapsedMs!==null){
+          scores[uid].totalTimeMs=(scores[uid].totalTimeMs||0)-prevAns.elapsedMs;
+          scores[uid].timeCount=(scores[uid].timeCount||0)-1;
+        }
+      }
+
+      scores[uid].total++;
+      const wasCorrect = (chosen===entry.a);
+      let pts=0;
+      if(wasCorrect){
         scores[uid].correct++;
         scores[uid].streak=(scores[uid].streak||0)+1;
         if(scores[uid].streak>(scores[uid].maxStreak||0)) scores[uid].maxStreak=scores[uid].streak;
-        let pts=10;
+        pts=10;
         if(elapsedMs!==null){
           const secs=elapsedMs/1000;
           if(secs<5) pts+=3; else if(secs<=10) pts+=2; else if(secs<=20) pts+=1;
@@ -2600,6 +2622,7 @@ async function fetchUpdates(){
         scores[uid].totalTimeMs=(scores[uid].totalTimeMs||0)+elapsedMs;
         scores[uid].timeCount=(scores[uid].timeCount||0)+1;
       }
+      scores[uid].answeredPolls[pa.poll_id]={wasCorrect,pts,elapsedMs};
       newAns++;
     });
     localStorage.setItem('tg_lastUpd', String(lastUpdateId));
