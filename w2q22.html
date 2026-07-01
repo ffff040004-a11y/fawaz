@@ -957,7 +957,7 @@ function getLvl(pct){
 function computeRanked(){
   const arr=Object.entries(scores).map(([uid,s])=>{
     const total=s.correct+s.wrong;
-    const pct=sentCount>0?Math.round(s.correct/sentCount*100):0;
+    const pct=total>0?Math.round(s.correct/total*100):0;
     const totalTime=(firstQuestionSentAt&&s.lastAnswerAt)?Math.max(0,(s.lastAnswerAt-firstQuestionSentAt)/1000):0;
     const avgTime=total>0?s.sumTime/total:0;
     return {uid,name:s.name,username:s.username,correct:s.correct,wrong:s.wrong,total,pct,
@@ -984,7 +984,7 @@ function computeAchievements(ranked){
     const fastest=withTime.reduce((m,u)=>u.avgTime<m.avgTime?u:m,withTime[0]);
     badges[fastest.uid].push('⚡ أسرع مجيب');
   }
-  ranked.forEach(u=>{ if(sentCount>0&&u.correct===sentCount&&u.wrong===0) badges[u.uid].push('🎯 دقة 100%'); });
+  ranked.forEach(u=>{ if(u.total>0&&u.wrong===0) badges[u.uid].push('🎯 دقة 100%'); });
   const maxStreak=Math.max(...ranked.map(u=>u.maxStreak),0);
   if(maxStreak>=3){ ranked.forEach(u=>{ if(u.maxStreak===maxStreak) badges[u.uid].push('🔥 أطول سلسلة'); }); }
   return badges;
@@ -999,7 +999,7 @@ function renderLb(){
   document.getElementById('lbSub').textContent=`آخر تحديث: ${new Date().toLocaleString('ar-SA')} | أُرسل: ${sentCount}`;
   const top=ranked[0];
   const avgCorrect=Math.round(ranked.reduce((s,x)=>s+x.correct,0)/n);
-  const avgPct=sentCount>0?Math.round(avgCorrect/sentCount*100):0;
+  const avgPct=n>0?Math.round(ranked.reduce((s,x)=>s+x.pct,0)/n):0;
   const topPoints=Math.max(...ranked.map(u=>u.points));
   document.getElementById('lbStats').innerHTML=`
     <div class="lb-stat"><div class="lb-stat-n">${n}</div><div class="lb-stat-l">مشارك</div></div>
@@ -1049,20 +1049,30 @@ async function sendLbToChat(){
   const ranked=computeRanked();
   if(!ranked.length){alert('لا توجد نتائج بعد!\nاضغط "تحديث النتائج الآن" أولاً');return;}
   const title=document.getElementById('alertTitle').value.trim()||'رخصة القيادة المدرسية';
-  let lines=[`🏁 لقد انتهى اختبار '${title}'!`,'',`📊 عدد الأسئلة: ${sentCount} سؤال`,'━━━━━━━━━━━━━━━━━━━━','','📌 آلية الترتيب:','• الأكثر إجابات صحيحة يتصدر القائمة','• عند التساوي → الأقل زمناً ← الأطول سلسلة صحيحة ← الأقل خطأً ← الأسبق إنهاءً',''];
-  ranked.slice(0,20).forEach((u,i)=>{
-    const rk=i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}.`;
+  let lines=[`🏆 نتائج اختبار ${title} 🏆`,''];
+  const top3=ranked.slice(0,3);
+  const boxChars=['┌─','├─','└─'];
+  const contPrefix=['│  ','│  ','   '];
+  const medals=['🥇','🥈','🥉'];
+  top3.forEach((u,i)=>{
     const display=u.username?`@${u.username}`:u.name;
-    const lvl=getLvl(u.pct);
-    lines.push(`${rk} ${display}`);
-    lines.push(`   ✅ ${u.correct}  ❌ ${u.wrong}  📊 ${u.pct}%  🌟 ${u.points} نقطة  ${lvl.l}`);
-    lines.push('');
+    lines.push(`${boxChars[i]} ${medals[i]} ${display}`);
+    lines.push(`${contPrefix[i]}${u.points} نقطة | ${u.correct}/${u.total} ✅ | ${Math.round(u.avgTime)}ث`);
   });
-  lines.push('━━━━━━━━━━━━━━━━━━━━');
+  const rest=ranked.slice(3,20);
+  if(rest.length){
+    lines.push('');
+    lines.push('📋 باقي المتصدرين:');
+    const digitEmoji={4:'4️⃣',5:'5️⃣',6:'6️⃣',7:'7️⃣',8:'8️⃣',9:'9️⃣'};
+    rest.forEach((u,i)=>{
+      const rankNum=i+4;
+      const display=u.username?`@${u.username}`:u.name;
+      const marker=digitEmoji[rankNum]||`${rankNum}.`;
+      lines.push(`${marker} ${display} — ${u.points}ن`);
+    });
+  }
   lines.push('');
-  lines.push('🌟 أحسنتم وبارك الله في جهودكم');
-  lines.push('💡 العلم نور — واصلوا المسيرة');
-  lines.push('🤝 شكراً لكل من شارك وأضاء هذا المجال');
+  lines.push('✨ أحسنتم جميعًا!');
   lines.push('');
   lines.push('تصميم: د/فواز 🎓 | t.me/TAqhjT3MFVE1Yzk0');
   try{
