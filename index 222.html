@@ -969,6 +969,88 @@
       line-height: 1.7;
     }
 
+    /* ===== COUNTDOWN ===== */
+    .countdown-section {
+      background: linear-gradient(135deg, #0d1f3c 0%, #1a3a5c 55%, #2a5298 100%);
+      border-radius: var(--radius);
+      padding: 32px 24px 26px;
+      margin-bottom: 28px;
+      text-align: center;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .countdown-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 85% 15%, rgba(200,169,81,0.18), transparent 55%);
+      pointer-events: none;
+    }
+
+    .countdown-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      position: relative;
+    }
+
+    .countdown-title i { color: var(--secondary); }
+
+    .countdown-boxes {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .countdown-box {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      backdrop-filter: blur(6px);
+      border-radius: 14px;
+      padding: 18px 26px;
+      min-width: 90px;
+    }
+
+    .countdown-num {
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: var(--secondary);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .countdown-label {
+      font-size: 0.85rem;
+      margin-top: 8px;
+      opacity: 0.85;
+      font-weight: 500;
+    }
+
+    .countdown-date {
+      font-size: 0.95rem;
+      opacity: 0.9;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      padding-top: 14px;
+      margin-top: 4px;
+      position: relative;
+    }
+
+    @media (max-width: 480px) {
+      .countdown-box { min-width: 68px; padding: 14px 12px; }
+      .countdown-num { font-size: 1.7rem; }
+      .countdown-boxes { gap: 10px; }
+    }
+
     .info-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -1132,7 +1214,32 @@
       <p>التقويم الدراسي لمواعيد بداية ونهاية الفصول الدراسية والإجازات الرسمية لمنطقة مكة المكرمة والمدينة المنورة وجدة والطائف · إعداد وتصميم: الأستاذ / أحمد الغامدي</p>
     </div>
 
+    <!-- Countdown -->
+    <div class="countdown-section">
+      <div class="countdown-title"><i class="fas fa-hourglass-half"></i> العد التنازلي لبداية العام الدراسي 1448/1449هـ</div>
+      <div class="countdown-boxes">
+        <div class="countdown-box">
+          <div class="countdown-num" id="cd-days">--</div>
+          <div class="countdown-label">يوم</div>
+        </div>
+        <div class="countdown-box">
+          <div class="countdown-num" id="cd-hours">--</div>
+          <div class="countdown-label">ساعة</div>
+        </div>
+        <div class="countdown-box">
+          <div class="countdown-num" id="cd-mins">--</div>
+          <div class="countdown-label">دقيقة</div>
+        </div>
+        <div class="countdown-box">
+          <div class="countdown-num" id="cd-secs">--</div>
+          <div class="countdown-label">ثانية</div>
+        </div>
+      </div>
+      <div class="countdown-date" id="cd-target-date">—</div>
+    </div>
+
     <!-- Stats -->
+
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-icon">📚</div>
@@ -2335,6 +2442,44 @@ function updateProgress() {
   if (bar) setTimeout(() => bar.style.width = pct.toFixed(1) + '%', 500);
 }
 
+// ==================== COUNTDOWN ====================
+const COUNTDOWN_TARGET = new Date('2026-08-30T00:00:00');
+
+function updateCountdown() {
+  const el = id => document.getElementById(id);
+  const now = new Date();
+  const diff = COUNTDOWN_TARGET - now;
+
+  if (diff <= 0) {
+    ['cd-days', 'cd-hours', 'cd-mins', 'cd-secs'].forEach(id => { if (el(id)) el(id).textContent = '0'; });
+    if (el('cd-target-date')) el('cd-target-date').textContent = 'بدأ العام الدراسي 🎉';
+    return;
+  }
+
+  const days = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff / 3600000) % 24);
+  const mins = Math.floor((diff / 60000) % 60);
+  const secs = Math.floor((diff / 1000) % 60);
+
+  if (el('cd-days')) el('cd-days').textContent = days;
+  if (el('cd-hours')) el('cd-hours').textContent = String(hours).padStart(2, '0');
+  if (el('cd-mins')) el('cd-mins').textContent = String(mins).padStart(2, '0');
+  if (el('cd-secs')) el('cd-secs').textContent = String(secs).padStart(2, '0');
+
+  const dateEl = el('cd-target-date');
+  if (dateEl) {
+    try {
+      const gregorian = COUNTDOWN_TARGET.toLocaleDateString('ar-SA', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      const hijri = COUNTDOWN_TARGET.toLocaleDateString('ar-SA-u-ca-islamic-umalqura', { day: 'numeric', month: 'long', year: 'numeric' });
+      dateEl.textContent = `${hijri}هـ — الموافق ${gregorian}`;
+    } catch (e) {
+      dateEl.textContent = COUNTDOWN_TARGET.toLocaleDateString('ar-SA');
+    }
+  }
+}
+
+setInterval(updateCountdown, 1000);
+
 // ==================== INIT ====================
 document.addEventListener('DOMContentLoaded', () => {
   renderAllTables();
@@ -2344,6 +2489,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderAppointments();
   updateApptCount();
   updateProgress();
+  updateCountdown();
 
   // Close modal on overlay click
   document.getElementById('modal-overlay').addEventListener('click', function(e) {
