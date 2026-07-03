@@ -229,7 +229,7 @@
   /* ===== التخطيط الرئيسي ===== */
   .main-layout {
     display: flex;
-    height: calc(100vh - 68px);
+    height: calc(100vh - 116px);
   }
 
   /* ===== الشريط الجانبي للأشهر ===== */
@@ -942,9 +942,229 @@
   .toast.info { border-color: #2563eb; color: #2563eb; }
   .toast.warning { border-color: #d97706; color: #d97706; }
 
+  /* ===== العد التنازلي ===== */
+  .countdown-section {
+    background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 65%, #1a5276 100%);
+    border-bottom: 3px solid var(--gold);
+    padding: 20px 20px 16px;
+    text-align: center;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .countdown-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 85% 15%, rgba(212,175,55,0.18), transparent 55%);
+    pointer-events: none;
+  }
+
+  .countdown-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    position: relative;
+  }
+
+  .countdown-regions {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 16px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+
+  .countdown-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 14px;
+    padding: 14px 16px 12px;
+    flex: 1 1 270px;
+    max-width: 340px;
+  }
+
+  .countdown-region-label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    opacity: 0.95;
+    line-height: 1.4;
+  }
+
+  .countdown-boxes {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .countdown-box {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    backdrop-filter: blur(6px);
+    border-radius: 10px;
+    padding: 10px 8px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .countdown-num {
+    font-size: 1.55rem;
+    font-weight: 900;
+    color: var(--gold-light);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .countdown-label {
+    font-size: 0.7rem;
+    margin-top: 5px;
+    opacity: 0.85;
+    font-weight: 500;
+  }
+
+  .countdown-date {
+    font-size: 0.76rem;
+    opacity: 0.9;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    padding-top: 8px;
+    margin-top: 2px;
+  }
+
+  @media (max-width: 480px) {
+    .countdown-box { padding: 8px 4px; }
+    .countdown-num { font-size: 1.25rem; }
+    .countdown-boxes { gap: 6px; }
+    .countdown-card { padding: 12px 10px 10px; }
+  }
+
+  @media print {
+    .countdown-section { display: none !important; }
+  }
+
+  /* ===== منتقي المنطقة ===== */
+  .region-switcher {
+    background: linear-gradient(135deg, #0f3460 0%, #1a5276 50%, #1B4332 100%);
+    padding: 0;
+    border-bottom: 3px solid var(--gold);
+    position: relative;
+    overflow: hidden;
+  }
+  .region-switcher::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='30' r='25' fill='none' stroke='%23D4AF37' stroke-width='0.5' opacity='0.1'/%3E%3Ccircle cx='30' cy='30' r='15' fill='none' stroke='%23D4AF37' stroke-width='0.3' opacity='0.08'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+  .region-inner {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    position: relative;
+    z-index: 1;
+    padding: 0 20px;
+  }
+  .region-label {
+    color: rgba(212,175,55,0.85);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 0 14px 0 18px;
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+    border-left: 1px solid rgba(212,175,55,0.2);
+    height: 48px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .region-tabs {
+    display: flex;
+    flex: 1;
+    gap: 0;
+  }
+  .region-tab {
+    flex: 1;
+    padding: 0 16px;
+    height: 48px;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.6);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    white-space: nowrap;
+  }
+  .region-tab:hover { color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.06); }
+  .region-tab.active {
+    color: white;
+    background: rgba(212,175,55,0.15);
+  }
+  .region-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    right: 10%;
+    height: 3px;
+    background: var(--gold);
+    border-radius: 3px 3px 0 0;
+  }
+  .region-tab-icon { font-size: 16px; }
+  .region-tab-cities {
+    font-size: 10px;
+    opacity: 0.65;
+    display: block;
+    margin-top: 1px;
+  }
+  .region-tab-text { display: flex; flex-direction: column; align-items: center; }
+
+  /* بطاقة مقارنة التقويمين */
+  .compare-banner {
+    background: linear-gradient(135deg, #fffbeb, #f0fdf4);
+    border: 1px solid #fde68a;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 2px 8px rgba(212,175,55,0.12);
+  }
+  .compare-banner-icon { font-size: 24px; flex-shrink: 0; }
+  .compare-banner-content { flex: 1; }
+  .compare-banner-title { font-weight: 900; color: #92400e; font-size: 13px; margin-bottom: 3px; }
+  .compare-banner-diff { font-size: 11px; color: #b45309; line-height: 1.5; }
+  .compare-diff-tag {
+    display: inline-block;
+    background: #fef3c7;
+    border: 1px solid #fcd34d;
+    border-radius: 4px;
+    padding: 1px 7px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #92400e;
+    margin: 2px 3px;
+  }
+
   /* ===== طباعة ===== */
   @media print {
     .no-print { display: none !important; }
+    .region-switcher { display: none !important; }
   }
 
   /* ===== استجابة الشاشات الصغيرة ===== */
@@ -979,7 +1199,81 @@
   </div>
 </header>
 
-<!-- ===== لوحة العطل ===== -->
+<!-- ===== العد التنازلي لبداية العام الدراسي ===== -->
+<div class="countdown-section no-print">
+  <div class="countdown-title">⏳ العد التنازلي لبداية العام الدراسي 1448/1449هـ</div>
+  <div class="countdown-regions">
+    <div class="countdown-card">
+      <div class="countdown-region-label">🕌 مكة المكرمة والمدينة المنورة وجدة والطائف</div>
+      <div class="countdown-boxes">
+        <div class="countdown-box">
+          <div class="countdown-num" id="cdA-days">--</div>
+          <div class="countdown-label">يوم</div>
+        </div>
+        <div class="countdown-box">
+          <div class="countdown-num" id="cdA-hours">--</div>
+          <div class="countdown-label">ساعة</div>
+        </div>
+        <div class="countdown-box">
+          <div class="countdown-num" id="cdA-mins">--</div>
+          <div class="countdown-label">دقيقة</div>
+        </div>
+        <div class="countdown-box">
+          <div class="countdown-num" id="cdA-secs">--</div>
+          <div class="countdown-label">ثانية</div>
+        </div>
+      </div>
+      <div class="countdown-date" id="cdA-target-date">—</div>
+    </div>
+    <div class="countdown-card">
+      <div class="countdown-region-label">🌴 بقية المناطق (الرياض والشرقية وغيرها)</div>
+      <div class="countdown-boxes">
+        <div class="countdown-box">
+          <div class="countdown-num" id="cdB-days">--</div>
+          <div class="countdown-label">يوم</div>
+        </div>
+        <div class="countdown-box">
+          <div class="countdown-num" id="cdB-hours">--</div>
+          <div class="countdown-label">ساعة</div>
+        </div>
+        <div class="countdown-box">
+          <div class="countdown-num" id="cdB-mins">--</div>
+          <div class="countdown-label">دقيقة</div>
+        </div>
+        <div class="countdown-box">
+          <div class="countdown-num" id="cdB-secs">--</div>
+          <div class="countdown-label">ثانية</div>
+        </div>
+      </div>
+      <div class="countdown-date" id="cdB-target-date">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== منتقي المنطقة ===== -->
+<div class="region-switcher no-print" id="regionSwitcher">
+  <div class="region-inner">
+    <div class="region-label">🗺️ اختر المنطقة:</div>
+    <div class="region-tabs">
+      <button class="region-tab active" id="tabRegionA" onclick="switchRegion('A')">
+        <span class="region-tab-icon">🕌</span>
+        <span class="region-tab-text">
+          مكة المكرمة والمدينة المنورة
+          <span class="region-tab-cities">جدة · الطائف</span>
+        </span>
+      </button>
+      <button class="region-tab" id="tabRegionB" onclick="switchRegion('B')">
+        <span class="region-tab-icon">🌴</span>
+        <span class="region-tab-text">
+          بقية المناطق
+          <span class="region-tab-cities">الرياض · الشرقية · والمزيد</span>
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
+
+
 <div class="panel-bar no-print" id="holidaysPanel">
   <div class="panel-bar-header">
     <div class="panel-bar-title">🔔 العطل والإجازات الرسمية 1448هـ</div>
@@ -1269,7 +1563,8 @@ const HOLIDAYS = [
 ];
 
 function getHolidayClass(hMonth, hDay) {
-  const h = HOLIDAYS.find(hol => hol.month === hMonth && hDay >= hol.from && hDay <= hol.to);
+  const list = activeCalendar ? activeCalendar.holidays : HOLIDAYS;
+  const h = list.find(hol => hol.month === hMonth && hDay >= hol.from && hDay <= hol.to);
   return h ? { cls: h.cls, label: h.label } : null;
 }
 
@@ -1294,6 +1589,7 @@ function init() {
   renderAppointmentsPanel();
   setupColorPicker();
   startReminderCheck();
+  renderHolidayPanel();
 }
 
 // ===================================================
@@ -1334,10 +1630,14 @@ function goToMonth(num) {
 // ===================================================
 function renderCalendar() {
   const area = document.getElementById('calendarContent');
+
+  // بانر المقارنة
   if (viewMode === 'single') {
     area.innerHTML = renderSingleMonth(MONTHS[currentMonth - 1], false);
   } else {
-    let html = `<div style="background:var(--green-dark);color:white;border-radius:16px;padding:16px 20px;margin-bottom:16px;text-align:center;position:relative;overflow:hidden;box-shadow:0 4px 16px rgba(27,67,50,0.25)">
+    const cal = activeCalendar;
+    let html = `<div style="background:linear-gradient(135deg,#0f3460,var(--green-dark));color:white;border-radius:16px;padding:16px 20px;margin-bottom:16px;text-align:center;position:relative;overflow:hidden;box-shadow:0 4px 16px rgba(27,67,50,0.25)">
+      <div style="font-size:10px;color:rgba(212,175,55,0.7);letter-spacing:1px;margin-bottom:4px;position:relative;z-index:1">${cal.regionName}</div>
       <div style="font-size:24px;font-weight:900;font-family:'Noto Naskh Arabic',serif;position:relative;z-index:1">جميع أشهر 1448هـ</div>
       <div style="font-size:11px;color:rgba(212,175,55,0.7);margin-top:4px;position:relative;z-index:1">2026 — 2027م</div>
     </div>
@@ -1354,9 +1654,12 @@ function renderCalendar() {
     html += '</div>';
     area.innerHTML = html;
   }
+  // أضف بانر المقارنة في أعلى المنطقة
+  setTimeout(() => renderCompareBanner(area), 0);
 }
 
 function renderSingleMonth(m, compact) {
+  const regionShort = activeRegion === 'A' ? 'مكة · المدينة · جدة · الطائف' : 'بقية المناطق';
   return `
     <div class="month-header">
       <button class="month-nav-btn" onclick="prevMonth()" ${currentMonth === 1 ? 'disabled' : ''}>›</button>
@@ -1374,6 +1677,7 @@ function renderSingleMonth(m, compact) {
           <div class="orn-line"></div>
         </div>
         <div class="month-greg-date">${m.start} — ${m.end}</div>
+        <div style="font-size:10px;color:rgba(212,175,55,0.55);margin-top:3px">🗺️ ${regionShort}</div>
       </div>
       <button class="month-nav-btn" onclick="nextMonth()" ${currentMonth === 12 ? 'disabled' : ''}>‹</button>
     </div>
@@ -1774,8 +2078,170 @@ function printAllApts() {
 }
 
 // ===================================================
-// الإشعارات (Toast)
+// بيانات التقويمين — المنطقة A ومنطقة B
 // ===================================================
+
+// المنطقة A: مكة المكرمة والمدينة المنورة وجدة والطائف
+const CALENDAR_A = {
+  regionName: 'مكة المكرمة والمدينة المنورة وجدة والطائف',
+  yearLabel: '1448 / 1449 هـ  —  2026 / 2027 م',
+  schoolStart: { month: 3, day: 17, label: 'بداية العام الدراسي: 17 ربيع الأول (30 أغسطس 2026)' },
+  events: [
+    { label: 'عودة الهيئة الإدارية والمشرفين', hijri: '3 ربيع الأول', greg: '16 أغسطس 2026', color: '#6366F1' },
+    { label: 'عودة المعلمين الممارسين للتدريس', hijri: '10 ربيع الأول', greg: '23 أغسطس 2026', color: '#8B5CF6' },
+    { label: '🏫 بداية العام الدراسي', hijri: '17 ربيع الأول', greg: '30 أغسطس 2026', color: '#3B82F6', bold: true },
+    { label: '🇸🇦 إجازة اليوم الوطني', hijri: '12-15 ربيع الآخر', greg: '23-26 سبتمبر 2026', color: '#10B981', bold: true },
+    { label: '🍂 إجازة الخريف', hijri: '10-18 جمادى الآخرة', greg: '20-28 نوفمبر 2026', color: '#F59E0B' },
+    { label: '🌙 إجازة منتصف العام', hijri: '30 رجب - 8 شعبان', greg: '8-16 يناير 2027', color: '#F59E0B' },
+    { label: '🏰 إجازة يوم التأسيس', hijri: '12-15 رمضان', greg: '19-22 فبراير 2027', color: '#EC4899', bold: true },
+    { label: '🌙 إجازة عيد الفطر', hijri: '19 رمضان - 5 شوال', greg: '26 فبراير - 13 مارس 2027', color: '#EF4444', bold: true },
+    { label: '🐑 إجازة عيد الأضحى', hijri: '23 ذو القعدة - 16 ذو الحجة', greg: '30 أبريل - 22 مايو 2027', color: '#06B6D4', bold: true },
+    { label: '🎓 إجازة نهاية العام الدراسي', hijri: '26 ذو الحجة 1449', greg: '1 يوليو 2027', color: '#64748B' },
+    { label: '🏫 بداية العام 1450-1449', hijri: '27 ربيع الأول 1449', greg: '29 أغسطس 2027', color: '#1D4ED8', bold: true },
+  ],
+  holidays: [
+    { month:3, from:17, to:17, cls:'hol-school',   label:'بداية العام الدراسي' },
+    { month:4, from:12, to:15, cls:'hol-national', label:'اليوم الوطني' },
+    { month:6, from:10, to:18, cls:'hol-sem1',     label:'إجازة الخريف' },
+    { month:7, from:30, to:30, cls:'hol-mid',      label:'منتصف العام الدراسي' },
+    { month:8, from:1,  to:8,  cls:'hol-mid',      label:'منتصف العام الدراسي' },
+    { month:9, from:12, to:15, cls:'hol-found',    label:'يوم التأسيس' },
+    { month:9, from:19, to:29, cls:'hol-fitr',     label:'عيد الفطر' },
+    { month:10,from:1,  to:5,  cls:'hol-fitr',     label:'عيد الفطر' },
+    { month:11,from:23, to:29, cls:'hol-adha',     label:'عيد الأضحى' },
+    { month:12,from:1,  to:16, cls:'hol-adha',     label:'عيد الأضحى' },
+  ]
+};
+
+// المنطقة B: بقية المناطق
+const CALENDAR_B = {
+  regionName: 'بقية المناطق (الرياض والشرقية وغيرها)',
+  yearLabel: '1448 / 1449 هـ  —  2026 / 2027 م',
+  schoolStart: { month: 3, day: 10, label: 'بداية العام الدراسي: 10 ربيع الأول (23 أغسطس 2026)' },
+  events: [
+    { label: 'عودة الهيئة الإدارية والمشرفين', hijri: '28 صفر', greg: '11 أغسطس 2026', color: '#6366F1' },
+    { label: 'عودة المعلمين الممارسين للتدريس', hijri: '3 ربيع الأول', greg: '16 أغسطس 2026', color: '#8B5CF6' },
+    { label: '🏫 بداية العام الدراسي', hijri: '10 ربيع الأول', greg: '23 أغسطس 2026', color: '#3B82F6', bold: true },
+    { label: '🇸🇦 إجازة اليوم الوطني', hijri: '12-15 ربيع الآخر', greg: '23-26 سبتمبر 2026', color: '#10B981', bold: true },
+    { label: '🍂 إجازة الخريف', hijri: '10-18 جمادى الآخرة', greg: '20-28 نوفمبر 2026', color: '#F59E0B' },
+    { label: '🌙 إجازة منتصف العام', hijri: '30 رجب - 8 شعبان', greg: '8-16 يناير 2027', color: '#F59E0B' },
+    { label: '🏰 إجازة يوم التأسيس', hijri: '12-15 رمضان', greg: '19-22 فبراير 2027', color: '#EC4899', bold: true },
+    { label: '🌙 إجازة عيد الفطر', hijri: '19 رمضان - 5 شوال', greg: '26 فبراير - 13 مارس 2027', color: '#EF4444', bold: true },
+    { label: '🐑 إجازة عيد الأضحى', hijri: '1-16 ذو الحجة', greg: '7-22 مايو 2027', color: '#06B6D4', bold: true },
+    { label: '🎓 بداية إجازة نهاية العام', hijri: '19 ذو الحجة 1449', greg: '24 يونيو 2027', color: '#64748B' },
+    { label: '🏫 بداية العام 1450-1449', hijri: '20 ربيع الأول 1449', greg: '22 أغسطس 2027', color: '#1D4ED8', bold: true },
+  ],
+  holidays: [
+    { month:3, from:10, to:10, cls:'hol-school',   label:'بداية العام الدراسي' },
+    { month:4, from:12, to:15, cls:'hol-national', label:'اليوم الوطني' },
+    { month:6, from:10, to:18, cls:'hol-sem1',     label:'إجازة الخريف' },
+    { month:7, from:30, to:30, cls:'hol-mid',      label:'منتصف العام الدراسي' },
+    { month:8, from:1,  to:8,  cls:'hol-mid',      label:'منتصف العام الدراسي' },
+    { month:9, from:12, to:15, cls:'hol-found',    label:'يوم التأسيس' },
+    { month:9, from:19, to:29, cls:'hol-fitr',     label:'عيد الفطر' },
+    { month:10,from:1,  to:5,  cls:'hol-fitr',     label:'عيد الفطر' },
+    { month:12,from:1,  to:16, cls:'hol-adha',     label:'عيد الأضحى' },
+  ]
+};
+
+let activeRegion = 'A';
+let activeCalendar = CALENDAR_A;
+
+function switchRegion(r) {
+  if (activeRegion === r) return;
+  activeRegion = r;
+  activeCalendar = r === 'A' ? CALENDAR_A : CALENDAR_B;
+
+  // تبويبات
+  document.getElementById('tabRegionA').classList.toggle('active', r === 'A');
+  document.getElementById('tabRegionB').classList.toggle('active', r === 'B');
+
+  // تحديث بيانات العطل العالمية
+  // (نبني نسخة مؤقتة تُستخدم في getHolidayClass)
+  renderHolidayPanel();
+  renderCalendar();
+  renderAppointmentsPanel();
+
+  showToast('info', r === 'A'
+    ? '🕌 تم التبديل: مكة المكرمة والمدينة المنورة وجدة والطائف'
+    : '🌴 تم التبديل: بقية المناطق');
+}
+
+// ===================================================
+// رسم لوحة العطل الديناميكية
+// ===================================================
+function renderHolidayPanel() {
+  const cal = activeCalendar;
+  const grid = document.querySelector('#holidaysPanel .holidays-grid');
+  if (!grid) return;
+  const colors = {
+    'hol-school':'#1D4ED8','hol-national':'#065F46','hol-sem1':'#5B21B6',
+    'hol-mid':'#92400E','hol-found':'#9D174D','hol-fitr':'#991B1B','hol-adha':'#155E75'
+  };
+  const borders = {
+    'hol-school':'#BFDBFE','hol-national':'#A7F3D0','hol-sem1':'#DDD6FE',
+    'hol-mid':'#FDE68A','hol-found':'#FBCFE8','hol-fitr':'#FECACA','hol-adha':'#A5F3FC'
+  };
+  const cssVars = {
+    'hol-school':'var(--hol-school)','hol-national':'var(--hol-national)',
+    'hol-sem1':'var(--hol-sem1)','hol-mid':'var(--hol-mid)',
+    'hol-found':'var(--hol-found)','hol-fitr':'var(--hol-fitr)','hol-adha':'var(--hol-adha)'
+  };
+
+  // بناء بطاقات العطل من events
+  const seenLabels = new Set();
+  let html = '';
+  cal.events.forEach(ev => {
+    if (seenLabels.has(ev.label)) return;
+    seenLabels.add(ev.label);
+    html += `<div class="holiday-card" style="border-color:#e5e7eb;border-right:4px solid ${ev.color}">
+      <div class="holiday-name" style="color:${ev.color}">${ev.label}</div>
+      <div class="holiday-hijri">${ev.hijri}</div>
+      <div class="holiday-greg">${ev.greg}</div>
+    </div>`;
+  });
+  grid.innerHTML = html;
+
+  // عنوان اللوحة
+  const panelTitle = document.querySelector('#holidaysPanel .panel-bar-title');
+  if (panelTitle) panelTitle.textContent = `🔔 العطل والإجازات — ${cal.regionName}`;
+}
+
+// إضافة بانر مقارنة
+function renderCompareBanner(area) {
+  const existing = area.querySelector('.compare-banner');
+  if (existing) existing.remove();
+
+  const cal = activeCalendar;
+  const other = activeRegion === 'A' ? CALENDAR_B : CALENDAR_A;
+  const otherRegionShort = activeRegion === 'A' ? 'بقية المناطق' : 'مكة والمدينة وجدة والطائف';
+
+  // الفرق الرئيسي بين التقويمين
+  const diffA = 'بداية العام: 17 ربيع الأول / 30 أغسطس';
+  const diffB = 'بداية العام: 10 ربيع الأول / 23 أغسطس';
+  const diffAdha = activeRegion === 'A'
+    ? 'عيد الأضحى: يشمل ذو القعدة 23-29 أيضاً'
+    : 'عيد الأضحى: ذو الحجة 1-16 فقط';
+
+  const banner = document.createElement('div');
+  banner.className = 'compare-banner';
+  banner.innerHTML = `
+    <div class="compare-banner-icon">📊</div>
+    <div class="compare-banner-content">
+      <div class="compare-banner-title">📌 ملاحظات الفروق بين التقويمين</div>
+      <div class="compare-banner-diff">
+        <span class="compare-diff-tag">منطقتك</span> ${cal.schoolStart.label}
+        &nbsp;|&nbsp;
+        <span class="compare-diff-tag">${otherRegionShort}</span> ${other.schoolStart.label}
+        <br>${diffAdha}
+      </div>
+    </div>
+    <button onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;color:#b45309;font-size:16px;padding:4px;flex-shrink:0">✕</button>
+  `;
+  area.insertBefore(banner, area.firstChild);
+}
+
+
 function showToast(type, msg) {
   const container = document.getElementById('toastContainer');
   const toast = document.createElement('div');
@@ -1846,9 +2312,58 @@ function getEndGMonth(m) {
 }
 
 // ===================================================
+// العد التنازلي (لكل منطقة على حدة)
+// ===================================================
+const COUNTDOWN_TARGETS = {
+  cdA: new Date('2026-08-30T00:00:00'), // مكة والمدينة وجدة والطائف
+  cdB: new Date('2026-08-23T00:00:00')  // بقية المناطق
+};
+
+function renderCountdownCard(prefix, target) {
+  const el = id => document.getElementById(id);
+  const now = new Date();
+  const diff = target - now;
+
+  if (diff <= 0) {
+    ['days', 'hours', 'mins', 'secs'].forEach(k => { const e = el(`${prefix}-${k}`); if (e) e.textContent = '0'; });
+    const d = el(`${prefix}-target-date`);
+    if (d) d.textContent = 'بدأ العام الدراسي 🎉';
+    return;
+  }
+
+  const days = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff / 3600000) % 24);
+  const mins = Math.floor((diff / 60000) % 60);
+  const secs = Math.floor((diff / 1000) % 60);
+
+  if (el(`${prefix}-days`)) el(`${prefix}-days`).textContent = days;
+  if (el(`${prefix}-hours`)) el(`${prefix}-hours`).textContent = String(hours).padStart(2, '0');
+  if (el(`${prefix}-mins`)) el(`${prefix}-mins`).textContent = String(mins).padStart(2, '0');
+  if (el(`${prefix}-secs`)) el(`${prefix}-secs`).textContent = String(secs).padStart(2, '0');
+
+  const dateEl = el(`${prefix}-target-date`);
+  if (dateEl) {
+    try {
+      const gregorian = target.toLocaleDateString('ar-SA', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      const hijri = target.toLocaleDateString('ar-SA-u-ca-islamic-umalqura', { day: 'numeric', month: 'long', year: 'numeric' });
+      dateEl.textContent = `${hijri}هـ — الموافق ${gregorian}`;
+    } catch (e) {
+      dateEl.textContent = target.toLocaleDateString('ar-SA');
+    }
+  }
+}
+
+function updateCountdown() {
+  Object.entries(COUNTDOWN_TARGETS).forEach(([prefix, target]) => renderCountdownCard(prefix, target));
+}
+
+setInterval(updateCountdown, 1000);
+
+// ===================================================
 // تشغيل التطبيق
 // ===================================================
 init();
+updateCountdown();
 </script>
 </body>
 </html>
