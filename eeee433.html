@@ -98,7 +98,7 @@ table.lb tr:hover td{background:#f8f9ff;}
 <div class="header">
   <h1>🤖 منصة بوت الانجلش</h1>
   <p>إرسال تلقائي مجدوَل مع لوحة نتائج المشاركين الحية</p>
-  <span class="hbadge" id="qCountBadge">6 أسئلة متوفرة — إرسال تلقائي</span>
+  <span class="hbadge" id="qCountBadge">112 سؤالاً متوفرة — إرسال تلقائي</span>
   <span class="live-badge" id="liveBadge" style="display:none"><span class="live-dot"></span> مراقبة النتائج نشطة</span>
 </div>
 
@@ -200,7 +200,7 @@ table.lb tr:hover td{background:#f8f9ff;}
       <div><div class="status-label">التالي بعد</div><div class="cd-badge" id="cdBadge">—</div></div>
     </div>
     <div class="progress-wrap"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
-    <div style="font-size:.75rem;margin-top:5px;opacity:.7" id="progLabel">0 / 12 تم إرساله</div>
+    <div style="font-size:.75rem;margin-top:5px;opacity:.7" id="progLabel">0 / 112 تم إرساله</div>
   </div>
 
   <div class="card">
@@ -290,7 +290,7 @@ table.lb tr:hover td{background:#f8f9ff;}
 <!-- ══ PREVIEW ══ -->
 <div id="tab-preview" style="display:none">
   <div class="card">
-    <div class="card-title">👁️ معاينة الأسئلة (12 سؤال)</div>
+    <div class="card-title">👁️ معاينة الأسئلة (112 سؤال)</div>
     <div id="previewList"></div>
   </div>
 </div>
@@ -327,7 +327,107 @@ const Q = [
   {id:9,cat:"Learning Principles",q:"The more ______ a word is encountered, the faster it will be remembered by students.",o:["Difficulty","Academic","Scientifically","Frequently"],a:3},
   {id:10,cat:"Learning Styles",q:"Ahmed can remember the names of people once he sees them. Also, he can know the names of shapes when he sees shapes like a circle and a triangle. We can conclude that Ahmed is:",o:["Kinesthetic","Visual","Audio","Analytic"],a:1},
   {id:11,cat:"Educational Technology",q:"The classes of a virtual learning environment use:",o:["Skype","Blackboard","Facebook","Twitter"],a:1},
-  {id:12,cat:"Lesson Planning",q:"Learning goal statements should begin with which type of word?",o:["Adverb","Action verbs","Adjective","Preposition"],a:1}
+  {id:12,cat:"Lesson Planning",q:"Learning goal statements should begin with which type of word?",o:["Adverb","Action verbs","Adjective","Preposition"],a:1},
+  {id:13,cat:"General",q:"Prezi is a cloud-based virtual software that teachers can use to create .........",o:["slide-based presentations","infographics","online tests","games"],a:0},
+  {id:14,cat:"Assessment",q:"A well-prepared exam should be:",o:["valid and editable","reliable and valid","creative and reliable","interchangeable and creative"],a:1},
+  {id:15,cat:"Vocabulary",q:"...... are different words which have the same or similar meaning",o:["Hyponyms","Synonyms","Antonyms","Polysemy"],a:1},
+  {id:16,cat:"Cognitive Skills",q:"Learners' ability to combine previous experiences with new materials in order to produce a whole new structure is known as .............?",o:["Analysis","synthesis","Evaluation","application"],a:1},
+  {id:17,cat:"Lesson Planning",q:"Learning goal statements should begin with ......?",o:["action verbs","prepositions","adjectives","adverbs"],a:0},
+  {id:18,cat:"Learning Objectives",q:"Which of the following is a specific learning outcome?",o:["Students will be able to appreciate English grammar.","Students will be able to understand the writing process.","Students will be able to value phonetics and phonology.","Students will be able to use present tense in reports."],a:3},
+  {id:19,cat:"Learning Objectives",q:"Activities that require students to use procedures to solve tasks are used to measure a learning objective which is called",o:["application","evaluation","designing","analyzing"],a:0},
+  {id:20,cat:"Teaching Methods",q:"......... is the information that a teacher receives from students about their reactions to a lesson or an activity.",o:["Curricula","Feedback","Lesson plan","Course book"],a:1},
+  {id:21,cat:"Teaching Methods",q:"Ali sometimes spends few minutes modeling difficult words for his students, and they repeat them after him. This activity is called",o:["Acting","miming","Dictating","Choral drill"],a:3},
+  {id:22,cat:"Linguistics",q:"According to Noam Chomsky, ...... is a person's underlying (subconscious) linguistic ability to create and understand sentences, including sentences they have never heard before.",o:["performance","competence","cognitive","native speakership"],a:1},
+  {id:23,cat:"Teaching Methods",q:"A Teaching students to reflect and develop self awareness will help them become............?",o:["independent learners","dependent learners","accurate learners","fluent learners"],a:0},
+  {id:24,cat:"Educational Technology",q:"The combination of both on-line and face-to-face education is known as",o:["blended learning","distance learning","mobile classroom","conventional learning"],a:0},
+  {id:25,cat:"Teaching Methods",q:"The communicative approach to teach English focuses on ....",o:["the structural accuracy of the sentences","correct pronunciation of words","linguistic competence plus an ability to use language appropriately","the practice of selected and graded structure patterns."],a:2},
+  {id:26,cat:"Teaching Materials",q:"Information regarding customs of greeting, habitation, and clothing of the target language should be presented through materials",o:["paper-based","authentic","scientific","digital"],a:1},
+  {id:27,cat:"Grammar",q:"Which group of words below is auxiliaries?",o:["this, that, my","may, can, should","very, too, maybe","before, inside, from"],a:1},
+  {id:28,cat:"Phonetics",q:".... refers to the actions of the organs of speech in the produce of speech.",o:["Acoustics","Phonetics","Articulation","Phonics"],a:2},
+  {id:29,cat:"Phonetics",q:"sounds made with the tongue touching the front teeth. Such as the English /θ/ and /ð/ are ….. :",o:["velar","dental","palatal","bilabial"],a:1},
+  {id:30,cat:"Vocabulary",q:"…… are different words which have the same or similar meaning",o:["Hyponyms","Synonyms","Antonyms","Polysemy"],a:1},
+  {id:31,cat:"Teaching Skills",q:"Teaching productive skills means teaching :",o:["listening and speaking","listening and reading","speaking and writing","reading and writing"],a:2},
+  {id:32,cat:"Writing",q:"Among the following types of academic essays, which one is MOST likely to use comparison and contrast or cause and effect to explain a process to the reader?",o:["Narration","Description","Exposition","Persuasion"],a:2},
+  {id:33,cat:"Teaching Methods",q:"Which graphic organizer would be most helpful when comparing and contrasting ideas or objects?",o:["KWL table","Venn diagram","Flowchart","Mind map"],a:1},
+  {id:34,cat:"Teaching Methods",q:"Teaching students to reflect and develop self-awareness will help them become",o:["fluent learners","accurate learners","dependent learners","independent learners"],a:3},
+  {id:35,cat:"Linguistics",q:"TESOL draws on theories of .........to creat better lesson plans and aim for more affective teaching",o:["L1 acquisition","minimalist grammar","Cognitive development","morpho syntactic interface"],a:2},
+  {id:36,cat:"Linguistics",q:"Set of signals by which we communicate is known as",o:["Syntax","language","linguistics","morphology"],a:1},
+  {id:37,cat:"Vocabulary",q:"Two or more words that often go together are called",o:["Comparatives","Conjunctions","Collocations","Clusters"],a:2},
+  {id:38,cat:"Linguistics",q:"English is a ......... language",o:["Celtic","Semitic","Hellenic","Germanic"],a:3},
+  {id:39,cat:"Grammar",q:"The prepositional phrase in ( Khaled has placed the cup on the table) is :",o:["on the table","has placed","the cup","khaled"],a:0},
+  {id:40,cat:"Grammar",q:"The head of the phrase ( an old green box ) is",o:["Green","An","Box","Old"],a:2},
+  {id:41,cat:"Learning Styles",q:"Problem solving exercises can work best with ...... learner",o:["visual","analytic","auditory","kinesthetic"],a:1},
+  {id:42,cat:"Teaching Methods",q:"the communicative teaching method works best with ..... students",o:["anxious","nervous","introverted","extroverted"],a:3},
+  {id:43,cat:"Assessment",q:"Which of the following refers to the assessment tool that is used to interpret and grade students' work against a set of criteria?",o:["a rubric","a survey","a syllabus","a questionnaire"],a:0},
+  {id:44,cat:"Writing",q:"How do transitional expressions like however, although, moreover.., affect a paragraph?",o:["They distract the reader","They improves coherence","They imply language fluency","They provide grammatical structure"],a:1},
+  {id:45,cat:"Writing",q:"One of the very first stage of writing is :",o:["editing","drafting","summarizing","brainstorming"],a:3},
+  {id:46,cat:"Cognitive Skills",q:"Learners' ability to combine previous experiences with new materials in order to produce a whole new structure is known as .............",o:["application","analysis","Evaluation","synthesis"],a:3},
+  {id:47,cat:"Listening",q:"In order to improve students' listening comprehension the input should be :",o:["diverse","general","complex","meaningful"],a:3},
+  {id:48,cat:"Phonetics",q:"تدريس minimal pairs فيه اللي السوال بين التمييز الطلاب",o:["unfamiliar and familiar sounds","fan and van","tent and ten","lamb and lamp"],a:1},
+  {id:49,cat:"Motivation",q:"............. Motivation is an inner drive for students to engage in an activity for its own sake because it is interesting and satisfying in itself:",o:["intrinsic","extrinsic","intensive","exhaustive"],a:0},
+  {id:50,cat:"Linguistics",q:"Which of the following is an inflectional morpheme?",o:["-er in \"taller\"","-or in \"visitor\"","- less in \"hopeless\"","- ment in \"government\""],a:0},
+  {id:51,cat:"Assessment",q:"Closed-ended questions are designed to :",o:["encourage creativity","discuss arguments","ensure objectivity","express opinions"],a:2},
+  {id:52,cat:"Teaching Methods",q:"Scaffolding to make the input more:",o:["difficult","challenging","complicated","comprehensible"],a:3},
+  {id:53,cat:"Assessment",q:"To assess language competence, the teacher give students ......... assessment:",o:["diagnostic","proficiency","placement","achievement"],a:1},
+  {id:54,cat:"Linguistics",q:"The morpheme in the 'fingerprint' is :",o:["Compounding","Clipping","Blending","Borrowing"],a:0},
+  {id:55,cat:"Linguistics",q:"connect one piece of speech to another or help listener organize and give meaning to what is being said",o:["Adjacency pairs","Elision process","Discourse markers","Deictic expression"],a:2},
+  {id:56,cat:"Phonetics",q:"Which of the following words has the sound / ʃ / ?",o:["Check","judge","cash","solve"],a:2},
+  {id:57,cat:"Teaching Methods",q:"Teachers usually activate students' background knowledge about the topic through ……… activities.",o:["collaborative","problem solving","the warm-up","challenging"],a:2},
+  {id:58,cat:"Teaching Skills",q:"Generating language and organizing it into a short monologue is a strategy used by language instructors to teach ……………",o:["speaking","listening","reading","writing"],a:0},
+  {id:59,cat:"Teaching Methods",q:"…………. is a general organizer that shows a central idea with its corresponding characteristics.",o:["flow chart","concept map","Venn diagram","pictorial diagram"],a:1},
+  {id:60,cat:"Linguistics",q:"…………is a component of the communicative competence that is concerned with the intersentential relationships.",o:["Discourse competence","Strategic competence","Pragmatic competence","Sociolinguistic competence"],a:0},
+  {id:61,cat:"Learning Objectives",q:"An example of a measurable learning objectives is ............",o:["students will be familiar with sounds.","students will learn how to pronounce /p/ and /b/.","I will teach students how to pronounce /p/ and /b/.","I will teach students how to pronounce two sound."],a:1},
+  {id:62,cat:"Assessment",q:"Placement tests are designed to create group of learners in ....... level",o:["different","similar","varied","diverse"],a:1},
+  {id:63,cat:"Teaching Methods",q:"The students are engaged in some group activities while the teacher is moving around, listening, and taking notes. In other words, the teacher is :",o:["monitoring","teaching","giving feedback","correcting errors"],a:0},
+  {id:64,cat:"Linguistics",q:"Which of the following types of competence refers to knowing what to say and how to say it appropriately based on the situation?",o:["Phonetic","Phonological","Morphological","Communicative"],a:3},
+  {id:65,cat:"Educational Technology",q:"Which of the following is an extremely important factor to consider when selecting and evaluating a website that you want to use as an online learning resource for your students?",o:["The extent to which it provides videos and graphics","Whether it offers a placement test to measure students' level","The content of the website and its appropriateness for their learning","The number of people using this website."],a:2},
+  {id:66,cat:"Linguistics",q:"Common error made by Arabic native speakers when using English is to write or say, \"five years before\" rather than \"five years ago\". This is an example of ..............",o:["negative transfer","feature merging","positive transfer","equivalence"],a:0},
+  {id:67,cat:"Linguistics",q:"According to Noam Chomsky, ...... is a person's underlying (subconscious) linguistic ability to create and understand sentences, including sentences they have never heard before.",o:["performance","competence","cognitive","native speakership"],a:1},
+  {id:68,cat:"Grammar",q:"It was a charming picnic.\" 'Charming' is a/an ...........",o:["verb","adverb","adverbial","adjective"],a:3},
+  {id:69,cat:"Linguistics",q:"An L2 learner may experience ....... in which incorrect language becomes a habit and cannot be easily corrected",o:["laziness","a plateau","fossilization","loss of interest"],a:2},
+  {id:70,cat:"Listening",q:"At the end of a listening class, and as a reward, the teacher plays part of a feel good short : students enjoyed yesterday. What kind of listening activity is it?",o:["Comprehensive listening","Appreciative listening","Critical listening","Therapeutic listening"],a:1},
+  {id:71,cat:"Linguistics",q:"It is most likely to notice gaps in L2 production, when",o:["listen to music","talk to others","read a book","watch TV"],a:1},
+  {id:72,cat:"Listening",q:"Bottom-up listening strategies include",o:["recognizing words","making predictions","drawing inferences","forming hypothesis"],a:0},
+  {id:73,cat:"Listening",q:"In order to improve students listening comprehension, the input should be........",o:["meaningful","complex","general","diverse"],a:0},
+  {id:74,cat:"Writing",q:"when writing a formal letter, which of the following greetings uses incorrect register & would not be acceptable for a formal letter ?",o:["hi Anas","Dear Sir or Madame","To whom it may concern","Good afternoon, Dr Anas"],a:0},
+  {id:75,cat:"Linguistics",q:"Slips of the tongue( e.g. yesterday instead of tomorrow in \"I will see you yesterday\") can be explained as a ............. error.",o:["competence","performance","universal grammar","generative grammar"],a:1},
+  {id:76,cat:"Learning Objectives",q:"Activities that require students to categorize cases, elements, or events using established criteria are used to measure a learning objective known as:",o:["classifying","critiquing","assessing","recalling"],a:0},
+  {id:77,cat:"Writing",q:"The skill of re-writing a text by maintaining the same idea, but with significantly different wording is known as ........?",o:["paraphrasing","summarizing","outlining","quoting"],a:0},
+  {id:78,cat:"Reading",q:"To look quickly through a reading passage to find something is called:",o:["skimming","scanning","silent reading","comprehension"],a:1},
+  {id:79,cat:"Writing",q:"Providing students with an example of a well-structured essay and then analyzing it with them is an example of.. ..?",o:["outlining","modeling","summarizing","paraphrasing"],a:1},
+  {id:80,cat:"Motivation",q:"Motivation that arises as a result of the students desire to gain a social or an economic reward is referred to as ......motivation",o:["intrinsic","integrative","instrumental","psychological"],a:2},
+  {id:81,cat:"Lesson Planning",q:"In lesson planing an objective must have .......",o:["every activities","new activities","some activities","uncommon activities"],a:0},
+  {id:82,cat:"Assessment/Linguistics",q:"Anxiety and self-restriction have an influence on learner's oral proficiency, these can be categorized as ........... factors",o:["Cognitive","linguistic","Affective","social"],a:2},
+  {id:83,cat:"Listening",q:"The type of listening focuses primarily on brief listening exercise which usually take a few minutes, but offer focused, concentrated practice",o:["Extensive","Intensive","Informal","Formal"],a:1},
+  {id:84,cat:"Assessment",q:"Assessment that is needed prior to instruction is known as ......... assessment",o:["formative","diagnostic","summative","norm-referenced"],a:1},
+  {id:85,cat:"Assessment",q:"when any assessment task fails to measure what it is set for",o:["validity","reliability","regularity","consistency"],a:0},
+  {id:86,cat:"Assessment",q:"The extent to which the assessment task consistency yields the same results",o:["Validity","Intensity","Reliability","variability"],a:2},
+  {id:87,cat:"Teaching Methods",q:"The teacher who starts with the presentation of a rule followed by examples in which the rule is applied resorts to...... approach",o:["formal","declarative","inductive","deductive"],a:3},
+  {id:88,cat:"Assessment",q:"Saud designed a quiz to test his students' to fill in the most appropriate word to make a meaningful paragraph. He deleted random words from the paragraph and the students provide their own. What type of test is this?",o:["Word choice test","Antonyms test","Puzzle test","Cloze test"],a:3},
+  {id:89,cat:"Teaching Methods",q:"..................is an activity where students collectively share their ideas before considering some of them more carefully.",o:["Brainstorming","Summarizing","Evaluating","Planning"],a:0},
+  {id:90,cat:"Phonetics",q:"The sound /ʃ/ is found in:",o:["Cash","Measure","Judge","Change"],a:0},
+  {id:91,cat:"Teaching Methods",q:"PPP is an abbreviation for:",o:["Presentation - Practice - Production","Prepare - Practice - Perform","Plan - Present - Produce","Practice - Present - Produce"],a:0},
+  {id:92,cat:"Linguistics",q:"Amal is traveling to London with her husband next week. The semantic features of 'her' are:",o:["-human -male -adult","+human +male +adult","+human -male +adult","-human -male +adult"],a:2},
+  {id:93,cat:"Teaching Methods",q:"Which of the following language teaching methods is most closely aligned to the behaviorist theory?",o:["the natural method","the silent way method","the Audio-lingual method","the communicative method"],a:2},
+  {id:94,cat:"Reading",q:"To look quickly through a reading passage to find something is called:",o:["skimming","scanning","silent reading","comprehension"],a:0},
+  {id:95,cat:"Teaching Methods",q:"The direct method places emphasis on",o:["Translation","Target language","Memorization","First language"],a:1},
+  {id:96,cat:"Teaching Methods",q:"Role playing is used for which activity?",o:["Speaking","reading","listening","writing"],a:0},
+  {id:97,cat:"Educational Technology",q:"The combination of both on-line and face-to-face education is known as",o:["Blended Learning","Flipping classroom","Mobile classroom","Conventional learning"],a:0},
+  {id:98,cat:"Linguistics",q:"The type of language that a foreign learner creates based on his first language and the target language is known as ..:",o:["interlanguage","intralanguage","crosslanguage","translanguage"],a:0},
+  {id:99,cat:"Linguistics",q:"Non linguistic knowledge is known as:",o:["Pragmatics","Context","Semantic","Phonetics"],a:1},
+  {id:100,cat:"Grammar",q:"Amanda is going to take the train (early tomorrow):",o:["adverb","preposition","adjective","noun"],a:0},
+  {id:101,cat:"Linguistics",q:"Successful ( ful) is considered as:",o:["derivational","inflectional"],a:0},
+  {id:102,cat:"Linguistics",q:"The actual production of language is known as:",o:["Performance","Competence","Accuracy","Fluency"],a:0},
+  {id:103,cat:"Linguistics",q:"The performance of language is known as :",o:["procedural knowledge","Declarative knowledge","Interpersonal knowledge","Interactive knowledge"],a:0},
+  {id:104,cat:"Phonetics",q:"Minimal pairs ( sit-seat / eat-it / ship-sheep ) help the teacher in teaching :",o:["pronunciation","spelling","stress","reading"],a:0},
+  {id:105,cat:"Teaching Methods",q:"All the following are high thinking skills in Bloom taxonomy except:",o:["List","Assess","Design","Plan"],a:0},
+  {id:106,cat:"Grammar",q:"Amal.......... cook dinner by the time we arrived.",o:["Is preparing","prepare","has prepare","had prepared"],a:3},
+  {id:107,cat:"Linguistics",q:"The sociocultural perspective in language learning is associated with:",o:["Chomsky","Vygotsky","Piaget","Skinner"],a:1},
+  {id:108,cat:"Vocabulary",q:"Learning vocabulary without intention or instruction is:",o:["Intentional","Anticipated","Incidental"],a:2},
+  {id:109,cat:"Linguistics",q:"Joining the initial part of a word with the final part of another word to produce a new word is called:",o:["Compounding","Borrowing","Blending"],a:2},
+  {id:110,cat:"Educational Technology",q:"Which of the following applications can be best used in a writing class?",o:["Snapchat","Instagram","Twitter","Google translation"],a:3},
+  {id:111,cat:"Educational Technology",q:"Which of the following applications can be a good resource for documentaries?",o:["Sound cloud","Flashcard","Whatsapp","YouTube"],a:3},
+  {id:112,cat:"Teaching Materials",q:"Which of the following is NOT an example of authentic printed materials?",o:["restaurant menu","song lyrics","postcard picture","sports report"],a:2}
 ];
 
 // ══ STATE ══
