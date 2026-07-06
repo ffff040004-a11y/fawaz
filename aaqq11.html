@@ -271,20 +271,28 @@ table.lb tr:hover td{background:#f8f9ff;}
       ✅ <strong>كيف يعمل النظام:</strong><br>
       • البوت يراقب ردود المشاركين كل <strong>8 ثوانٍ</strong> تلقائيًا<br>
       • كل سؤال يُحتسب مرة <strong>واحدة فقط</strong> لكل مشارك ✅<br>
-      • الترتيب: عدد الصحيح ← الزمن الكلي ← أطول سلسلة ← أقل خطأ ← من أنهى أولاً<br>
+      • الترتيب: عدد الصحيح ← أقل خطأ ← الزمن الكلي ← النقاط ← أطول سلسلة ← من أنهى أولاً<br>
       • النتائج تتحدث فورًا بمجرد إجابة أي عضو
     </div>
     <div class="field" style="margin-bottom:14px">
-      <label>🔢 عدد أسئلة المسابقة</label>
+      <label>⏱️ إغلاق النتائج بعد آخر سؤال (بالدقائق)</label>
+      <input type="number" id="closeMin" min="0" max="30" step="0.5" value="2" oninput="saveS()" style="direction:ltr;text-align:center;font-size:1.1rem;font-weight:700;max-width:160px;">
+      <div class="hint">عند انتهاء إرسال آخر سؤال (أو الضغط على إيقاف) يبدأ عدّ تنازلي بهذه المدة، ثم تُقفل اللوحة نهائياً ولا تُحتسب أي إجابة جديدة. ضع 0 لتعطيل الإغلاق التلقائي</div>
+    </div>
+    <div class="field" style="margin-bottom:14px">
+      <label>🔢 عدد أسئلة المسابقة <span style="font-size:.72rem;color:#888;font-weight:400">(يُحدَّث تلقائياً من الأسئلة المرسلة — هذه القيمة احتياطية فقط)</span></label>
       <input type="number" id="compQCount" min="1" value="10" oninput="saveS()" style="direction:ltr;text-align:center;font-size:1.1rem;font-weight:700;max-width:160px;">
       <div class="hint">يُستخدم لحساب النسبة المئوية ومستوى التميز لكل مشارك — لا يُستبعد أي مشارك من اللوحة مهما كان عدد إجاباته</div>
     </div>
     <div id="liveCountWrap" style="display:none">
       <div class="live-count"><span class="live-dot" style="background:#4caf50"></span><span id="liveCount">0</span> مشارك سُجِّلت إجاباتهم</div>
     </div>
+    <div id="closeCd" style="display:none;align-items:center;gap:6px;background:#fff3cd;color:#b45309;border:1px solid #f0c36d;border-radius:10px;padding:6px 14px;font-weight:800;font-size:.9rem;margin-bottom:12px;width:fit-content;"></div>
     <div class="btn-row" style="margin-bottom:14px">
       <button class="btn btn-green" onclick="fetchNow()">🔄 تحديث النتائج الآن</button>
       <button class="btn btn-gold" onclick="sendLbToChat()">📤 إرسال النتائج للمجموعة</button>
+      <button class="btn btn-outline" onclick="finalizeLb(true)">🔒 إغلاق النتائج الآن</button>
+      <button class="btn btn-outline" id="btnUnlock" onclick="unlockLb()" style="display:none">🔓 فتح النتائج</button>
       <button class="btn btn-outline" onclick="clearLb()">🗑️ مسح النتائج</button>
     </div>
   </div>
@@ -478,9 +486,63 @@ let lastUpdateId=0, scores={}, pollMap={};
 const L=['أ','ب','ج'];
 const NS='tg_thaqafi_'; // localStorage namespace
 
+// عدد الأسئلة: الأولوية للعدد الفعلي المرسل (pollMap) حتى لا يتعارض العدّاد مع النتائج
 function getQCount(){
+  const sentQids = new Set(Object.values(pollMap||{}).map(e=>e.qid));
+  if(sentQids.size>0) return sentQids.size;
   const v=parseInt(document.getElementById('compQCount')?.value);
   return (v && v>0) ? v : 10;
+}
+
+// ══ نظام إغلاق النتائج بعد آخر سؤال ══
+let closeTimer=null, closeAt=null, lbLocked=false;
+function getCloseMin(){
+  const v=parseFloat(document.getElementById('closeMin')?.value);
+  return isNaN(v) ? 2 : v;
+}
+function scheduleClose(){
+  const min=getCloseMin();
+  if(min<=0 || lbLocked) return;
+  cancelClose();
+  closeAt=Date.now()+Math.round(min*60000);
+  localStorage.setItem(NS+'closeAt', closeAt);
+  log(`⏱️ ستُغلق النتائج تلقائياً بعد ${min} دقيقة — بعدها لن تُحتسب أي إجابة`,'warn');
+  closeTimer=setInterval(updateCloseCd,1000);
+  updateCloseCd();
+}
+function updateCloseCd(){
+  if(!closeAt) return;
+  const left=closeAt-Date.now();
+  const el=document.getElementById('closeCd');
+  if(left<=0){ finalizeLb(); return; }
+  const m=Math.floor(left/60000), s=Math.floor((left%60000)/1000);
+  if(el){ el.style.display='inline-flex'; el.textContent=`⏱️ تُغلق النتائج خلال ${m}:${String(s).padStart(2,'0')} — آخر فرصة للإجابة!`; }
+}
+async function finalizeLb(manual){
+  if(manual && !confirm('🔒 إغلاق النتائج نهائياً؟ لن تُحتسب أي إجابات جديدة بعد الإغلاق')) return;
+  if(closeTimer){clearInterval(closeTimer);closeTimer=null;}
+  closeAt=null; localStorage.removeItem(NS+'closeAt');
+  await fetchUpdates(); // آخر جلبة قبل القفل
+  lbLocked=true;
+  localStorage.setItem(NS+'lbLocked','1');
+  stopPollWatcher();
+  const el=document.getElementById('closeCd');
+  if(el){ el.style.display='inline-flex'; el.style.background='#fde8e8'; el.style.color='#b91c1c'; el.style.borderColor='#f5b5b5'; el.textContent='🔒 النتائج نهائية — أُغلق احتساب الإجابات'; }
+  const ub=document.getElementById('btnUnlock'); if(ub) ub.style.display='inline-flex';
+  renderLb();
+  log('🔒 أُغلقت النتائج — أي إجابات جديدة لن تُحتسب','warn');
+}
+function cancelClose(){
+  if(closeTimer){clearInterval(closeTimer);closeTimer=null;}
+  closeAt=null; localStorage.removeItem(NS+'closeAt');
+  const el=document.getElementById('closeCd'); if(el){ el.style.display='none'; el.style.background='#fff3cd'; el.style.color='#b45309'; el.style.borderColor='#f0c36d'; }
+}
+function unlockLb(){
+  lbLocked=false; localStorage.removeItem(NS+'lbLocked');
+  cancelClose();
+  const ub=document.getElementById('btnUnlock'); if(ub) ub.style.display='none';
+  renderLb();
+  log('🔓 فُتحت النتائج — عاد احتساب الإجابات','info');
 }
 function speedBonus(ms){
   if(ms==null) return 0;
@@ -503,15 +565,18 @@ function computeDerived(u,qCount){
     else streak=0;
   });
   const avgMs = cntMs>0 ? Math.round(sumMs/cntMs) : null;
-  const totalTimeMs = (u.firstAt && u.lastAt) ? (u.lastAt-u.firstAt) : 0;
+  // الزمن الكلي = مجموع أزمنة الإجابة الفعلية (متسق مع المتوسط: متوسط × عدد ≈ كلي)
+  const totalTimeMs = cntMs>0 ? sumMs : ((u.firstAt && u.lastAt) ? (u.lastAt-u.firstAt) : 0);
   return {name:u.name,username:u.username,correct:u.correct,wrong:u.wrong,total:u.total,
     pct,points,avgMs,fastestMs,maxStreak,totalTimeMs,finishAt:u.lastAt||0};
 }
+// ترتيب رسمي: 1) صحيح⬆ 2) أقل خطأ⬇ 3) زمن كلي⬇ 4) النقاط⬆ 5) أطول سلسلة⬆ 6) من أنهى أولاً
 function cmpRank(a,b){
   if(b.correct!==a.correct) return b.correct-a.correct;
-  if(a.totalTimeMs!==b.totalTimeMs) return a.totalTimeMs-b.totalTimeMs;
-  if(b.maxStreak!==a.maxStreak) return b.maxStreak-a.maxStreak;
   if(a.wrong!==b.wrong) return a.wrong-b.wrong;
+  if(a.totalTimeMs!==b.totalTimeMs) return a.totalTimeMs-b.totalTimeMs;
+  if(b.points!==a.points) return b.points-a.points;
+  if(b.maxStreak!==a.maxStreak) return b.maxStreak-a.maxStreak;
   return (a.finishAt||0)-(b.finishAt||0);
 }
 function getLvlByPct(pct){
@@ -555,6 +620,17 @@ window.onload=()=>{
     if(sc) scores=JSON.parse(sc);
     if(lu) lastUpdateId=parseInt(lu)||0;
   }catch(e){}
+  // استعادة حالة إغلاق النتائج بعد إعادة فتح الصفحة
+  if(localStorage.getItem(NS+'lbLocked')==='1'){
+    lbLocked=true;
+    const el=document.getElementById('closeCd');
+    if(el){ el.style.display='inline-flex'; el.style.background='#fde8e8'; el.style.color='#b91c1c'; el.style.borderColor='#f5b5b5'; el.textContent='🔒 النتائج نهائية — أُغلق احتساب الإجابات'; }
+    const ub=document.getElementById('btnUnlock'); if(ub) ub.style.display='inline-flex';
+  } else {
+    const ca=parseInt(localStorage.getItem(NS+'closeAt')||'0');
+    if(ca>Date.now()){ closeAt=ca; closeTimer=setInterval(updateCloseCd,1000); updateCloseCd(); }
+    else if(ca>0){ finalizeLb(); }
+  }
   if(Object.keys(scores).length>0) renderLb();
 };
 
@@ -625,13 +701,14 @@ function saveS(){try{
   localStorage.setItem(NS+'cs',g('customSec'));
   localStorage.setItem(NS+'tm',g('testMsg'));
   localStorage.setItem(NS+'qc',g('compQCount'));
+  localStorage.setItem(NS+'closeMin',g('closeMin'));
 }catch(e){}}
 
 function loadS(){try{
   const f=(id,k)=>{const v=localStorage.getItem(k);if(v&&document.getElementById(id))document.getElementById(id).value=v;};
   f('botToken',NS+'tok'); f('chatId',NS+'cid');
   f('interval',NS+'iv'); f('sendType',NS+'st'); f('customSec',NS+'cs');
-  f('testMsg',NS+'tm'); f('compQCount',NS+'qc');
+  f('testMsg',NS+'tm'); f('compQCount',NS+'qc'); f('closeMin',NS+'closeMin');
   onIvChange();
 }catch(e){}}
 
@@ -737,6 +814,7 @@ function startSending(){
   if(!document.getElementById('botToken').value.trim()){showTab('setup');log('❌ أدخل Token','err');return;}
   if(!document.getElementById('chatId').value.trim()){showTab('setup');log('❌ أدخل Chat ID','err');return;}
   running=true;
+  cancelClose(); if(lbLocked) unlockLb(); // جولة جديدة تفتح النتائج
   document.getElementById('btnStart').disabled=true;
   document.getElementById('btnStop').disabled=false;
   document.getElementById('statusText').textContent='🟢 يعمل — إرسال تلقائي';
@@ -747,6 +825,7 @@ function startSending(){
 }
 
 function stopSending(){
+  const wasRunning=running;
   running=false;
   if(timer){clearInterval(timer);timer=null;}
   if(cdTimer){clearInterval(cdTimer);cdTimer=null;}
@@ -756,10 +835,13 @@ function stopSending(){
   document.getElementById('cdBadge').textContent='—';
   log('⏹️ إيقاف الإرسال','warn');
   setTimeout(()=>fetchUpdates(),1500);
+  // انتهى إرسال آخر سؤال → تبدأ مهلة إغلاق النتائج
+  if(wasRunning) scheduleClose();
 }
 
 function resetProg(){
   stopSending(); stopPollWatcher();
+  cancelClose(); // إعادة من البداية تلغي مهلة الإغلاق
   nextIdx=0; totalSent=0;
   localStorage.setItem(NS+'ni',0);
   document.getElementById('startFrom').value=0;
@@ -796,6 +878,7 @@ function stopPollWatcher(){
 }
 
 async function fetchUpdates(){
+  if(lbLocked) return; // النتائج مُغلقة — لا تُحتسب أي إجابات جديدة
   const tok=document.getElementById('botToken').value.trim(); if(!tok) return;
   try{
     const offset=lastUpdateId?lastUpdateId+1:0;
@@ -861,7 +944,7 @@ function renderLb(){
   document.getElementById('liveCountWrap').style.display=n>0?'block':'none';
   document.getElementById('liveCount').textContent=n;
   if(n===0){document.getElementById('lbTable').innerHTML='<div style="text-align:center;padding:24px;color:#aaa">📭 لا توجد إجابات بعد</div>';return;}
-  document.getElementById('lbSub').textContent=`آخر تحديث: ${new Date().toLocaleString('ar-SA')} | أسئلة المسابقة: ${qCount}`;
+  document.getElementById('lbSub').textContent=`آخر تحديث: ${new Date().toLocaleString('ar-SA')} | أسئلة المسابقة: ${qCount}${lbLocked?' | 🔒 النتائج النهائية':''}`;
   const top=ranked[0].correct;
   const topPct=ranked[0].pct;
   document.getElementById('lbStats').innerHTML=`
@@ -876,9 +959,10 @@ function renderLb(){
     const pctColor=u.pct>=90?'#1e7e34':u.pct>=80?'#1565c0':u.pct>=70?'#e65100':'#c0392b';
     const pctBg   =u.pct>=90?'#d4edda':u.pct>=80?'#cce5ff':u.pct>=70?'#fff3cd':'#f8d7da';
     const badgeStr=(badges[u.uid]||[]).join(' ');
+    const partialTag=(u.total<qCount)?`<span style="display:inline-block;background:#fff3cd;color:#e65100;border-radius:6px;padding:1px 7px;font-size:.68rem;font-weight:700;margin-inline-start:4px;white-space:nowrap;">🕐 جزئية ${u.total}/${qCount}</span>`:'';
     rows+=`<tr>
       <td><div class="rank-badge ${rc}">${i<3?medals[i]:i+1}</div></td>
-      <td style="font-weight:700">${u.name} ${badgeStr?`<span style="font-size:.9rem">${badgeStr}</span>`:''}</td>
+      <td style="font-weight:700">${u.name} ${badgeStr?`<span style="font-size:.9rem">${badgeStr}</span>`:''}${partialTag}</td>
       <td style="color:var(--green);font-weight:700;font-size:.95rem">${u.correct} ✅</td>
       <td style="color:var(--red);font-weight:700;font-size:.95rem">${u.wrong} ❌</td>
       <td>
@@ -898,7 +982,7 @@ function renderLb(){
       <thead><tr><th>الترتيب</th><th>الاسم</th><th>✅ صحيح</th><th>❌ خطأ</th><th>النسبة</th><th>⏱️ الزمن الكلي</th><th>⏱️ متوسط الإجابة</th><th>🔥 أطول سلسلة</th><th>⭐ النقاط</th><th>المستوى</th></tr></thead>
       <tbody>${rows}</tbody></table>
     </div>`;
-  document.getElementById('lbNote').textContent=`* النسبة المئوية لكل مشارك من إجمالي إجاباته هو (صحيح+خطأ) | الترتيب: عدد الصحيح ← الزمن الكلي ← أطول سلسلة ← أقل خطأ ← من أنهى أولاً`;
+  document.getElementById('lbNote').textContent=`* النسبة المئوية لكل مشارك من إجمالي إجاباته هو (صحيح+خطأ) | الترتيب: عدد الصحيح ← أقل خطأ ← الزمن الكلي ← النقاط ← أطول سلسلة ← من أنهى أولاً | 🕐 جزئية: لم تصله كل الأسئلة`;
 }
 
 async function sendLbToChat(){
@@ -957,7 +1041,9 @@ async function sendLbToChat(){
 function clearLb(){
   if(!confirm('🗑️ مسح جميع نتائج المشاركين؟')) return;
   scores={}; pollMap={}; lastUpdateId=0;
-  [NS+'sc',NS+'pm',NS+'lu'].forEach(k=>localStorage.removeItem(k));
+  lbLocked=false; cancelClose();
+  const ub=document.getElementById('btnUnlock'); if(ub) ub.style.display='none';
+  [NS+'sc',NS+'pm',NS+'lu',NS+'lbLocked',NS+'closeAt'].forEach(k=>localStorage.removeItem(k));
   document.getElementById('lbStats').innerHTML='';
   document.getElementById('lbTable').innerHTML='';
   document.getElementById('lbSub').textContent='في انتظار إجابات المشاركين...';
