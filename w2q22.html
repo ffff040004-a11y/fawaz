@@ -344,14 +344,25 @@ table.lb tr:hover td{background:#f8f9ff;}
       • البوت يراقب ردود المشاركين كل <strong>8 ثوانٍ</strong> تلقائيًا<br>
       • يرصد من أجاب صح ومن أجاب خطأ على كل سؤال ✅<br>
       • كل سؤال يُحتسب مرة <strong>واحدة فقط</strong> لكل مشارك ✅<br>
+      • الترتيب: عدد الصحيح ← أقل خطأ ← الزمن الكلي ← النقاط ← أطول سلسلة<br>
       • النتائج تتحدث فورًا بمجرد إجابة أي عضو
     </div>
     <div id="liveCountWrap" style="display:none">
       <div class="live-count"><span class="live-dot" style="background:#4caf50"></span> <span id="liveCount">0</span> مشارك سُجِّلت إجاباتهم</div>
     </div>
+    <div class="field" style="margin-bottom:14px">
+      <label>⏱️ إغلاق النتائج بعد آخر سؤال (بالدقائق)</label>
+      <input type="number" id="closeMin" min="0" max="30" step="0.5" value="2" oninput="saveS()" style="direction:ltr;text-align:center;font-size:1.1rem;font-weight:700;max-width:160px;">
+      <div class="hint">عند انتهاء إرسال آخر سؤال (أو الضغط على إيقاف) يبدأ عدّ تنازلي بهذه المدة، ثم تُقفل اللوحة نهائياً ولا تُحتسب أي إجابة جديدة. ضع 0 لتعطيل الإغلاق التلقائي</div>
+    </div>
+
+    <div id="closeCd" style="display:none;align-items:center;gap:6px;background:#fff3cd;color:#b45309;border:1px solid #f0c36d;border-radius:10px;padding:6px 14px;font-weight:800;font-size:.9rem;margin-bottom:12px;width:fit-content;"></div>
+
     <div class="btn-row" style="margin-bottom:14px">
       <button class="btn btn-green" onclick="fetchNow()">🔄 تحديث النتائج الآن</button>
       <button class="btn btn-gold" onclick="sendLbToChat()">📤 إرسال النتائج للمجموعة</button>
+      <button class="btn btn-outline" onclick="finalizeLb(true)">🔒 إغلاق النتائج الآن</button>
+      <button class="btn btn-outline" id="btnUnlock" onclick="unlockLb()" style="display:none">🔓 فتح النتائج</button>
       <button class="btn btn-outline" onclick="clearLb()">🗑️ مسح النتائج</button>
     </div>
   </div>
@@ -553,6 +564,17 @@ window.onload=()=>{
     if(lu) lastUpdateId=parseInt(lu)||0;
     if(fqt) firstQuestionSentAt=parseInt(fqt)||0;
   }catch(e){}
+  // استعادة حالة إغلاق النتائج بعد إعادة فتح الصفحة
+  if(localStorage.getItem('tg_lbLocked_qiyada')==='1'){
+    lbLocked=true;
+    const el=document.getElementById('closeCd');
+    if(el){ el.style.display='inline-flex'; el.style.background='#fde8e8'; el.style.color='#b91c1c'; el.style.borderColor='#f5b5b5'; el.textContent='🔒 النتائج نهائية — أُغلق احتساب الإجابات'; }
+    const ub=document.getElementById('btnUnlock'); if(ub) ub.style.display='inline-flex';
+  } else {
+    const ca=parseInt(localStorage.getItem('tg_closeAt_qiyada')||'0');
+    if(ca>Date.now()){ closeAt=ca; closeTimer=setInterval(updateCloseCd,1000); updateCloseCd(); }
+    else if(ca>0){ finalizeLb(); }
+  }
   if(Object.keys(scores).length>0) renderLb();
   previewAlert();
 };
@@ -643,6 +665,7 @@ function saveS(){try{
   localStorage.setItem('tg_as_qiyada',g('alertSeconds'));
   localStorage.setItem('tg_ad_qiyada',g('alertDelay'));
   localStorage.setItem('tg_sf_qiyada',g('stageFilter'));
+  const cm=document.getElementById('closeMin'); if(cm) localStorage.setItem('tg_closeMin_qiyada', cm.value);
   previewAlert();
 }catch(e){}}
 
@@ -654,7 +677,7 @@ function loadS(){try{
   f('customLabel','tg_cl_qiyada'); f('questionSuffix','tg_qs_qiyada');
   f('alertTitle','tg_at_qiyada'); f('alertQCount','tg_aqc_qiyada');
   f('alertSeconds','tg_as_qiyada'); f('alertDelay','tg_ad_qiyada');
-  f('stageFilter','tg_sf_qiyada');
+  f('stageFilter','tg_sf_qiyada'); f('closeMin','tg_closeMin_qiyada');
   onIvChange(); onLabelStyleChange(); applyStageFilter(); previewAlert();
 }catch(e){}}
 
@@ -821,6 +844,7 @@ async function startSending(){
   if(!document.getElementById('botToken').value.trim()){showTab('setup');log('❌ أدخل Token','err');return;}
   if(!document.getElementById('chatId').value.trim()){showTab('setup');log('❌ أدخل Chat ID','err');return;}
   running=true;
+  cancelClose(); if(lbLocked) unlockLb(); // جولة جديدة تفتح النتائج
   document.getElementById('btnStart').disabled=true;
   document.getElementById('btnStop').disabled=false;
   document.getElementById('statusText').textContent='🟢 يعمل — إرسال تلقائي';
@@ -835,6 +859,7 @@ async function startSending(){
 }
 
 function stopSending(){
+  const wasRunning=running;
   running=false;
   if(timer){clearInterval(timer);timer=null;}
   if(cdTimer){clearInterval(cdTimer);cdTimer=null;}
@@ -844,10 +869,13 @@ function stopSending(){
   document.getElementById('cdBadge').textContent='—';
   log('⏹️ إيقاف الإرسال','warn');
   setTimeout(()=>fetchUpdates(),1500);
+  // انتهى إرسال آخر سؤال → تبدأ مهلة إغلاق النتائج
+  if(wasRunning) scheduleClose();
 }
 
 function resetProg(){
   stopSending(); stopPollWatcher();
+  cancelClose(); // إعادة من البداية تلغي مهلة الإغلاق
   nextIdx=0;totalSent=0;sentCount=0;
   firstQuestionSentAt=0; localStorage.removeItem('tg_fqt_qiyada');
   localStorage.setItem('tg_ni_qiyada',0); localStorage.setItem('tg_sc2_qiyada',0);
@@ -886,6 +914,7 @@ function stopPollWatcher(){
 }
 
 async function fetchUpdates(){
+  if(lbLocked) return; // النتائج مُغلقة — لا تُحتسب أي إجابات جديدة
   const tok=document.getElementById('botToken').value.trim(); if(!tok) return;
   try{
     const r=await fetch(`https://api.telegram.org/bot${tok}/getUpdates`,{
@@ -908,40 +937,26 @@ async function fetchUpdates(){
       const chosen=pa.option_ids?.[0];
       if(chosen===undefined||chosen===null) return;
       const entry=pollMap[pa.poll_id]; if(!entry) return;
-      if(!scores[uid]) scores[uid]={name:displayName,username:pa.user.username||'',correct:0,wrong:0,total:0,points:0,sumTime:0,maxStreak:0,curStreak:0,firstAnswerAt:0,lastAnswerAt:0,fastestTime:null,answeredPolls:{}};
+      if(!scores[uid]) scores[uid]={name:displayName,username:pa.user.username||'',correct:0,wrong:0,total:0,points:0,sumTime:0,maxStreak:0,curStreak:0,firstAnswerAt:0,lastAnswerAt:0,fastestTime:null,answers:{}};
       const s=scores[uid];
-      if(!s.answeredPolls) s.answeredPolls={};
       s.name=displayName; s.username=pa.user.username||'';
+      if(!s.answers) s.answers={};
+      // منع الاحتساب المكرر: كل سؤال يُحتسب مرة واحدة فقط لكل مشارك
+      if(s.answers[entry.qid]) return;
+      s.answers[entry.qid]=true;
+      s.total++;
       // وقت الإجابة التقريبي لهذا السؤال (منذ إرساله وحتى رصد الإجابة)
       let rt=entry.sentAt?Math.max(0,(now-entry.sentAt)/1000):null;
-      if(!s.firstAnswerAt) s.firstAnswerAt=now;
-      s.lastAnswerAt=now;
-
-      // ── منع الاحتساب المكرر: تيليجرام يرسل poll_answer في كل مرة يغيّر فيها
-      // المشارك اختياره على نفس السؤال. لو سبق له الإجابة على هذا السؤال (poll_id)
-      // نتراجع أولاً عن أثر إجابته القديمة قبل احتساب الإجابة الجديدة، بدل تكديسهما فوق بعض.
-      const prevAns=s.answeredPolls[pa.poll_id];
-      if(prevAns){
-        s.total--;
-        if(prevAns.wasCorrect){
-          s.correct--;
-          s.points-=(10+prevAns.bonus);
-          // لا يمكن التراجع الدقيق عن curStreak/maxStreak بعد أحداث لاحقة، فنكتفي بإعادة حسابها لاحقًا لو لزم
-        }else{
-          s.wrong--;
-        }
-        if(prevAns.rt!==null) s.sumTime-=prevAns.rt;
-      }
-
-      s.total++;
       if(rt!==null){
         s.sumTime+=rt;
         if(s.fastestTime===null||rt<s.fastestTime) s.fastestTime=rt;
       }
+      if(!s.firstAnswerAt) s.firstAnswerAt=now;
+      s.lastAnswerAt=now;
       const isCorrect=chosen===entry.a;
-      let bonus=0;
       if(isCorrect){
         s.correct++; s.curStreak++; if(s.curStreak>s.maxStreak) s.maxStreak=s.curStreak;
+        let bonus=0;
         if(rt!==null){
           if(rt<5) bonus=3; else if(rt<=10) bonus=2; else if(rt<=20) bonus=1; else bonus=0;
         }
@@ -949,7 +964,6 @@ async function fetchUpdates(){
       } else {
         s.wrong++; s.curStreak=0;
       }
-      s.answeredPolls[pa.poll_id]={wasCorrect:isCorrect,bonus,rt};
       newAns++;
     });
     localStorage.setItem('tg_lu_qiyada',String(lastUpdateId));
@@ -972,13 +986,70 @@ function getLvl(pct){
   return{l:'مشارك 🎖️',c:'lv-p'};
 }
 
+// عدد الأسئلة الفعلي المرسل (لوسم المشاركة الجزئية)
+function getSentQCount(){
+  return new Set(Object.values(pollMap||{}).map(e=>e.qid)).size;
+}
+
+// ══ نظام إغلاق النتائج بعد آخر سؤال ══
+let closeTimer=null, closeAt=null, lbLocked=false;
+function getCloseMin(){
+  const v=parseFloat(document.getElementById('closeMin')?.value);
+  return isNaN(v) ? 2 : v;
+}
+function scheduleClose(){
+  const min=getCloseMin();
+  if(min<=0 || lbLocked) return;
+  cancelClose();
+  closeAt=Date.now()+Math.round(min*60000);
+  localStorage.setItem('tg_closeAt_qiyada', closeAt);
+  log(`⏱️ ستُغلق النتائج تلقائياً بعد ${min} دقيقة — بعدها لن تُحتسب أي إجابة`,'warn');
+  closeTimer=setInterval(updateCloseCd,1000);
+  updateCloseCd();
+}
+function updateCloseCd(){
+  if(!closeAt) return;
+  const left=closeAt-Date.now();
+  const el=document.getElementById('closeCd');
+  if(left<=0){ finalizeLb(); return; }
+  const m=Math.floor(left/60000), s=Math.floor((left%60000)/1000);
+  if(el){ el.style.display='inline-flex'; el.textContent=`⏱️ تُغلق النتائج خلال ${m}:${String(s).padStart(2,'0')} — آخر فرصة للإجابة!`; }
+}
+async function finalizeLb(manual){
+  if(manual && !confirm('🔒 إغلاق النتائج نهائياً؟ لن تُحتسب أي إجابات جديدة بعد الإغلاق')) return;
+  if(closeTimer){clearInterval(closeTimer);closeTimer=null;}
+  closeAt=null; localStorage.removeItem('tg_closeAt_qiyada');
+  await fetchUpdates(); // آخر جلبة قبل القفل
+  lbLocked=true;
+  localStorage.setItem('tg_lbLocked_qiyada','1');
+  stopPollWatcher();
+  const el=document.getElementById('closeCd');
+  if(el){ el.style.display='inline-flex'; el.style.background='#fde8e8'; el.style.color='#b91c1c'; el.style.borderColor='#f5b5b5'; el.textContent='🔒 النتائج نهائية — أُغلق احتساب الإجابات'; }
+  const ub=document.getElementById('btnUnlock'); if(ub) ub.style.display='inline-flex';
+  renderLb();
+  log('🔒 أُغلقت النتائج — أي إجابات جديدة لن تُحتسب','warn');
+}
+function cancelClose(){
+  if(closeTimer){clearInterval(closeTimer);closeTimer=null;}
+  closeAt=null; localStorage.removeItem('tg_closeAt_qiyada');
+  const el=document.getElementById('closeCd'); if(el){ el.style.display='none'; el.style.background='#fff3cd'; el.style.color='#b45309'; el.style.borderColor='#f0c36d'; }
+}
+function unlockLb(){
+  lbLocked=false; localStorage.removeItem('tg_lbLocked_qiyada');
+  cancelClose();
+  const ub=document.getElementById('btnUnlock'); if(ub) ub.style.display='none';
+  renderLb();
+  log('🔓 فُتحت النتائج — عاد احتساب الإجابات','info');
+}
+
 // ══ نظام الترتيب العادل ══
-// 1) الأكثر صحيحاً 2) الأقل زمناً إجمالياً 3) الأطول سلسلة صحيحة 4) الأقل خطأً 5) الأسبق إنهاءً
+// 1) الأكثر صحيحاً 2) الأقل خطأً 3) الأقل زمناً إجمالياً 4) الأعلى نقاطاً 5) الأطول سلسلة 6) الأسبق إنهاءً
 function computeRanked(){
   const arr=Object.entries(scores).map(([uid,s])=>{
     const total=s.correct+s.wrong;
     const pct=total>0?Math.round(s.correct/total*100):0;
-    const totalTime=(firstQuestionSentAt&&s.lastAnswerAt)?Math.max(0,(s.lastAnswerAt-firstQuestionSentAt)/1000):0;
+    // الزمن الإجمالي = مجموع أزمنة إجابات المشارك (متسق مع المتوسط: متوسط × عدد ≈ إجمالي)
+    const totalTime=s.sumTime||0;
     const avgTime=total>0?s.sumTime/total:0;
     return {uid,name:s.name,username:s.username,correct:s.correct,wrong:s.wrong,total,pct,
       points:s.points,totalTime,avgTime,maxStreak:s.maxStreak,fastestTime:s.fastestTime,
@@ -986,9 +1057,10 @@ function computeRanked(){
   });
   arr.sort((a,b)=>{
     if(b.correct!==a.correct) return b.correct-a.correct;
-    if(a.totalTime!==b.totalTime) return a.totalTime-b.totalTime;
-    if(b.maxStreak!==a.maxStreak) return b.maxStreak-a.maxStreak;
     if(a.wrong!==b.wrong) return a.wrong-b.wrong;
+    if(a.totalTime!==b.totalTime) return a.totalTime-b.totalTime;
+    if(b.points!==a.points) return b.points-a.points;
+    if(b.maxStreak!==a.maxStreak) return b.maxStreak-a.maxStreak;
     return a.lastAnswerAt-b.lastAnswerAt;
   });
   return arr;
@@ -1016,7 +1088,8 @@ function renderLb(){
   document.getElementById('liveCountWrap').style.display=n>0?'block':'none';
   document.getElementById('liveCount').textContent=n;
   if(n===0){document.getElementById('lbTable').innerHTML='<div style="text-align:center;padding:24px;color:#aaa">📭 لا توجد إجابات بعد</div>';return;}
-  document.getElementById('lbSub').textContent=`آخر تحديث: ${new Date().toLocaleString('ar-SA')} | أُرسل: ${sentCount}`;
+  const qCount=getSentQCount();
+  document.getElementById('lbSub').textContent=`آخر تحديث: ${new Date().toLocaleString('ar-SA')} | أُرسل: ${sentCount}${lbLocked?' | 🔒 النتائج النهائية':''}`;
   const top=ranked[0];
   const avgCorrect=Math.round(ranked.reduce((s,x)=>s+x.correct,0)/n);
   const avgPct=n>0?Math.round(ranked.reduce((s,x)=>s+x.pct,0)/n):0;
@@ -1036,9 +1109,10 @@ function renderLb(){
     const pctColor=u.pct>=90?'#1e7e34':u.pct>=75?'#1565c0':u.pct>=60?'#e65100':'#c0392b';
     const pctBg   =u.pct>=90?'#d4edda':u.pct>=75?'#cce5ff':u.pct>=60?'#fff3cd':'#f8d7da';
     const badgeHtml=(badges[u.uid]||[]).map(b=>`<span style="display:inline-block;background:#f0f4ff;border:1px solid var(--border);border-radius:8px;padding:1px 7px;font-size:.68rem;margin:1px;color:var(--navy);font-weight:700">${b}</span>`).join('')||'—';
+    const partialTag=(qCount>0 && u.total<qCount)?`<span style="display:inline-block;background:#fff3cd;color:#e65100;border-radius:6px;padding:1px 7px;font-size:.68rem;font-weight:700;margin-inline-start:4px;white-space:nowrap;">🕐 جزئية ${u.total}/${qCount}</span>`:'';
     rows+=`<tr>
       <td><div class="rank-badge ${rc}">${i<3?medals[i]:i+1}</div></td>
-      <td style="font-weight:700">${u.name}</td>
+      <td style="font-weight:700">${u.name}${partialTag}</td>
       <td style="color:var(--green);font-weight:700;font-size:.95rem">${u.correct} ✅</td>
       <td style="color:var(--red);font-weight:700;font-size:.95rem">${u.wrong} ❌</td>
       <td>
@@ -1059,7 +1133,7 @@ function renderLb(){
       <thead><tr><th>الترتيب</th><th>الاسم</th><th>✅</th><th>❌</th><th>النسبة</th><th>الزمن الإجمالي</th><th>متوسط الزمن</th><th>أطول سلسلة</th><th>النقاط</th><th>المستوى</th><th>الأوسمة</th></tr></thead>
       <tbody>${rows}</tbody></table>
     </div>`;
-  document.getElementById('lbNote').textContent='📌 الترتيب: الأكثر صحيحاً ← الأقل زمناً ← الأطول سلسلة ← الأقل خطأً ← الأسبق إنهاءً | تحديث كل 8 ثوانٍ تلقائيًا';
+  document.getElementById('lbNote').textContent='📌 الترتيب: الأكثر صحيحاً ← الأقل خطأً ← الأقل زمناً ← الأعلى نقاطاً ← الأطول سلسلة ← الأسبق إنهاءً | 🕐 جزئية: لم تصله كل الأسئلة | تحديث كل 8 ثوانٍ تلقائيًا';
 }
 
 async function sendLbToChat(){
@@ -1109,7 +1183,9 @@ async function sendLbToChat(){
 function clearLb(){
   if(!confirm('مسح جميع نتائج المشاركين؟'))return;
   scores={}; pollMap={}; lastUpdateId=0; firstQuestionSentAt=0;
-  ['tg_sc_qiyada','tg_pm_qiyada','tg_lu_qiyada','tg_fqt_qiyada'].forEach(k=>localStorage.removeItem(k));
+  lbLocked=false; cancelClose();
+  const ub=document.getElementById('btnUnlock'); if(ub) ub.style.display='none';
+  ['tg_sc_qiyada','tg_pm_qiyada','tg_lu_qiyada','tg_fqt_qiyada','tg_lbLocked_qiyada','tg_closeAt_qiyada'].forEach(k=>localStorage.removeItem(k));
   document.getElementById('lbStats').innerHTML='';
   document.getElementById('lbTable').innerHTML='';
   document.getElementById('lbSub').textContent='في انتظار إجابات المشاركين...';
