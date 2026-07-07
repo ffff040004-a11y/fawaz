@@ -286,6 +286,7 @@ footer a{color:#fff;text-decoration:underline;}
     </div>
   </div>
   <div class="topbar-actions">
+    <span class="icon-btn" id="saveIndicator" style="pointer-events:none;">💾 محفوظ تلقائيًا</span>
     <button class="icon-btn" onclick="toggleTheme()">🌗 الوضع الليلي/النهاري</button>
     <button class="icon-btn" onclick="window.print()">🖨️ طباعة</button>
     <button class="icon-btn" onclick="openBackup()">💾 نسخة احتياطية</button>
@@ -463,6 +464,18 @@ footer a{color:#fff;text-decoration:underline;}
         <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJSON(event)">
         <button class="btn danger" onclick="wipeData()">🗑️ تفريغ جميع البيانات</button>
       </div>
+      <hr style="border:none;border-top:1px solid var(--border);margin:18px 0;">
+      <h4 style="margin:0 0 6px;">🔒 نسخة احتياطية حية على جهازك (موصى به بشدة)</h4>
+      <p class="hint">
+        بياناتك تُحفظ تلقائيًا داخل المتصفح (LocalStorage) مع كل إضافة أو تعديل، وتبقى محفوظة حتى بعد إغلاق المنصة
+        وإعادة فتحها من نفس الجهاز والمتصفح. لكن مسح بيانات المتصفح أو استخدام جهاز/متصفح آخر يفقدها.
+        لضمان أقصى حماية، فعّل الخيار التالي (متاح في متصفحات كروم/إيدج) ليكتب كل تغيير مباشرة في ملف
+        نسخة احتياطية حقيقي على جهازك، بشكل تلقائي وبدون أي إجراء إضافي منك.
+      </p>
+      <div class="modal-actions" style="justify-content:flex-start;">
+        <button class="btn gold" id="liveBackupBtn" onclick="enableLiveBackup()">🔒 تفعيل النسخة الاحتياطية الحية</button>
+        <span class="hint" id="liveBackupStatus">لم تُفعَّل بعد في هذا المتصفح</span>
+      </div>
     </div>
 
     <div id="adminTab_requests" style="display:none;">
@@ -571,19 +584,19 @@ function loadItems(){
   if(raw){try{return JSON.parse(raw);}catch(e){return demoItems;}}
   return demoItems;
 }
-function saveItems(items){localStorage.setItem(STORAGE_KEY, JSON.stringify(items));}
+function saveItems(items){localStorage.setItem(STORAGE_KEY, JSON.stringify(items)); markSaved(); writeLiveBackup();}
 function loadSettings(){
   const raw = localStorage.getItem(SETTINGS_KEY);
   if(raw){try{return Object.assign({},defaultSettings,JSON.parse(raw));}catch(e){return defaultSettings;}}
   return defaultSettings;
 }
-function saveSettingsToStorage(s){localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));}
+function saveSettingsToStorage(s){localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); markSaved(); writeLiveBackup();}
 function loadRequests(){
   const raw = localStorage.getItem(REQUESTS_KEY);
   if(raw){try{return JSON.parse(raw);}catch(e){return [];}}
   return [];
 }
-function saveRequests(r){localStorage.setItem(REQUESTS_KEY, JSON.stringify(r));}
+function saveRequests(r){localStorage.setItem(REQUESTS_KEY, JSON.stringify(r)); markSaved(); writeLiveBackup();}
 
 let ITEMS = loadItems();
 let SETTINGS = loadSettings();
@@ -815,6 +828,116 @@ window.addEventListener('scroll', ()=>{
   document.getElementById('toTopBtn').classList.toggle('show', window.scrollY>400);
 });
 
+/* ---------- save indicator ---------- */
+function markSaved(){
+  const el = document.getElementById('saveIndicator');
+  if(!el) return;
+  const t = new Date().toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
+  el.textContent = `✅ تم الحفظ ${t}`;
+  clearTimeout(el._resetTimer);
+  el._resetTimer = setTimeout(()=>{el.textContent='💾 محفوظ تلقائيًا';}, 2500);
+}
+
+/* ---------- live backup file (File System Access API + IndexedDB) ---------- */
+let liveBackupHandle = null;
+
+function idbOpen(){
+  return new Promise((resolve,reject)=>{
+    const req = indexedDB.open('fawaz_library_idb', 1);
+    req.onupgradeneeded = ()=>{req.result.createObjectStore('handles');};
+    req.onsuccess = ()=>resolve(req.result);
+    req.onerror = ()=>reject(req.error);
+  });
+}
+async function idbSetHandle(handle){
+  try{
+    const db = await idbOpen();
+    await new Promise((res,rej)=>{
+      const tx = db.transaction('handles','readwrite');
+      tx.objectStore('handles').put(handle,'backupHandle');
+      tx.oncomplete = res; tx.onerror = ()=>rej(tx.error);
+    });
+  }catch(e){/* silent */}
+}
+async function idbGetHandle(){
+  try{
+    const db = await idbOpen();
+    return await new Promise((res)=>{
+      const tx = db.transaction('handles','readonly');
+      const r = tx.objectStore('handles').get('backupHandle');
+      r.onsuccess = ()=>res(r.result||null);
+      r.onerror = ()=>res(null);
+    });
+  }catch(e){return null;}
+}
+
+async function enableLiveBackup(){
+  if(!window.showSaveFilePicker){
+    toast('⚠️ هذه الميزة تعمل حاليًا على متصفحات كروم/إيدج فقط');
+    return;
+  }
+  // إذا كان هناك ملف مربوط مسبقًا وينقصه الإذن فقط، أعد طلب الإذن بدل اختيار ملف جديد
+  if(liveBackupHandle){
+    try{
+      const perm = await liveBackupHandle.requestPermission({mode:'readwrite'});
+      if(perm === 'granted'){
+        await writeLiveBackup(true);
+        toast('✅ تم تجديد صلاحية النسخة الاحتياطية الحية');
+        return;
+      }
+    }catch(e){/* fall through to picking a new file */}
+  }
+  try{
+    const handle = await window.showSaveFilePicker({
+      suggestedName: 'fawaz-library-live-backup.json',
+      types: [{description:'ملف JSON', accept:{'application/json':['.json']}}]
+    });
+    liveBackupHandle = handle;
+    await idbSetHandle(handle);
+    await writeLiveBackup(true);
+    setLiveBackupStatus('🟢 مفعّلة — يُكتب كل تغيير مباشرة إلى: ' + handle.name);
+    toast('✅ تم تفعيل النسخة الاحتياطية الحية بنجاح');
+  }catch(e){
+    if(e.name !== 'AbortError') toast('⚠️ لم يتم تفعيل النسخة الاحتياطية الحية');
+  }
+}
+
+async function writeLiveBackup(forceNotify){
+  if(!liveBackupHandle) return;
+  try{
+    const perm = await liveBackupHandle.queryPermission({mode:'readwrite'});
+    if(perm !== 'granted'){
+      setLiveBackupStatus('🟡 مفعّلة سابقًا — اضغط الزر لإعادة منح الإذن بعد إعادة فتح الصفحة');
+      return;
+    }
+    const payload = {items:ITEMS, settings:SETTINGS, requests:REQUESTS, savedAt:new Date().toISOString()};
+    const writable = await liveBackupHandle.createWritable();
+    await writable.write(JSON.stringify(payload,null,2));
+    await writable.close();
+    if(forceNotify) setLiveBackupStatus('🟢 مفعّلة — آخر كتابة: ' + new Date().toLocaleTimeString('ar-SA'));
+  }catch(e){/* silent fail, localStorage already safe */}
+}
+
+function setLiveBackupStatus(msg){
+  const el = document.getElementById('liveBackupStatus');
+  if(el) el.textContent = msg;
+}
+
+async function tryRestoreLiveBackupHandle(){
+  const handle = await idbGetHandle();
+  if(!handle) return;
+  try{
+    const perm = await handle.queryPermission({mode:'readwrite'});
+    if(perm === 'granted'){
+      liveBackupHandle = handle;
+      setLiveBackupStatus('🟢 مفعّلة — يُكتب كل تغيير مباشرة إلى: ' + handle.name);
+    } else {
+      liveBackupHandle = handle;
+      setLiveBackupStatus('🟡 مفعّلة سابقًا لملف: ' + handle.name + ' — اضغط الزر لإعادة منح الإذن');
+    }
+  }catch(e){/* silent */}
+}
+
 /* ---------- modal helpers ---------- */
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
@@ -933,6 +1056,7 @@ function openAdmin(){
   renderAdminItemsList();
   renderAdminRequestsList();
   switchAdminTab('items');
+  tryRestoreLiveBackupHandle();
   openModal('adminModal');
 }
 function switchAdminTab(tab){
@@ -1077,6 +1201,7 @@ function renderAdminRequestsList(){
 /* ---------- initial boot ---------- */
 fillDomainOptions();
 renderAll();
+tryRestoreLiveBackupHandle();
 </script>
 </body>
 </html>
