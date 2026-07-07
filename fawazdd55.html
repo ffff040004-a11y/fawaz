@@ -476,6 +476,16 @@ footer a{color:#fff;text-decoration:underline;}
         <button class="btn gold" id="liveBackupBtn" onclick="enableLiveBackup()">🔒 تفعيل النسخة الاحتياطية الحية</button>
         <span class="hint" id="liveBackupStatus">لم تُفعَّل بعد في هذا المتصفح</span>
       </div>
+      <hr style="border:none;border-top:1px solid var(--border);margin:18px 0;">
+      <h4 style="margin:0 0 6px;">🧹 حذف البيانات التجريبية التي وضعتها المنصة عند الإنشاء</h4>
+      <p class="hint">
+        العناصر الافتراضية (مثل "منصة مسابقة الرخصة المهنية للمعلمين") موضوعة فقط كأمثلة توضيحية لشكل البطاقات.
+        يمكنك حذفها دفعة واحدة مع الإبقاء الكامل على أي عنصر أضفته أنت بنفسك — أو تعديل أي منها بدل حذفه واستخدامه
+        كنقطة بداية جاهزة.
+      </p>
+      <div class="modal-actions" style="justify-content:flex-start;">
+        <button class="btn danger" onclick="clearDemoItems()">🧹 حذف العناصر التجريبية فقط</button>
+      </div>
     </div>
 
     <div id="adminTab_requests" style="display:none;">
@@ -555,8 +565,8 @@ const SETTINGS_KEY = 'fawaz_library_settings_v1';
 const REQUESTS_KEY = 'fawaz_library_requests_v1';
 const FAV_KEY = 'fawaz_library_favs_v1';
 
-const DOMAINS = ["التقويم المدرسي","التعليم والتعلم","نواتج التعلم","البيئة المدرسية","الإدارة المدرسية","الرخصة المهنية","التدريب","الاختبارات","الشؤون الطلابية","السلوك والمواظبة","النشاط الطلابي","القيادة المدرسية","الجودة والتميز"];
-const BENEFICIARIES = ["معلم","مدير مدرسة","وكيل مدرسة","مشرف تربوي","مرشد طلابي","رائد نشاط","إداري","ولي أمر","طالب"];
+const DOMAINS = ["التقويم المدرسي","التعليم والتعلم","نواتج التعلم","البيئة المدرسية","الإدارة المدرسية","الرخصة المهنية","التدريب","الاختبارات","الشؤون الطلابية","السلوك والمواظبة","النشاط الطلابي","القيادة المدرسية","الجودة والتميز","خدمات","أخرى"];
+const BENEFICIARIES = ["معلم","مدير مدرسة","وكيل مدرسة","مشرف تربوي","مرشد طلابي","رائد نشاط","إداري","ولي أمر","طالب","الكل"];
 const TYPE_ICON = {"منصة":"💻","ملف":"📄","رابط":"🔗","نموذج":"🧾","دليل":"📘"};
 
 let defaultSettings = {
@@ -999,6 +1009,16 @@ function deleteItem(id){
   renderAll();
   renderAdminItemsList();
   toast('🗑️ تم حذف العنصر');
+}
+function clearDemoItems(){
+  const demoCount = ITEMS.filter(i=>i.id.startsWith('d') && /^d\d+$/.test(i.id)).length;
+  if(!demoCount){toast('لا توجد عناصر تجريبية متبقية'); return;}
+  if(!confirm(`سيتم حذف ${demoCount} عنصر/عناصر تجريبية فقط، مع الإبقاء الكامل على كل ما أضفته أنت. هل تريد المتابعة؟`)) return;
+  ITEMS = ITEMS.filter(i=>!(i.id.startsWith('d') && /^d\d+$/.test(i.id)));
+  saveItems(ITEMS);
+  renderAll();
+  renderAdminItemsList();
+  toast('✅ تم حذف العناصر التجريبية والإبقاء على عناصرك');
 }
 
 /* ---------- quick add from telegram ---------- */
