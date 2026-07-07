@@ -190,6 +190,18 @@ section{padding:34px 0;}
 }
 .empty-state .big{font-size:36px;margin-bottom:8px;}
 
+.domain-group{margin-bottom:26px;}
+.domain-group-title{
+  display:flex;align-items:center;gap:10px;margin-bottom:12px;
+  font-size:15px;font-weight:800;color:var(--navy);
+}
+[data-theme="dark"] .domain-group-title{color:var(--gold-light);}
+.domain-group-title .count-chip{
+  background:var(--gold-light);color:#7a5b0f;font-size:11.5px;font-weight:700;
+  padding:2px 10px;border-radius:999px;
+}
+.domain-group-title::after{content:"";flex:1;height:1px;background:var(--border);}
+
 /* domain/beneficiary pill grid */
 .pill-grid{display:flex;flex-wrap:wrap;gap:8px;}
 .pill{
@@ -361,15 +373,20 @@ footer a{color:#fff;text-decoration:underline;}
 
   <section id="platforms">
     <div class="section-head"><h2>💻 المنصات الرقمية</h2></div>
-    <div class="pill-grid" id="platformDomainsPills"></div>
+    <p class="hint">كل مجال يظهر في قسمه الخاص، بحيث لا تختلط منصة التقويم الذاتي مع منصة الاختبارات مثلًا.</p>
+    <div id="platformsGrouped"></div>
   </section>
 
   <section id="files">
     <div class="section-head"><h2>📄 قسم الملفات</h2></div>
+    <p class="hint">تشمل الملفات، النماذج، والأدلة — مصنّفة حسب المجال.</p>
+    <div id="filesGrouped"></div>
   </section>
 
   <section id="links">
     <div class="section-head"><h2>🔗 الروابط المهمة</h2></div>
+    <p class="hint">الروابط مصنّفة حسب المجال أيضًا لسهولة الوصول.</p>
+    <div id="linksGrouped"></div>
   </section>
 
 </div>
@@ -767,17 +784,24 @@ function renderFavs(){
   const favs = ITEMS.filter(i=>i.favorite);
   document.getElementById('favGrid').innerHTML = favs.length? favs.map(cardHTML).join(''):emptyState('لم تُضِف أي عنصر إلى المفضلة بعد');
 }
-function renderPlatformDomainPills(){
-  const platformDomains = [...new Set(ITEMS.filter(i=>i.type==='منصة').map(i=>i.domain))];
-  const el = document.getElementById('platformDomainsPills');
-  if(!platformDomains.length){el.innerHTML='<span class="hint">لا توجد منصات مضافة بعد</span>';return;}
-  el.innerHTML = platformDomains.map(d=>`<button class="pill" onclick="filterByDomainPill('${escapeAttr(d)}')">${escapeHTML(d)}</button>`).join('');
+function renderGroupedByDomain(containerId, typeList){
+  const el = document.getElementById(containerId);
+  const items = ITEMS.filter(i=>typeList.includes(i.type));
+  if(!items.length){el.innerHTML = emptyState('لا توجد عناصر في هذا القسم بعد — أضِف عنصرًا من لوحة الإدارة'); return;}
+  // نحافظ على ترتيب المجالات كما هي معرّفة في DOMAINS حتى يكون العرض ثابتًا ومنطقيًا
+  const usedDomains = DOMAINS.filter(d=> items.some(i=>i.domain===d));
+  el.innerHTML = usedDomains.map(domain=>{
+    const domainItems = items.filter(i=>i.domain===domain).sort((a,b)=>b.date.localeCompare(a.date));
+    return `
+      <div class="domain-group">
+        <div class="domain-group-title">📁 ${escapeHTML(domain)} <span class="count-chip">${domainItems.length}</span></div>
+        <div class="grid">${domainItems.map(cardHTML).join('')}</div>
+      </div>`;
+  }).join('');
 }
-function filterByDomainPill(d){
-  document.getElementById('filterDomain').value=d;
-  currentTypeFilter='منصة'; renderTypeTabs(); renderMainGrid();
-  document.getElementById('allItemsSection').scrollIntoView({behavior:'smooth'});
-}
+function renderPlatformsGrouped(){renderGroupedByDomain('platformsGrouped', ['منصة']);}
+function renderFilesGrouped(){renderGroupedByDomain('filesGrouped', ['ملف','نموذج','دليل']);}
+function renderLinksGrouped(){renderGroupedByDomain('linksGrouped', ['رابط']);}
 
 function renderAll(){
   renderStats();
@@ -786,7 +810,9 @@ function renderAll(){
   renderRecent();
   renderMostUsed();
   renderFavs();
-  renderPlatformDomainPills();
+  renderPlatformsGrouped();
+  renderFilesGrouped();
+  renderLinksGrouped();
   applySettingsToUI();
 }
 
