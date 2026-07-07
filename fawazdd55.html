@@ -523,15 +523,20 @@ footer a{color:#fff;text-decoration:underline;}
         <button class="btn danger" onclick="clearDemoItems()">🧹 حذف العناصر التجريبية فقط</button>
       </div>
       <hr style="border:none;border-top:1px solid var(--border);margin:18px 0;">
-      <h4 style="margin:0 0 6px;">🚀 تصدير نسخة نهائية جاهزة للتوزيع</h4>
+      <h4 style="margin:0 0 6px;">🌐 نشر التحديثات على الرابط الثابت (GitHub Pages)</h4>
       <p class="hint">
-        هذا هو الحل الصحيح عندما تريد إعطاء الملف لشخص آخر: البيانات التي أضفتها محفوظة داخل متصفحك أنت فقط
-        (LocalStorage)، وليست داخل الملف نفسه — لذلك أي شخص يفتح نسخة الملف الأصلية من جهازه سيرى البيانات
-        الافتراضية القديمة وليس منصاتك. اضغط الزر التالي لتوليد ملف HTML جديد تكون فيه كل منصاتك وملفاتك
-        الحالية هي المحتوى الأساسي الذي يظهر لأي شخص من أول لحظة فتح — ثم أرسل هذا الملف الجديد بدل الملف الأصلي.
+        بما أنك نشرت المنصة على رابط ثابت عبر GitHub، أصبحت آلية التحديث كالتالي: أي شخص يفتح الرابط
+        تحاول الصفحة تلقائيًا جلب ملف باسم <b>data.json</b> من نفس مجلد الاستضافة. إن وُجد، يظهر لكل الزوار
+        نفس المحتوى المحدّث فورًا بدون الحاجة لإرسال أي ملف لأحد. لتحديث المحتوى للجميع:
+      </p>
+      <p class="hint">
+        1) عدّل/أضف عناصرك من تبويب "العناصر" كالمعتاد.<br>
+        2) اضغط الزر التالي لتنزيل ملف <b>data.json</b> يحتوي أحدث بياناتك.<br>
+        3) ارفع هذا الملف إلى نفس مستودع GitHub (بنفس الاسم data.json ليستبدل القديم).<br>
+        كل زائر جديد للرابط بعدها سيرى تحديثك مباشرة.
       </p>
       <div class="modal-actions" style="justify-content:flex-start;">
-        <button class="btn gold" onclick="exportDistributionCopy()">🚀 تصدير نسخة توزيع ببياناتي الحالية</button>
+        <button class="btn gold" onclick="exportPublishData()">🌐 تنزيل data.json لنشره على GitHub</button>
       </div>
     </div>
 
@@ -1191,25 +1196,10 @@ function saveSettings(){
   toast('✅ تم حفظ إعدادات المنصة');
 }
 
-function exportDistributionCopy(){
-  try{
-    // إغلاق أي نوافذ مفتوحة قبل أخذ لقطة من الصفحة لتفادي تصدير حالة غير مقصودة
-    document.querySelectorAll('.modal-overlay.open').forEach(m=>m.classList.remove('open'));
-
-    let src = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
-
-    // استبدال العناصر الافتراضية ببيانات المستخدم الحالية
-    const itemsJSON = 'let demoItems = ' + JSON.stringify(ITEMS, null, 2) + ';';
-    src = src.replace(/let demoItems = \[[\s\S]*?\];/, itemsJSON);
-
-    const settingsJSON = 'let defaultSettings = ' + JSON.stringify(SETTINGS, null, 2) + ';';
-    src = src.replace(/let defaultSettings = \{[\s\S]*?\};/, settingsJSON);
-
-    downloadFile('مكتبة-د-فواز-نسخة-توزيع.html', src, 'text/html;charset=utf-8;');
-    toast('🚀 تم تصدير نسخة التوزيع — أرسل هذا الملف بدل الملف الأصلي');
-  }catch(e){
-    toast('⚠️ تعذّر إنشاء نسخة التوزيع، حاول مجددًا');
-  }
+function exportPublishData(){
+  const payload = {items:ITEMS, settings:SETTINGS, publishedAt:new Date().toISOString()};
+  downloadFile('data.json', JSON.stringify(payload,null,2), 'application/json');
+  toast('🌐 تم تنزيل data.json — ارفعه الآن إلى مستودع GitHub بنفس الاسم');
 }
 
 /* ---------- export / import / wipe ---------- */
@@ -1321,9 +1311,27 @@ function renderAdminRequestsList(){
   `).join('');
 }
 
+/* ---------- fetch published data.json (for GitHub Pages / fixed link hosting) ---------- */
+async function loadPublishedData(){
+  try{
+    const res = await fetch('data.json?_=' + Date.now(), {cache:'no-store'});
+    if(res && res.ok){
+      const data = await res.json();
+      if(Array.isArray(data.items)) ITEMS = data.items;
+      if(data.settings) SETTINGS = Object.assign({}, defaultSettings, data.settings);
+      saveItems(ITEMS);
+      saveSettingsToStorage(SETTINGS);
+      renderAll();
+    }
+  }catch(e){
+    /* لا يوجد data.json أو لا يوجد اتصال — نستمر بالبيانات المحلية أو الافتراضية بصمت */
+  }
+}
+
 /* ---------- initial boot ---------- */
 fillDomainOptions();
 renderAll();
+loadPublishedData();
 tryRestoreLiveBackupHandle();
 </script>
 </body>
