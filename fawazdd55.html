@@ -302,7 +302,7 @@ footer a{color:#fff;text-decoration:underline;}
     <button class="icon-btn" onclick="toggleTheme()">🌗 الوضع الليلي/النهاري</button>
     <button class="icon-btn" onclick="window.print()">🖨️ طباعة</button>
     <button class="icon-btn" onclick="openBackup()">💾 نسخة احتياطية</button>
-    <button class="icon-btn gold" onclick="openAdmin()">⚙️ لوحة الإدارة</button>
+    <button class="icon-btn gold" onclick="requestAdminAccess()">⚙️ لوحة الإدارة</button>
   </div>
 </div>
 
@@ -398,6 +398,25 @@ footer a{color:#fff;text-decoration:underline;}
   <div>للمزيد تابع <a id="footerChannel" href="#" target="_blank">قناة التميز في التقويم والتعليم</a> و<a id="footerGroup" href="#" target="_blank">قروب التميز في التقويم والتعليم</a></div>
   <div class="no-print" style="margin-top:8px;opacity:.7;font-size:11.5px;">مكتبة د/فواز الرقمية — تعمل بالكامل محليًا دون اتصال بالإنترنت</div>
 </footer>
+
+<!-- ===== Admin PIN Lock Modal ===== -->
+<div class="modal-overlay" id="adminPinModal">
+  <div class="modal" style="max-width:380px;text-align:center;">
+    <button class="close-x" onclick="closeModal('adminPinModal')">✖</button>
+    <h3 style="justify-content:center;">🔒 دخول لوحة الإدارة</h3>
+    <p class="hint">هذه اللوحة مخصصة للمالك فقط. الرجاء إدخال رمز الدخول.</p>
+    <div class="form-grid">
+      <div class="full">
+        <input type="password" id="adminPinInput" placeholder="رمز الدخول" style="text-align:center;font-size:16px;letter-spacing:2px;"
+          onkeydown="if(event.key==='Enter'){checkAdminPin();}">
+      </div>
+    </div>
+    <div class="modal-actions" style="justify-content:center;">
+      <button class="btn" onclick="closeModal('adminPinModal')">إلغاء</button>
+      <button class="btn gold" onclick="checkAdminPin()">دخول</button>
+    </div>
+  </div>
+</div>
 
 <!-- ===== Item Detail / Add/Edit Modal ===== -->
 <div class="modal-overlay" id="itemModal">
@@ -1090,6 +1109,32 @@ function analyzeQuickAdd(){
   document.getElementById('f_keywords').value = hashtags.join(', ');
   document.getElementById('itemModalTitle').textContent = '✨ مراجعة عنصر مستورد من تليجرام';
   toast('✅ تم الاستخراج — راجع البيانات ثم اضغط حفظ');
+}
+
+/* ---------- admin PIN lock ---------- */
+const ADMIN_PIN = 'fawaz2026';
+const ADMIN_SESSION_KEY = 'fawaz_library_admin_unlocked';
+
+function requestAdminAccess(){
+  if(sessionStorage.getItem(ADMIN_SESSION_KEY) === '1'){
+    openAdmin();
+    return;
+  }
+  document.getElementById('adminPinInput').value='';
+  openModal('adminPinModal');
+  setTimeout(()=>document.getElementById('adminPinInput').focus(), 100);
+}
+function checkAdminPin(){
+  const val = document.getElementById('adminPinInput').value;
+  if(val === ADMIN_PIN){
+    sessionStorage.setItem(ADMIN_SESSION_KEY, '1');
+    closeModal('adminPinModal');
+    openAdmin();
+  } else {
+    toast('⚠️ رمز الدخول غير صحيح');
+    document.getElementById('adminPinInput').value='';
+    document.getElementById('adminPinInput').focus();
+  }
 }
 
 /* ---------- admin panel ---------- */
