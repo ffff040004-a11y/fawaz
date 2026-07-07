@@ -522,6 +522,17 @@ footer a{color:#fff;text-decoration:underline;}
       <div class="modal-actions" style="justify-content:flex-start;">
         <button class="btn danger" onclick="clearDemoItems()">🧹 حذف العناصر التجريبية فقط</button>
       </div>
+      <hr style="border:none;border-top:1px solid var(--border);margin:18px 0;">
+      <h4 style="margin:0 0 6px;">🚀 تصدير نسخة نهائية جاهزة للتوزيع</h4>
+      <p class="hint">
+        هذا هو الحل الصحيح عندما تريد إعطاء الملف لشخص آخر: البيانات التي أضفتها محفوظة داخل متصفحك أنت فقط
+        (LocalStorage)، وليست داخل الملف نفسه — لذلك أي شخص يفتح نسخة الملف الأصلية من جهازه سيرى البيانات
+        الافتراضية القديمة وليس منصاتك. اضغط الزر التالي لتوليد ملف HTML جديد تكون فيه كل منصاتك وملفاتك
+        الحالية هي المحتوى الأساسي الذي يظهر لأي شخص من أول لحظة فتح — ثم أرسل هذا الملف الجديد بدل الملف الأصلي.
+      </p>
+      <div class="modal-actions" style="justify-content:flex-start;">
+        <button class="btn gold" onclick="exportDistributionCopy()">🚀 تصدير نسخة توزيع ببياناتي الحالية</button>
+      </div>
     </div>
 
     <div id="adminTab_requests" style="display:none;">
@@ -1178,6 +1189,27 @@ function saveSettings(){
   saveSettingsToStorage(SETTINGS);
   applySettingsToUI();
   toast('✅ تم حفظ إعدادات المنصة');
+}
+
+function exportDistributionCopy(){
+  try{
+    // إغلاق أي نوافذ مفتوحة قبل أخذ لقطة من الصفحة لتفادي تصدير حالة غير مقصودة
+    document.querySelectorAll('.modal-overlay.open').forEach(m=>m.classList.remove('open'));
+
+    let src = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+    // استبدال العناصر الافتراضية ببيانات المستخدم الحالية
+    const itemsJSON = 'let demoItems = ' + JSON.stringify(ITEMS, null, 2) + ';';
+    src = src.replace(/let demoItems = \[[\s\S]*?\];/, itemsJSON);
+
+    const settingsJSON = 'let defaultSettings = ' + JSON.stringify(SETTINGS, null, 2) + ';';
+    src = src.replace(/let defaultSettings = \{[\s\S]*?\};/, settingsJSON);
+
+    downloadFile('مكتبة-د-فواز-نسخة-توزيع.html', src, 'text/html;charset=utf-8;');
+    toast('🚀 تم تصدير نسخة التوزيع — أرسل هذا الملف بدل الملف الأصلي');
+  }catch(e){
+    toast('⚠️ تعذّر إنشاء نسخة التوزيع، حاول مجددًا');
+  }
 }
 
 /* ---------- export / import / wipe ---------- */
