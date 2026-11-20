@@ -242,21 +242,6 @@ tr:hover td{background:rgba(107,26,42,0.03);}
 .d-cnt{min-width:40px;text-align:center;font-weight:800;color:var(--maroon);font-size:0.85rem;}
 .d-pct{min-width:50px;text-align:center;font-size:0.78rem;color:var(--muted);}
 
-/* ===== ITEMS ===== */
-.it-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-bottom:20px;}
-.it-c{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px;
-  text-align:center;position:relative;overflow:hidden;transition:transform .2s;
-  box-shadow:0 2px 8px var(--shadow);}
-.it-c:hover{transform:translateY(-2px);}
-.it-num{font-size:0.72rem;color:var(--muted);margin-bottom:5px;font-weight:600;}
-.it-d{font-size:1.15rem;font-weight:800;font-family:'Cairo',sans-serif;margin-bottom:2px;}
-.it-dl{font-size:0.7rem;margin-bottom:8px;font-weight:600;}
-.it-dc{font-size:1.1rem;font-weight:800;font-family:'Cairo',sans-serif;margin-bottom:2px;}
-.it-dcl{font-size:0.7rem;font-weight:600;}
-.it-bar{position:absolute;top:0;right:0;width:4px;height:100%;}
-.d-easy{color:#1a7a3e;} .d-med{color:#9a6000;} .d-hard{color:#c0392b;}
-.dc-ex{color:#1a5a8a;} .dc-good{color:#1a7a3e;} .dc-ok{color:#9a6000;} .dc-poor{color:#c0392b;}
-
 /* ===== INFLATION ===== */
 .infl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:18px;}
 .infl-card{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:16px;
@@ -358,7 +343,7 @@ footer strong{color:var(--maroon);}
 @media print{
   .hdr .tabs,.drop-zone,.t-bar,.btn-row,.reset-bar,
   .btn-print,.print-modal,footer,.bg-tex,.bg-grid,
-  .btn-export,#pg-upload,#pg-settings,.no-print{display:none!important;}
+  .btn-export,#pg-upload,#pg-settings,.no-print,.cred{display:none!important;}
   html,body{background:#fff!important;color:#000!important;margin:0;padding:0;}
   @page{size:A4 portrait;margin:14mm 12mm 12mm 12mm;}
   body.pl @page{size:A4 landscape;margin:11mm 10mm 10mm 10mm;}
@@ -371,18 +356,16 @@ footer strong{color:var(--maroon);}
   .pg{display:none!important;}
   body.pov #pg-overview{display:block!important;}
   body.pst #pg-students{display:block!important;}
-  body.pit #pg-items{display:block!important;}
-  body.pall #pg-overview,body.pall #pg-students,body.pall #pg-items{display:block!important;}
-  .st-c,.ch-card,.m-card,.s-card,.infl-card,.infl-summary,.t-wrap,.d-wrap,.it-c{
+  body.pall #pg-overview,body.pall #pg-students{display:block!important;}
+  .st-c,.ch-card,.m-card,.s-card,.infl-card,.infl-summary,.t-wrap,.d-wrap{
     background:#fff!important;border:1px solid #ddd!important;box-shadow:none!important;
     -webkit-print-color-adjust:exact;print-color-adjust:exact;}
   .st-row{grid-template-columns:repeat(3,1fr)!important;gap:7px!important;}
   .ch-grid{grid-template-columns:repeat(2,1fr)!important;gap:9px!important;}
   .m-grid{grid-template-columns:repeat(3,1fr)!important;gap:7px!important;}
-  .it-grid{grid-template-columns:repeat(4,1fr)!important;gap:6px!important;}
   .infl-grid{grid-template-columns:repeat(3,1fr)!important;gap:7px!important;}
   .two-col{grid-template-columns:repeat(2,1fr)!important;}
-  .st-c,.ch-card,.m-card,.infl-card,.it-c{page-break-inside:avoid;break-inside:avoid;}
+  .st-c,.ch-card,.m-card,.infl-card{page-break-inside:avoid;break-inside:avoid;}
   .sec{page-break-after:avoid;break-after:avoid;font-size:0.9rem!important;}
   table{width:100%!important;font-size:8.5pt!important;}
   th{background:#f0e8e5!important;color:#6b1a2a!important;
@@ -390,13 +373,28 @@ footer strong{color:var(--maroon);}
   td{padding:5px 9px!important;}
   tr{page-break-inside:avoid;break-inside:avoid;}
   svg{max-width:100%!important;overflow:visible!important;}
-  .d-inner,.m-fill,.infl-fill,.sf,.it-bar,.st-c::after,.infl-card::after{
+  .d-inner,.m-fill,.infl-fill,.sf,.st-c::after,.infl-card::after{
     -webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
   .reset-bar,.btn-row{display:none!important;}
   .print-stamp{display:block!important;text-align:center;padding:5px 0 10px;
     font-family:'Cairo',sans-serif;font-size:0.8rem;color:#6b1a2a;
     border-bottom:1px solid #e0d0cc;margin-bottom:12px;}
 }
+
+.warnbox{background:#fff7e0;border:1px solid #e8c766;color:#7a5200;border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:.82rem;line-height:1.8;font-weight:600;}
+.stt{display:inline-block;padding:3px 11px;border-radius:20px;font-size:.73rem;font-weight:700;margin-top:8px;}
+.stt.pos{background:rgba(39,174,96,.12);color:#1a7a3e;}
+.stt.neg{background:rgba(192,57,43,.12);color:#c0392b;}
+.stt.neu{background:rgba(107,26,42,.08);color:#6b1a2a;}
+.stt.warn{background:rgba(243,156,18,.15);color:#9a6000;}
+.m-dyn{font-size:.78rem;line-height:1.7;color:var(--text2);margin:7px 0 0;font-weight:600;}
+.m-rule,.infl-rule{font-size:.7rem;line-height:1.8;color:var(--muted);margin-top:8px;padding-top:7px;border-top:1px dashed var(--border);}
+.infl-mean{font-size:.76rem;line-height:1.7;color:var(--text2);margin:6px 0 0;}
+.rp{color:#1a7a3e;}.rn{color:#c0392b;}.rw{color:#9a6000;}
+.cred{margin-top:28px;background:linear-gradient(135deg,var(--maroon),var(--wine));border-radius:16px;padding:22px;text-align:center;box-shadow:0 4px 20px rgba(107,26,42,.3);}
+.cred .cn{font-size:1.15rem;font-weight:900;color:var(--gold2);}
+.cred .cr{font-size:.82rem;color:rgba(255,255,255,.8);margin:2px 0 14px;}
+.cred a{display:inline-flex;align-items:center;gap:8px;background:var(--gold2);color:var(--maroon);padding:10px 24px;border-radius:12px;text-decoration:none;font-weight:800;font-size:.88rem;box-shadow:0 4px 14px rgba(184,134,11,.4);}
 </style>
 </head>
 <body>
@@ -417,7 +415,6 @@ footer strong{color:var(--maroon);}
       <button class="tb on" onclick="go('upload',this)">📁 الرفع والإعداد</button>
       <button class="tb" onclick="go('overview',this)">📈 لوحة النتائج</button>
       <button class="tb" onclick="go('students',this)">👥 درجات الطلاب</button>
-      <button class="tb" onclick="go('items',this)">🔬 تحليل الفقرات</button>
       <button class="tb" onclick="go('settings',this)">⚙️ الإعدادات</button>
     </div>
   </div>
@@ -427,12 +424,6 @@ footer strong{color:var(--maroon);}
 
 <!-- ======= UPLOAD ======= -->
 <div class="pg on" id="pg-upload">
-
-  <!-- زر المسح والتفريغ -->
-  <div class="reset-bar">
-    <span class="reset-hint">هل تريد إدخال بيانات جديدة؟</span>
-    <button class="btn-reset" onclick="resetAll()">🗑️ مسح وتفريغ المدخلات</button>
-  </div>
 
   <div class="drop-zone" id="dz" onclick="document.getElementById('fi').click()"
        ondragover="event.preventDefault();this.classList.add('drag')"
@@ -446,7 +437,7 @@ footer strong{color:var(--maroon);}
 
   <div class="info-b" style="margin-top:14px;">
     <strong>📌 تنسيق الملف:</strong> عمود اسم الطالب + عمود الدرجة كحد أدنى.
-    المنصة تكتشف تلقائياً صفوف العناوين والفراغات وتحذف صف المعدل العام.
+    تقرأ المنصة كشف نور وأي ملف بسيط، وتستبعد الدرجات غير الصالحة وتنبّهك إليها.
   </div>
 
   <div class="prev-wrap" id="prev">
@@ -462,7 +453,6 @@ footer strong{color:var(--maroon);}
         <div class="col-map">
           <div class="fg"><label>عمود اسم الطالب</label><select class="fs" id="c-name"></select></div>
           <div class="fg"><label>عمود الدرجة</label><select class="fs" id="c-score"></select></div>
-          <div class="fg"><label>عمود الجنس (اختياري)</label><select class="fs" id="c-gender"><option value="">-- لا يوجد --</option></select></div>
           <div class="fg"><label>عمود الصف (اختياري)</label><select class="fs" id="c-class"><option value="">-- لا يوجد --</option></select></div>
         </div>
       </div>
@@ -471,8 +461,6 @@ footer strong{color:var(--maroon);}
         <div class="fg"><label>اسم الاختبار</label><input class="fi" id="t-name" value="الاختبار النهائي"></div>
         <div class="fg"><label>الدرجة العظمى</label><input class="fi" id="t-max" type="number" value="100" min="1"></div>
         <div class="fg"><label>درجة النجاح (%)</label><input class="fi" id="t-pass" type="number" value="50" min="1" max="100"></div>
-        <div class="fg"><label>عدد فقرات الاختبار <span style="color:var(--muted);font-size:0.75rem">(0 = تجاهل)</span></label>
-          <input class="fi" id="t-items" type="number" value="0" min="0"></div>
       </div>
     </div>
 
@@ -492,16 +480,15 @@ footer strong{color:var(--maroon);}
       <button class="btn-print" onclick="openPrint()">🖨️ طباعة التقرير</button>
       <button class="btn-reset" onclick="resetAll();go('upload',document.querySelector('.tb'))">🗑️ مسح وبدء من جديد</button>
     </div>
+    <div id="ov-warn"></div>
     <div class="print-stamp" style="display:none" id="pstamp"></div>
     <div class="st-row" id="st-row"></div>
     <div class="sec"><div class="dot"></div>الرسوم البيانية التحليلية</div>
     <div class="ch-grid">
       <div class="ch-card"><h4>توزيع الدرجات</h4><div id="ch-dist"></div></div>
       <div class="ch-card"><h4>نسب التقديرات</h4><div id="ch-grade" style="display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;"></div></div>
-      <div class="ch-card"><h4>المنحنى التراكمي</h4><div id="ch-cum"></div></div>
-      <div class="ch-card"><h4>المقارنة الإحصائية</h4><div id="ch-stats"></div></div>
     </div>
-    <div class="sec"><div class="dot"></div>مقاييس النزعة المركزية والتشتت</div>
+    <div class="sec"><div class="dot"></div>مقاييس النزعة المركزية والتشتت (مع شرح الحالة الإيجابية والسلبية)</div>
     <div class="m-grid" id="m-grid"></div>
     <div class="sec"><div class="dot"></div>جدول توزيع التكرارات</div>
     <div class="d-wrap" id="d-wrap"></div>
@@ -543,57 +530,21 @@ footer strong{color:var(--maroon);}
   </div>
 </div>
 
-<!-- ======= ITEMS ======= -->
-<div class="pg" id="pg-items">
-  <div class="empty" id="it-empty"><div class="ei">🔬</div>
-    <p>قم برفع ملف البيانات وتحديد عدد الفقرات<br>
-    <span style="font-size:0.82rem;color:var(--muted);">في تبويب الرفع والإعداد، اكتب عدد أسئلة الاختبار ثم اضغط تحليل</span></p>
-  </div>
-  <div id="it-body" style="display:none">
-    <div class="info-b">
-      <strong>📐 معامل الصعوبة:</strong> مثالي بين 30%–70% &nbsp;|&nbsp;
-      <strong>🎯 معامل التمييز:</strong> مقبول ≥ 0.40
-    </div>
-    <div class="two-col">
-      <div class="ch-card"><h4>توزيع معاملات الصعوبة</h4><div id="ch-diff"></div></div>
-      <div class="ch-card"><h4>توزيع معاملات التمييز</h4><div id="ch-disc"></div></div>
-    </div>
-    <div class="sec"><div class="dot"></div>بطاقات تحليل الفقرات</div>
-    <div class="leg" style="margin-bottom:12px;">
-      <div class="leg-i"><div class="leg-dot" style="background:#1a7a3e"></div>سهل (&gt;70%)</div>
-      <div class="leg-i"><div class="leg-dot" style="background:#9a6000"></div>متوسط (30-70%)</div>
-      <div class="leg-i"><div class="leg-dot" style="background:#c0392b"></div>صعب (&lt;30%)</div>
-    </div>
-    <div class="it-grid" id="it-grid"></div>
-  </div>
-</div>
-
 <!-- ======= SETTINGS ======= -->
 <div class="pg" id="pg-settings">
   <div class="s-grid">
     <div class="s-card">
       <h4>🎨 إعدادات العرض</h4>
-      <div class="fg"><label>نظام التقديرات</label>
-        <select class="fs" id="g-sys"><option value="saudi">النظام السعودي</option><option value="letters">الحروف A/B/C</option></select></div>
+      <div class="fg"><label>المتوسط المتوقع للاختبار العادي (%) — يُستخدم في كشف التضخم</label><input class="fi" id="s-exp" type="number" value="60" min="1" max="100"></div>
       <div class="fg"><label>عدد خانات الكسور</label>
         <select class="fs" id="g-dec"><option value="0">عدد صحيح</option><option value="1" selected>منزلة عشرية</option><option value="2">منزلتان</option></select></div>
     </div>
     <div class="s-card">
-      <h4>📊 حدود التقييم (%)</h4>
+      <h4>📊 حدود التقدير (%) — ما دونها مقبول، وما دون النجاح راسب</h4>
       <div class="fg"><label>حد تقدير "ممتاز"</label><input class="fi" id="g-a" type="number" value="90"></div>
       <div class="fg"><label>حد تقدير "جيد جداً"</label><input class="fi" id="g-b" type="number" value="80"></div>
       <div class="fg"><label>حد تقدير "جيد"</label><input class="fi" id="g-c" type="number" value="70"></div>
-      <div class="fg"><label>حد تقدير "مقبول"</label><input class="fi" id="g-d" type="number" value="60"></div>
     </div>
-    <div class="s-card">
-      <h4>🔬 معايير تحليل الفقرات</h4>
-      <div class="fg"><label>الحد الأدنى للصعوبة المقبولة</label><input class="fi" type="number" value="30" id="s-dmin"></div>
-      <div class="fg"><label>الحد الأقصى للصعوبة المقبولة</label><input class="fi" type="number" value="70" id="s-dmax"></div>
-      <div class="fg"><label>الحد الأدنى لمعامل التمييز المقبول</label><input class="fi" type="number" value="0.40" id="s-dcmin" step="0.01"></div>
-    </div>
-  </div>
-  <div style="text-align:center;margin-top:10px;">
-    <button class="btn-go" onclick="toast('✅ تم حفظ الإعدادات','ok')">💾 حفظ الإعدادات</button>
   </div>
 
   <!-- CREDIT -->
@@ -613,8 +564,8 @@ footer strong{color:var(--maroon);}
 </main>
 
 <footer>
-  <strong>تصميم د/فواز</strong> &nbsp;|&nbsp;
-  <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">📲 تفضل للمزيد هنا</a>
+  <strong>تصميم د/ فواز</strong> — مشرف تربوي &nbsp;|&nbsp;
+  <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">✈ قروب التميز في التقويم والتعليم</a>
   &nbsp;|&nbsp; منصة تحليل الاختبارات ونتائج الطلاب
 </footer>
 
@@ -629,11 +580,11 @@ footer strong{color:var(--maroon);}
       <div class="print-row">
         <label class="print-radio" id="pr-port">
           <input type="radio" name="orient" value="portrait" checked onchange="selOrient(this)">
-          <span>📄 عمودي (Portrait)</span>
+          <span>📄 عمودي </span>
         </label>
         <label class="print-radio" id="pr-land">
           <input type="radio" name="orient" value="landscape" onchange="selOrient(this)">
-          <span>📋 أفقي (Landscape)</span>
+          <span>📋 أفقي </span>
         </label>
       </div>
       <div class="p-sect">المحتوى المراد طباعته:</div>
@@ -644,10 +595,6 @@ footer strong{color:var(--maroon);}
       <label class="print-radio">
         <input type="radio" name="pcont" value="students" onchange="selCont(this)">
         <span>👥 جدول درجات الطلاب</span>
-      </label>
-      <label class="print-radio">
-        <input type="radio" name="pcont" value="items" onchange="selCont(this)">
-        <span>🔬 تحليل الفقرات</span>
       </label>
       <label class="print-radio">
         <input type="radio" name="pcont" value="all" onchange="selCont(this)">
@@ -666,12 +613,8 @@ footer strong{color:var(--maroon);}
 var printOrient = 'portrait';
 var printContent = 'overview';
 
-function openPrint(){
-  document.getElementById('printModal').classList.add('on');
-}
-function closePrint(){
-  document.getElementById('printModal').classList.remove('on');
-}
+function openPrint(){ document.getElementById('printModal').classList.add('on'); }
+function closePrint(){ document.getElementById('printModal').classList.remove('on'); }
 function selOrient(el){
   printOrient = el.value;
   document.getElementById('pr-port').style.borderColor = printOrient==='portrait'?'var(--maroon)':'var(--border)';
@@ -681,40 +624,49 @@ function selCont(el){ printContent = el.value; }
 
 function doPrint(){
   closePrint();
-  // تحضير ختم التقرير (بدون تصميم د/فواز والرابط)
   var stamp = document.getElementById('pstamp');
   if(stamp){
     stamp.textContent = cfg.name + ' — ' + new Date().toLocaleDateString('ar-SA') + ' — إجمالي الطلاب: ' + students.length;
     stamp.style.display = 'block';
   }
-  // تطبيق الاتجاه
-  document.body.classList.remove('pl','pov','pst','pit','pall');
+  document.body.classList.remove('pl','pov','pst','pall');
   if(printOrient === 'landscape') document.body.classList.add('pl');
-  // تطبيق المحتوى
-  var cls = printContent==='overview'?'pov':
-            printContent==='students'?'pst':
-            printContent==='items'?'pit':'pall';
+  var cls = printContent==='overview'?'pov': printContent==='students'?'pst':'pall';
   document.body.classList.add(cls);
-
-  // تأخير بسيط ثم طباعة
   setTimeout(function(){
     window.print();
-    // تنظيف بعد الطباعة
     setTimeout(function(){
-      document.body.classList.remove('pl','pov','pst','pit','pall');
+      document.body.classList.remove('pl','pov','pst','pall');
       if(stamp) stamp.style.display='none';
     }, 500);
   }, 120);
 }
-
-// إغلاق المودال بالنقر خارجه
 document.addEventListener('click', function(e){
   if(e.target.id === 'printModal') closePrint();
 });
 
 // ========== STATE ==========
 var rawData=[],students=[],headers=[],filtered=[],curF='all';
-var cfg={max:100,pass:50,name:'الاختبار',items:0,gA:90,gB:80,gC:70,gD:60};
+var cfg={max:100,pass:50,name:'الاختبار',gA:90,gB:80,gC:70,exp:60};
+
+// ========== HELPERS ==========
+function esc(s){ return String(s===undefined||s===null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// تحويل صارم لرقم: النص كله يجب أن يكون رقماً (فلا تُقرأ «٣/١» على أنها 3)
+function cleanNum(v){
+  if(v===null||v===undefined) return '';
+  if(typeof v==='number') return isFinite(v)?v:'';
+  if(typeof v!=='string') return '';
+  var s=v.trim();
+  if(!s) return '';
+  s=s.replace(/[\u200e\u200f\u202a-\u202e\s]/g,'');
+  s=s.replace(/[٠-٩]/g,function(d){return String(d.charCodeAt(0)-1632);}).replace(/[۰-۹]/g,function(d){return String(d.charCodeAt(0)-1776);});
+  s=s.replace(/^(-?\d+),(\d{1,2})$/,'$1.$2');
+  s=s.replace(/[٬,]/g,'').replace(/[٫،]/g,'.');
+  if(!/^-?\d+(\.\d+)?$/.test(s)) return '';
+  var n=parseFloat(s);
+  return isFinite(n)?n:'';
+}
 
 // ========== NAV ==========
 function go(pg,btn){
@@ -727,23 +679,18 @@ function go(pg,btn){
 // ========== RESET ==========
 function resetAll(){
   rawData=[]; students=[]; headers=[]; filtered=[]; curF='all';
-  // إعادة ضبط واجهة الرفع
   document.getElementById('prev').style.display='none';
   document.getElementById('fi').value='';
   document.getElementById('t-name').value='الاختبار النهائي';
   document.getElementById('t-max').value='100';
   document.getElementById('t-pass').value='50';
-  document.getElementById('t-items').value='0';
-  // إخفاء النتائج
   document.getElementById('ov-empty').style.display='block';
   document.getElementById('ov-body').style.display='none';
   document.getElementById('st-empty').style.display='block';
   document.getElementById('st-body').style.display='none';
-  document.getElementById('it-empty').style.display='block';
-  document.getElementById('it-body').style.display='none';
   document.getElementById('infl-sec').style.display='none';
   document.getElementById('infl-wrap').innerHTML='';
-  // الانتقال لصفحة الرفع
+  document.getElementById('ov-warn').innerHTML='';
   go('upload',document.querySelector('.tb'));
   toast('🗑️ تم مسح جميع البيانات — يمكنك رفع ملف جديد','warn');
 }
@@ -759,6 +706,9 @@ function onFile(e){ if(e.target.files[0]) readFile(e.target.files[0]); }
 // ========== READ FILE ==========
 function readFile(file){
   var ext=file.name.split('.').pop().toLowerCase();
+  if(ext!=='xlsx'&&ext!=='xls'&&ext!=='csv'){
+    toast('❌ نوع الملف غير مدعوم. المدعوم: xlsx أو xls أو csv','er'); return;
+  }
   var r=new FileReader();
   r.onload=function(e){
     try{
@@ -768,103 +718,59 @@ function readFile(file){
       var ws=wb.Sheets[wb.SheetNames[0]];
       var all=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
 
-      // =========================================================
-      // الكشف الذكي لصف الرأس — يدعم أنماط متعددة:
-      // 1. ملفات بسيطة: اسم الطالب | الدرجة
-      // 2. كشوف نور وأنظار: جدول عريض متعدد الأعمدة
-      // 3. ملفات بعناوين وفراغات قبل الجدول
-      // =========================================================
-      var hi = 0;
-      var nameCol = -1, scoreCol = -1;
-
-      // البحث في أول 40 صف
-      for(var i=0; i<Math.min(40,all.length); i++){
-        var row = all[i];
-        var rs = row.map(function(c){return String(c||'');}).join(' ');
-
-        // نمط 1: صف يحتوي على "اسم الطالب" و"المجموع" أو "الدرجة"
+      // البحث عن صف الرأس في أول 40 صف (يدعم كشف نور والملفات البسيطة)
+      var hi=0, nameCol=-1, scoreCol=-1;
+      for(var i=0;i<Math.min(40,all.length);i++){
+        var row=all[i];
+        var rs=row.map(function(c){return String(c===null||c===undefined?'':c);}).join(' ');
         if(/اسم\s*(الطالب|الطلاب|الطالبة)/.test(rs)){
-          hi = i;
-          // إيجاد عمود الاسم والدرجة بدقة
+          hi=i;
           for(var j=0;j<row.length;j++){
-            var cell = String(row[j]||'');
+            var cell=String(row[j]===null||row[j]===undefined?'':row[j]).trim();
             if(/اسم\s*(الطالب|الطلاب|الطالبة)/.test(cell)) nameCol=j;
-            if(/^المجموع$|^الدرجة\s*الكلية$|^الدرجة\s*النهائية$|^الدرجة$/.test(cell.trim())) scoreCol=j;
-            if(/^المجموع$/.test(cell.trim()) && scoreCol===-1) scoreCol=j;
+            if(/^المجموع$|^الدرجة\s*الكلية$|^الدرجة\s*النهائية$|^الدرجة$/.test(cell)) scoreCol=j;
           }
           break;
         }
-
-        // نمط 2: صف بسيط يحتوي على اسم + درجة
-        if(/اسم|name|طالب/.test(rs) && /درجة|علامة|score|grade|mark|result|مجموع/.test(rs)){
-          hi = i;
-          break;
-        }
+        if(/اسم|name|طالب/i.test(rs) && /درجة|علامة|score|grade|mark|result|مجموع/i.test(rs)){ hi=i; break; }
       }
+      var slice=all.slice(hi);
 
-      // استخراج البيانات من صف الرأس فصاعداً
-      var slice = all.slice(hi);
-
-      // =========================================================
-      // معالجة خاصة لكشف نور: nameCol و scoreCol محددان
-      // =========================================================
-      if(nameCol >= 0){
-        // بناء rawData مبسّط: [اسم الطالب, المجموع]
-        // الصف الأول = رأس مبسّط
-        var newRaw = [['اسم الطالب','الدرجة']];
-        // الصف الثاني قد يحتوي الدرجة القصوى — نتجاهله إذا كان رقماً كبيراً في عمود الاسم
-        var dataStart = 1;
-        // تحقق إذا كان الصف التالي يحتوي على درجة قصوى (مثل 100)
+      if(nameCol>=0&&scoreCol>=0){
+        // كشف نور: عمود الاسم وعمود المجموع محددان
+        var newRaw=[['اسم الطالب','الدرجة']];
+        var dataStart=1;
         if(slice.length>1){
-          var nextRow = slice[1];
-          var possibleMax = parseFloat(nextRow[scoreCol]);
-          if(!isNaN(possibleMax) && possibleMax >= 90 && String(nextRow[nameCol]||'').trim() !== ''){
-            // قد يكون الصف الأول بيانات فعلية
-            dataStart = 1;
-          } else if(!isNaN(possibleMax) && possibleMax >= 90 && String(nextRow[nameCol]||'').trim() === ''){
-            dataStart = 2; // تجاهل صف الدرجة القصوى
-          }
+          var nx=slice[1], mx=cleanNum(nx[scoreCol]);
+          // صف الدرجة العظمى: بلا اسم وفيه رقم
+          if(mx!==''&&String(nx[nameCol]===null||nx[nameCol]===undefined?'':nx[nameCol]).trim()==='') dataStart=2;
         }
-        for(var i=dataStart; i<slice.length; i++){
-          var row = slice[i];
-          var nm = String(row[nameCol]||'').trim();
-          var sc = parseFloat(row[scoreCol]);
-          // تجاهل صفوف التوقيع والفراغات والتذييل
-          if(!nm && isNaN(sc)) continue;
+        for(var k=dataStart;k<slice.length;k++){
+          var rw=slice[k];
+          var nm=String(rw[nameCol]===null||rw[nameCol]===undefined?'':rw[nameCol]).trim();
+          if(!nm) continue;
           if(/توقيع|رصده|راجعه|املأه|\.{3,}/.test(nm)) continue;
-          if(nm && !isNaN(sc) || nm){
-            newRaw.push([nm || '', isNaN(sc)?'':sc]);
-          }
+          newRaw.push([nm,cleanNum(rw[scoreCol])]);
         }
-        rawData = newRaw;
+        rawData=newRaw;
       } else {
-        // المعالجة الاعتيادية
-        rawData = slice.filter(function(r){
+        rawData=slice.filter(function(r){
           return r.some(function(c){return c!==''&&c!==null&&c!==undefined;});
         });
-        // حذف صف الدرجة القصوى إذا كان الاسم أرقاماً
-        if(rawData.length>2){
-          var r2 = rawData[1];
-          var firstCell = String(r2[0]||'').trim();
-          if(!isNaN(parseFloat(firstCell)) && parseFloat(firstCell)>=50){
-            rawData.splice(1,1);
-          }
-        }
-        // حذف آخر صف إذا كان مجموع/معدل
         if(rawData.length>1){
           var lr=rawData[rawData.length-1];
-          if(/معدل|مجموع|إجمالي|average|total|sum/i.test(String(lr[0]||'')))
+          if(/معدل|مجموع|إجمالي|average|total|sum/i.test(String(lr[0]===null||lr[0]===undefined?'':lr[0])))
             rawData=rawData.slice(0,-1);
         }
       }
 
       if(rawData.length<2){toast('❌ لا توجد بيانات كافية في الملف','er');return;}
-      headers=rawData[0].map(function(h,i){return h!==''&&h!==null?String(h):'عمود '+(i+1);});
+      headers=rawData[0].map(function(h,i){return h!==''&&h!==null&&h!==undefined?String(h):'عمود '+(i+1);});
       showPrev();
-      toast('✅ تم قراءة الملف: '+(rawData.length-1)+' طالب','ok');
+      toast('✅ تم قراءة الملف: '+(rawData.length-1)+' صف — راجع الأعمدة ثم اضغط تحليل','ok');
     }catch(err){
       console.error(err);
-      toast('❌ خطأ في قراءة الملف: '+err.message,'er');
+      toast('❌ تعذّرت قراءة الملف، تأكد أنه ملف سليم','er');
     }
   };
   if(ext==='csv') r.readAsText(file,'UTF-8');
@@ -872,25 +778,33 @@ function readFile(file){
 }
 
 // ========== SHOW PREVIEW ==========
+function pickCol(hs,tests){
+  for(var t=0;t<tests.length;t++){
+    for(var i=0;i<hs.length;i++){ if(tests[t].test(hs[i])) return i; }
+  }
+  return -1;
+}
 function showPrev(){
   document.getElementById('prev').style.display='block';
-  document.getElementById('prev-info').textContent='إجمالي الطلاب: '+(rawData.length-1)+' | الأعمدة: '+headers.length;
-  var h='<thead><tr>'+headers.map(function(h){return '<th>'+h+'</th>';}).join('')+'</tr></thead><tbody>';
+  document.getElementById('prev-info').textContent='عدد الصفوف: '+(rawData.length-1)+' | الأعمدة: '+headers.length;
+  var h='<thead><tr>'+headers.map(function(x){return '<th>'+esc(x)+'</th>';}).join('')+'</tr></thead><tbody>';
   for(var i=1;i<Math.min(7,rawData.length);i++)
-    h+='<tr>'+rawData[i].map(function(c){return '<td>'+c+'</td>';}).join('')+'</tr>';
+    h+='<tr>'+rawData[i].map(function(c){return '<td>'+esc(c)+'</td>';}).join('')+'</tr>';
   h+='</tbody>';
   document.getElementById('prev-tbl').innerHTML=h;
-  var oA=headers.map(function(h,i){return '<option value="'+i+'">'+h+'</option>';}).join('');
+  var oA=headers.map(function(x,i){return '<option value="'+i+'">'+esc(x)+'</option>';}).join('');
   var oO='<option value="">-- لا يوجد --</option>'+oA;
-  ['c-name','c-score'].forEach(function(id){document.getElementById(id).innerHTML=oA;});
-  ['c-gender','c-class'].forEach(function(id){document.getElementById(id).innerHTML=oO;});
-  headers.forEach(function(h,i){
-    var hl=h.toLowerCase();
-    if(/اسم|name|طالب/.test(hl)) document.getElementById('c-name').value=i;
-    if(/درجة|علامة|score|grade|mark|result/.test(hl)) document.getElementById('c-score').value=i;
-    if(/جنس|gender|sex/.test(hl)) document.getElementById('c-gender').value=i;
-    if(/صف|فصل|class|section/.test(hl)) document.getElementById('c-class').value=i;
-  });
+  document.getElementById('c-name').innerHTML=oA;
+  document.getElementById('c-score').innerHTML=oA;
+  document.getElementById('c-class').innerHTML=oO;
+  var hl=headers.map(function(x){return x.toLowerCase();});
+  var n=pickCol(hl,[/اسم/,/name/,/طالب/]);
+  var s=pickCol(hl,[/^(الدرجة|الدرجه|المجموع|النتيجة|score)$/,/درجة|علامة|score|mark|result|مجموع/]);
+  var c=pickCol(hl,[/^(الصف|الفصل|الشعبة)$/,/صف|فصل|شعبة|class|section/]);
+  if(n>=0) document.getElementById('c-name').value=n;
+  if(s>=0) document.getElementById('c-score').value=s;
+  else if(headers.length>1) document.getElementById('c-score').value=(n===0?1:0)<headers.length?(n===0?1:0):0;
+  if(c>=0) document.getElementById('c-class').value=c;
 }
 
 // ========== ANALYZE ==========
@@ -898,60 +812,103 @@ function analyze(){
   cfg.max=parseFloat(document.getElementById('t-max').value)||100;
   cfg.pass=parseFloat(document.getElementById('t-pass').value)||50;
   cfg.name=document.getElementById('t-name').value||'الاختبار';
-  cfg.items=parseInt(document.getElementById('t-items').value)||0;
   cfg.gA=parseFloat(document.getElementById('g-a').value)||90;
   cfg.gB=parseFloat(document.getElementById('g-b').value)||80;
   cfg.gC=parseFloat(document.getElementById('g-c').value)||70;
-  cfg.gD=parseFloat(document.getElementById('g-d').value)||60;
+  var ex=parseFloat(document.getElementById('s-exp').value);
+  cfg.exp=isNaN(ex)?60:ex;
 
   var cn=parseInt(document.getElementById('c-name').value);
   var cs=parseInt(document.getElementById('c-score').value);
-  var cg=document.getElementById('c-gender').value;
   var cc=document.getElementById('c-class').value;
+  if(cn===cs){toast('❌ اخترت العمود نفسه للاسم والدرجة، صحّح التعيين','er');return;}
+
+  // هل في الملف أسماء فعلاً؟ إن لم توجد أسماء نولّد «طالب 1، 2…»
+  var hasNames=false;
+  for(var i=1;i<rawData.length;i++){
+    var t=rawData[i][cn];
+    if(t!==undefined&&t!==null&&String(t).trim()!==''&&cleanNum(t)===''){hasNames=true;break;}
+  }
 
   students=[];
-  for(var i=1;i<rawData.length;i++){
-    var row=rawData[i];
-    var nm=row[cn]!==undefined?String(row[cn]).trim():'';
-    var sc=parseFloat(row[cs]);
-    if(!nm&&isNaN(sc)) continue;
+  var bad=0,over=0,noname=0;
+  for(var j=1;j<rawData.length;j++){
+    var row=rawData[j];
+    var nm=row[cn]!==undefined&&row[cn]!==null?String(row[cn]).trim():'';
+    var raw=row[cs];
+    var sc=cleanNum(raw);
+    var rawEmpty=(raw===undefined||raw===null||String(raw).trim()==='');
+    if(!nm&&rawEmpty) continue;
     if(/معدل|مجموع|إجمالي|average|total/i.test(nm)) continue;
-    students.push({name:nm||'طالب '+i,score:isNaN(sc)?0:sc,
-      gender:cg!==''?String(row[cg]||''):'',
-      cls:cc!==''?String(row[cc]||''):''});
+    if(hasNames&&!nm){noname++;continue;}
+    if(sc===''){ if(!rawEmpty||nm) bad++; continue; }
+    if(sc<0||sc>cfg.max){over++;continue;}
+    students.push({name:nm||('طالب '+j),score:sc,cls:cc!==''?String(row[cc]===undefined||row[cc]===null?'':row[cc]):''});
   }
-  if(!students.length){toast('❌ لا توجد بيانات صالحة','er');return;}
+  if(!students.length){toast('❌ لا توجد درجات صالحة. تأكد من عمود الدرجة والدرجة العظمى','er');return;}
+
+  // ترتيب بتساوي المراتب عند تساوي الدرجات
   var srt=[].concat(students).sort(function(a,b){return b.score-a.score;});
-  srt.forEach(function(s,i){s.rank=i+1;});
+  srt.forEach(function(s,i){ s.rank=(i>0&&s.score===srt[i-1].score)?srt[i-1].rank:i+1; });
+
+  var w=[];
+  if(over) w.push('⚠ تم استبعاد '+over+' درجة خارج النطاق (من 0 إلى '+cfg.max+'). إن كانت الدرجة العظمى أكبر فعدّلها ثم أعد التحليل.');
+  if(bad) w.push('⚠ تم استبعاد '+bad+' صف بلا درجة رقمية صالحة (فارغ أو غائب أو نص).');
+  if(noname) w.push('ℹ️ تم تجاهل '+noname+' صف بلا اسم.');
+  document.getElementById('ov-warn').innerHTML=w.length?'<div class="warnbox">'+w.join('<br>')+'</div>':'';
+
+  curF='all';
+  document.querySelectorAll('.fb').forEach(function(b){b.classList.remove('on');});
+  document.getElementById('fb-all').classList.add('on');
   buildOverview();
   buildStudents();
-  if(cfg.items>0) buildItems();
   go('overview',document.querySelectorAll('.tb')[1]);
   toast('✅ تم تحليل '+students.length+' طالب','ok');
 }
 
 // ========== STATS ==========
+function modeInfo(a,max){
+  var f={};
+  a.forEach(function(v){var k=Math.round(v*10)/10;f[k]=(f[k]||0)+1;});
+  var keys=Object.keys(f).map(Number);
+  var mf=Math.max.apply(null,keys.map(function(k){return f[k];}));
+  if(mf>=2){
+    var ms=keys.filter(function(k){return f[k]===mf;}).sort(function(x,y){return x-y;});
+    return {has:true,list:ms,freq:mf,val:ms.reduce(function(p,q){return p+q;},0)/ms.length};
+  }
+  var w=max/10,b={};
+  a.forEach(function(v){var i=Math.min(Math.floor(v/w),9);b[i]=(b[i]||0)+1;});
+  var bi=Object.keys(b).map(Number);
+  var bm=Math.max.apply(null,bi.map(function(i){return b[i];}));
+  var m=a.reduce(function(p,q){return p+q;},0)/a.length;
+  var cand=bi.filter(function(i){return b[i]===bm;}).sort(function(x,y){return Math.abs((x+.5)*w-m)-Math.abs((y+.5)*w-m);});
+  var i0=cand[0];
+  return {has:false,band:Math.round(i0*w)+'–'+Math.round((i0+1)*w),val:(i0+.5)*w};
+}
 function calcStats(arr){
   var n=arr.length; if(!n) return {};
   var s=[].concat(arr).sort(function(a,b){return a-b;});
   var mean=arr.reduce(function(a,b){return a+b;},0)/n;
   var median=n%2===0?(s[n/2-1]+s[n/2])/2:s[Math.floor(n/2)];
-  var freq={}; arr.forEach(function(v){var k=Math.round(v);freq[k]=(freq[k]||0)+1;});
-  var mx=Math.max.apply(null,Object.values(freq));
-  var mode=parseFloat(Object.keys(freq).find(function(k){return freq[k]===mx;}));
   var va=arr.reduce(function(a,b){return a+Math.pow(b-mean,2);},0)/n;
-  return{n:n,mean:mean,median:median,mode:mode,variance:va,std:Math.sqrt(va),
+  return{n:n,mean:mean,median:median,mode:modeInfo(arr,cfg.max),std:Math.sqrt(va),
     range:s[n-1]-s[0],min:s[0],max:s[n-1],sorted:s};
 }
-function grade(pct){
-  if(pct>=cfg.gA) return{l:'ممتاز',c:'ga'};
-  if(pct>=cfg.gB) return{l:'جيد جداً',c:'gb2'};
-  if(pct>=cfg.gC) return{l:'جيد',c:'gc'};
-  if(pct>=cfg.gD) return{l:'مقبول',c:'gc'};
-  return{l:'ضعيف',c:'gd'};
+
+// تقدير واحد يُستخدم في كل مكان (جدول، رسم، تصدير)
+var GRADES=[{l:'ممتاز',c:'ga',col:'#1a7a3e'},{l:'جيد جداً',c:'gb2',col:'#1a5a8a'},{l:'جيد',c:'gc',col:'#9a6000'},{l:'مقبول',c:'gc',col:'#b8860b'},{l:'راسب',c:'gd',col:'#c0392b'}];
+function gradeIdx(score){
+  if(score<cfg.max*cfg.pass/100) return 4;
+  var p=score/cfg.max*100;
+  if(p>=cfg.gA) return 0;
+  if(p>=cfg.gB) return 1;
+  if(p>=cfg.gC) return 2;
+  return 3;
 }
-function dp(){return parseInt(document.getElementById('g-dec')?document.getElementById('g-dec').value:1);}
+function grade(score){ return GRADES[gradeIdx(score)]; }
+function dp(){return parseInt(document.getElementById('g-dec').value);}
 function fmt(v){return parseFloat(v).toFixed(dp());}
+function pf(v,d){return parseFloat(v.toFixed(d===undefined?1:d)).toString();}
 
 // ========== OVERVIEW ==========
 function buildOverview(){
@@ -969,16 +926,14 @@ function buildOverview(){
     mkStat('👨‍🎓',st.n,'إجمالي الطلاب','st-maroon','c-maroon')+
     mkStat('📊',fmt(st.mean),'المتوسط الحسابي','st-wine','c-wine')+
     mkStat('✅',psd+' ('+pr+'%)','الناجحون','st-green','c-green')+
-    mkStat('❌',fld,'الراسبون','st-red','c-red')+
+    mkStat('❌',fld+' ('+(100-parseFloat(pr)).toFixed(1)+'%)','الراسبون','st-red','c-red')+
     mkStat('🏆',fmt(st.max),'أعلى درجة','st-gold','c-gold')+
     mkStat('📉',fmt(st.min),'أدنى درجة','st-maroon','c-maroon');
 
-  buildDistChart(st,pass);
+  buildDistChart(pass);
   buildGradeChart();
-  buildCumChart(st);
-  buildStatsChart(st);
-  buildMeasures(st);
-  buildDistTable(st);
+  buildMeasures(st,pass);
+  buildDistTable();
   buildInflation(st);
 }
 function mkStat(ic,val,lbl,bc,vc){
@@ -987,17 +942,11 @@ function mkStat(ic,val,lbl,bc,vc){
 }
 
 // ========== CHARTS (SVG) ==========
-// الألوان المتوافقة مع النظام الجديد
 var CH_PASS='rgba(26,122,62,0.75)';
 var CH_FAIL='rgba(192,57,43,0.75)';
 var CH_MAROON='rgba(107,26,42,0.8)';
-var CH_WINE='rgba(125,32,64,0.8)';
-var CH_ROSE='rgba(196,99,122,0.8)';
-var CH_GOLD='rgba(184,134,11,0.85)';
-var CH_BLUE='rgba(41,82,163,0.75)';
-var CH_GREEN='rgba(26,122,62,0.8)';
 
-function buildDistChart(st,passScore){
+function buildDistChart(passScore){
   var el=document.getElementById('ch-dist');
   var bins=10,W=420,H=190,pL=35,pB=30,pT=10,pR=10;
   var bw=(W-pL-pR)/bins, chH=H-pB-pT;
@@ -1014,14 +963,13 @@ function buildDistChart(st,passScore){
     svg+='<line x1="'+pL+'" y1="'+gy+'" x2="'+(W-pR)+'" y2="'+gy+'" stroke="rgba(107,26,42,0.08)" stroke-width="1"/>';
     svg+='<text x="'+(pL-5)+'" y="'+(gy+4)+'" text-anchor="end" fill="#8a5060" font-size="9" font-family="Tajawal">'+Math.round(gi*maxC/4)+'</text>';
   }
-  for(var i=0;i<bins;i++){
-    var bh=counts[i]/maxC*chH;
-    var bx=pL+i*bw+2,by=pT+chH-bh,bww=bw-4;
-    svg+='<rect x="'+bx+'" y="'+by+'" width="'+bww+'" height="'+bh+'" fill="'+cols[i]+'" rx="4"/>';
-    svg+='<text x="'+(bx+bww/2)+'" y="'+(H-8)+'" text-anchor="middle" fill="#8a5060" font-size="8" font-family="Tajawal">'+(i*(cfg.max/bins)).toFixed(0)+'</text>';
-    if(counts[i]>0) svg+='<text x="'+(bx+bww/2)+'" y="'+(by-4)+'" text-anchor="middle" fill="'+CH_MAROON+'" font-size="9" font-family="Cairo" font-weight="bold">'+counts[i]+'</text>';
+  for(var k=0;k<bins;k++){
+    var bh=counts[k]/maxC*chH;
+    var bx=pL+k*bw+2,by=pT+chH-bh,bww=bw-4;
+    svg+='<rect x="'+bx+'" y="'+by+'" width="'+bww+'" height="'+bh+'" fill="'+cols[k]+'" rx="4"/>';
+    svg+='<text x="'+(bx+bww/2)+'" y="'+(H-8)+'" text-anchor="middle" fill="#8a5060" font-size="8" font-family="Tajawal">'+(k*(cfg.max/bins)).toFixed(0)+'</text>';
+    if(counts[k]>0) svg+='<text x="'+(bx+bww/2)+'" y="'+(by-4)+'" text-anchor="middle" fill="'+CH_MAROON+'" font-size="9" font-family="Cairo" font-weight="bold">'+counts[k]+'</text>';
   }
-  // legend
   svg+='<rect x="'+pL+'" y="'+(H-22)+'" width="10" height="10" fill="'+CH_PASS+'" rx="2"/>';
   svg+='<text x="'+(pL+13)+'" y="'+(H-13)+'" fill="#8a5060" font-size="9" font-family="Tajawal">ناجح</text>';
   svg+='<rect x="'+(pL+50)+'" y="'+(H-22)+'" width="10" height="10" fill="'+CH_FAIL+'" rx="2"/>';
@@ -1032,24 +980,18 @@ function buildDistChart(st,passScore){
 
 function buildGradeChart(){
   var el=document.getElementById('ch-grade');
-  var labels=['ممتاز','جيد جداً','جيد','مقبول','ضعيف'];
-  var colors=['#1a7a3e','#1a5a8a','#9a6000','#b8860b','#c0392b'];
   var counts=[0,0,0,0,0];
-  students.forEach(function(s){
-    var p=s.score/cfg.max*100;
-    if(p>=cfg.gA) counts[0]++;
-    else if(p>=cfg.gB) counts[1]++;
-    else if(p>=cfg.gC) counts[2]++;
-    else if(p>=cfg.gD) counts[3]++;
-    else counts[4]++;
-  });
+  students.forEach(function(s){ counts[gradeIdx(s.score)]++; });
   var total=students.length||1;
   var R=72,r=44,cx=82,cy=82,W=164,H=164;
   var svg='<svg viewBox="0 0 '+W+' '+H+'" style="width:164px;height:164px;">';
   var sa=-Math.PI/2;
+  var nonZero=counts.filter(function(c){return c>0;}).length;
   for(var i=0;i<5;i++){
     if(!counts[i]) continue;
-    var ang=(counts[i]/total)*2*Math.PI, ea=sa+ang;
+    var ang=(counts[i]/total)*2*Math.PI;
+    if(nonZero===1) ang=2*Math.PI-0.0001;
+    var ea=sa+ang;
     var x1=cx+R*Math.cos(sa),y1=cy+R*Math.sin(sa);
     var x2=cx+R*Math.cos(ea),y2=cy+R*Math.sin(ea);
     var xi1=cx+r*Math.cos(sa),yi1=cy+r*Math.sin(sa);
@@ -1057,161 +999,176 @@ function buildGradeChart(){
     var lg=ang>Math.PI?1:0;
     svg+='<path d="M '+xi1+' '+yi1+' L '+x1+' '+y1+' A '+R+' '+R+' 0 '+lg+' 1 '+x2+' '+y2+
          ' L '+xi2+' '+yi2+' A '+r+' '+r+' 0 '+lg+' 0 '+xi1+' '+yi1+' Z"'+
-         ' fill="'+colors[i]+'" stroke="#fff" stroke-width="2"/>';
+         ' fill="'+GRADES[i].col+'" stroke="#fff" stroke-width="2"/>';
     sa=ea;
   }
-  svg+='<text x="'+cx+'" y="'+(cy-5)+'" text-anchor="middle" fill="'+CH_MAROON+'" font-size="18" font-family="Cairo" font-weight="900">'+total+'</text>';
+  svg+='<text x="'+cx+'" y="'+(cy-5)+'" text-anchor="middle" fill="'+CH_MAROON+'" font-size="18" font-family="Cairo" font-weight="900">'+students.length+'</text>';
   svg+='<text x="'+cx+'" y="'+(cy+12)+'" text-anchor="middle" fill="#8a5060" font-size="9" font-family="Tajawal">طالب</text>';
   svg+='</svg>';
   var leg='<div class="leg" style="flex-direction:column;gap:5px;">';
-  for(var i=0;i<5;i++){
-    if(!counts[i]) continue;
-    leg+='<div class="leg-i"><div class="leg-dot" style="background:'+colors[i]+'"></div>'+
-      labels[i]+': <strong style="color:'+colors[i]+'">'+counts[i]+'</strong> ('+
-      (counts[i]/total*100).toFixed(1)+'%)</div>';
+  for(var j=0;j<5;j++){
+    if(!counts[j]) continue;
+    leg+='<div class="leg-i"><div class="leg-dot" style="background:'+GRADES[j].col+'"></div>'+
+      GRADES[j].l+': <strong style="color:'+GRADES[j].col+'">'+counts[j]+'</strong> ('+
+      (counts[j]/total*100).toFixed(1)+'%)</div>';
   }
   leg+='</div>';
   el.innerHTML=svg+leg;
 }
 
-function buildCumChart(st){
-  var el=document.getElementById('ch-cum');
-  var W=420,H=190,pL=40,pB=30,pT=10,pR=10;
-  var chW=W-pL-pR, chH=H-pB-pT;
-  var srt=st.sorted, n=srt.length; if(!n){el.innerHTML='';return;}
-  var minV=srt[0], maxV=srt[n-1], rng=maxV-minV||1;
-  var svg='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;">';
-  for(var gi=0;gi<=4;gi++){
-    var gy=pT+gi*(chH/4), gv=100-gi*25;
-    svg+='<line x1="'+pL+'" y1="'+gy+'" x2="'+(W-pR)+'" y2="'+gy+'" stroke="rgba(107,26,42,0.07)" stroke-width="1"/>';
-    svg+='<text x="'+(pL-5)+'" y="'+(gy+4)+'" text-anchor="end" fill="#8a5060" font-size="9" font-family="Tajawal">'+gv+'%</text>';
-  }
-  var step=Math.ceil(n/6);
-  for(var i=0;i<n;i+=step){
-    var xp=pL+(srt[i]-minV)/rng*chW;
-    svg+='<text x="'+xp+'" y="'+(H-6)+'" text-anchor="middle" fill="#8a5060" font-size="8" font-family="Tajawal">'+srt[i]+'</text>';
-  }
-  var pts=srt.map(function(v,i){return[(pL+(v-minV)/rng*chW),(pT+chH-(i+1)/n*chH)];});
-  var aD='M '+pL+' '+(pT+chH);
-  pts.forEach(function(p){aD+=' L '+p[0]+' '+p[1];});
-  aD+=' L '+(W-pR)+' '+(pT+chH)+' Z';
-  svg+='<path d="'+aD+'" fill="rgba(107,26,42,0.08)"/>';
-  var lD='M '+pts[0][0]+' '+pts[0][1];
-  for(var i=1;i<pts.length;i++) lD+=' L '+pts[i][0]+' '+pts[i][1];
-  svg+='<path d="'+lD+'" fill="none" stroke="'+CH_MAROON+'" stroke-width="2.2" stroke-linejoin="round"/>';
-  svg+='</svg>';
-  el.innerHTML=svg;
+// ========== MEASURES (مع شرح الحالة) ==========
+var ST_T={pos:'✅ إيجابي',neg:'❌ سلبي',neu:'➖ مقبول',warn:'⚠ يستحق المراجعة'};
+function mCard(o){
+  return '<div class="m-card"><div class="m-name">'+o.ic+' '+o.n+'</div>'+
+    '<div class="m-val">'+o.v+'</div>'+
+    '<div class="m-bar"><div class="m-fill" style="width:'+Math.max(0,Math.min(100,o.b)).toFixed(1)+'%"></div></div>'+
+    '<div class="m-desc">'+o.d+'</div>'+
+    '<span class="stt '+o.c+'">'+ST_T[o.c]+'</span>'+
+    '<p class="m-dyn">'+o.dyn+'</p>'+
+    '<div class="m-rule">'+o.rule+'</div></div>';
 }
+function buildMeasures(st,pass){
+  var tot=cfg.max, avgPct=st.mean/tot*100;
+  var cvv=st.mean===0?0:st.std/st.mean*100;
+  var cards=[];
 
-function buildStatsChart(st){
-  var el=document.getElementById('ch-stats');
-  var items=[
-    {l:'المتوسط',v:st.mean,c:CH_MAROON},{l:'الوسيط',v:st.median,c:CH_WINE},
-    {l:'المنوال',v:st.mode,c:CH_ROSE},{l:'أعلى درجة',v:st.max,c:CH_GREEN},
-    {l:'أدنى درجة',v:st.min,c:CH_FAIL},{l:'الدرجة العظمى',v:cfg.max,c:CH_GOLD}
-  ];
-  var W=420,bh=22,gap=8,pL=80,pR=55,pT=8,pB=8;
-  var H2=items.length*(bh+gap)+pT+pB, chW=W-pL-pR;
-  var svg='<svg viewBox="0 0 '+W+' '+H2+'" style="width:100%;height:auto;">';
-  items.forEach(function(it,i){
-    var y=pT+i*(bh+gap), bw=Math.max(0,(it.v/cfg.max)*chW);
-    svg+='<rect x="'+pL+'" y="'+y+'" width="'+bw+'" height="'+bh+'" fill="'+it.c+'" rx="5"/>';
-    svg+='<text x="'+(pL-6)+'" y="'+(y+bh/2+4)+'" text-anchor="end" fill="#4a1525" font-size="10.5" font-family="Tajawal" font-weight="600">'+it.l+'</text>';
-    svg+='<text x="'+(pL+bw+6)+'" y="'+(y+bh/2+4)+'" fill="'+CH_MAROON+'" font-size="10.5" font-family="Cairo" font-weight="bold">'+parseFloat(it.v).toFixed(1)+'</text>';
-  });
-  svg+='</svg>';
-  el.innerHTML=svg;
-}
+  // المتوسط
+  (function(){
+    var p=avgPct,c,dyn;
+    if(p>=90){c='warn';dyn='متوسط الفصل '+pf(st.mean,2)+' من '+tot+' ('+pf(p)+'%)، وهو في أعلى السلم، وقد يدل على سهولة الاختبار أو تساهل التصحيح.';}
+    else if(p>=70){c='pos';dyn='متوسط الفصل '+pf(p)+'% من الدرجة الكلية، وهو مستوى جيد ومتوازن.';}
+    else if(p>=50){c='neu';dyn='متوسط الفصل '+pf(p)+'% من الدرجة الكلية، وهو مستوى مقبول يحتمل التحسين.';}
+    else {c='neg';dyn='متوسط الفصل '+pf(p)+'% وهو أقل من النصف، ما يشير إلى ضعف عام في مستوى الفصل أو صعوبة الاختبار.';}
+    cards.push(mCard({ic:'📊',n:'المتوسط الحسابي',v:fmt(st.mean),b:p,d:'مجموع الدرجات ÷ عدد الطلاب.',c:c,dyn:dyn,
+      rule:'<b class="rp">✅ إيجابي:</b> من 70% إلى أقل من 90% من الدرجة الكلية.<br><b class="rn">❌ سلبي:</b> أقل من 50%.<br><b class="rw">⚠ تنبيه:</b> 90% فأكثر، فقد يدل على تضخم.<br>ويتأثر المتوسط بالدرجات الشاذة، فيُقرأ دائماً مع الوسيط.'}));
+  })();
 
-// ========== MEASURES ==========
-function buildMeasures(st){
-  var m=[
-    {n:'المتوسط الحسابي',v:fmt(st.mean),b:(st.mean/cfg.max*100),
-     d:'مجموع الدرجات ÷ عدد الطلاب. يعطي الصورة العامة لمستوى الصف.',ic:'📊'},
-    {n:'الوسيط',v:fmt(st.median),b:(st.median/cfg.max*100),
-     d:'القيمة الوسطى في الترتيب. أكثر دقة من المتوسط عند وجود قيم شاذة.',ic:'📍'},
-    {n:'المنوال',v:fmt(st.mode),b:(st.mode/cfg.max*100),
-     d:'أكثر الدرجات تكراراً. يشير لنقطة التمركز في توزيع القيم.',ic:'📌'},
-    {n:'المدى',v:fmt(st.range),b:Math.min(st.range/cfg.max*100,100),
-     d:'الفرق بين أعلى درجة ('+fmt(st.max)+') وأدنى درجة ('+fmt(st.min)+').',ic:'↔️'},
-    {n:'الانحراف المعياري',v:fmt(st.std),b:Math.min(st.std/cfg.max*100,100),
-     d:'الجذر التربيعي لمتوسط مربعات انحرافات القيم عن متوسطها. كلما صغر دلّ على تقارب الدرجات وتجانس مستوى الطلاب.',ic:'📐'},
-    {n:'التباين',v:fmt(st.variance),b:Math.min(Math.sqrt(st.variance)/cfg.max*100,100),
-     d:'مربع الانحراف المعياري. يتيح إجراء المقارنات الإحصائية بين المجموعات.',ic:'📏'},
-  ];
-  document.getElementById('m-grid').innerHTML=m.map(function(x){
-    return '<div class="m-card"><div class="m-name">'+x.ic+' '+x.n+'</div>'+
-      '<div class="m-val">'+x.v+'</div>'+
-      '<div class="m-bar"><div class="m-fill" style="width:'+x.b.toFixed(1)+'%"></div></div>'+
-      '<div class="m-desc">'+x.d+'</div></div>';
-  }).join('');
+  // الوسيط
+  (function(){
+    var gap=(st.median-st.mean)/tot*100,c,dyn;
+    if(st.median*100>=tot*90){c='warn';dyn='الوسيط '+pf(st.median,2)+'، أي أن نصف الطلاب تقريباً في فئة الامتياز، وهذا يستحق مراجعة معايير التصحيح.';}
+    else if(st.median<pass){c='neg';dyn='الوسيط '+pf(st.median,2)+' أقل من درجة النجاح ('+pf(pass,1)+')، أي أن نصف الطلاب تقريباً دون النجاح.';}
+    else if(gap>=2){c='pos';dyn='الوسيط ('+pf(st.median,2)+') أعلى من المتوسط ('+pf(st.mean,2)+')، أي أن أكثر من نصف الطلاب فوق المتوسط، وقلة من الدرجات المنخفضة تسحبه للأسفل.';}
+    else if(gap<=-2){c='neg';dyn='الوسيط ('+pf(st.median,2)+') أقل من المتوسط ('+pf(st.mean,2)+')، أي أن أكثر من نصف الطلاب دون المتوسط، وقلة من الدرجات المرتفعة ترفعه للأعلى.';}
+    else {c='neu';dyn='الوسيط ('+pf(st.median,2)+') قريب من المتوسط ('+pf(st.mean,2)+')، فالتوزيع متوازن حول الوسط.';}
+    cards.push(mCard({ic:'📍',n:'الوسيط',v:fmt(st.median),b:st.median/tot*100,d:'الدرجة التي تتوسط الطلاب بعد ترتيبهم.',c:c,dyn:dyn,
+      rule:'<b class="rp">✅ إيجابي:</b> الوسيط أعلى من المتوسط بنحو 2% من الدرجة الكلية فأكثر.<br><b class="rn">❌ سلبي:</b> أقل من المتوسط بنحو 2% فأكثر، أو أقل من درجة النجاح.<br><b class="rw">⚠ تنبيه:</b> 90% فأكثر من الدرجة الكلية.<br>إذا تقارب الوسيط والمتوسط (أقل من 2%) فالتوزيع متوازن.'}));
+  })();
+
+  // المنوال
+  (function(){
+    var M=st.mode,mp=M.val/tot*100,c,dyn,v,sub;
+    if(M.has){ v=M.list.slice(0,3).map(function(x){return pf(x,1);}).join('، ')+(M.list.length>3?' …':''); }
+    else { v='لا يوجد'; }
+    sub=M.has?'تكررت '+M.freq+' مرات'+(M.list.length>1?' لكل منوال':''):'لم تتكرر أي درجة — أكثر نطاق ازدحاماً: '+M.band;
+    var sbj=M.has?(M.list.length>1?'الدرجات الأكثر تكراراً':'الدرجة الأكثر تكراراً'):'النطاق الأكثر ازدحاماً ('+M.band+')';
+    if(M.has&&M.list.length>1){c='neu';dyn='تعدد المنوال: هناك '+M.list.length+' درجات تكررت العدد نفسه من المرات ('+M.freq+')، فلا يوجد منوال واحد مميّز. يُعتمد على المتوسط والوسيط في القراءة.';}
+    else if(mp>=90){c='warn';dyn=sbj+' في أعلى السلم ('+pf(mp,0)+'% تقريباً)، وتكدس الدرجات هناك قد يدل على تضخم.';}
+    else if(mp>=70){c='pos';dyn=sbj+' في نطاق جيد ('+pf(mp,0)+'% تقريباً من الدرجة الكلية).';}
+    else if(mp>=50){c='neu';dyn=sbj+' في نطاق مقبول ('+pf(mp,0)+'% تقريباً من الدرجة الكلية).';}
+    else {c='neg';dyn=sbj+' أقل من النصف ('+pf(mp,0)+'% تقريباً)، أي أن أكثر الطلاب تتركز درجاتهم في المستوى الضعيف.';}
+    cards.push(mCard({ic:'📌',n:'المنوال',v:v,b:mp,d:sub+'.',c:c,dyn:dyn,
+      rule:'<b class="rp">✅ إيجابي:</b> يقع بين 70% وأقل من 90% من الدرجة الكلية.<br><b class="rn">❌ سلبي:</b> أقل من 50%.<br><b class="rw">⚠ تنبيه:</b> 90% فأكثر.<br>إذا تعددت المنوالات فلا يُحكم بها، وإذا لم تتكرر أي درجة فيُعرض النطاق الأكثر ازدحاماً بدلاً منه.'}));
+  })();
+
+  // الانحراف المعياري
+  (function(){
+    var c,dyn;
+    if(st.n<2){c='neu';dyn='يلزم طالبان على الأقل لحساب التشتت.';}
+    else if(cvv<15){
+      if(avgPct>=80){c='warn';dyn='الانحراف المعياري '+pf(st.std,2)+' درجة، أي أن الدرجات متقاربة جداً مع متوسط مرتفع، وقد يدل ذلك على تضخم.';}
+      else {c='neu';dyn='الانحراف المعياري '+pf(st.std,2)+' درجة، أي أن مستوى الطلاب متجانس ومتقارب جداً.';}
+    }
+    else if(cvv<=35){c='pos';dyn='الانحراف المعياري '+pf(st.std,2)+' درجة، وهو تشتت معتدل يعكس فروقاً فردية طبيعية بين الطلاب.';}
+    else {c='neg';dyn='الانحراف المعياري '+pf(st.std,2)+' درجة، وهو تشتت كبير يعني فجوة واسعة بين مستويات الطلاب.';}
+    cards.push(mCard({ic:'📐',n:'الانحراف المعياري',v:fmt(st.std),b:st.std/tot*100,d:'مقياس تباعد الدرجات عن المتوسط.',c:c,dyn:dyn,
+      rule:'<b class="rp">✅ إيجابي:</b> تشتت معتدل (الانحراف بين 15% و35% من المتوسط تقريباً).<br><b class="rn">❌ سلبي:</b> تشتت كبير (أكثر من 35% من المتوسط): فجوة واسعة بين الطلاب.<br><b class="rw">⚠ تنبيه:</b> تقارب شديد (أقل من 15%) مع متوسط 80% فأكثر.'}));
+  })();
+
+  // المدى
+  (function(){
+    var r=st.range,rp=r/tot*100,c,dyn;
+    if(st.n<2){c='neu';dyn='يلزم طالبان على الأقل لحساب المدى.';}
+    else if(rp>75){c='neg';dyn='الفرق بين أعلى درجة ('+pf(st.max,1)+') وأدنى درجة ('+pf(st.min,1)+') هو '+pf(r,1)+'، أي '+pf(rp,0)+'% من الدرجة الكلية، وهو فرق واسع جداً بين الطلاب.';}
+    else if(rp>=25){c='pos';dyn='الفرق بين أعلى وأدنى درجة '+pf(r,1)+' ('+pf(rp,0)+'% من الدرجة الكلية)، وهو مدى معتدل.';}
+    else {c='neu';dyn='الفرق بين أعلى وأدنى درجة '+pf(r,1)+' فقط ('+pf(rp,0)+'% من الدرجة الكلية)، أي أن الدرجات متقاربة جداً؛ يُنظر معه إلى المتوسط.';}
+    cards.push(mCard({ic:'↔️',n:'المدى',v:fmt(r),b:rp,d:'أعلى درجة ('+fmt(st.max)+') − أدنى درجة ('+fmt(st.min)+').',c:c,dyn:dyn,
+      rule:'<b class="rp">✅ إيجابي:</b> المدى من 25% إلى 75% من الدرجة الكلية.<br><b class="rn">❌ سلبي:</b> أكثر من 75%: فروق كبيرة جداً بين الطلاب.<br>أقل من 25% يعني تقارباً شديداً بين الدرجات، ويُقرأ مع المتوسط.'}));
+  })();
+
+  document.getElementById('m-grid').innerHTML=cards.join('');
 }
 
 // ========== DIST TABLE ==========
-function buildDistTable(st){
+function buildDistTable(){
   var ivs=[
-    {lo:90,hi:100,l:'90–100 %',c:'#1a7a3e'},{lo:80,hi:89,l:'80–89 %',c:'#1a5a8a'},
-    {lo:70,hi:79,l:'70–79 %',c:'#9a6000'},{lo:60,hi:69,l:'60–69 %',c:'#b8860b'},
-    {lo:50,hi:59,l:'50–59 %',c:'#8b2439'},{lo:0,hi:49,l:'أقل من 50%',c:'#c0392b'}
+    {lo:90,hi:100.0001,l:'90–100 %',c:'#1a7a3e'},{lo:80,hi:90,l:'80 – أقل من 90 %',c:'#1a5a8a'},
+    {lo:70,hi:80,l:'70 – أقل من 80 %',c:'#9a6000'},{lo:60,hi:70,l:'60 – أقل من 70 %',c:'#b8860b'},
+    {lo:50,hi:60,l:'50 – أقل من 60 %',c:'#8b2439'},{lo:0,hi:50,l:'أقل من 50%',c:'#c0392b'}
   ];
-  var mx=Math.max.apply(null,ivs.map(function(iv){
-    return students.filter(function(s){var p=s.score/cfg.max*100;return p>=iv.lo&&p<=iv.hi;}).length;
-  }))||1;
+  function cnt(iv){return students.filter(function(s){var p=s.score/cfg.max*100;return p>=iv.lo&&p<iv.hi;}).length;}
+  var counts=ivs.map(cnt);
+  var mx=Math.max.apply(null,counts)||1;
   var html='<div class="d-hdr">توزيع الطلاب على الفئات النسبية</div>';
-  ivs.forEach(function(iv){
-    var cnt=students.filter(function(s){var p=s.score/cfg.max*100;return p>=iv.lo&&p<=iv.hi;}).length;
-    var pct=(cnt/students.length*100).toFixed(1);
-    var bw=(cnt/mx*100).toFixed(1);
+  ivs.forEach(function(iv,i){
+    var pct=(counts[i]/students.length*100).toFixed(1);
+    var bw=(counts[i]/mx*100).toFixed(1);
     html+='<div class="d-row"><div class="d-lbl" style="color:'+iv.c+'">'+iv.l+'</div>'+
-      '<div class="d-outer"><div class="d-inner" style="width:'+bw+'%;background:'+iv.c+';">'+(bw>15?cnt:'')+'</div></div>'+
-      '<div class="d-cnt">'+cnt+'</div><div class="d-pct">'+pct+'%</div></div>';
+      '<div class="d-outer"><div class="d-inner" style="width:'+bw+'%;background:'+iv.c+';">'+(bw>15?counts[i]:'')+'</div></div>'+
+      '<div class="d-cnt">'+counts[i]+'</div><div class="d-pct">'+pct+'%</div></div>';
   });
   document.getElementById('d-wrap').innerHTML=html;
 }
 
 // ========== INFLATION ==========
 function buildInflation(st){
-  var n=students.length; if(!n) return;
-  // معامل الالتواء (وزن 40%)
+  var n=students.length;
+  var sec=document.getElementById('infl-sec');
+  sec.style.display='flex';
+  if(n<5){
+    document.getElementById('infl-wrap').innerHTML='<div class="infl-summary"><h4>➖ لا يمكن تقدير التضخم</h4><div class="infl-rec">عدد الطلاب ('+n+') أقل من 5، وهو غير كافٍ لحكم موثوق. زِد عدد الطلاب لتظهر النتيجة.</div></div>';
+    return;
+  }
+  var tot=cfg.max;
+  // (1) تكدس الدرجات في الأعلى — مبني على الفرق بين الوسيط والمتوسط مقارنة بتشتت الدرجات
   var skewness=st.std>0?(3*(st.mean-st.median))/st.std:0;
+  var medGap=st.median-st.mean;
   var skewScore=0;
   if(skewness<-2.0) skewScore=40; else if(skewness<-1.5) skewScore=32;
   else if(skewness<-1.0) skewScore=22; else if(skewness<-0.5) skewScore=12;
   else if(skewness<0) skewScore=4; else skewScore=0;
-  // فجوة المتوسط (وزن 35%)
-  var expectedMean=cfg.max*0.60;
-  var meanGapPct=((st.mean-expectedMean)/cfg.max)*100;
+  // (2) فجوة المتوسط عن المتوسط المتوقع
+  var expectedMean=tot*cfg.exp/100;
+  var meanGapPct=((st.mean-expectedMean)/tot)*100;
   var gapScore=0;
   if(meanGapPct>25) gapScore=35; else if(meanGapPct>18) gapScore=28;
   else if(meanGapPct>12) gapScore=20; else if(meanGapPct>6) gapScore=10;
   else if(meanGapPct>0) gapScore=3; else gapScore=0;
-  // نسبة الممتازين (وزن 25%)
-  var excellentPct=students.filter(function(s){return s.score/cfg.max*100>=90;}).length/n*100;
+  // (3) نسبة المتفوقين
+  var excellentPct=students.filter(function(s){return s.score/tot*100>=90;}).length/n*100;
   var exScore=0;
   if(excellentPct>65) exScore=25; else if(excellentPct>50) exScore=20;
   else if(excellentPct>35) exScore=14; else if(excellentPct>25) exScore=8;
   else if(excellentPct>15) exScore=3; else exScore=0;
-  // المجموع
+
   var total=Math.min(100,Math.max(0,skewScore+gapScore+exScore));
-  var level,label,color;
-  if(total>=60){level='danger';label='تضخم مرتفع ⚠️';color='#c0392b';}
-  else if(total>=30){level='warn';label='تضخم محتمل 🟡';color='#9a6000';}
-  else{level='ok';label='طبيعي ✅';color='#1a7a3e';}
+  var label,color;
+  if(total>=60){label='تضخم مرتفع ⚠️';color='#c0392b';}
+  else if(total>=30){label='تضخم محتمل 🟡';color='#9a6000';}
+  else{label='طبيعي ✅';color='#1a7a3e';}
 
-  var passPct=students.filter(function(s){return s.score>=cfg.max*cfg.pass/100;}).length/n*100;
-  var stdPct=st.std/cfg.max*100;
+  var passPct=students.filter(function(s){return s.score>=tot*cfg.pass/100;}).length/n*100;
 
-  function cl(v,ok,warn){return v<=ok?'ok':v<=warn?'warn':'danger';}
   function bl(b){return b==='ok'?'طبيعي':b==='warn'?'مراقبة':'خطر';}
   function bc(b){return b==='ok'?'#1a7a3e':b==='warn'?'#9a6000':'#c0392b';}
-
-  function mkC(ic,val,lbl,badge,formula){
+  function mkC(ic,val,lbl,badge,meaning,rule){
     return '<div class="infl-card infl-'+badge+'">' +
       '<div class="infl-ic">'+ic+'</div>'+
       '<div class="infl-val" style="color:'+bc(badge)+'">'+val+'</div>'+
       '<div class="infl-lbl">'+lbl+'</div>'+
-      '<div style="font-size:0.67rem;color:var(--muted);margin:3px 0 6px;font-family:monospace;direction:ltr;text-align:center;">'+formula+'</div>'+
-      '<span class="infl-badge b-'+badge+'">'+bl(badge)+'</span></div>';
+      '<span class="infl-badge b-'+badge+'">'+bl(badge)+'</span>'+
+      '<p class="infl-mean">'+meaning+'</p>'+
+      '<div class="infl-rule">'+rule+'</div></div>';
   }
   function mkMs(lbl,score,maxS,val){
     var p=score/maxS*100;
@@ -1227,40 +1184,48 @@ function buildInflation(st){
   var gapB=meanGapPct>12?'danger':meanGapPct>6?'warn':'ok';
   var exB=excellentPct>35?'danger':excellentPct>25?'warn':'ok';
   var passB=passPct>88?'danger':passPct>78?'warn':'ok';
-  var stdB=stdPct<8?'danger':stdPct<14?'warn':'ok';
 
+  var medTxt=medGap>0?'الوسيط أعلى من المتوسط بـ '+pf(medGap,2)+' درجة':medGap<0?'الوسيط أقل من المتوسط بـ '+pf(-medGap,2)+' درجة':'الوسيط يساوي المتوسط';
   var cards=
-    mkC('📐',skewness.toFixed(3),'معامل الالتواء (Skewness)',skewB,'3×(Mean−Median)÷SD')+
-    mkC('↔️',(meanGapPct>0?'+':'')+meanGapPct.toFixed(1)+'%','فجوة المتوسط عن 60% المتوقعة',gapB,'(Actual−Expected)÷Max×100')+
-    mkC('🏅',excellentPct.toFixed(1)+'%','نسبة الحاصلين على ≥90%',exB,'Count(≥90%)÷N×100')+
-    mkC('✅',passPct.toFixed(1)+'%','نسبة الناجحين الإجمالية',passB,'Count(≥Pass)÷N×100')+
-    mkC('📉',st.std.toFixed(2)+' ('+stdPct.toFixed(1)+'%)','الانحراف المعياري',stdB,'√[Σ(Xi−X̄)²÷N]');
+    mkC('📐',(medGap>0?'+':'')+pf(medGap,2),'الوسيط − المتوسط (تكدس الدرجات في الأعلى)',skewB,
+      medTxt+'. كلما كان الوسيط أعلى بوضوح فأغلب الطلاب متجمعون في الدرجات العليا وقلة ضعيفة تسحب المتوسط للأسفل.',
+      'مراقبة: الفرق أكبر من سدس الانحراف المعياري. خطر: أكبر من ثلثه.')+
+    mkC('↔️',(meanGapPct>0?'+':'')+pf(meanGapPct)+'%','فجوة المتوسط عن المتوسط المتوقع ('+cfg.exp+'%)',gapB,
+      'متوسط الفصل '+pf(st.mean,1)+' مقابل المتوقع '+pf(expectedMean,1)+'. الفجوة الموجبة الكبيرة تعني أن الاختبار أسهل من المعتاد أو أن التصحيح متساهل.',
+      'مراقبة: أكثر من 6%. خطر: أكثر من 12%. (يمكن تغيير المتوسط المتوقع من الإعدادات)')+
+    mkC('🏅',pf(excellentPct)+'%','نسبة الحاصلين على 90% فأكثر',exB,
+      'نسبة الطلاب في فئة الامتياز. المعتاد أن تكون قليلة (نحو 10–15%).',
+      'مراقبة: أكثر من 25%. خطر: أكثر من 35%.')+
+    mkC('✅',pf(passPct)+'%','نسبة النجاح',passB,
+      'نسبة الطلاب الذين بلغوا درجة النجاح. ارتفاعها الشديد مع مؤشرات أخرى قد يعكس ضعف معايير التقييم.',
+      'مراقبة: أكثر من 78%. خطر: أكثر من 88%.');
 
   var breakdown='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:12px 0;">'+
-    mkMs('معامل الالتواء',skewScore,40,skewness.toFixed(2))+
-    mkMs('فجوة المتوسط',gapScore,35,(meanGapPct>0?'+':'')+meanGapPct.toFixed(1)+'%')+
-    mkMs('نسبة الممتازين',exScore,25,excellentPct.toFixed(1)+'%')+'</div>';
+    mkMs('تكدس الدرجات في الأعلى',skewScore,40,(medGap>0?'+':'')+pf(medGap,2))+
+    mkMs('فجوة المتوسط',gapScore,35,(meanGapPct>0?'+':'')+pf(meanGapPct)+'%')+
+    mkMs('نسبة المتفوقين',exScore,25,pf(excellentPct)+'%')+'</div>';
 
   var recs=[];
-  if(skewness<-1.0) recs.push('معامل الالتواء ('+skewness.toFixed(2)+') سالب قوي — الدرجات متكدسة في الأعلى، يدل على سهولة مفرطة أو تساهل في التصحيح.');
-  if(meanGapPct>12) recs.push('متوسط الصف ('+st.mean.toFixed(1)+') يتجاوز المتوقع ('+expectedMean.toFixed(1)+') بفجوة '+meanGapPct.toFixed(1)+'% — يُنصح بمراجعة مستوى الأسئلة.');
-  if(excellentPct>35) recs.push('نسبة '+excellentPct.toFixed(1)+'% من الطلاب حصلوا على ممتاز — تتجاوز المعدل الطبيعي (10-15%) بشكل ملحوظ.');
-  if(passPct>88) recs.push('نسبة النجاح ('+passPct.toFixed(1)+'%) مرتفعة جداً — قد يعكس ضعف معايير التقييم.');
-  if(st.std<cfg.max*0.08) recs.push('الانحراف المعياري ('+st.std.toFixed(1)+') منخفض — يضعف قدرة الاختبار على التمييز بين المستويات.');
+  if(skewness<-1.0) recs.push(medTxt+' — أغلب الدرجات متكدسة في الأعلى، وهذا يدل على سهولة مفرطة أو تساهل في التصحيح.');
+  if(meanGapPct>12) recs.push('متوسط الصف ('+pf(st.mean,1)+') يتجاوز المتوقع ('+pf(expectedMean,1)+') بفجوة '+pf(meanGapPct)+'% — يُنصح بمراجعة مستوى الأسئلة.');
+  if(excellentPct>35) recs.push('نسبة '+pf(excellentPct)+'% من الطلاب حصلوا على ممتاز — تتجاوز المعتاد (10–15%) بشكل ملحوظ.');
+  if(passPct>88) recs.push('نسبة النجاح ('+pf(passPct)+'%) مرتفعة جداً — قد يعكس ضعف معايير التقييم.');
+  if(st.mean>0&&st.std/st.mean*100<15&&st.mean/tot*100>=80) recs.push('الدرجات متقاربة جداً ('+pf(st.std,1)+' انحراف معياري) مع متوسط مرتفع — يضعف قدرة الاختبار على التمييز بين المستويات.');
   if(!recs.length) recs.push('جميع المؤشرات ضمن الحدود الطبيعية — لا تظهر مؤشرات تضخم في هذا الاختبار. ✅');
+  recs.push('هذا المؤشر إحصائي للمراجعة وليس حكماً نهائياً؛ يُدعم بمقارنة النتائج باختبار موحّد ومراجعة عينة من الإجابات.');
+  if(n<10) recs.push('⚠ عدد الطلاب قليل ('+n+')، فالمؤشر أقل دقة.');
 
   var html='<div class="infl-grid">'+cards+'</div>';
   html+='<div class="infl-summary">';
   html+='<h4>📊 مؤشر التضخم المركب: <span style="color:'+color+'">'+label+'</span> <span style="font-size:0.85rem;color:var(--muted);font-weight:600;">('+total+' / 100)</span></h4>';
-  html+='<div style="font-size:0.74rem;color:var(--muted);margin-bottom:5px;">المعادلة: الالتواء (40%) + فجوة المتوسط (35%) + نسبة الممتازين (25%)</div>';
+  html+='<div style="font-size:0.74rem;color:var(--muted);margin-bottom:5px;">المعادلة: تكدس الدرجات في الأعلى (40) + فجوة المتوسط (35) + نسبة المتفوقين (25)</div>';
   html+='<div class="infl-meter"><div class="infl-fill" style="width:'+total+'%;background:'+color+';">'+(total>12?total+'%':'')+'</div></div>';
   html+='<div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--muted);margin-top:3px;">'+
     '<span>0 — طبيعي</span><span>30 — محتمل</span><span>60 — مرتفع</span><span>100</span></div>';
   html+=breakdown;
-  html+='<div class="infl-rec"><strong>📋 التوصيات المبنية على المعادلات:</strong><br>'+
+  html+='<div class="infl-rec"><strong>📋 التوصيات:</strong><br>'+
     recs.map(function(r){return '• '+r;}).join('<br>')+'</div></div>';
 
-  document.getElementById('infl-sec').style.display='flex';
   document.getElementById('infl-wrap').innerHTML=html;
 }
 
@@ -1268,7 +1233,9 @@ function buildInflation(st){
 function buildStudents(){
   document.getElementById('st-empty').style.display='none';
   document.getElementById('st-body').style.display='block';
-  filtered=[].concat(students); renderSt();
+  document.getElementById('t-search').value='';
+  document.getElementById('t-sort').value='rank';
+  filt();
 }
 function filt(){
   var q=document.getElementById('t-search').value.toLowerCase();
@@ -1293,14 +1260,14 @@ function setF(f,btn){
 function renderSt(){
   var pass=cfg.max*cfg.pass/100;
   document.getElementById('st-tbody').innerHTML=filtered.map(function(s){
-    var pct=s.score/cfg.max*100, g=grade(pct), ok=s.score>=pass;
+    var pct=s.score/cfg.max*100, g=grade(s.score), ok=s.score>=pass;
     var bc=ok?'#1a7a3e':'#c0392b';
     var rk=s.rank<=3?'rk'+s.rank:'';
     return '<tr>'+
       '<td><span class="rk '+rk+'">'+s.rank+'</span></td>'+
-      '<td>'+s.name+(s.cls?' <span style="color:var(--muted);font-size:.72rem">('+s.cls+')</span>':'')+'</td>'+
+      '<td>'+esc(s.name)+(s.cls?' <span style="color:var(--muted);font-size:.72rem">('+esc(s.cls)+')</span>':'')+'</td>'+
       '<td><strong>'+fmt(s.score)+'</strong> / '+cfg.max+
-        '<div class="sb"><div class="sf" style="width:'+pct.toFixed(1)+'%;background:'+bc+'"></div></div></td>'+
+        '<div class="sb"><div class="sf" style="width:'+Math.min(100,pct).toFixed(1)+'%;background:'+bc+'"></div></div></td>'+
       '<td>'+pct.toFixed(1)+'%</td>'+
       '<td><span class="gb '+g.c+'">'+g.l+'</span></td>'+
       '<td style="color:'+bc+';font-weight:700">'+(ok?'✅ ناجح':'❌ راسب')+'</td></tr>';
@@ -1315,87 +1282,13 @@ function doExport(){
   var pass=cfg.max*cfg.pass/100;
   var rows=[['المرتبة','اسم الطالب','الدرجة','النسبة%','التقدير','الحالة']];
   filtered.forEach(function(s){
-    var pct=(s.score/cfg.max*100).toFixed(1);
-    rows.push([s.rank,s.name,s.score,pct+'%',grade(parseFloat(pct)).l,s.score>=pass?'ناجح':'راسب']);
+    rows.push([s.rank,s.name,s.score,Math.round(s.score/cfg.max*1000)/10,grade(s.score).l,s.score>=pass?'ناجح':'راسب']);
   });
   var ws=XLSX.utils.aoa_to_sheet(rows);
   var wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,ws,'النتائج');
   XLSX.writeFile(wb,cfg.name+'_نتائج.xlsx');
   toast('✅ تم تصدير النتائج','ok');
-}
-
-// ========== ITEM ANALYSIS ==========
-function buildItems(){
-  document.getElementById('it-empty').style.display='none';
-  document.getElementById('it-body').style.display='block';
-  var n=cfg.items;
-  var srt=[].concat(students).sort(function(a,b){return b.score-a.score;});
-  var topN=Math.max(2,Math.round(srt.length*0.27));
-  var topAvg=srt.slice(0,topN).reduce(function(a,s){return a+s.score;},0)/topN;
-  var botAvg=srt.slice(-topN).reduce(function(a,s){return a+s.score;},0)/topN;
-  var items=[];
-  for(var i=1;i<=n;i++){
-    var seed=((i*13+n*7+students.length*3)%71);
-    var diff=Math.max(15,Math.min(90,35+seed*0.7+(Math.sin(i*0.8)*12)));
-    var disc=Math.min(0.95,Math.max(0.05,(topAvg-botAvg)/cfg.max*(0.8+Math.sin(i*1.3)*0.2)+(seed%20-10)*0.008));
-    items.push({i:i,diff:diff.toFixed(1),disc:disc.toFixed(2)});
-  }
-  document.getElementById('it-grid').innerHTML=items.map(function(it){
-    var d=parseFloat(it.diff), dc=parseFloat(it.disc);
-    var dc2=d>70?'d-easy':d>=30?'d-med':'d-hard';
-    var dl=d>70?'سهل':d>=30?'متوسط':'صعب';
-    var bc=d>70?'#1a7a3e':d>=30?'#9a6000':'#c0392b';
-    var dcc=dc>=0.40?(dc>=0.70?'dc-ex':'dc-good'):dc>=0.25?'dc-ok':'dc-poor';
-    var dcl=dc>=0.40?(dc>=0.70?'ممتاز':'جيد'):dc>=0.25?'مقبول':'ضعيف';
-    return '<div class="it-c"><div class="it-bar" style="background:'+bc+'"></div>'+
-      '<div class="it-num">فقرة رقم '+it.i+'</div>'+
-      '<div class="it-d '+dc2+'">'+it.diff+'%</div>'+
-      '<div class="it-dl '+dc2+'">'+dl+' الصعوبة</div>'+
-      '<div class="it-dc '+dcc+'">'+it.disc+'</div>'+
-      '<div class="it-dcl '+dcc+'">تمييز '+dcl+'</div></div>';
-  }).join('');
-
-  // Pie charts
-  var diffB={سهل:0,متوسط:0,صعب:0}, discB={ممتاز:0,جيد:0,مقبول:0,ضعيف:0};
-  items.forEach(function(it){
-    var d=parseFloat(it.diff), dc=parseFloat(it.disc);
-    if(d>70) diffB.سهل++; else if(d>=30) diffB.متوسط++; else diffB.صعب++;
-    if(dc>=0.70) discB.ممتاز++; else if(dc>=0.40) discB.جيد++; else if(dc>=0.25) discB.مقبول++; else discB.ضعيف++;
-  });
-  document.getElementById('ch-diff').innerHTML=mkPie(Object.keys(diffB),Object.values(diffB),['#1a7a3e','#9a6000','#c0392b']);
-  document.getElementById('ch-disc').innerHTML=mkPie(Object.keys(discB),Object.values(discB),['#1a5a8a','#1a7a3e','#9a6000','#c0392b']);
-}
-
-function mkPie(labels,values,colors){
-  var total=values.reduce(function(a,b){return a+b;},0)||1;
-  var R=75,r=45,cx=85,cy=85,W=170,H=170;
-  var svg='<svg viewBox="0 0 '+W+' '+H+'" style="width:170px;height:170px;">';
-  var sa=-Math.PI/2;
-  for(var i=0;i<values.length;i++){
-    if(!values[i]) continue;
-    var ang=(values[i]/total)*2*Math.PI, ea=sa+ang;
-    var x1=cx+R*Math.cos(sa),y1=cy+R*Math.sin(sa);
-    var x2=cx+R*Math.cos(ea),y2=cy+R*Math.sin(ea);
-    var xi1=cx+r*Math.cos(sa),yi1=cy+r*Math.sin(sa);
-    var xi2=cx+r*Math.cos(ea),yi2=cy+r*Math.sin(ea);
-    var lg=ang>Math.PI?1:0;
-    svg+='<path d="M '+xi1+' '+yi1+' L '+x1+' '+y1+' A '+R+' '+R+' 0 '+lg+' 1 '+x2+' '+y2+
-         ' L '+xi2+' '+yi2+' A '+r+' '+r+' 0 '+lg+' 0 '+xi1+' '+yi1+' Z"'+
-         ' fill="'+colors[i%colors.length]+'" stroke="#fff" stroke-width="2"/>';
-    var ma=sa+ang/2,mr=(R+r)/2;
-    if(values[i]/total>0.06)
-      svg+='<text x="'+(cx+mr*Math.cos(ma))+'" y="'+(cy+mr*Math.sin(ma)+4)+'" text-anchor="middle" fill="#fff" font-size="10.5" font-family="Cairo" font-weight="bold">'+values[i]+'</text>';
-    sa=ea;
-  }
-  svg+='</svg>';
-  var leg='<div class="leg" style="flex-direction:column;gap:5px;">';
-  for(var i=0;i<labels.length;i++){
-    leg+='<div class="leg-i"><div class="leg-dot" style="background:'+colors[i%colors.length]+'"></div>'+
-      labels[i]+': <strong style="color:'+colors[i%colors.length]+'">'+values[i]+'</strong></div>';
-  }
-  leg+='</div>';
-  return '<div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center;">'+svg+leg+'</div>';
 }
 
 // ========== TOAST ==========
@@ -1405,6 +1298,7 @@ function toast(msg,type){
   t.classList.add('on');
   setTimeout(function(){t.classList.remove('on');},3200);
 }
+
 </script>
 </body>
 </html>
