@@ -585,7 +585,7 @@ function cleanNum(v){
   if(typeof v!=='string') return '';
   let s=v.trim();
   if(!s) return '';
-  s=s.replace(/[‎‏‪-‮\s]/g,'');
+  s=s.replace(/[\u200e\u200f\u202a-\u202e\s]/g,'');
   s=s.replace(/[٠-٩]/g,d=>String(d.charCodeAt(0)-1632)).replace(/[۰-۹]/g,d=>String(d.charCodeAt(0)-1776));
   s=s.replace(/^(-?\d+),(\d{1,2})$/,'$1.$2');
   s=s.replace(/[٬,]/g,'').replace(/[٫،]/g,'.');
