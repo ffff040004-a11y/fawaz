@@ -6,6 +6,9 @@
 <title>نظام تحليل نتائج الطلاب</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>try{pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";}catch(e){}</script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap');
 :root{
@@ -290,7 +293,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--txt);min-
   <div class="cg">
     <div class="oc" onclick="selMethod('file')">
       <div class="ico"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
-      <h3>استخراج من ملف Excel أو CSV</h3>
+      <h3>استخراج من ملف إكسل أو وورد أو PDF</h3>
       <p>رفع ملف الدرجات — قراءة تلقائية للأسماء والدرجات</p>
     </div>
     <div class="oc" onclick="selMethod('manual')">
@@ -304,14 +307,14 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--txt);min-
 
 <!-- ═══ شاشة 4: رفع الملفات ═══ -->
 <div class="scr" id="S4">
-  <div class="hbr"><h1>📄 استخراج البيانات من الملف</h1><p>ارفع ملف Excel أو CSV فيه أسماء الطلاب ودرجاتهم</p></div>
+  <div class="hbr"><h1>📄 استخراج البيانات من الملف</h1><p>ارفع ملف إكسل أو وورد أو PDF فيه أسماء الطلاب ودرجاتهم</p></div>
   <div class="upsec">
     <div class="upzone" id="UZ" onclick="document.getElementById('FI').click()">
       <div class="uico">📤</div>
       <h3>اضغط أو اسحب الملفات هنا</h3>
-      <p>ملف Excel (xlsx, xls) أو CSV — اسم الطالب في عمود، والدرجة في عمود</p>
+      <p>إكسل (xlsx, xls) — CSV — وورد (docx) — PDF</p>
     </div>
-    <input type="file" id="FI" style="display:none" multiple accept=".xlsx,.xls,.csv">
+    <input type="file" id="FI" style="display:none" multiple accept=".xlsx,.xls,.csv,.docx,.pdf">
     <div class="flist" id="FL" style="display:none"></div>
     <button class="btn bm" id="BEX" onclick="extractFiles()">⬆ استخراج البيانات</button>
   </div>
@@ -428,9 +431,12 @@ UZ.addEventListener('drop',e=>{e.preventDefault();UZ.classList.remove('drag');ad
 FI.addEventListener('change',e=>{addFiles(e.target.files);e.target.value='';});
 
 function isExcelName(n){ return /\.(xlsx|xls|csv)$/i.test(n); }
+function isWordName(n){ return /\.docx$/i.test(n); }
+function isPdfName(n){ return /\.pdf$/i.test(n); }
+function isSupportedName(n){ return isExcelName(n)||isWordName(n)||isPdfName(n); }
 function addFiles(fs){ for(let f of fs) files.push(f); renderFL(); }
 function removeFile(i){ files.splice(i,1); renderFL(); }
-function fIco(n){ return /\.(jpg|jpeg|png)$/i.test(n)?'🖼':/\.pdf$/i.test(n)?'📄':isExcelName(n)?'📊':'📁'; }
+function fIco(n){ return /\.(jpg|jpeg|png)$/i.test(n)?'🖼':/\.pdf$/i.test(n)?'📄':isExcelName(n)?'📊':isWordName(n)?'📝':'📁'; }
 function renderFL(){
   const el=document.getElementById('FL');
   if(!files.length){el.style.display='none';document.getElementById('BEX').className='btn bm';return;}
@@ -449,39 +455,43 @@ function setBanner(txt,kind){
 
 async function extractFiles(){
   if(!files.length){alert('الرجاء رفع ملف واحد على الأقل');return;}
-  const xls=files.filter(f=>isExcelName(f.name));
-  if(!xls.length){
-    alert('الاستخراج من الصور وملفات PDF غير متاح حالياً.\nاستخدم ملف Excel أو CSV، أو اختر الإدخال اليدوي.');
+  const ok=files.filter(f=>isSupportedName(f.name));
+  if(!ok.length){
+    alert('نوع الملف غير مدعوم.\nالمدعوم: إكسل (xlsx أو xls) أو CSV أو وورد (docx) أو PDF.\nإن كان ملف وورد قديم (doc) فاحفظه بصيغة docx ثم ارفعه.');
     return;
   }
   showL('جارٍ قراءة الملف...');
   let infos=[];
   try{
-    const targets=ST.classCount==='single'?[xls[0]]:xls;
+    const targets=ST.classCount==='single'?[ok[0]]:ok;
     for(const f of targets){
-      const r=await parseExcelFile(f,ST.classCount!=='single');
+      const r=await parseAnyFile(f,ST.classCount!=='single');
       infos=infos.concat(r);
     }
   }catch(e){
     hideL();
-    alert('تعذّرت قراءة الملف. تأكد أنه ملف Excel أو CSV سليم.');
+    alert(e&&e.userMsg?e.userMsg:'تعذّرت قراءة الملف. تأكد أنه ملف سليم غير تالف.');
     return;
   }
   hideL();
   if(!infos.length){
-    alert('لم يتم العثور على أسماء ودرجات في الملف.\nتأكد أن الملف فيه عمود لأسماء الطلاب وعمود للدرجات.');
+    alert('لم يتم العثور على أسماء ودرجات في الملف.\nتأكد أن فيه أسماء الطلاب وبجانب كل اسم درجته رقمًا.');
     return;
   }
   ST.classes=infos.map((i,k)=>({label:i.label||('الفصل '+(k+1)),students:i.students}));
   const tn=infos.reduce((a,i)=>a+i.students.length,0);
   const bl=infos.reduce((a,i)=>a+i.blank,0);
+  const review=infos.some(i=>i.review);
+  const multi=infos.some(i=>i.multi);
   const i0=infos[0];
   let msg=`✅ تم استخراج ${tn} طالب`;
   if(infos.length>1) msg+=` في ${infos.length} فصول`;
   if(i0.nameHdr||i0.scoreHdr) msg+=` — عمود الاسم: «${i0.nameHdr||'غير محدد'}» وعمود الدرجة: «${i0.scoreHdr||'غير محدد'}»`;
   if(bl) msg+=` — ⚠ ${bl} صف بلا درجة رقمية (لن يُحتسب)`;
+  if(multi) msg+=' — ⚠ وُجد أكثر من رقم في بعض الأسطر فاعتُمد آخر رقم درجةً';
+  if(review) msg+=' — ⚠ الاستخراج من وورد/PDF: راجع الأسماء والدرجات قبل التحليل';
   drawData();
-  setBanner(msg,bl?'warn':'');
+  setBanner(msg,(bl||review||multi)?'warn':'');
   go2(5);
 }
 
@@ -513,7 +523,9 @@ async function parseExcelFile(f,allSheets){
 
 // قراءة ورقة: تبحث عن رأس الجدول (اسم / درجة)، وإن لم تجده تحدد الأعمدة من محتواها
 function parseSheet(ws){
-  const rows=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:''});
+  return parseRows(XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:''}));
+}
+function parseRows(rows){
   const info={students:[],nameHdr:'',scoreHdr:'',blank:0};
   if(!rows.length) return info;
   const nameRe=/اسم|الطالب|الطالبة|name/i;
@@ -572,6 +584,7 @@ function parseSheet(ws){
       nm='طالب '+(info.students.length+1);
     }
     if(/^(المجموع|المتوسط|الإجمالي|الاجمالي|total|average)/i.test(nm)) continue;
+    if(/^(اسم الطالب|اسم الطالبة|اسم الطالب\/ة|الاسم|اسم)\s*$/.test(nm)) continue;
     if(sc==='') info.blank++;
     info.students.push({name:nm,score:sc});
   }
@@ -1087,6 +1100,111 @@ function shareR(){
 // ══ LOADING ══
 function showL(t){ document.getElementById('LTXT').textContent=t||'جارٍ المعالجة...'; document.getElementById('LOV').classList.add('on'); }
 function hideL(){ document.getElementById('LOV').classList.remove('on'); }
+
+// ══ وورد و PDF ══
+const NRE=/اسم|الطالب|الطالبة|name/i;
+const SRE=/الدرجة|الدرجه|درجة|score|marks|المجموع|النتيجة/i;
+const NUMTAIL=/^(.*\D)\s+(-?[\d٠-٩۰-۹]+(?:[.,٫][\d٠-٩۰-۹]+)?)$/;
+
+async function parseAnyFile(f,allSheets){
+  const base=f.name.replace(/\.[^.]+$/,'');
+  if(isExcelName(f.name)) return parseExcelFile(f,allSheets);
+  let info;
+  if(isWordName(f.name)) info=await parseWord(f);
+  else info=await parsePdf(f);
+  if(!info.students.length) return [];
+  info.label=ST.classCount==='single'?'الفصل 1':base;
+  info.review=true;
+  return [info];
+}
+
+// من أسطر مكوّنة من خلايا (وورد/PDF): الاسم = الخلايا النصية، والدرجة = آخر رقم في السطر
+function parseLines(rows){
+  const info={students:[],nameHdr:'',scoreHdr:'',blank:0,multi:false};
+  const clean=rows.map(r=>r.map(c=>String(c).trim()).filter(Boolean)).filter(r=>r.length);
+  let start=0;
+  for(let i=0;i<Math.min(clean.length,15);i++){
+    const nc=clean[i].find(c=>NRE.test(c)), sc=clean[i].find(c=>SRE.test(c)&&c!==nc);
+    if(nc&&sc){info.nameHdr=nc;info.scoreHdr=sc;start=i+1;break;}
+  }
+  let nextSerial=1;
+  for(let i=start;i<clean.length;i++){
+    let cells=clean[i];
+    if(cells.length===1){
+      const m=cells[0].match(NUMTAIL);
+      if(m) cells=[m[1].trim(),m[2]];
+    }
+    const nums=[],words=[];
+    cells.forEach(c=>{ const n=cleanNum(c); if(n!=='') nums.push(n); else words.push(c); });
+    const nm=words.join(' ').replace(/\s+/g,' ').trim();
+    if(!nm||!nums.length) continue;
+    if(/^(المجموع|المتوسط|الإجمالي|الاجمالي|total|average)/i.test(nm)) continue;
+    if(/^(اسم الطالب|اسم الطالبة|الاسم|اسم)\s*$/.test(nm)) continue;
+    if(Number.isInteger(nums[0])&&nums[0]===nextSerial){
+      nextSerial++;
+      nums.shift();
+      if(!nums.length){info.blank++;info.students.push({name:nm,score:''});continue;}
+    }
+    if(nums.length>1) info.multi=true;
+    info.students.push({name:nm,score:nums[nums.length-1]});
+  }
+  return info;
+}
+
+async function parseWord(f){
+  if(typeof mammoth==='undefined'){ const e=new Error('lib'); e.userMsg='تعذّر تحميل أداة قراءة وورد. تأكد من اتصال الإنترنت ثم أعد المحاولة.'; throw e; }
+  const buf=await readBuf(f);
+  const res=await mammoth.convertToHtml({arrayBuffer:buf});
+  const doc=new DOMParser().parseFromString(res.value,'text/html');
+  const rows=[];
+  doc.querySelectorAll('table').forEach(t=>{
+    t.querySelectorAll('tr').forEach(tr=>{
+      rows.push([...tr.querySelectorAll('th,td')].map(c=>c.textContent.trim()));
+    });
+  });
+  let info=rows.length?parseRows(rows):{students:[]};
+  if(!info.students.length){
+    const lines=[...doc.querySelectorAll('p,li')].map(p=>[p.textContent.trim()]).filter(r=>r[0]);
+    info=parseLines(lines);
+  }
+  return info;
+}
+
+async function parsePdf(f){
+  if(typeof pdfjsLib==='undefined'){ const e=new Error('lib'); e.userMsg='تعذّر تحميل أداة قراءة PDF. تأكد من اتصال الإنترنت ثم أعد المحاولة.'; throw e; }
+  const buf=await readBuf(f);
+  const pdf=await pdfjsLib.getDocument({data:new Uint8Array(buf)}).promise;
+  const pageLines=[];
+  let ar=0,lat=0;
+  for(let p=1;p<=pdf.numPages;p++){
+    const page=await pdf.getPage(p);
+    const tc=await page.getTextContent();
+    const items=tc.items.filter(i=>i.str&&i.str.trim()!=='').map(i=>({s:i.str.trim(),x:i.transform[4],y:i.transform[5],w:i.width||0,h:Math.abs(i.transform[3])||10}));
+    items.forEach(i=>{ ar+=(i.s.match(/[؀-ۿ]/g)||[]).length; lat+=(i.s.match(/[A-Za-z]/g)||[]).length; });
+    items.sort((a,b)=>(b.y-a.y)||(a.x-b.x));
+    let cur=null;
+    items.forEach(it=>{
+      if(cur&&Math.abs(cur.y-it.y)<=Math.max(2,it.h*0.4)) cur.items.push(it);
+      else {cur={y:it.y,items:[it]};pageLines.push(cur);}
+    });
+  }
+  if(!pageLines.length){ const e=new Error('empty'); e.userMsg='لا يوجد نص قابل للقراءة في ملف PDF (قد يكون صورة ممسوحة ضوئيًا). استخدم ملف إكسل أو وورد.'; throw e; }
+  const rtl=ar>=lat;
+  const rows=pageLines.map(l=>{
+    const it=l.items.sort((a,b)=>rtl?b.x-a.x:a.x-b.x);
+    const cells=[];
+    it.forEach((x,i)=>{
+      if(i>0){
+        const a=it[i-1];
+        const gap=rtl?(a.x-(x.x+x.w)):(x.x-(a.x+a.w));
+        if(gap<Math.max(x.h,a.h)*0.7){ cells[cells.length-1]+=' '+x.s; return; }
+      }
+      cells.push(x.s);
+    });
+    return cells;
+  });
+  return parseLines(rows);
+}
 </script>
 </body>
 </html>
